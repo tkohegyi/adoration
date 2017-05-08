@@ -16,15 +16,15 @@ tehát, akkor van nagyjából teljes létszám, ha minden órára van 2 személy
 
 Vácott mi a helyzet, hány adoráló van?
 ----------------------------------------
-Körülbelül x adorálóval kezdtük, az ideális létszámot (336) még sohasem értük el, jelenleg körülbelül 246 aktív adoráló van, 
-és ahogy az látszik [itt](http://vacitemplom.piarista.hu/adoration/index.php), az egyenletlen eloszlás miatt - ami teljesen érthető - így is van sok olyan óra, 
-ahol nagyon oda kell figyelni arra, hogy mindig folyamatos legyen a Szentségimádás.
+Körülbelül x adorálóval kezdtük, az ideális létszámot (336) még sohasem értük el, jelenleg körülbelül 246 aktív adoráló van (2017 májusa), 
+és ahogy az látszik [itt](http://vacitemplom.piarista.hu/adoration/index.php), az egyenletlen eloszlás miatt - ami teljesen érthető - így is van sok olyan óra, ahol nagyon oda kell figyelni arra, hogy mindig folyamatos legyen a Szentségimádás.
 
 Mi az egyes felelősök konkrét feladata?
 ---------------------------------------
 
-Ha valaki lemondja a vállalt időpontot ki az aki mást keres? És kikből válogathat? Vannak akik ilyen esetekre mobilizálhatók?
+Ha valaki lemondja a vállalt időpontot ki az, aki mást keres? És kikből válogathat? Vannak akik ilyen esetekre mobilizálhatók?
 -----------------------------------------------------------------------------------------------------------------------------
 
-Ki az aki összehangolja a vállalásokat? Hiszen lehet, hogy egyes napszakokban, órákban több ember is van máskor meg egy sem.
+Ki az, aki összehangolja a vállalásokat? Hiszen lehet, hogy egyes napszakokban, órákban több ember is van máskor meg egy sem.
 ----------------------------------------------------------------------------------------------------------------------------
+Induláskor (2014 nyara) nagyon sok jelentkezőnk volt, körülbelül 370 fő. A sok jelentkezési lapot - a rajta található információk alapján - a négy napszaknak megfelelően négy csoportra osztottuk, és azokat a négy napszak-koordinátor kapta meg. Igen sok munka és telefonálgatás, egyeztetések árán, több hét alatt a sok jelentkezőből kialakult az a beosztás, amely teljes fedettséget biztosított. Természetesen ez nem volt egyenletes. Majdnem minden délelőtti órára sikerült két adorálót beosztani, míg a hajnali órákkal bizony gondok voltak. Voltak adorálók akik - ideiglenesen - több, akár naponta egy-egy órát vállaltak. Ilyen eset van a mai napig is - nem szerencsés, de sajnos szükség van rá. 
