@@ -21,10 +21,24 @@ Körülbelül x adorálóval kezdtük, az ideális létszámot (336) még sohase
 
 Mi az egyes felelősök konkrét feladata?
 ---------------------------------------
+Ez nagyon összetett. Legegyszerűbben úgy lehet megfogni, hogy minden felelősnek van egy hozzárendelt időszelete (órafelelősnek egy adott óra, a hét minden napján, napszak felelősnek meg egy adott napszak), és az adott időszelethez kapcsolódóan a felelős megpróbálja segíteni az oda tartozó adorálókat minden tekintetben - legyen az egy megüresedett óra ideiglenes betöltésének megszervezése, vagy akár új adoráló fogadása. 
 
 Ha valaki lemondja a vállalt időpontot ki az, aki mást keres? És kikből válogathat? Vannak akik ilyen esetekre mobilizálhatók?
------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------
+Egy vállalt időpont lemondásakor körülbelül ugyanaz a teendő, mint amikor valaki egy-egy alkalommal nem tud elmenni, csak annyi a különbség, hogy nem ideiglenesen, hanem állandó helyettesítésről van szó. 
+
+Egy-egy hiányzásra jó előre fel kell készülni. A felkészülés azt jelenti, hogy az **adoráló** keres helyettesítőt. Nem az óra, a napszak vagy az általános koordinátorra kell gondolni akkor, amikor valaki helyettest keres, hanem a családra, a rokonokra, az ismerősökre, a közösségre, a plébániaközösségre. Onnan kell megpróbálni helyettest keresni elsősorban.
+
+Helyettes keresése egyébként nem kötődik egy-egy előre tudott hiányzáshoz, vagy az óra lemondásához. Mindenkinek javasolt az, hogy gondolkodjon el ezen, és próbálja megtalálni környezetében azt a 2-3 embert/közösséget (tehát nem egyet!), akikre majd számíthat akkor, amikor valóban szükség lesz rá. Ilyen segítségre előbb-utóbb mindenkinek szüksége lesz, egy adoráló sem gondolhat arra, hogy ő kivétel.
+
+Arra a helyzetre is fel kell készülni, amikor a vállat óra végén nem érkezik meg a váltás. Ilyen eset bármikor előfordulhat, és nagyon fontos, hogy kéznél legyenek az ilyenkor szükséges információk:
+-	Az adoráló tudja meg előre, hogy kia az, aki a soron következő órát vállalta. Legyen a telefonszáma kéznél, és bátran fel kell hívni azonnal, ha nem érkezik meg időben. 
+-	Az adoráló azt is tudakolja meg, hogy ki a következő óra órafelelőse, és mi az ő elérhetősége. Ha a soron következő órát vállalót nem lehet épp elérni, az ő órafelelősét érdemes felhívni.
+A soron következő órát vállaló személy és annak órafelelőse meg fogja tudni oldani a problémát. 
+Ezeket az információkat legegyszerűbben a következő órát vállalóval elbeszélgetve lehet beszerezni, de akár az Örökimádás weboldalára bejelentkezve is hozzáférhetők ezek az információk. Ehhez viszont szükséges mobil internet és "okostelefon".
+
+Előfordulhat az is, hogy valakinek, aki ilyen helyzetbe kerül, el kell mennie mielőtt a váltása megérkezik. Az a kérés az adorálók felé, hogy ilyen esetben feltétlen hívják fel a fent említett személyeket, hogy azok mihamarabb megérkezzenek, vagy egyéb módon gondoskodjanak a Szentségimádás folytonosságáról. Természetesen, amennyiben egyiküket sem lehet elérni, akkor a napszakfelelőshöz, végső soron pedig az általános koordinátorhoz is lehet fordulni.
 
 Ki az, aki összehangolja a vállalásokat? Hiszen lehet, hogy egyes napszakokban, órákban több ember is van máskor meg egy sem.
 ----------------------------------------------------------------------------------------------------------------------------
-Induláskor (2014 nyara) nagyon sok jelentkezőnk volt, körülbelül 370 fő. A sok jelentkezési lapot - a rajta található információk alapján - a négy napszaknak megfelelően négy csoportra osztottuk, és azokat a négy napszak-koordinátor kapta meg. Igen sok munka és telefonálgatás, egyeztetések árán, több hét alatt a sok jelentkezőből kialakult az a beosztás, amely teljes fedettséget biztosított. Természetesen ez nem volt egyenletes. Majdnem minden délelőtti órára sikerült két adorálót beosztani, míg a hajnali órákkal bizony gondok voltak. Voltak adorálók akik - ideiglenesen - több, akár naponta egy-egy órát vállaltak. Ilyen eset van a mai napig is - nem szerencsés, de sajnos szükség van rá. 
+Induláskor (2014 nyara) nagyon sok jelentkezőnk volt, körülbelül 370 fő. A sok jelentkezési lapot - a rajta található információk alapján - a négy napszaknak megfelelően négy csoportra osztottuk, és azokat a négy napszak-koordinátor kapta meg. Igen sok munka és telefonálgatás, egyeztetések árán, több hét alatt a sok jelentkezőből kialakult az a beosztás, amely teljes fedettséget biztosított. Természetesen ez nem volt egyenletes. Majdnem minden délelőtti órára sikerült két adorálót beosztani, míg a hajnali órákkal bizony gondok voltak. Bár a 370 egy igen szép szám, az egyeztetések során nagyon sokszor kiderült, hogy nem gondolták komolyan a jelentkezést, és így valójában egy jóval kisebb számú adorálóval indult el az Örökimádás. Voltak adorálók akik - ideiglenesen - több órát is vállaltak. Sok ilyen eset van a mai napig is - nem szerencsés, de sajnos szükség van rá. 
