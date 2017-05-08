@@ -42,3 +42,13 @@ Előfordulhat az is, hogy valakinek, aki ilyen helyzetbe kerül, el kell mennie 
 Ki az, aki összehangolja a vállalásokat? Hiszen lehet, hogy egyes napszakokban, órákban több ember is van máskor meg egy sem.
 ----------------------------------------------------------------------------------------------------------------------------
 Induláskor (2014 nyara) nagyon sok jelentkezőnk volt, körülbelül 370 fő. A sok jelentkezési lapot - a rajta található információk alapján - a négy napszaknak megfelelően négy csoportra osztottuk, és azokat a négy napszak-koordinátor kapta meg. Igen sok munka és telefonálgatás, egyeztetések árán, több hét alatt a sok jelentkezőből kialakult az a beosztás, amely teljes fedettséget biztosított. Természetesen ez nem volt egyenletes. Majdnem minden délelőtti órára sikerült két adorálót beosztani, míg a hajnali órákkal bizony gondok voltak. Bár a 370 egy igen szép szám, az egyeztetések során nagyon sokszor kiderült, hogy nem gondolták komolyan a jelentkezést, és így valójában egy jóval kisebb számú adorálóval indult el az Örökimádás. Voltak adorálók akik - ideiglenesen - több órát is vállaltak. Sok ilyen eset van a mai napig is - nem szerencsés, de sajnos szükség van rá. 
+
+Ki vehet részt az Örökimádáson?
+-------------------------------
+Az Örökimádáson személyesen lehet részt venni, cím: Vác, Köztársaság út 1, Szent Anna Templom ([térképen itt]( https://www.google.hu/maps/place/Szent+Anna-templom/@47.7762051,19.1289969,15z/data=!4m5!3m4!1s0x0:0x881aba1b44645839!8m2!3d47.7762051!4d19.1289969))
+
+Bármikor be lehet térni, az Örökimádáson bárki, bármikor részt vehet. Na jó, itt érdemes picit pontosítani: bárki aki keresztény hívő, részt vehet. Nem keresztények nem tudnak "részt venni", maximum meglátogathatják a helyet.
+
+Az Örökimádásra jelentkezni akkor szükséges, ha valaki folyamatosan, minden héten, egy bizonyos órában, részt szeretne venni az Örökimádáson, és segíteni akar másoknak, hogy más is látogathassa a kápolnát - hiszen a kápolna nyitva tartása csak úgy lehetséges, ha legalább egy hívő folyamatosan jelen van. 
+Ebben az esetben, egyszeri jelentkezés után, mint az adott óra regisztrált adorálója, részt vehet az Örökimádásban, egészen addig, amíg csak vállalni tudja, ideálisan nagyon hosszú ideig.
+
