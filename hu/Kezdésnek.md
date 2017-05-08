@@ -16,8 +16,7 @@ tehát, akkor van nagyjából teljes létszám, ha minden órára van 2 személy
 
 Vácott mi a helyzet, hány adoráló van?
 ----------------------------------------
-Körülbelül x adorálóval kezdtük, az ideális létszámot (336) még sohasem értük el, jelenleg körülbelül 246 aktív adoráló van (2017 májusa), 
-és ahogy az látszik [itt](http://vacitemplom.piarista.hu/adoration/index.php), az egyenletlen eloszlás miatt - ami teljesen érthető - így is van sok olyan óra, ahol nagyon oda kell figyelni arra, hogy mindig folyamatos legyen a Szentségimádás.
+Körülbelül 250 adorálóval kezdtük, az ideális létszámot (336) még sohasem értük el, a létszám viszonylag stabil, azóta is a 250 körül mozog, jelenleg körülbelül 246 aktív adoráló van (2017 májusa). Ahogy az látszik [itt](http://vacitemplom.piarista.hu/adoration/index.php), az egyenletlen eloszlás miatt - ami teljesen érthető - így is van sok olyan óra, ahol nagyon oda kell figyelni arra, hogy mindig folyamatos legyen a Szentségimádás.
 
 Mi az egyes felelősök konkrét feladata?
 ---------------------------------------
