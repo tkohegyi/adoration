@@ -82,3 +82,12 @@ Néhány javasolt intézkedés:
 
 Mindig felmerül az a gondolat, hogy az éjszakai órákra bezárjuk a kápolnát, és csak azoknak adunk kulcsot/bejárási lehetőséget, akik adorálnak. De ez nem járható út. Pont az a cél, hogy bárki - jószándékú - betérhessen, ehhez pedig nyitott ajtókra van szükség.
 
+Kérdések, melyek megválaszolásra várnak:
+----------------------------------------
+- Tartalék lista hogyan működik? Kik látják? Koordinátorok csak vagy adorálókkal is megosztják is? Tapasztalatok ezzel kapcsolatban?
+- Adatcsere az informatikus és a napszakkoordinátorok között?
+- Adatbiztonság, Adattárolás, Személyiségi jogok?
+- Lakcímet, miért kérték el az emberektől, van-e lehet-e jelentősége?
+- Nagy ünnepek, ill. nyár előtt megkérdezik-e a Szentségőrzőket, hogy mikor érnek rá, és mit vállalnak? Vagy ők jelentkeznek?
+- Szoktak-e olyan koordinációs meetinget tartani ahova adorálókat is várnak tapasztalatcserére? 
+
