@@ -16,7 +16,17 @@ tehát, akkor van nagyjából teljes létszám, ha minden órára van 2 személy
 
 Vácott mi a helyzet, hány adoráló van?
 ----------------------------------------
-Körülbelül 250 adorálóval kezdtük, az ideális létszámot (336) még sohasem értük el, a létszám viszonylag stabil, azóta is a 250 körül mozog, jelenleg körülbelül 246 aktív adoráló van (2017 májusa). Ahogy az látszik [itt](http://vacitemplom.piarista.hu/adoration/index.php), az egyenletlen eloszlás miatt - ami teljesen érthető - így is van sok olyan óra, ahol nagyon oda kell figyelni arra, hogy mindig folyamatos legyen a Szentségimádás.
+Körülbelül 250 adorálóval kezdtük, az ideális létszámot (336) még sohasem értük el, a létszám viszonylag stabil, azóta is a 250 körül mozog, jelenleg körülbelül 243 aktív adoráló van (2017 májusa). Ahogy az látszik [itt](http://vacitemplom.piarista.hu/adoration/index.php), az egyenletlen eloszlás miatt - ami teljesen érthető - így is van sok olyan óra, ahol nagyon oda kell figyelni arra, hogy mindig folyamatos legyen a Szentségimádás.
+
+Az adorálók száma egyébként úgy nagyjából az Örökimádás biztonságosságával azaz folyamatosságával összefüggésben van, nagyjából a következők alapján:
+
+|Adorálók száma|Értelmezés|
+|--------------|----------|
+|0 .. 249|Kritikus szint. Ennyi adorálóval nem nagyon érdemes elindítani egy Örökimádást. Egy már működő örökimádás esetében határozott erőfeszítéseket kell tenni a résztvevőknek, hogy a létszám növekedjen.|
+|250 .. 279|Az Örökimádás ekkora létszámmal már működni tud, de folyamatos odafigyelés szükséges a szervezőktől, hogy az esetleges hiányzások ne okozzanak fennakadást, valamint a létszám növelése még továbbra is cél.|
+|280 .. 336|Az Örökimádás különösebb gond nélkül működik.|
+|336 .. 585|Ideális létszám egy Örökimádás működéséhez.|
+|586 .. |Ez a létszám már sok adorálónak számít egy adott Örökimádás esetében, és érdemes elgondolkodni egy másik Örökimádás elindításában.|
 
 Mi az egyes felelősök konkrét feladata?
 ---------------------------------------
