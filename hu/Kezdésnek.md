@@ -51,3 +51,34 @@ Bármikor be lehet térni, az Örökimádáson bárki, bármikor részt vehet. N
 Az Örökimádásra jelentkezni akkor szükséges, ha valaki folyamatosan, minden héten, egy bizonyos órában, részt szeretne venni az Örökimádáson, és segíteni akar másoknak, hogy más is látogathassa a kápolnát - hiszen a kápolna nyitva tartása csak úgy lehetséges, ha legalább egy hívő folyamatosan jelen van. 
 Ebben az esetben, egyszeri jelentkezés után, mint az adott óra regisztrált adorálója, részt vehet az Örökimádásban, egészen addig, amíg csak vállalni tudja, ideálisan nagyon hosszú ideig.
 
+Mik az esti-éjszakai órákkal kapcsolatos tapasztalatok, és hogyan kezeljük a különböző helyzeteket?
+---------------------------------------------------------------------------------------------------
+Ez a kérdés rögtön felmerül, amikor a hajléktalanok is felfedezik a kápolnát, és bejönnek pihenni, akár éjszakára aludni. Rendkívül kellemetlen az ilyen helyzet, és bizony előfordul, és vannak olyan esetek is, amelyek bizony komolyan veszélyeztetik az Örökimádás fennmaradását. Akik órákat vállalnak nem biztonsági őrök, hanem sokszor idős hölgyek. Nem várható el tőlük az, hogy szembeszálljanak olyanokkal, akik a hely szellemét figyelmen kívül hagyják, és másokra nincsenek tekintettel.
+
+Először is azok, akik bejönnek, alapvetően teljes joggal teszik ezt. Jézust imádni üdvös mindenki számára, legyen bármilyen társadalmi helyzetben. Látogatókra a kápolnában mindig számíthatunk, és örömmel várunk mindenkit. Ugyanakkor jogos igényünk, sőt elvárásunk az, hogy aki betér, tudatában legyen annak. hogy a kápolna nem az övé, nem egyedül van ott, egy közös helyet használ, amelynek vannak szabályai, többek között ezek:
+
+- A kápolna látogatásának célja a csendes szentségimádásban való részvétel, az Úrral való találkozás legyen, és nem más.
+- Minden szentségimádó az Úrral való találkozásra készen lépjen be a kápolnába. 
+- Jelenlétével és viselkedésével más szentségimádók imáját/imádását nem zavarhatja.
+
+Had említsek néhány példát a fenti szabályok megszegésére:
+- Ha valaki belép a kápolnába, és kéreget, vagy hangoskodik, vagy botrányt okoz, annak nem a csendes szentségimádás a célja. 
+- Ha valakinek az öltözéke nem tiszta, esetleg kihívó/megbotránkoztató, akkor nem készült fel megfelelően/méltóan az Úrral való találkozásra.
+- Ha valaki - bár csendben van - de illata átható, behoz állatokat (legyen az poloska vagy egy házi kedvenc), vagy fertőző beteg, bizony akkor jelenléte más szentségimádók imáját zavarja.
+ 
+Ezeket az embereket - nyugodtan, és nem hangoskodva - fel kell szólítanunk arra, hogy távozzanak, és jöjjenek akkor vissza, ha majd látogatásuknak valóban az Úrral való találkozás a célja és arra hajlandók megfelelően felkészülni és viselkedni.
+
+Tisztában vagyok azzal, hogy a fentieket leírni könnyű, és az adott esetben lehet, hogy nehéz megvalósítani.
+Ne feledjétek azonban soha, hogy a szentségimádó soha sincs egyedül, mert az Úr vele van. 
+Belőle kell meríteni az erőt ezeknek a kényes helyzeteknek az Úrnak tetsző megoldásában.
+
+Néhány javasolt intézkedés:
+- Érdemes utánajárni, hogy hol vannak éjszakai hajléktalanszállók, és oda lehet irányítani őket.
+- Legyen tilos a kápolnában kéregetni és legyen tilos adni is. Aki szeretne adni, az menjen ki (az utcára), és ott adja oda, amit az illetőnek szán, és hívja fel egyben az illető figyelmét arra, hogy a kápolnában a kéregetés tilos.
+- Mindenféleképpen ki kell küldeni őket a kápolnából. Akinek erre megvan a lelki ereje, nyugodtan mondhatja: "Jézus Krisztus nevében felszólítom, hogy hagyja el ezt a helyet."
+- Van, aki nem akar menni. Ezért a kápolnában legyen egy jól látható telefonszám, ami egy közvetlen szám a rendőrséghez. Ha szép szóval nem lehet elmenésre bírni az illetőt, erőszakot semmiféleképpen nem szabad alkalmazni. Fel kell hívni a számot, a rendőrök jönnek, és kitessékelik a kápolnából. Emiatt minden adorálónál, mindig legyen ott a saját telefonja, hogy szükség esetén tudja használni.
+- Lehetőség szerint férfiak vállalják az esti/éjszakai órákat, hölgyet pedig ne hagyjunk egyedül. 
+- A kápolna legyen rendesen szellőztethető, legyen elérhető közelségben takarító eszköz, és legyen megszervezve a kápolna rendszeres takarítása.
+
+Mindig felmerül az a gondolat, hogy az éjszakai órákra bezárjuk a kápolnát, és csak azoknak adunk kulcsot/bejárási lehetőséget, akik adorálnak. De ez nem járható út. Pont az a cél, hogy bárki - jószándékú - betérhessen, ehhez pedig nyitott ajtókra van szükség.
+
