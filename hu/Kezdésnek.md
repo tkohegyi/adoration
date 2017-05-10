@@ -7,10 +7,10 @@ de van betegség, szabadság, ilyen-olyan egyéb halaszthatatlan ügy, illetve v
 tehát, akkor van nagyjából teljes létszám, ha minden órára van 2 személy is - össz 336. Ez lenne nagyjából optimális. A tényleges és reális szám valahol a kettő között van, de mindig érvényes a szabály: minél több annál jobb.
 - *Szervezők*, akik koordinálják az Örökimádást, úgymint:
   - egy egyházi vezető (pap)
-  - egy világi vezető, 
-  - valakire, aki ért a számítógépekhez, és van ideje adminisztrálgatni a változásokat 
-  - 4 napszakfelelősre
-  - valamint minden órának saját órafelelőse van (ez 24 ember). 
+  - egy világi vezető (általános koordinátor), 
+  - valakire, aki ért a számítógépekhez, és van ideje adminisztrálgatni a változásokat (adminisztrátor)
+  - 4 napszakfelelősre (napszak-koordinátor)
+  - valamint minden órának saját órafelelőse van (óra-koordinátor, ez 24 ember). 
   A szervezők egyébként - normális esetben - egyben adorálók is, valamint több funkciót is betölthet egy személy, bár ezt nem érdemes túlzásba vinni.
 - Végül, de nem utolsósorban, szükséges egy jó nagy adag segítség az Úrtól.
 
@@ -92,12 +92,21 @@ Néhány javasolt intézkedés:
 
 Mindig felmerül az a gondolat, hogy az éjszakai órákra bezárjuk a kápolnát, és csak azoknak adunk kulcsot/bejárási lehetőséget, akik adorálnak. De ez nem járható út. Pont az a cél, hogy bárki - jószándékú - betérhessen, ehhez pedig nyitott ajtókra van szükség.
 
+Hogyan történik az adatcsere az informatikus és a napszakkordinátorok között?
+-----------------------------------------------------------------------------
+Az adorálókat tartalmazó adatbázishoz minden napszakkordinátornak van hozzáférése és olvasási joga. Amennyiben valamit módosítani kell, elég bármilyen írásos módon - például levélben - értesíteni azt a személyt, aki az adatbázis írni is tudja. Vácon ez a személy az általános koordinátor. Az információ alapján az adatbázis frissítésre kerül. Ugyanez az adatbázis van használva a weboldalhoz, ahol az adorálók be tudnak lépni és láthatják a rájuk vonatkozó adatokat.
+
+Adatbiztonság, adattárolás, személyiségi jogok?
+-----------------------------------------------
+Ezzel kapcsolatban törvényi előírás van a megfelelő adatkezelésre, amelyhez szabályzatot hoztunk létre, ami itt érhető el: [Adatkezelési Szabályzat - Váci Örökimádás](http://vacitemplom.piarista.hu/adoration/resources/Adatkezel%C3%A9siSzab%C3%A1lyzat.pdf)
+
+Lakcímet, miért kérték el az emberektől, van-e, lehet-e jelentősége?
+--------------------------------------------------------------------
+Az Örökimádás indulásakor, az első jelentkezők esetében volt ez az adat - nem kötelező jelleggel - elkérve. Akkor annak az volt a jelentősége, hogy sokan nem tudtak más kapcsolati pontot megadni, például nem volt telefonszámuk, ahol el tudtuk érni őket. Ebben a helyzetben, akkor amikor az első beosztásra sor került, volt eset, amikor a koordinátorok személyesen keresték fel a jelentkezőket, hogy velük a beosztást megbeszéljék. Jelenleg ezt az adatot még opcionális módon sem kérjük el. Az [itt](http://vacitemplom.piarista.hu/adoration/orok-jelentkezes.php) látható jelentkezési lapnál, a tapasztalatok alapján, már csak a legfontosabb és valóban szükséges adatokat kérjük el a jelentkezőktől.
+
 Kérdések, melyek megválaszolásra várnak:
 ----------------------------------------
 - Tartalék lista hogyan működik? Kik látják? Koordinátorok csak vagy adorálókkal is megosztják is? Tapasztalatok ezzel kapcsolatban?
-- Adatcsere az informatikus és a napszakkoordinátorok között?
-- Adatbiztonság, Adattárolás, Személyiségi jogok?
-- Lakcímet, miért kérték el az emberektől, van-e lehet-e jelentősége?
 - Nagy ünnepek, ill. nyár előtt megkérdezik-e a Szentségőrzőket, hogy mikor érnek rá, és mit vállalnak? Vagy ők jelentkeznek?
 - Szoktak-e olyan koordinációs meetinget tartani ahova adorálókat is várnak tapasztalatcserére? 
 
