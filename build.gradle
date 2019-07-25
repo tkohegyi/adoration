@@ -1,0 +1,49 @@
+subprojects {
+    ext.adorAppVersion=0.1
+
+    group = 'org.rockhill.adorapp'
+    apply plugin: 'idea'
+    apply plugin: 'checkstyle'
+    apply plugin: 'java'
+    apply plugin: 'maven'
+
+    version = "$adorAppVersion"+'.'+"$buildNumber"
+
+    repositories {
+        jcenter()
+        maven { url "http://repo.maven.apache.org/maven2" }
+    }
+
+// Source and target info
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    task sourceZip(type: Zip) {
+        from 'src'
+        baseName = "$componentName"
+        classifier 'sources'
+        extension 'jar'
+    }
+
+    checkstyle.configFile = file(new File(".").absolutePath + "/config/checkstyle/checkstyle.xml")
+    checkstyle.configProperties = ['samedir' : new File(".").absolutePath + "/config/checkstyle"]
+    checkstyle.toolVersion = '5.6'
+    checkstyle.ignoreFailures = true
+
+    subprojects {
+        task allDeps(type: DependencyReportTask) {}
+    }
+}
+
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.6.2"
+    }
+}
+
+apply plugin: "org.sonarqube"

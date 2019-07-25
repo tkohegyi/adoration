@@ -1,0 +1,103 @@
+description= 'AdorApp'
+
+allprojects  {
+    apply plugin: 'jacoco'
+}
+
+task docs(type: Javadoc) {
+    destinationDir = file("$buildDir/docs/all")
+    options.memberLevel = JavadocMemberLevel.PRIVATE
+    for (subproject in project.subprojects) {
+        if (subproject.plugins.hasPlugin(JavaPlugin)){
+            source += files(subproject.sourceSets.main.java)
+            classpath += files(subproject.sourceSets.main.compileClasspath)
+        }
+    }
+}
+
+task checkstyle(type: Checkstyle) {
+    dependsOn subprojects.checkstyleMain
+}
+
+configurations {
+    jacoco {
+    }
+}
+
+dependencies {
+    jacoco 'org.jacoco:org.jacoco.core:0.8.0'
+}
+
+task deleteRelease(type: Delete) {
+    //delete rootProject.rootDir.absolutePath + '/adorApp-application/release'
+}
+
+def releaseCopySpec = project.copySpec {
+   from(rootProject.rootDir.absolutePath + '/adorApp-application/modules/adorApp-engine/') {
+     include 'adorApp.conf.properties'
+     include 'readme.txt'
+   }
+    from(rootProject.rootDir.absolutePath + '/config/'){
+        include 'security/adorApp.cer'
+        include 'security/adorApp.keystore'
+    }
+    from(rootProject.rootDir.absolutePath + '/adorApp-application/modules/adorApp-engine/build/libs/') {
+     include "adorApp-$adorAppVersion.$buildNumber" + '.jar'
+   }
+}
+
+task copyToRelease(type: Copy) {
+    dependsOn deleteRelease
+    into rootProject.rootDir.absolutePath + '/release'
+    with releaseCopySpec
+}
+
+task release(type: Zip) {
+    dependsOn copyToRelease
+    archiveName = "adorApp-application-$adorAppVersion.$buildNumber"+'.zip'
+    from rootProject.rootDir.absolutePath + '/release'
+}
+
+subprojects {
+
+    repositories {
+        maven { url "https://repository.jboss.org/nexus/content/groups/public" }
+    }
+  
+    dependencies {
+        compile(group: 'org.springframework', name: 'spring-context', version:'5.0.12.RELEASE') {
+            exclude(module: 'commons-logging')
+        }
+	    compile group: 'org.springframework', name: 'spring-webmvc', version:'5.0.12.RELEASE'
+	    compile group: 'org.aspectj', name: 'aspectjrt', version:'1.6.9'
+	    testCompile group: 'org.mockito', name: 'mockito-all', version:'1.9.5'
+	    testCompile(group: 'org.testng', name: 'testng', version:'6.8.5') {
+            exclude(module: 'junit')
+        }
+    }
+
+    def checkstyleCommonReportDir = new File(rootProject.rootDir.absolutePath , '/adorApp-application/build/reports/checkstyle')
+    def checkstyleSubProjectReportFile = new File(project.buildDir.absolutePath , '/reports/checkstyle/main.xml')
+    checkstyle.configFile = file("$rootProject.rootDir/config/checkstyle/checkstyle.xml")
+    checkstyle.configProperties = ['samedir' : "$rootProject.rootDir/config/checkstyle"]
+    checkstyle.toolVersion = '5.6'
+    checkstyle.ignoreFailures = true
+    checkstyleMain.classpath += configurations.compile
+    checkstyleTest.classpath += configurations.compile
+    checkstyleMain {
+        doLast {
+            ant.xslt(in: reports.xml.destination,
+            style: new File("$rootProject.rootDir/config/checkstyle/checkstyle-noframes-sorted.xsl"),
+            out: new File(checkstyleCommonReportDir, project.name + '-main.html'))
+            copy {  //collect xml-s
+                from checkstyleSubProjectReportFile
+                into checkstyleCommonReportDir
+                rename { String filename -> project.name + '-main.xml' }
+            }
+        }
+    }
+    
+    test.useTestNG()
+}
+
+

@@ -1,0 +1,15 @@
+.idea
+.gradle
+.settings
+.project
+.classpath
+.checkstyle
+adorApp-application/modules/adorApp-engine/log
+*.iml
+*.ipr
+*.iws
+build
+bin
+release
+out
+

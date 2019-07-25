@@ -1,0 +1,12 @@
+rootProject.name = 'adorApp'
+
+include 'adorApp-application'
+include 'adorApp-application:adorApp-core'
+include 'adorApp-application:adorApp-webapp'
+include 'adorApp-application:adorApp-engine'
+include 'adorApp-application:adorApp-database'
+
+for (subproject in (project(':adorApp-application')).children){
+	subproject.projectDir = file("$rootDir/adorApp-application/modules/$subproject.name")
+}
+
