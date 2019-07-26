@@ -16,6 +16,7 @@ def configFileDefaultPath = "$project.projectDir/adorApp.conf.properties";
 if (!hasProperty("configFilePath")) {
     project.ext.configFilePath = configFileDefaultPath
 }
+
 run{
     args = ["$configFilePath"];
 }
@@ -48,7 +49,7 @@ shadowJar {
             'build.properties',
             'about.html']
 
-        archiveName = "ador-$adorAppVersion.$buildNumber"+'.jar'
+        archiveName = "adorApp-$adorAppVersion.$buildNumber"+'.jar'
 }
 
 jar.finalizedBy shadowJar

@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
          version="3.0">
     <context-param>
-        <param-comment>contextConfigLocation</param-comment>
+        <param-name>contextConfigLocation</param-name>
         <param-value>
             classpath:webapp/WEB-INF/spring-security.xml
             classpath:conf/spring/engine-application-context.xml
@@ -14,16 +14,16 @@
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
     <servlet>
-        <servlet-comment>appServlet</servlet-comment>
+        <servlet-name>appServlet</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
         <init-param>
-            <param-comment>contextConfigLocation</param-comment>
+            <param-name>contextConfigLocation</param-name>
             <param-value>classpath:webapp/WEB-INF/spring/appServlet/servlet-context.xml</param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet-mapping>
-        <servlet-comment>appServlet</servlet-comment>
+        <servlet-name>appServlet</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
     <session-config>
@@ -31,13 +31,13 @@
     </session-config>
     <!-- Spring Security -->
     <filter>
-        <filter-comment>springSecurityFilterChain</filter-comment>
+        <filter-name>springSecurityFilterChain</filter-name>
         <filter-class>org.springframework.web.filter.DelegatingFilterProxy
         </filter-class>
     </filter>
 
     <filter-mapping>
-        <filter-comment>springSecurityFilterChain</filter-comment>
+        <filter-name>springSecurityFilterChain</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 

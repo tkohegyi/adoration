@@ -1,12 +1,11 @@
 package org.rockhill.adorApp.web;
-import java.net.URL;
 
 import org.eclipse.jetty.server.*;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.webapp.WebAppContext;
-
 import org.rockhill.adorApp.web.service.ServerException;
-import org.rockhill.adorApp.web.service.WebAppStopper;
+
+import java.net.URL;
 
 /**
  * Responsible for configuring, starting and stopping the jetty server.
@@ -14,7 +13,6 @@ import org.rockhill.adorApp.web.service.WebAppStopper;
 
 public class WebAppServer {
 
-    private static final String SHUTDOWN_URL = "/adorationsecure/shutdown";
     private static final int STOP_TIMEOUT = 5000;
     private static final String WEB_XML_LOCATION = "/WEB-INF/web.xml";
     private static final String WEBAPP_ROOT = "webapp";
@@ -22,6 +20,7 @@ public class WebAppServer {
 
     /**
      * Creates and configures the webapp server.
+     *
      * @param port the port the server listens on
      */
     public void createServer(final Integer port, final boolean isHttpsInUse) {

@@ -1,26 +1,5 @@
 <configuration>
-  <appender comment="CONSOLE-APPENDER" class="ch.qos.logback.core.ConsoleAppender">
-    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-      <level>INFO</level>
-    </filter>
-    <encoder>
-      <pattern>%d{HH:mm:ss} - %msg%nopex%n</pattern>
-    </encoder>
-  </appender>
-
-  <appender comment="EMPTY" class="ch.qos.logback.core.ConsoleAppender">
-    <filter class="ch.qos.logback.classic.filter.LevelFilter">
-      <level>INFO</level>
-      <onMatch>DENY</onMatch>
-      <onMismatch>DENY</onMismatch>
-    </filter>
-    <encoder>
-      <pattern>%X{messageId} - %msg%n</pattern>
-    </encoder>
-  </appender>
-
-
-  <appender comment="FILE-APP" class="ch.qos.logback.core.rolling.RollingFileAppender">
+  <appender name="FILE-APP" class="ch.qos.logback.core.rolling.RollingFileAppender">
     <file>log/adorApplog.txt</file>
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
       <fileNamePattern>log/adorApplog%d{yyyyMMdd}.txt</fileNamePattern>
@@ -31,20 +10,42 @@
     </encoder>
   </appender>
 
-  <!--logger comment="org.hibernate" level="TRACE">
-    <appender-ref ref="FILE-APP" />
-  </logger-->
+  <appender name="CONSOLE-APPENDER" class="ch.qos.logback.core.ConsoleAppender">
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>INFO</level>
+    </filter>
+    <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+      <evaluator>
+        <expression>return event.getLoggerName().contains("SaxonCompilerErrorListener");</expression>
+        <expression>return event.getMessage().contains("org.springframework.beans.factory.BeanCreationException");</expression>
+      </evaluator>
+      <OnMismatch>NEUTRAL</OnMismatch>
+      <OnMatch>DENY</OnMatch>
+    </filter>
+    <encoder>
+      <pattern>%d{HH:mm:ss} - %msg%nopex%n</pattern>
+    </encoder>
+  </appender>
 
-    <logger comment="org.rockhill.adorApp" level="INFO">
-        <appender-ref ref="CONSOLE-APPENDER" />
-    </logger>
+  <appender name="DEV" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+    </encoder>
+  </appender>
 
-  <logger comment="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping" level="ERROR">
-    <appender-ref ref="FILE-APP" />
-  </logger>
-  
-  <logger comment="org.springframework.web.context.support.XmlWebApplicationContext" level="ERROR">
-    <appender-ref ref="FILE-APP" />
+  <appender name="EMPTY" class="ch.qos.logback.core.ConsoleAppender">
+    <filter class="ch.qos.logback.classic.filter.LevelFilter">
+      <level>INFO</level>
+      <onMatch>DENY</onMatch>
+      <onMismatch>DENY</onMismatch>
+    </filter>
+    <encoder>
+      <pattern>%X{messageId} - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <logger name="org.rockhill.adorApp" level="INFO">
+    <appender-ref ref="CONSOLE-APPENDER" />
   </logger>
 
   <root level="INFO">

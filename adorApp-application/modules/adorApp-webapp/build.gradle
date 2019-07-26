@@ -10,6 +10,7 @@ dependencies {
     compile group: 'org.eclipse.jetty', name: 'jetty-servlets', version:'9.2.27.v20190403'
     compile group: 'org.eclipse.jetty', name: 'jetty-jsp', version:'9.2.27.v20190403'
     compile group: 'ch.qos.logback', name: 'logback-classic', version:'1.0.13'
+    compile group: 'org.codehaus.janino', name: 'janino', version:'2.6.1'
     compile(group: 'org.slf4j', name: 'jcl-over-slf4j', version:'1.7.0')
     compile project(':adorApp-application:adorApp-core')
     compile project(':adorApp-application:adorApp-database')

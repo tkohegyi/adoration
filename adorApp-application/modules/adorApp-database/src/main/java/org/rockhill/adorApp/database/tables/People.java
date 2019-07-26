@@ -23,6 +23,7 @@ public class People {
     private Date dhcSignedDate;
     private String coordinatorComment;
     private String visibleComment;
+    private String languageCode;
 
     public People() {
         // this form used by Hibernate
@@ -87,13 +88,9 @@ public class People {
         this.mobileVisible = mobileVisible;
     }
 
-    @Column(name = "email", nullable = true)
+    @Column(name = "email", nullable = false)
     public String getEmail() {
-        if (email != null) {
-            return email;
-        } else {
-            return "";
-        }
+        return email;
     }
 
     public void setEmail(String email) {
@@ -165,6 +162,15 @@ public class People {
 
     public void setVisibleComment(String visibleComment) {
         this.visibleComment = visibleComment;
+    }
+
+    @Column(name = "languageCode", nullable = false)
+    public String getLanguageCode() {
+        return languageCode;
+    }
+
+    public void setLanguageCode(String languageCode) {
+        this.languageCode = languageCode;
     }
 
 }

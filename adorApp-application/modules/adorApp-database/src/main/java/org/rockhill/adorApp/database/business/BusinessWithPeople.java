@@ -105,7 +105,7 @@ public class BusinessWithPeople {
         if (sessionFactory != null) {
             Session session = sessionFactory.openSession();
             session.beginTransaction();
-            String hql = "from People as P where P.email = :email";
+            String hql = "from People as P where P.email like :email";
             Query query = session.createQuery(hql);
             query.setParameter("email", email);
             result = (List<People>) query.list();

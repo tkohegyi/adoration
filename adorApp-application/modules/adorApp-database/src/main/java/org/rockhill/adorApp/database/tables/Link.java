@@ -13,7 +13,8 @@ public class Link {
     private Long personId;
     private Long hourId;
     private Integer priority;
-    private String comment;
+    private String adminComment;
+    private String publicComment;
 
     public Link() {
         // this form used by Hibernate
@@ -56,17 +57,29 @@ public class Link {
         this.priority = priority;
     }
 
-    @Column(name = "comment", nullable = true)
-    public String getComment() {
-        if (comment != null) {
-            return comment;
+    @Column(name = "adminComment", nullable = true)
+    public String getAdminComment() {
+        if (adminComment != null) {
+            return adminComment;
         } else {
             return "";
         }
     }
 
-    public void setComment(String comment) {
-        this.comment = comment;
+    public void setAdminComment(String adminComment) {
+        this.adminComment = adminComment;
     }
 
+    @Column(name = "publicComment", nullable = true)
+    public String getPublicComment() {
+        if (publicComment != null) {
+            return publicComment;
+        } else {
+            return "";
+        }
+    }
+
+    public void setPublicComment(String publicComment) {
+        this.publicComment = publicComment;
+    }
 }
