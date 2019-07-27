@@ -5,7 +5,9 @@ public class CurrentUserInformationJson {
     public Long id;
     public String loggedInUserName;
     public String userName;
-    public boolean allowAccessToMenuAppLog;
+    public boolean isRegisteredAdorator;
+    public boolean isAdoratorLeader;
+    public boolean isAdoratorAdmin;
 
     public CurrentUserInformationJson() {
         reset();
@@ -16,6 +18,8 @@ public class CurrentUserInformationJson {
         isLoggedIn = false;
         loggedInUserName = "Anonymous";
         userName = loggedInUserName;
-        allowAccessToMenuAppLog = false;
+        isRegisteredAdorator = false;
+        isAdoratorLeader = false;
+        isAdoratorAdmin = false;
     }
 }

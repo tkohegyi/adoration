@@ -14,7 +14,7 @@
 
 .navbar .nav>li>a {
   float: none;
-  padding: 10px 15px 10px;
+  padding: 5px 15px 5px;
   color: white;
   text-shadow: none;
   font-size: 20px;
@@ -97,5 +97,18 @@
 }
 
 .body {
-    background-color: #5e9cf1;
+    background-color: #373737;
+    color: #39C2D7;
+}
+
+hr {
+    color: #39C2D7;
+}
+
+a {
+    color: #ffffff;
+}
+
+a:hover {
+  color: #39C2D7;
 }

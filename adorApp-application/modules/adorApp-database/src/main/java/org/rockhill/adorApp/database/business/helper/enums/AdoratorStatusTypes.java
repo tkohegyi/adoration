@@ -5,7 +5,7 @@ import org.rockhill.adorApp.database.exception.DatabaseHandlingException;
 public enum AdoratorStatusTypes {
     PRE_ADORATOR("Pre-Adorator", 1),
     ADORATOR("Adorator", 2),
-    ADORATOR_HOURLY_COORDINATOR("Horly Coordinator", 3),
+    ADORATOR_HOURLY_COORDINATOR("Hourly Coordinator", 3),
     ADORATOR_DAILY_COORDINATOR("Daily Coordinator", 4),
     ADORATOR_MAIN_COORDINATOR("Main Coordinator", 5),
     ADORATOR_SPIRITUAL_COORDINATOR("Spiritual Coordinator", 6),
