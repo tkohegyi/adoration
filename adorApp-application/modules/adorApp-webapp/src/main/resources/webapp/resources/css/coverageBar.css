@@ -1,0 +1,43 @@
+.coverageTable {
+    width: 80%;
+    table-layout: fixed;
+}
+
+.centerText  {
+    text-align: center;
+}
+
+.topHours {
+    border-bottom: 1px solid white;
+    border-left: 1px solid white;
+    border-right: 1px solid white;
+}
+
+.coverageDaysLeftSide {
+    border-top: 1px solid white;
+    border-bottom: 1px solid white;
+    transform: rotate(-90deg);
+}
+
+.coverageQuarter {
+    border-top: 1px solid white;
+    border-left: 1px solid white;
+    border-right: 1px solid white;
+    text-align: center;
+}
+
+.coverageDay {
+    border-top: 1px solid white;
+    border-bottom: 1px solid white;
+    border-left: 1px solid white;
+    border-right: 1px solid white;
+    text-align: center;
+}
+
+.coverageHour {
+    border-top: 1px solid white;
+    border-bottom: 1px solid white;
+    border-left: 1px solid white;
+    border-right: 1px solid white;
+    text-align: center;
+}

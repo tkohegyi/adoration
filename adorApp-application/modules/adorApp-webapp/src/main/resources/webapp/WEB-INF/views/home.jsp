@@ -16,6 +16,7 @@
 <title>Örökimádás - Vác</title>
 <link href="./../resources/css/bootstrap-4.3.1.min.css" rel="stylesheet" media="screen">
 <link href="./../resources/css/menu.css" rel="stylesheet" media="screen">
+<link href="./../resources/css/coverageBar.css" rel="stylesheet" media="screen">
 <link id="favicon" rel="shortcut icon" type="image/png" href="./../resources/img/favicon.png" />
 </head>
 <body class="body">
@@ -25,9 +26,7 @@
     <fieldset class="form-horizontal">
         <legend class="message-legend"d>Az órák aktuális fedettsége</legend>
         <div class="control-group">
-            <table class="table table-hover table-bordered">
-            <tbody id="coverageMap"/>
-            </table>
+            <%@include file="../include/coverageBar.html" %>
         </div>
     </fieldset>
 
