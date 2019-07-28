@@ -1,24 +1,13 @@
 $(document).ready(function() {
     $("#nav-home").addClass("active");
-
-    $.get('/getLoggedInUserInfo', function(data) {
-        var loggedInUserInfo = JSON.parse(data.loggedInUserInfo[0]).details;
-        if (loggedInUserInfo.isLoggedIn) {
-            $("#loggedInUserLegend").text("Belépve: " + loggedInUserInfo.userName);
-            $("#nav-exit").show();
-        } else {
-            $("#loggedInUserLegend").text("");
-            $("#nav-login").show();
-        }
-        if (loggedInUserInfo.isRegisteredAdorator) {
-            $("#nav-information").show();
-            $("#nav-ador-list").show();
-            $("#nav-ador-status").show();
-        } else {
-            $("#nav-ador-registration").show();
-        }
-        if (loggedInUserInfo.isAdoratorAdmin) {
-            $("#nav-application-log").show();
-        }
-    });
+    setupMenu();
+    setupCoverage();
 });
+
+function setupCoverage() {
+    $.get('/getCoverageInformation', function(data) {
+        var coverageInfo = JSON.parse(data.coverageInfo[0]).details;
+        var dayNames = coverageInfo.dayNames; // eg FRIDAY: "péntek"
+        var hours = coverageInfo.hours; // hour is 0-167,  eg: 75: 0
+    });
+}

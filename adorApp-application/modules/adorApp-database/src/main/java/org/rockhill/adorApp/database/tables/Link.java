@@ -11,7 +11,7 @@ public class Link {
 
     private Long id;
     private Long personId;
-    private Long hourId;
+    private Integer hourId;
     private Integer priority;
     private String adminComment;
     private String publicComment;
@@ -40,11 +40,11 @@ public class Link {
     }
 
     @Column(name = "hourId", nullable = false)
-    public Long getHourId() {
+    public Integer getHourId() {
         return hourId;
     }
 
-    public void setHourId(Long hourId) {
+    public void setHourId(Integer hourId) {
         this.hourId = hourId;
     }
 

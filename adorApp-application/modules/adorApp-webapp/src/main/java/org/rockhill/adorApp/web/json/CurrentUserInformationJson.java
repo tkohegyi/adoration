@@ -5,6 +5,7 @@ public class CurrentUserInformationJson {
     public Long id;
     public String loggedInUserName;
     public String userName;
+    public String languageCode;
     public boolean isRegisteredAdorator;
     public boolean isAdoratorLeader;
     public boolean isAdoratorAdmin;
@@ -18,6 +19,7 @@ public class CurrentUserInformationJson {
         isLoggedIn = false;
         loggedInUserName = "Anonymous";
         userName = loggedInUserName;
+        languageCode = "hu"; //default language of the site
         isRegisteredAdorator = false;
         isAdoratorLeader = false;
         isAdoratorAdmin = false;

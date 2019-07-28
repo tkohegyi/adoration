@@ -2,8 +2,10 @@ package org.rockhill.adorApp.web.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import org.rockhill.adorApp.web.provider.CurrentUserProvider;
+import org.rockhill.adorApp.web.json.CoverageInformationJson;
 import org.rockhill.adorApp.web.json.CurrentUserInformationJson;
+import org.rockhill.adorApp.web.provider.CoverageProvider;
+import org.rockhill.adorApp.web.provider.CurrentUserProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,10 +35,13 @@ import java.util.Map;
 @Controller
 public class HomeController {
     private static final String JSON_LOGGED_IN_USER_INFO = "loggedInUserInfo";
+    private static final String JSON_COVERAGE_INFO = "coverageInfo";
     private static final String JSON_UOO_APP_INFO = "adorAppApplication";
     private final Logger logger = LoggerFactory.getLogger(HomeController.class);
     @Autowired
     CurrentUserProvider currentUserProvider;
+    @Autowired
+    CoverageProvider coverageProvider;
 
     /**
      * Serves requests which arrive to home and sends back the home page.
@@ -121,6 +126,25 @@ public class HomeController {
         String json = gson.toJson(jsonObject);
         jsonString.add(json);
         jsonResponse.put(JSON_UOO_APP_INFO, jsonString);
+        return jsonResponse;
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/getCoverageInformation", method = {RequestMethod.GET})
+    public Map<String, Collection<String>> getCoverageInformation() {
+
+        Map<String, Collection<String>> jsonResponse = new HashMap<>();
+        Collection<String> jsonString = new ArrayList<>();
+
+        CurrentUserInformationJson currentUserInformationJson = currentUserProvider.getUserInformation();
+        CoverageInformationJson coverageInformationJson = coverageProvider.getCoverageInfo(currentUserInformationJson);
+
+        Gson gson = new Gson();
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.add("details", gson.toJsonTree(coverageInformationJson));
+        String json = gson.toJson(jsonObject);
+        jsonString.add(json);
+        jsonResponse.put(JSON_COVERAGE_INFO, jsonString);
         return jsonResponse;
     }
 
