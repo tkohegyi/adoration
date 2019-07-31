@@ -41,3 +41,18 @@
     border-right: 1px solid white;
     text-align: center;
 }
+
+.goodCoverage {
+    background-color: #4dd25d;
+    color: #19ff19;
+}
+
+.badCoverage {
+    background-color: #fdf467;
+    color: black;
+}
+
+.veryBadCoverage {
+    background-color: #fd726f;
+    color: black;
+}

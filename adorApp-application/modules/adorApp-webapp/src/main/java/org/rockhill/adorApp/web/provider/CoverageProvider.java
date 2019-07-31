@@ -35,7 +35,7 @@ public class CoverageProvider {
         for (TranslatorDayNames dayName : TranslatorDayNames.values()) {
             String textId = dayName.toString();
             String value = businessWithTranslator.getTranslatorValue(currentUserInformationJson.languageCode, textId, textId);
-            coverageInformationJson.dayNames.put(textId, value);
+            coverageInformationJson.dayNames.put(textId.toLowerCase(), value);
         }
 
         //fill the hour coverage information
