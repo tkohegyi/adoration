@@ -1,7 +1,7 @@
 $(document).ready(function() {
   $("#nav-application-log").addClass("active");
 
-  $.get('/getLoggedInUserInfo', function(data) {
+  $.get('/adoration/getLoggedInUserInfo', function(data) {
     var loggedInUserInfo = JSON.parse(data.loggedInUserInfo[0]).details;
     $("#loggedInUserLegend").text("User: " + loggedInUserInfo.userName);
     if (loggedInUserInfo.allowAccessToMenuAccountAndPeopleManagement) {
@@ -16,7 +16,7 @@ $(document).ready(function() {
     }
   });
 
-  $.get('/version', function(data) {
+  $.get('/adoration/version', function(data) {
       $("#span-version").text(data.uooVersion);
   });
 

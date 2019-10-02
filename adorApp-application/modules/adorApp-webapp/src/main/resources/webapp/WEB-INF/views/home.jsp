@@ -21,6 +21,7 @@
 <body class="body">
   <div class="container">
     <%@include file="../include/navbar.html" %>
+              <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 
     <fieldset class="form-horizontal">
         <legend class="message-legend"d>Az órák aktuális fedettsége</legend>
@@ -87,7 +88,7 @@
     			</tr>
     			<tr>
     				<td />
-    				<td>- <a href="./resources/PüspökiLevél.pdf" target="new">dr. Beer MIklós püspök atya levele a regisztrált szentségimádókhoz</a></td>
+    				<td>- <a href="./resources/PüspökiLevél.pdf" target="new">dr. Beer Miklós püspök atya levele a regisztrált szentségimádókhoz</a></td>
     			</tr>
     			<tr>
     				<td />

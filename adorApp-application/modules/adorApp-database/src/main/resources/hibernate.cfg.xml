@@ -23,7 +23,8 @@
         <!--property name="use_sql_comments">true</property-->
 
         <!-- Names the annotated entity class -->
-        <mapping class="org.rockhill.adorApp.database.tables.People"/>
+        <mapping class="org.rockhill.adorApp.database.tables.Person"/>
+        <mapping class="org.rockhill.adorApp.database.tables.Social"/>
         <mapping class="org.rockhill.adorApp.database.tables.Translator"/>
         <mapping class="org.rockhill.adorApp.database.tables.Link"/>
         <mapping class="org.rockhill.adorApp.database.tables.AuditTrail"/>

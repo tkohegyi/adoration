@@ -7,8 +7,8 @@ import javax.persistence.Table;
 import java.util.Date;
 
 @Entity
-@Table(name = "adoration.dbo.people")
-public class People {
+@Table(name = "adoration.dbo.person")
+public class Person {
 
     private Long id;
     private String name;
@@ -25,7 +25,7 @@ public class People {
     private String visibleComment;
     private String languageCode;
 
-    public People() {
+    public Person() {
         // this form used by Hibernate
     }
 
@@ -172,5 +172,4 @@ public class People {
     public void setLanguageCode(String languageCode) {
         this.languageCode = languageCode;
     }
-
 }

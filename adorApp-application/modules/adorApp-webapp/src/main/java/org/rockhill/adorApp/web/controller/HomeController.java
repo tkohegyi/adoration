@@ -10,22 +10,25 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.springframework.security.web.context.HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY;
 
 /**
  * Controller for handling requests for the application home page.
@@ -36,8 +39,9 @@ import java.util.Map;
 public class HomeController {
     private static final String JSON_LOGGED_IN_USER_INFO = "loggedInUserInfo";
     private static final String JSON_COVERAGE_INFO = "coverageInfo";
-    private static final String JSON_UOO_APP_INFO = "adorAppApplication";
+    private static final String JSON_APP_INFO = "adorAppApplication";
     private final Logger logger = LoggerFactory.getLogger(HomeController.class);
+
     @Autowired
     CurrentUserProvider currentUserProvider;
     @Autowired
@@ -68,32 +72,17 @@ public class HomeController {
         return "myInfoMyProfile";
     }
 
-    //Spring Security see this :
-    @RequestMapping(value = "/login", method = {RequestMethod.GET, RequestMethod.POST})
-    public String login(
-            @RequestParam(value = "error", required = false) String error,
-            @RequestParam(value = "logout", required = false) String logout) {
-
-        return "login";
-    }
-
-    @RequestMapping(value = "/logout", method = RequestMethod.POST)
-    public String logout(HttpServletRequest request, HttpServletResponse response) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null) {
-            new SecurityContextLogoutHandler().logout(request, response, auth);
-        }
-        return "redirect:/login?logout";
-    }
-
     @ResponseBody
-    @RequestMapping(value = "/getLoggedInUserInfo", method = {RequestMethod.GET})
-    public Map<String, Collection<String>> getLoggedInUserInfo() {
-
+    @RequestMapping(value = "/adoration/getLoggedInUserInfo", method = {RequestMethod.GET})
+    public Map<String, Collection<String>> getLoggedInUserInfo(HttpSession httpSession, HttpServletResponse httpServletResponse
+    ) {
+        httpServletResponse.setHeader("Cache-Control", "no-cache, no-store, max-age=0, must-revalidate");
+        httpServletResponse.setHeader("Pragma", "no-cache");
         Map<String, Collection<String>> jsonResponse = new HashMap<>();
         Collection<String> jsonString = new ArrayList<>();
 
-        CurrentUserInformationJson currentUserInformationJson = currentUserProvider.getUserInformation();
+        SecurityContext sc = (SecurityContext) httpSession.getAttribute(SPRING_SECURITY_CONTEXT_KEY);
+        CurrentUserInformationJson currentUserInformationJson = currentUserProvider.getUserInformation(sc);
 
         Gson gson = new Gson();
         JsonObject jsonObject = new JsonObject();
@@ -105,8 +94,8 @@ public class HomeController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/getAdorAppServerInfo", method = {RequestMethod.GET})
-    public Map<String, Collection<String>> getUooServerInfo() {
+    @RequestMapping(value = "/adoration/getAdorAppServerInfo", method = {RequestMethod.GET})
+    public Map<String, Collection<String>> getAdorAppServerInfo() {
 
         Map<String, Collection<String>> jsonResponse = new HashMap<>();
         Collection<String> jsonString = new ArrayList<>();
@@ -125,18 +114,22 @@ public class HomeController {
         }
         String json = gson.toJson(jsonObject);
         jsonString.add(json);
-        jsonResponse.put(JSON_UOO_APP_INFO, jsonString);
+        jsonResponse.put(JSON_APP_INFO, jsonString);
         return jsonResponse;
     }
 
     @ResponseBody
-    @RequestMapping(value = "/getCoverageInformation", method = {RequestMethod.GET})
-    public Map<String, Collection<String>> getCoverageInformation() {
+    @RequestMapping(value = "/adoration/getCoverageInformation", method = {RequestMethod.GET})
+    public Map<String, Collection<String>> getCoverageInformation(HttpSession httpSession, HttpServletResponse httpServletResponse) {
+
+        httpServletResponse.setHeader("Cache-Control", "no-cache, no-store, max-age=0, must-revalidate");
+        httpServletResponse.setHeader("Pragma", "no-cache");
 
         Map<String, Collection<String>> jsonResponse = new HashMap<>();
         Collection<String> jsonString = new ArrayList<>();
 
-        CurrentUserInformationJson currentUserInformationJson = currentUserProvider.getUserInformation();
+        SecurityContext sc = (SecurityContext) httpSession.getAttribute(SPRING_SECURITY_CONTEXT_KEY);
+        CurrentUserInformationJson currentUserInformationJson = currentUserProvider.getUserInformation(sc);
         CoverageInformationJson coverageInformationJson = coverageProvider.getCoverageInfo(currentUserInformationJson);
 
         Gson gson = new Gson();

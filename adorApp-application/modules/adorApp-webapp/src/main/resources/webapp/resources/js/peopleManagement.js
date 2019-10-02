@@ -1,7 +1,7 @@
 $(document).ready(function() {
   $("#nav-summary-people").addClass("active");
 
-  $.get('/getLoggedInUserInfo', function(data) {
+  $.get('/adoration/getLoggedInUserInfo', function(data) {
     var loggedInUserInfo = JSON.parse(data.loggedInUserInfo[0]).details;
     $("#loggedInUserLegend").text("User: " + loggedInUserInfo.userName);
     if (loggedInUserInfo.allowAccessToMenuAccountAndPeopleManagement) {

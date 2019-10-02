@@ -2,6 +2,7 @@ package org.rockhill.adorApp.web.json;
 
 public class CurrentUserInformationJson {
     public boolean isLoggedIn;
+    public boolean isAuthorized;
     public Long id;
     public String loggedInUserName;
     public String userName;
@@ -17,6 +18,7 @@ public class CurrentUserInformationJson {
     public void reset() {
         id = null;
         isLoggedIn = false;
+        isAuthorized = false;
         loggedInUserName = "Anonymous";
         userName = loggedInUserName;
         languageCode = "hu"; //default language of the site
