@@ -39,8 +39,9 @@ public class WebAppConfigurationAccess implements ConfigurationAccessBase {
         String google_client_id = propertyHolder.get("google_client_id");
         String google_client_secret = propertyHolder.get("google_client_secret");
         String google_redirect_url = propertyHolder.get("google_redirect_url");
-        String google_developer_key = propertyHolder.get("google_developer_key");
         String base_url = propertyHolder.get("base_url");
-        properties = new PropertyDto(google_client_id, google_client_secret, google_redirect_url, google_developer_key, base_url);
+        String facebook_app_id = propertyHolder.get("facebook_app_id");;
+        String facebook_app_secret = propertyHolder.get("facebook_app_secret");;
+        properties = new PropertyDto(google_client_id, google_client_secret, google_redirect_url, base_url, facebook_app_id, facebook_app_secret);
     }
 }

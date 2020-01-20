@@ -3,10 +3,11 @@ package org.rockhill.adorApp.web.provider;
 import org.rockhill.adorApp.database.business.helper.enums.AdoratorStatusTypes;
 import org.rockhill.adorApp.database.tables.Person;
 import org.rockhill.adorApp.web.json.CurrentUserInformationJson;
+import org.rockhill.adorApp.web.service.AuthenticatedUser;
+import org.rockhill.adorApp.web.service.FacebookUser;
 import org.rockhill.adorApp.web.service.GoogleUser;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
@@ -26,14 +27,20 @@ public class CurrentUserProvider {
             Object principal = authentication.getPrincipal();
             String loggedInUserName;
             Person person = null;
-            if (principal instanceof GoogleUser) {
+            if (principal instanceof AuthenticatedUser) {
                 currentUserInformationJson.isLoggedIn = true;  // if authentication is not null then the person is logged in
-                GoogleUser googleUser = (GoogleUser) principal;
-                person = googleUser.getPerson();
+                AuthenticatedUser user = (AuthenticatedUser) principal;
+                person = user.getPerson();
                 if (person != null) {
                     loggedInUserName = person.getName();
                 } else {
-                    loggedInUserName = "Guest User - " + googleUser.getSocial().getGoogleUserName();
+                    loggedInUserName = "Guest User - Anonymous";
+                    if (principal instanceof GoogleUser) {
+                        loggedInUserName = "Guest User - " + user.getSocial().getGoogleUserName();
+                    }
+                    if (principal instanceof FacebookUser) {
+                        loggedInUserName = "Guest User - " + user.getSocial().getFacebookUserName();
+                    }
                 }
             } else {
                 loggedInUserName = "Unknown";

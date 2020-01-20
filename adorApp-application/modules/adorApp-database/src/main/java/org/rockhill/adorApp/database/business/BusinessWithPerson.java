@@ -99,6 +99,23 @@ public class BusinessWithPerson {
         return null;
     }
 
+    /**
+     * Tries to identify the person by the google or facebook email, whichever is available. First tries with google.
+     * @param gEmail is the google email or null
+     * @param fEmail is the facebook email or null
+     * @return with the person is identified
+     */
+    public Person getPersonByGOrFEmail(final String gEmail, final String fEmail) {
+        Person p = null;
+        if (gEmail != null) {
+            p = getPersonByEmail(gEmail);
+        }
+        if ( (p == null) && (fEmail != null) ) {
+            p = getPersonByEmail(fEmail);
+        }
+        return p;
+    }
+
     public Person getPersonByEmail(final String email) {
         List<Person> result = null;
         SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();

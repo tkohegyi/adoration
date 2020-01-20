@@ -37,6 +37,7 @@ public class BusinessWithSocial {
         return id;
     }
 
+    //GOOGLE METHODS ===================================================================================================
     public Social getSocialByGUserId(final String googleUserId) {
         List<Social> result = null;
         SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
@@ -45,7 +46,6 @@ public class BusinessWithSocial {
             session.beginTransaction();
             String hql = "from Social as S where S.googleUserId like '" + googleUserId + "'";
             Query query = session.createQuery(hql);
-//            query.setParameter("expectedId", gUserId);
             result = (List<Social>) query.list();
             session.getTransaction().commit();
             session.close();
@@ -65,6 +65,25 @@ public class BusinessWithSocial {
             String hql = "from Social as S where S.gEmail like :expectedGEmail";
             Query query = session.createQuery(hql);
             query.setParameter("expectedGEmail", gEmail);
+            result = (List<Social>) query.list();
+            session.getTransaction().commit();
+            session.close();
+        }
+        if (result.size() > 0) {
+            return result.get(0);
+        }
+        return null;
+    }
+
+    //FACEBOOK METHODS =================================================================================================
+    public Social getSocialByFUserId(final String facebookUserId) {
+        List<Social> result = null;
+        SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
+        if (sessionFactory != null) {
+            Session session = sessionFactory.openSession();
+            session.beginTransaction();
+            String hql = "from Social as S where S.facebookUserId like '" + facebookUserId + "'";
+            Query query = session.createQuery(hql);
             result = (List<Social>) query.list();
             session.getTransaction().commit();
             session.close();

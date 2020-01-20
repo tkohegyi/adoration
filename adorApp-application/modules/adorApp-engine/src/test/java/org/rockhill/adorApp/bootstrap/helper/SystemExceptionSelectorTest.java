@@ -4,11 +4,12 @@ package org.rockhill.adorApp.bootstrap.helper;
 import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.omg.CORBA.portable.ApplicationException;
 import org.rockhill.adorApp.exception.SystemException;
 import org.springframework.beans.factory.BeanCreationException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import java.io.IOException;
 
 import static org.mockito.BDDMockito.given;
 import static org.testng.Assert.assertNotNull;
@@ -22,7 +23,7 @@ public class SystemExceptionSelectorTest {
     private SystemExceptionSelector underTest;
 
     @Mock
-    private ApplicationException applicationException;
+    private IOException applicationException;
     @Mock
     private SystemException invalidPropertyException;
 

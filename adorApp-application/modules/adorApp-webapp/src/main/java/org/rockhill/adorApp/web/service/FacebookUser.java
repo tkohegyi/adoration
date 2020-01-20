@@ -3,9 +3,9 @@ package org.rockhill.adorApp.web.service;
 import org.rockhill.adorApp.database.tables.Person;
 import org.rockhill.adorApp.database.tables.Social;
 
-public class GoogleUser extends AuthenticatedUser {
+public class FacebookUser extends AuthenticatedUser {
 
-    public GoogleUser(Social social, Person person) {
+    public FacebookUser(Social social, Person person) {
         super(social, person);
     }
 

@@ -1,9 +1,5 @@
 description= 'AdorApp'
 
-allprojects  {
-    apply plugin: 'jacoco'
-}
-
 task docs(type: Javadoc) {
     destinationDir = file("$buildDir/docs/all")
     options.memberLevel = JavadocMemberLevel.PRIVATE
@@ -17,15 +13,6 @@ task docs(type: Javadoc) {
 
 task checkstyle(type: Checkstyle) {
     dependsOn subprojects.checkstyleMain
-}
-
-configurations {
-    jacoco {
-    }
-}
-
-dependencies {
-    jacoco 'org.jacoco:org.jacoco.core:0.8.0'
 }
 
 task deleteRelease(type: Delete) {

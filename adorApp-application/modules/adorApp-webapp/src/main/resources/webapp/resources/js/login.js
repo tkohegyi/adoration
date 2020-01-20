@@ -9,8 +9,8 @@ function setupLoginPage() {
         var loginUrlInfo = JSON.parse(data.loginUrlInfo[0]).details;
         var googleLoginAnchor = loginUrlInfo.loginUrls.googleLoginAnchor;
         $("#googleLoginAnchor").attr("href", googleLoginAnchor);
-        //var facebookLoginAnchor = loginUrlInfo.loginUrls.facebookLoginAnchor;
-        //$("#facebookLoginAnchor").attr("href", facebookLoginAnchor);
+        var facebookLoginAnchor = loginUrlInfo.loginUrls.facebookLoginAnchor;
+        $("#facebookLoginAnchor").attr("href", facebookLoginAnchor);
     });
 
     $.get('/adoration/getAdorAppServerInfo', function(data) {

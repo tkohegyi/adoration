@@ -8,21 +8,23 @@ public class PropertyDto {
     private final String google_client_id;
     private final String google_client_secret;
     private final String google_redirect_url;
-    private final String google_developer_key;
     private final String base_url;
+    private final String facebook_app_id;
+    private final String facebook_app_secret;
 
     /**
      * Constructs a new property holding object with the given fields.
      *
      */
     public PropertyDto(final String google_client_id, final String google_client_secret, final String google_redirect_url,
-                       final String google_developer_key, final String base_url) {
+                       final String base_url, final String facebook_app_id, final String facebook_app_secret) {
         super();
         this.google_client_id = google_client_id;
         this.google_client_secret = google_client_secret;
         this.google_redirect_url = google_redirect_url;
-        this.google_developer_key = google_developer_key;
         this.base_url = base_url;
+        this.facebook_app_id = facebook_app_id;
+        this.facebook_app_secret = facebook_app_secret;
     }
 
     public String getGoogleClientId() {
@@ -34,11 +36,16 @@ public class PropertyDto {
     public String getGoogleRedirectUrl() {
         return google_redirect_url;
     }
-    public String getGoogleDeveloperKey() {
-        return google_developer_key;
-    }
 
     public String getBaseUrl() {
         return base_url;
+    }
+
+    public String getFacebook_app_id() {
+        return facebook_app_id;
+    }
+
+    public String getFacebook_app_secret() {
+        return facebook_app_secret;
     }
 }

@@ -17,7 +17,7 @@ if (!hasProperty("configFilePath")) {
     project.ext.configFilePath = configFileDefaultPath
 }
 
-run{
+run {
     args = ["$configFilePath"];
 }
 

@@ -15,6 +15,10 @@ public class Social {
     private String googleUserName;
     private String googleUserId;
     private String googleUserPicture;
+    private String facebookEmail;
+    private String facebookUserName;
+    private String facebookUserId;
+    private String facebookFirstName;
 
     public Social() {
         // this form used by Hibernate
@@ -84,4 +88,53 @@ public class Social {
     public void setGoogleUserPicture(String googleUserPicture) {
         this.googleUserPicture = googleUserPicture;
     }
+
+    @Column(name = "facebookEmail", nullable = true)
+    public String getFacebookEmail() {
+        if (facebookEmail != null) {
+            return facebookEmail;
+        } else {
+            return "";
+        }
+    }
+    public void setFacebookEmail(String facebookEmail) {
+        this.facebookEmail = facebookEmail;
+    }
+
+    @Column(name = "facebookUserName", nullable = true)
+    public String getFacebookUserName() {
+        if (facebookUserName != null) {
+            return facebookUserName;
+        } else {
+            return "";
+        }
+    }
+    public void setFacebookUserName(String facebookUserName) {
+        this.facebookUserName = facebookUserName;
+    }
+
+    @Column(name = "facebookUserId", nullable = true)
+    public String getFacebookUserId() {
+        if (facebookUserId != null) {
+            return facebookUserId;
+        } else {
+            return "";
+        }
+    }
+    public void setFacebookUserId(String facebookUserId) {
+        this.facebookUserId = facebookUserId;
+    }
+
+    @Column(name = "facebookFirstName", nullable = true)
+    public String getFacebookFirstName() {
+        if (facebookFirstName != null) {
+            return facebookFirstName;
+        } else {
+            return "";
+        }
+    }
+    public void setFacebookFirstName(String facebookFirstName) {
+        this.facebookFirstName = facebookFirstName;
+    }
+
 }

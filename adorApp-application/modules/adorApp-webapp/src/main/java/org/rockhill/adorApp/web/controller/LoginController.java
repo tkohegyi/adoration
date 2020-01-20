@@ -2,8 +2,10 @@ package org.rockhill.adorApp.web.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 import org.rockhill.adorApp.web.configuration.WebAppConfigurationAccess;
 import org.rockhill.adorApp.web.json.LoginUrlInformationJson;
+import org.rockhill.adorApp.web.service.FacebookOauth2Service;
 import org.rockhill.adorApp.web.service.GoogleOauth2Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +38,8 @@ public class LoginController {
 
     @Autowired
     GoogleOauth2Service googleOauth2Service;
+    @Autowired
+    FacebookOauth2Service facebookOauth2Service;
 
     @Autowired
     WebAppConfigurationAccess webAppConfigurationAccess;
@@ -60,16 +64,16 @@ public class LoginController {
     //https://fuf.me/adoration/loginResult?code=4%2FrgG8fzvTngq_gf3YiQgi5x8vGrZis4JD4SXyLxyVhHD97o-k13uxXJHmSqnBa5o-7y-QmjtgMZnyHryn4u_heR8&scope=email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+openid&authuser=0&session_state=8ca7cab3c0dd23415b112fae84f84b1cb9957590..dd73&prompt=consent#
     @RequestMapping(value = "/adoration/loginResult", method = {RequestMethod.GET, RequestMethod.POST})
     public String showLoginResultPage(
-            @RequestParam(value = "code", defaultValue = "") final String code,
+            @RequestParam(value = "code", defaultValue = "") final String code,  //google uses this
             @RequestParam(value = "scope", defaultValue = "") final String scope,
             @RequestParam(value = "authuser", defaultValue = "") final String authuser,
-            @RequestParam(value = "session_state", defaultValue = "") final String session_state,
-            @RequestParam(value = "prompt", defaultValue = "") final String prompt,
+            @RequestParam(value = "state", defaultValue = "") final String state,  //facebook uses this
+            @RequestParam(value = "access_token", defaultValue = "") final String access_token,
             HttpSession httpSession,
             HttpServletResponse httpServletResponse
     ) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if ((code.length() > 0) && (auth == null)) {  //if login can be performed and it is not yet authenticated for Ador App
+        if ((code.length() > 0) && (state.length() == 0) && (auth == null)) {  //if GOOGLE login can be performed and it is not yet authenticated for Ador App
             Authentication authentication = googleOauth2Service.getGoogleUserInfoJson(code);
             SecurityContext sc = SecurityContextHolder.getContext();
             sc.setAuthentication(authentication);
@@ -78,6 +82,18 @@ public class LoginController {
                 httpServletResponse.sendRedirect(webAppConfigurationAccess.getProperties().getGoogleRedirectUrl());
             } catch (IOException e) {
                 logger.warn("Redirect after Google authentication does not work.", e);
+                return "login";
+            }
+        }
+        if ((code.length() > 0) && (state.length() > 0) && (auth == null)) {  //if FACEBOOK login can be performed and it is not yet authenticated for Ador App
+            Authentication authentication = facebookOauth2Service.getFacebookUserInfoJson(code);
+            SecurityContext sc = SecurityContextHolder.getContext();
+            sc.setAuthentication(authentication);
+            httpSession.setAttribute(SPRING_SECURITY_CONTEXT_KEY, sc);
+            try {
+                httpServletResponse.sendRedirect(webAppConfigurationAccess.getProperties().getGoogleRedirectUrl());
+            } catch (IOException e) {
+                logger.warn("Redirect after Facebook authentication does not work.", e);
                 return "login";
             }
         }
@@ -112,11 +128,11 @@ public class LoginController {
 
         LoginUrlInformationJson loginUrlInformationJson = new LoginUrlInformationJson();
         loginUrlInformationJson = googleOauth2Service.addLoginUrlInformation(loginUrlInformationJson);
-        //loginUrlInformationJson = facebookOauth2Service.addLoginUrlInformation(loginUrlInformationJson);
+        loginUrlInformationJson = facebookOauth2Service.addLoginUrlInformation(loginUrlInformationJson);
 
         Gson gson = new Gson();
         JsonObject jsonObject = new JsonObject();
-        jsonObject.add("details", gson.toJsonTree(loginUrlInformationJson));
+        jsonObject.add("details", gson.toJsonTree(loginUrlInformationJson, new TypeToken<LoginUrlInformationJson>() {}.getType()));
         String json = gson.toJson(jsonObject);
         jsonString.add(json);
         jsonResponse.put(JSON_LOGIN_URL_INFO, jsonString);

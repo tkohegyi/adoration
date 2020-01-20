@@ -29,6 +29,17 @@ public class AdorationCustomAuthenticationProvider implements AuthenticationProv
                 return auth; //login success
             }
         }
+        if ((authentication != null) && (authentication.getPrincipal() instanceof FacebookUser)) {
+            FacebookUser facebookUser = ((FacebookUser)authentication.getPrincipal());
+            Social social = facebookUser.getSocial();
+            if (social != null) {
+                //authenticated !
+                List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+                grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+                Authentication auth = new PreAuthenticatedAuthenticationToken(facebookUser, authentication.getCredentials(), grantedAuthorities);
+                return auth; //login success
+            }
+        }
         return null; //login failed
     }
 
