@@ -1,5 +1,6 @@
 package org.rockhill.adorApp.web.configuration;
 
+import org.apache.commons.lang3.math.NumberUtils;
 import org.rockhill.adorApp.configuration.ConfigurationAccessBase;
 import org.rockhill.adorApp.configuration.PropertyHolder;
 import org.slf4j.Logger;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class WebAppConfigurationAccess implements ConfigurationAccessBase {
     private final Logger logger = LoggerFactory.getLogger(WebAppConfigurationAccess.class);
+    private final int SESSION_TIMEOUT_DEFAULT_VALUE = 500;
 
     private PropertyDto properties;
 
@@ -41,7 +43,8 @@ public class WebAppConfigurationAccess implements ConfigurationAccessBase {
         String google_redirect_url = propertyHolder.get("google_redirect_url");
         String base_url = propertyHolder.get("base_url");
         String facebook_app_id = propertyHolder.get("facebook_app_id");;
-        String facebook_app_secret = propertyHolder.get("facebook_app_secret");;
-        properties = new PropertyDto(google_client_id, google_client_secret, google_redirect_url, base_url, facebook_app_id, facebook_app_secret);
+        String facebook_app_secret = propertyHolder.get("facebook_app_secret");
+        Integer sessionTimeout = NumberUtils.toInt(propertyHolder.get("sessionTimeout"), SESSION_TIMEOUT_DEFAULT_VALUE);
+        properties = new PropertyDto(google_client_id, google_client_secret, google_redirect_url, base_url, facebook_app_id, facebook_app_secret, sessionTimeout);
     }
 }

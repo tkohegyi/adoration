@@ -5,8 +5,8 @@ import org.rockhill.adorApp.database.tables.Social;
 
 public class FacebookUser extends AuthenticatedUser {
 
-    public FacebookUser(Social social, Person person) {
-        super(social, person);
+    public FacebookUser(Social social, Person person, Integer sessionTimeoutInSec) {
+        super(social, person, sessionTimeoutInSec);
     }
 
 }

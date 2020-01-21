@@ -81,8 +81,7 @@ public class HomeController {
         Map<String, Collection<String>> jsonResponse = new HashMap<>();
         Collection<String> jsonString = new ArrayList<>();
 
-        SecurityContext sc = (SecurityContext) httpSession.getAttribute(SPRING_SECURITY_CONTEXT_KEY);
-        CurrentUserInformationJson currentUserInformationJson = currentUserProvider.getUserInformation(sc);
+        CurrentUserInformationJson currentUserInformationJson = currentUserProvider.getUserInformation(httpSession);
 
         Gson gson = new Gson();
         JsonObject jsonObject = new JsonObject();
@@ -128,8 +127,7 @@ public class HomeController {
         Map<String, Collection<String>> jsonResponse = new HashMap<>();
         Collection<String> jsonString = new ArrayList<>();
 
-        SecurityContext sc = (SecurityContext) httpSession.getAttribute(SPRING_SECURITY_CONTEXT_KEY);
-        CurrentUserInformationJson currentUserInformationJson = currentUserProvider.getUserInformation(sc);
+        CurrentUserInformationJson currentUserInformationJson = currentUserProvider.getUserInformation(httpSession);
         CoverageInformationJson coverageInformationJson = coverageProvider.getCoverageInfo(currentUserInformationJson);
 
         Gson gson = new Gson();

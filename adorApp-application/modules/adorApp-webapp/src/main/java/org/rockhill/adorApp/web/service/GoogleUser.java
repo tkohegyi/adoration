@@ -5,8 +5,8 @@ import org.rockhill.adorApp.database.tables.Social;
 
 public class GoogleUser extends AuthenticatedUser {
 
-    public GoogleUser(Social social, Person person) {
-        super(social, person);
+    public GoogleUser(Social social, Person person, Integer sessionTimeoutInSec) {
+        super(social, person, sessionTimeoutInSec);
     }
 
 }

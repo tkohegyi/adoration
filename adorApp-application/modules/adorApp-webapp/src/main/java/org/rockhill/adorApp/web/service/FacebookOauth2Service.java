@@ -7,6 +7,7 @@ import org.rockhill.adorApp.database.business.BusinessWithPerson;
 import org.rockhill.adorApp.database.business.BusinessWithSocial;
 import org.rockhill.adorApp.database.tables.Person;
 import org.rockhill.adorApp.database.tables.Social;
+import org.rockhill.adorApp.exception.SystemException;
 import org.rockhill.adorApp.web.configuration.PropertyDto;
 import org.rockhill.adorApp.web.configuration.WebAppConfigurationAccess;
 import org.rockhill.adorApp.web.json.LoginUrlInformationJson;
@@ -120,12 +121,10 @@ public class FacebookOauth2Service {
                 b.append(inputLine + "\n");
             in.close();
             graph = b.toString();
-            System.out.println(graph);
             JSONParser parser = new JSONParser(JSONParser.DEFAULT_PERMISSIVE_MODE);
             json = (JSONObject) parser.parse(graph);
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("ERROR in getting FB graph data. " + e);
+            throw new SystemException("ERROR in getting FB graph data. ", e);
         }
 
         return json;
@@ -140,12 +139,12 @@ public class FacebookOauth2Service {
             JSONObject facebookUserInfoJson = getFacebookGraph(accessToken);
             Social social = detectSocial(facebookUserInfoJson);
             Person person = detectPerson(social);
-            facebookUser = new FacebookUser(social, person);
+            facebookUser = new FacebookUser(social, person, propertyDto.getSessionTimeout());
 
             // //googleUser used as Principal, credential is coming from Google
             authentication = adorationCustomAuthenticationProvider.authenticate(new PreAuthenticatedAuthenticationToken(facebookUser, facebookUserInfoJson));
         } catch (IOException | ParseException e) {
-            e.printStackTrace();
+            throw new SystemException("GetFacebook user Info failed", e);
         }
         return authentication;
     }

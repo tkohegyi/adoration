@@ -113,7 +113,7 @@ public class GoogleOauth2Service {
 
             Social social = detectSocial(googleUserInfoJson);
             Person person = detectPerson(social);
-            googleUser = new GoogleUser(social, person);
+            googleUser = new GoogleUser(social, person, propertyDto.getSessionTimeout());
 
             //googleUser used as Principal, credential is coming from Google
             authentication = adorationCustomAuthenticationProvider.authenticate(new PreAuthenticatedAuthenticationToken(googleUser, credential));
