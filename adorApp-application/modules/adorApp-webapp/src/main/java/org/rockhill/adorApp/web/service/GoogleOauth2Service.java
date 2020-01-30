@@ -18,7 +18,6 @@ import org.rockhill.adorApp.database.tables.Social;
 import org.rockhill.adorApp.web.configuration.PropertyDto;
 import org.rockhill.adorApp.web.configuration.WebAppConfigurationAccess;
 import org.rockhill.adorApp.database.json.GoogleUserInfoJson;
-import org.rockhill.adorApp.web.json.LoginUrlInformationJson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,31 +67,24 @@ public class GoogleOauth2Service {
     }
 
     /**
-     * Checks the content of the provided loginInformation, and in case Google info is missing, then this method adds that
-     * @param loginUrlInformationJson is the initial information json
-     * @return with information Json that holds proper Google Login url
+     * Gets the Google login url.
+     * @return with Google login url
      */
-    public LoginUrlInformationJson addLoginUrlInformation(LoginUrlInformationJson loginUrlInformationJson) {
-        String name = "googleLoginAnchor";
-        if (!loginUrlInformationJson.loginUrls.containsKey(name)) {
+    public String getLoginUrlInformation() {
+        //see help from https://www.programcreek.com/java-api-examples/?api=com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets
+        //see help from https://www.programcreek.com/java-api-examples/index.php?api=com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeRequestUrl
 
-            //see help from https://www.programcreek.com/java-api-examples/?api=com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets
-            //see help from https://www.programcreek.com/java-api-examples/index.php?api=com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeRequestUrl
+        GoogleClientSecrets.Details installedDetails = new GoogleClientSecrets.Details();
+        PropertyDto propertyDto = webAppConfigurationAccess.getProperties();
+        installedDetails.setClientId(propertyDto.getGoogleClientId());
+        installedDetails.setClientSecret(propertyDto.getGoogleClientSecret());
 
-            GoogleClientSecrets.Details installedDetails = new GoogleClientSecrets.Details();
-            PropertyDto propertyDto = webAppConfigurationAccess.getProperties();
-            installedDetails.setClientId(propertyDto.getGoogleClientId());
-            installedDetails.setClientSecret(propertyDto.getGoogleClientSecret());
+        GoogleClientSecrets clientSecrets = new GoogleClientSecrets();
+        clientSecrets.setInstalled(installedDetails);
 
-            GoogleClientSecrets clientSecrets = new GoogleClientSecrets();
-            clientSecrets.setInstalled(installedDetails);
-
-            GoogleAuthorizationCodeRequestUrl googleAuthorizationCodeRequestUrl =
-                    new GoogleAuthorizationCodeRequestUrl(clientSecrets, propertyDto.getGoogleRedirectUrl(), SCOPES);
-            loginUrlInformationJson.loginUrls.put(name, googleAuthorizationCodeRequestUrl.build());
-        }
-
-        return loginUrlInformationJson;
+        GoogleAuthorizationCodeRequestUrl googleAuthorizationCodeRequestUrl =
+                new GoogleAuthorizationCodeRequestUrl(clientSecrets, propertyDto.getGoogleRedirectUrl(), SCOPES);
+        return googleAuthorizationCodeRequestUrl.build();
     }
 
     public Authentication getGoogleUserInfoJson(final String authCode) {

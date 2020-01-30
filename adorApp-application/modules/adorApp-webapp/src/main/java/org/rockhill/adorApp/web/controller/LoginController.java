@@ -1,10 +1,6 @@
 package org.rockhill.adorApp.web.controller;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
 import org.rockhill.adorApp.web.configuration.WebAppConfigurationAccess;
-import org.rockhill.adorApp.web.json.LoginUrlInformationJson;
 import org.rockhill.adorApp.web.service.FacebookOauth2Service;
 import org.rockhill.adorApp.web.service.GoogleOauth2Service;
 import org.slf4j.Logger;
@@ -14,15 +10,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.springframework.security.web.context.HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY;
 
@@ -33,7 +27,6 @@ import static org.springframework.security.web.context.HttpSessionSecurityContex
  */
 @Controller
 public class LoginController {
-    private static final String JSON_LOGIN_URL_INFO = "loginUrlInfo";
     private final Logger logger = LoggerFactory.getLogger(LoginController.class);
 
     @Autowired
@@ -58,6 +51,38 @@ public class LoginController {
         }
         //else make simple login page default
         logger.warn("Unhandled login page request, falling back to provide basic login page.");
+        return "login";
+    }
+
+    /**
+     * Serves requests to log in with Google.
+     *
+     * @return the name of the jsp to display as result
+     */
+    @RequestMapping(value = "/adoration/loginGoogle", method = {RequestMethod.GET, RequestMethod.POST})
+    public String showGoogleLoginPage(HttpServletResponse httpServletResponse) {
+        String loginUrl = googleOauth2Service.getLoginUrlInformation();
+        try {
+            httpServletResponse.sendRedirect(loginUrl);
+        } catch (IOException e) {
+            logger.warn("Redirect to Google authentication does not work.", e);
+        }
+        return "login";
+    }
+
+    /**
+     * Serves requests to log in with Facebook.
+     *
+     * @return the name of the jsp to display as result
+     */
+    @RequestMapping(value = "/adoration/loginFacebook", method = {RequestMethod.GET, RequestMethod.POST})
+    public String showFacebookLoginPage(HttpServletResponse httpServletResponse) {
+        String loginUrl = facebookOauth2Service.getLoginUrlInformation();
+        try {
+            httpServletResponse.sendRedirect(loginUrl);
+        } catch (IOException e) {
+            logger.warn("Redirect to Facebook authentication does not work.", e);
+        }
         return "login";
     }
 
@@ -117,26 +142,6 @@ public class LoginController {
             logger.warn("Redirect after logout does not work.", e);
         }
         return "home";
-    }
-
-    @ResponseBody
-    @RequestMapping(value = "/adoration/getLoginUrls", method = {RequestMethod.GET})
-    public Map<String, Collection<String>> getLoginUrls() {
-
-        Map<String, Collection<String>> jsonResponse = new HashMap<>();
-        Collection<String> jsonString = new ArrayList<>();
-
-        LoginUrlInformationJson loginUrlInformationJson = new LoginUrlInformationJson();
-        loginUrlInformationJson = googleOauth2Service.addLoginUrlInformation(loginUrlInformationJson);
-        loginUrlInformationJson = facebookOauth2Service.addLoginUrlInformation(loginUrlInformationJson);
-
-        Gson gson = new Gson();
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.add("details", gson.toJsonTree(loginUrlInformationJson, new TypeToken<LoginUrlInformationJson>() {}.getType()));
-        String json = gson.toJson(jsonObject);
-        jsonString.add(json);
-        jsonResponse.put(JSON_LOGIN_URL_INFO, jsonString);
-        return jsonResponse;
     }
 
 }

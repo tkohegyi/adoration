@@ -29,15 +29,18 @@
 
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 
-        <div id="login-possibilities">
-            <p>Ön nincs bejelentkezve, kérjük lépjen be (vagy regisztráljon), hogy további oldalakhoz is hozzáférjen.</p>
-            <br />
-            <p>Kérem vegye figyelembe, hogy a legelső bejelentkezés után még eltelhet pár nap mire a végleges azonosítás megtörténik, és további információkhoz is hozzáférhet.</p>
-            <br />A belépés többféleképpen is történhet:<br />
-            Használhatja például a Google-t azonosításra: <a id="googleLoginAnchor" class="login" href=".$g_authUrl."><img src="./../resources/img/google_login.png" /></a>, (klikkeljen a Google logora!)<br/>
-            de beléphet Facebook fiókjával is: <a id="facebookLoginAnchor" class="login" href=".$fb_loginUrl."><img src="./../resources/img/facebook_login.png" /></a>, (klikkeljen a Facebook logora!)<br/>
-            <br /></p>
-        </div>
+        <hl/>
+                <div id="login-2-possibilities">
+                    <p>Ön nincs bejelentkezve, kérjük lépjen be (vagy regisztráljon), hogy további oldalakhoz is hozzáférjen.</p>
+                    <br />
+                    <p>Kérem vegye figyelembe, hogy a legelső bejelentkezés után még eltelhet pár nap mire a végleges azonosítás megtörténik, és további információkhoz is hozzáférhet.</p>
+                    <br />A belépés többféleképpen is történhet:<br />
+                    Használhatja például a Google-t azonosításra: <a id="gLoginAnchor" class="login" href="/adoration/loginGoogle"><img src="./../resources/img/google_login.png" /></a>, (klikkeljen a Google logora!)<br/>
+                    de beléphet Facebook fiókjával is: <a id="fLoginAnchor" class="login" href="/adoration/loginFacebook"><img src="./../resources/img/facebook_login.png" /></a>, (klikkeljen a Facebook logora!)<br/>
+                    <br /></p>
+                </div>
+
+
     </fieldset>
   </div>
   <script src="./../resources/js/external/jquery-3.4.1.js"></script>

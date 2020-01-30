@@ -10,7 +10,6 @@ import org.rockhill.adorApp.database.tables.Social;
 import org.rockhill.adorApp.exception.SystemException;
 import org.rockhill.adorApp.web.configuration.PropertyDto;
 import org.rockhill.adorApp.web.configuration.WebAppConfigurationAccess;
-import org.rockhill.adorApp.web.json.LoginUrlInformationJson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,23 +56,14 @@ public class FacebookOauth2Service {
         facebookConnectionFactory.setScope("email,public_profile");
     }
 
-    /**
-     * Checks the content of the provided loginInformation, and in case Facebook info is missing, then this method adds that
-     * @param loginUrlInformationJson is the initial information json
-     * @return with information Json that holds proper Facebook Login url
-     */
-    public LoginUrlInformationJson addLoginUrlInformation(LoginUrlInformationJson loginUrlInformationJson) {
-        String name = "facebookLoginAnchor";
-        if (!loginUrlInformationJson.loginUrls.containsKey(name)) {
-            PropertyDto propertyDto = webAppConfigurationAccess.getProperties();
+    public String getLoginUrlInformation() {
+        PropertyDto propertyDto = webAppConfigurationAccess.getProperties();
 
-            String authorizationUrl = "https://www.facebook.com/v5.0/dialog/oauth?client_id=" + propertyDto.getFacebook_app_id()
-                    + "&redirect_uri=" + propertyDto.getGoogleRedirectUrl()
-                    + "&state=no-state&display=popup&response_type=code&scope=" + facebookConnectionFactory.getScope();
-            //note use this: &response_type=granted_scopes to get list of granted scopes
-            loginUrlInformationJson.loginUrls.put(name, authorizationUrl);
-        }
-        return loginUrlInformationJson;
+        String authorizationUrl = "https://www.facebook.com/v5.0/dialog/oauth?client_id=" + propertyDto.getFacebook_app_id()
+                + "&redirect_uri=" + propertyDto.getGoogleRedirectUrl()
+                + "&state=no-state&display=popup&response_type=code&scope=" + facebookConnectionFactory.getScope();
+        //note use this: &response_type=granted_scopes to get list of granted scopes
+        return authorizationUrl;
     }
 
     public String getFacebookGraphUrl(String code, String applicationId, String applicationSecret, String redirectUrl) throws UnsupportedEncodingException {
@@ -181,4 +171,5 @@ public class FacebookOauth2Service {
         }
         return social;
     }
+
 }
