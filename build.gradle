@@ -6,6 +6,7 @@ subprojects {
     apply plugin: 'checkstyle'
     apply plugin: 'java'
     apply plugin: 'maven'
+    compileJava {options.encoding = "UTF-8"}
 
     version = "$adorAppVersion"+'.'+"$buildNumber"
 

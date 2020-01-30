@@ -1,6 +1,6 @@
 function setupMenu() {
     $.get('/adoration/getLoggedInUserInfo', function(data) {
-        var loggedInUserInfo = JSON.parse(data.loggedInUserInfo[0]).details;
+        var loggedInUserInfo = JSON.parse(data.loggedInUserInfo[0]);
         if (loggedInUserInfo.isLoggedIn) {
             $("#loggedInUserLegend").text("Belépve: " + loggedInUserInfo.userName);
             $("#nav-exit").show();

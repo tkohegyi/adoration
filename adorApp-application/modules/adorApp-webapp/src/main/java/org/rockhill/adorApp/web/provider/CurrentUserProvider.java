@@ -40,12 +40,12 @@ public class CurrentUserProvider {
                     if (person != null) {
                         loggedInUserName = person.getName();
                     } else {
-                        loggedInUserName = "Guest User - Anonymous";
+                        loggedInUserName = "Vendég - Anonymous";
                         if (principal instanceof GoogleUser) {
-                            loggedInUserName = "Guest User - " + user.getSocial().getGoogleUserName();
+                            loggedInUserName = "Vendég - " + user.getSocial().getGoogleUserName();
                         }
                         if (principal instanceof FacebookUser) {
-                            loggedInUserName = "Guest User - " + user.getSocial().getFacebookUserName();
+                            loggedInUserName = "Vend\u00e9g - " + user.getSocial().getFacebookUserName();
                         }
                     }
                     currentUserInformationJson.loggedInUserName = loggedInUserName; //user who logged in via social

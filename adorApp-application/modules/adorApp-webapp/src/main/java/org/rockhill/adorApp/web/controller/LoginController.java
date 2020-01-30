@@ -122,7 +122,7 @@ public class LoginController {
                 return "login";
             }
         }
-        return "loginResult";
+        return "home";
     }
 
     @RequestMapping(value = "/adorationSecure/exit", method = {RequestMethod.GET, RequestMethod.POST})

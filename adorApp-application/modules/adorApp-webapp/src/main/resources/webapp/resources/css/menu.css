@@ -98,7 +98,7 @@
 
 .body {
     background-color: #373737;
-    color: #39C2D7;
+    color: antiquewhite;
 }
 
 hr {
@@ -106,7 +106,7 @@ hr {
 }
 
 a {
-    color: #ffffff;
+    color: #39C2D7;
 }
 
 a:hover {

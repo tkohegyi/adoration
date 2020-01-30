@@ -1,4 +1,4 @@
 $(document).ready(function() {
-    $("#nav-home").addClass("active");
+    $("#nav-praying-day").addClass("active");
     setupMenu();
 });
