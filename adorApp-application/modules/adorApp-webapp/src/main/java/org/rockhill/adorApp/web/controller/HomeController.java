@@ -1,7 +1,5 @@
 package org.rockhill.adorApp.web.controller;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
 import org.rockhill.adorApp.web.json.CoverageInformationJson;
@@ -19,8 +17,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -35,7 +31,6 @@ import java.util.Map;
 public class HomeController {
     private static final String JSON_LOGGED_IN_USER_INFO = "loggedInUserInfo";
     private static final String JSON_COVERAGE_INFO = "coverageInfo";
-    private static final String JSON_APP_INFO = "adorAppApplication";
     private final Logger logger = LoggerFactory.getLogger(HomeController.class);
 
     @Autowired
@@ -87,33 +82,8 @@ public class HomeController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/adoration/getAdorAppServerInfo", method = {RequestMethod.GET})
-    public Map<String, Collection<String>> getAdorAppServerInfo() {
-
-        Map<String, Collection<String>> jsonResponse = new HashMap<>();
-        Collection<String> jsonString = new ArrayList<>();
-
-        JsonObject jsonObject = new JsonObject();
-        Gson gson = new Gson();
-        InetAddress ip;
-        String hostname;
-        try {
-            ip = InetAddress.getLocalHost(); //ip address
-            hostname = ip.getHostName();
-            jsonObject.add("ip", gson.toJsonTree(ip.toString()));
-            jsonObject.add("hostname", gson.toJsonTree(hostname));
-        } catch (UnknownHostException e) {
-            logger.info("Login page - cannot detect ip/hostname.");
-        }
-        String json = gson.toJson(jsonObject);
-        jsonString.add(json);
-        jsonResponse.put(JSON_APP_INFO, jsonString);
-        return jsonResponse;
-    }
-
-    @ResponseBody
     @RequestMapping(value = "/adoration/getCoverageInformation", method = {RequestMethod.GET})
-    public Map<String, Collection<String>> getCoverageInformation(HttpSession httpSession, HttpServletResponse httpServletResponse) {
+    public Map<String, Collection<String>> getCoverageInformation(HttpSession httpSession, HttpServletResponse httpServletResponse) throws IOException {
 
         httpServletResponse.setHeader("Cache-Control", "no-cache, no-store, max-age=0, must-revalidate");
         httpServletResponse.setHeader("Pragma", "no-cache");
@@ -124,10 +94,9 @@ public class HomeController {
         CurrentUserInformationJson currentUserInformationJson = currentUserProvider.getUserInformation(httpSession);
         CoverageInformationJson coverageInformationJson = coverageProvider.getCoverageInfo(currentUserInformationJson);
 
-        Gson gson = new Gson();
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.add("details", gson.toJsonTree(coverageInformationJson));
-        String json = gson.toJson(jsonObject);
+        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        String json = ow.writeValueAsString(coverageInformationJson);
+
         jsonString.add(json);
         jsonResponse.put(JSON_COVERAGE_INFO, jsonString);
         return jsonResponse;

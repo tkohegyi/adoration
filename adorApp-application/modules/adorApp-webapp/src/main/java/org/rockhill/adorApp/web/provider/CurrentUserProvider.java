@@ -18,6 +18,30 @@ import static org.springframework.security.web.context.HttpSessionSecurityContex
 
 @Component
 public class CurrentUserProvider {
+    private Set<AdoratorStatusTypes> registeredAdorator;
+    private Set<AdoratorStatusTypes> leaders;
+    private Set<AdoratorStatusTypes> admins;
+
+    CurrentUserProvider() {
+        registeredAdorator = new HashSet<>();
+        registeredAdorator.add(AdoratorStatusTypes.ADORATOR_ADMIN);
+        registeredAdorator.add(AdoratorStatusTypes.ADORATOR_MAIN_COORDINATOR);
+        registeredAdorator.add(AdoratorStatusTypes.ADORATOR_DAILY_COORDINATOR);
+        registeredAdorator.add(AdoratorStatusTypes.ADORATOR_HOURLY_COORDINATOR);
+        registeredAdorator.add(AdoratorStatusTypes.ADORATOR_SPIRITUAL_COORDINATOR);
+        registeredAdorator.add(AdoratorStatusTypes.ADORATOR);
+
+        leaders = new HashSet<>();
+        leaders.add(AdoratorStatusTypes.ADORATOR_ADMIN);
+        leaders.add(AdoratorStatusTypes.ADORATOR_MAIN_COORDINATOR);
+        leaders.add(AdoratorStatusTypes.ADORATOR_DAILY_COORDINATOR);
+        leaders.add(AdoratorStatusTypes.ADORATOR_HOURLY_COORDINATOR);
+        leaders.add(AdoratorStatusTypes.ADORATOR_SPIRITUAL_COORDINATOR);
+
+        admins = new HashSet<>();
+        admins.add(AdoratorStatusTypes.ADORATOR_ADMIN);
+        admins.add(AdoratorStatusTypes.ADORATOR_MAIN_COORDINATOR);
+    }
 
     public CurrentUserInformationJson getUserInformation(HttpSession httpSession) {
         CurrentUserInformationJson currentUserInformationJson = new CurrentUserInformationJson();
@@ -30,7 +54,7 @@ public class CurrentUserProvider {
         if (authentication != null) {
             Object principal = authentication.getPrincipal();
             String loggedInUserName;
-            Person person = null;
+            Person person; // = null;
             if (principal instanceof AuthenticatedUser) {
                 AuthenticatedUser user = (AuthenticatedUser) principal;
                 if (user.isSessionValid()) {
@@ -40,9 +64,9 @@ public class CurrentUserProvider {
                     if (person != null) {
                         loggedInUserName = person.getName();
                     } else {
-                        loggedInUserName = "Vendég - Anonymous";
+                        loggedInUserName = "Vend\u00e9g - Anonymous";
                         if (principal instanceof GoogleUser) {
-                            loggedInUserName = "Vendég - " + user.getSocial().getGoogleUserName();
+                            loggedInUserName = "Vend\u00e9g - " + user.getSocial().getGoogleUserName();
                         }
                         if (principal instanceof FacebookUser) {
                             loggedInUserName = "Vend\u00e9g - " + user.getSocial().getFacebookUserName();
@@ -54,7 +78,10 @@ public class CurrentUserProvider {
                         currentUserInformationJson.isAuthorized = true; //not just logged in, but since the person is known, authorized too
                         currentUserInformationJson.id = person.getId();
                         currentUserInformationJson.userName = person.getName();
-                        //TODO setup authorized access list
+                        AdoratorStatusTypes status = AdoratorStatusTypes.getAdoratorStatusTypeFromId(person.getAdorationStatus());
+                        currentUserInformationJson.isRegisteredAdorator = registeredAdorator.contains(status);
+                        currentUserInformationJson.isAdoratorLeader = leaders.contains(status);
+                        currentUserInformationJson.isAdoratorAdmin = admins.contains(status);
                     }
                 } else {
                     //session expired!
@@ -65,12 +92,5 @@ public class CurrentUserProvider {
         }
         return currentUserInformationJson;
     }
-
-    private boolean getMenuAccessToAppLog(AdoratorStatusTypes currentUserType) {
-        Set<AdoratorStatusTypes> configurators = new HashSet<>();
-        configurators.add(AdoratorStatusTypes.ADORATOR_MAIN_COORDINATOR);
-        configurators.add(AdoratorStatusTypes.ADORATOR_ADMIN);
-        return configurators.contains(currentUserType);
-    }
-
+    
 }

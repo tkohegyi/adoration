@@ -26,7 +26,6 @@
         <fieldset class="form-horizontal" style="background-color: #373737; height: 50px">
             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
             <div id="login-possibilities">
-                <p>Ön nincs bejelentkezve, kérjük lépjen be (vagy regisztráljon), hogy további oldalakhoz is hozzáférjen.</p>
                 <br />
                 <p>Kérjük vegye figyelembe, hogy a legelső bejelentkezés után még eltelhet pár nap mire a végleges azonosítás megtörténik, és további információkhoz is hozzáférhet.</p>
                 <br />A belépés többféleképpen is történhet:<br />

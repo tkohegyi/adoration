@@ -1,7 +1,14 @@
 package org.rockhill.adorApp.web.controller;
 
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import org.rockhill.adorApp.web.json.CurrentUserInformationJson;
+import org.rockhill.adorApp.web.provider.CurrentUserProvider;
 import org.rockhill.adorApp.web.provider.LogFileProvider;
+import org.rockhill.adorApp.web.provider.PeopleProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -13,6 +20,9 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
+import javax.servlet.http.HttpSession;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -27,9 +37,16 @@ public class AppLogController {
     private static final String JSON_NAME = "files";
     private static final String CONTENT_DISPOSITION = "Content-Disposition";
     private static final String ATTACHMENT_TEMPLATE = "attachment; filename=%s";
+    private static final String JSON_APP_INFO = "adorAppApplication";
     private final RequestMappingHandlerMapping handlerMapping;
+    private final Logger logger = LoggerFactory.getLogger(AppLogController.class);
+
     @Autowired
     private LogFileProvider logFileProvider;
+    @Autowired
+    private CurrentUserProvider currentUserProvider;
+    @Autowired
+    private PeopleProvider peopleProvider;
 
     @Autowired
     public AppLogController(RequestMappingHandlerMapping handlerMapping) {
@@ -41,7 +58,7 @@ public class AppLogController {
      *
      * @return the name of the applog jsp file
      */
-    @RequestMapping(value = "/applog", method = RequestMethod.GET)
+    @RequestMapping(value = "/adorationSecure/applog", method = RequestMethod.GET)
     public String applog() {
         return "applog";
     }
@@ -52,7 +69,7 @@ public class AppLogController {
      * @return with the list of log files as a JSON response
      */
     @ResponseBody
-    @RequestMapping(value = "/logs", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/adorationSecure/logs", method = {RequestMethod.GET, RequestMethod.POST})
     public Map<String, Collection<String>> getLogFiles() {
         Map<String, Collection<String>> jsonResponse = new HashMap<>();
         jsonResponse.put(JSON_NAME, logFileProvider.getLogFileNames());
@@ -67,7 +84,7 @@ public class AppLogController {
      * @param userAgent the User-Agent of the request header
      * @return the content of the log file
      */
-    @RequestMapping(value = "/logs/{fileName:.+}", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/adorationSecure/logs/{fileName:.+}", method = {RequestMethod.GET, RequestMethod.POST})
     public ResponseEntity<String> getLogFileContent(@PathVariable("fileName") final String fileName,
                                                     @RequestParam(value = "source", defaultValue = "false") final boolean source,
                                                     @RequestHeader(value = "User-Agent", defaultValue = "") final String userAgent) {
@@ -108,5 +125,49 @@ public class AppLogController {
 
         return jsonResponse;
     }
+
+    @ResponseBody
+    @RequestMapping(value = "/adorationSecure/getAdorAppServerInfo", method = {RequestMethod.GET})
+    public Map<String, Collection<String>> getAdorAppServerInfo() {
+
+        Map<String, Collection<String>> jsonResponse = new HashMap<>();
+        Collection<String> jsonString = new ArrayList<>();
+
+        JsonObject jsonObject = new JsonObject();
+        Gson gson = new Gson();
+        InetAddress ip;
+        String hostname;
+        try {
+            ip = InetAddress.getLocalHost(); //ip address
+            hostname = ip.getHostName();
+            jsonObject.add("ip", gson.toJsonTree(ip.toString()));
+            jsonObject.add("hostname", gson.toJsonTree(hostname));
+        } catch (UnknownHostException e) {
+            logger.info("Login page - cannot detect ip/hostname.");
+        }
+        String json = gson.toJson(jsonObject);
+        jsonString.add(json);
+        jsonResponse.put(JSON_APP_INFO, jsonString);
+        return jsonResponse;
+    }
+
+    /**
+     * Gets the list of log files.
+     *
+     * @return with the list of log files as a JSON response
+     */
+    @ResponseBody
+    @RequestMapping(value = "/adorationSecure/getPersonTable", method = {RequestMethod.GET, RequestMethod.POST})
+    public String getPersonTable(HttpSession httpSession) {
+        String content = null;
+        CurrentUserInformationJson currentUserInformationJson = currentUserProvider.getUserInformation(httpSession);
+        if (currentUserInformationJson.isAdoratorAdmin) {
+            //can get the person table
+            Object people = peopleProvider.getPersonListAsObject(); // this says [{"id":372,"name" we need data in head
+            content = " { \"data\": [ { \"id\": \"Airi\", \"name\": \"Satou\" } ] }";
+        }
+        return content;
+    }
+
 
 }

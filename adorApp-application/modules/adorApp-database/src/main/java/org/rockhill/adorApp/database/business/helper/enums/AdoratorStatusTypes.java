@@ -38,6 +38,7 @@ public enum AdoratorStatusTypes {
         if (ADORATOR_DAILY_COORDINATOR.getAdoratorStatusValue().equals(adoratorStatusValue)) { adoratorStatusText = ADORATOR_DAILY_COORDINATOR.getAdoratorStatusText(); }
         if (ADORATOR_MAIN_COORDINATOR.getAdoratorStatusValue().equals(adoratorStatusValue)) { adoratorStatusText = ADORATOR_MAIN_COORDINATOR.getAdoratorStatusText(); }
         if (ADORATOR_SPIRITUAL_COORDINATOR.getAdoratorStatusValue().equals(adoratorStatusValue)) { adoratorStatusText = ADORATOR_SPIRITUAL_COORDINATOR.getAdoratorStatusText(); }
+        if (ADORATOR_ADMIN.getAdoratorStatusValue().equals(adoratorStatusValue)) { adoratorStatusText = ADORATOR_ADMIN.getAdoratorStatusText(); }
         if (POST_ADORATOR.getAdoratorStatusValue().equals(adoratorStatusValue)) { adoratorStatusText = POST_ADORATOR.getAdoratorStatusText(); }
         if (DIED_ADORATOR.getAdoratorStatusValue().equals(adoratorStatusValue)) { adoratorStatusText = DIED_ADORATOR.getAdoratorStatusText(); }
         if (adoratorStatusText == null) {
@@ -53,6 +54,7 @@ public enum AdoratorStatusTypes {
         if (ADORATOR_DAILY_COORDINATOR.adoratorStatusValue.equals(id)) return ADORATOR_DAILY_COORDINATOR;
         if (ADORATOR_MAIN_COORDINATOR.adoratorStatusValue.equals(id)) return ADORATOR_MAIN_COORDINATOR;
         if (ADORATOR_SPIRITUAL_COORDINATOR.adoratorStatusValue.equals(id)) return ADORATOR_SPIRITUAL_COORDINATOR;
+        if (ADORATOR_ADMIN.adoratorStatusValue.equals(id)) return ADORATOR_ADMIN;
         if (POST_ADORATOR.adoratorStatusValue.equals(id)) return POST_ADORATOR;
         if (DIED_ADORATOR.adoratorStatusValue.equals(id)) return DIED_ADORATOR;
         throw new DatabaseHandlingException("Invalid AdoratorStatusTypes requested: " + id);

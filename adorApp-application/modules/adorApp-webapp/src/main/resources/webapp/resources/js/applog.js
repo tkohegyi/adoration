@@ -1,26 +1,21 @@
 $(document).ready(function() {
   $("#nav-application-log").addClass("active");
+    $("#nav-home").addClass("active");
+    setupMenu();
+    setupVersion();
+    setupLogs();
+    setupPersonTable();
+});
 
-  $.get('/adoration/getLoggedInUserInfo', function(data) {
-    var loggedInUserInfo = JSON.parse(data.loggedInUserInfo[0]).details;
-    $("#loggedInUserLegend").text("User: " + loggedInUserInfo.userName);
-    if (loggedInUserInfo.allowAccessToMenuAccountAndPeopleManagement) {
-        $("#nav-summary").show();
-        $("#nav-summary-people").show();
-    }
-    if (loggedInUserInfo.allowAccessToMenuConfiguration) {
-        $("#nav-configuration").show();
-    }
-    if (loggedInUserInfo.allowAccessToMenuAppLog) {
-        $("#nav-application-log").show();
-    }
-  });
+function setupVersion() {
+  //TODO
+  //$.get('/adorationSecure/version', function(data) {
+  //    $("#span-version").text(data.uooVersion);
+  //});
+}
 
-  $.get('/adoration/version', function(data) {
-      $("#span-version").text(data.uooVersion);
-  });
-
-  $.get('/logs', function(data) {
+function setupLogs() {
+  $.get('/adorationSecure/logs', function(data) {
 	data.files.sort();
     var firstElement = data.files.shift();
     data.files = data.files.reverse();
@@ -36,4 +31,15 @@ $(document).ready(function() {
       $('#div-log-files').append(li);
     }
   });
-});
+}
+
+function setupPersonTable() {
+    $('#person').DataTable( {
+        "ajax": "/adorationSecure/getPersonTable",
+        "columns": [
+            { "data": "id" },
+            { "data": "name" }
+        ]
+    } );
+}
+
