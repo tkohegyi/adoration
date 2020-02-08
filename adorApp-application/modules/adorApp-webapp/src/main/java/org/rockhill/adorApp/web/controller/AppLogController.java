@@ -4,6 +4,7 @@ package org.rockhill.adorApp.web.controller;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.rockhill.adorApp.web.json.CurrentUserInformationJson;
+import org.rockhill.adorApp.web.json.TableDataInformationJson;
 import org.rockhill.adorApp.web.provider.CurrentUserProvider;
 import org.rockhill.adorApp.web.provider.LogFileProvider;
 import org.rockhill.adorApp.web.provider.PeopleProvider;
@@ -158,13 +159,13 @@ public class AppLogController {
      */
     @ResponseBody
     @RequestMapping(value = "/adorationSecure/getPersonTable", method = {RequestMethod.GET, RequestMethod.POST})
-    public String getPersonTable(HttpSession httpSession) {
-        String content = null;
+    public TableDataInformationJson getPersonTable(HttpSession httpSession) {
+        TableDataInformationJson content = null;
         CurrentUserInformationJson currentUserInformationJson = currentUserProvider.getUserInformation(httpSession);
         if (currentUserInformationJson.isAdoratorAdmin) {
             //can get the person table
             Object people = peopleProvider.getPersonListAsObject(); // this says [{"id":372,"name" we need data in head
-            content = " { \"data\": [ { \"id\": \"Airi\", \"name\": \"Satou\" } ] }";
+            content = new TableDataInformationJson(people);
         }
         return content;
     }

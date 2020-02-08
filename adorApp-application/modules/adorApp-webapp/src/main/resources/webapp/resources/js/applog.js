@@ -36,9 +36,22 @@ function setupLogs() {
 function setupPersonTable() {
     $('#person').DataTable( {
         "ajax": "/adorationSecure/getPersonTable",
+        "scrollX": true,
         "columns": [
             { "data": "id" },
-            { "data": "name" }
+            { "data": "name" },
+            { "data": "adorationStatus" },
+            { "data": "webStatus" },
+            { "data": "mobile" },
+            { "data": "mobileVisible" },
+            { "data": "email" },
+            { "data": "emailVisible" },
+            { "data": "adminComment" },
+            { "data": "dhcSigned" },
+            { "data": "dhcSignedDate" },
+            { "data": "coordinatorComment" },
+            { "data": "visibleComment" },
+            { "data": "languageCode" }
         ]
     } );
 }
