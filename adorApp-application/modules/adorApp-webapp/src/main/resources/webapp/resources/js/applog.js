@@ -36,10 +36,13 @@ function setupLogs() {
 function setupPersonTable() {
     $('#person').DataTable( {
         "ajax": "/adorationSecure/getPersonTable",
+        "language": {
+                    "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Hungarian.json"
+             },
         "scrollX": true,
         "columns": [
             { "data": "id" },
-            { "data": "name" },
+            { "data": "name", "width": "200px" },
             { "data": "adorationStatus" },
             { "data": "webStatus" },
             { "data": "mobile" },

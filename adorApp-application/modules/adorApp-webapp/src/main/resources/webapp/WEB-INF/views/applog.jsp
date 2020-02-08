@@ -26,7 +26,7 @@
     <fieldset class="form-horizontal">
         <legend>Adorator Table</legend>
         <div class="control-group">
-            <table id="person" class="body compact table table-striped table-bordered" style="width:100%">
+            <table id="person" class="body compact cell-border" style="width:100%">
                     <thead>
                         <tr>
                             <th>ID</th>
