@@ -8,43 +8,43 @@
 }
 
 .topHours {
-    border-bottom: 1px solid white;
-    border-left: 1px solid white;
-    border-right: 1px solid white;
+    border-bottom: 1px solid black;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
 }
 
 .coverageDaysLeftSide {
-    border-top: 1px solid white;
-    border-bottom: 1px solid white;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
     transform: rotate(-90deg);
 }
 
 .coverageQuarter {
-    border-top: 1px solid white;
-    border-left: 1px solid white;
-    border-right: 1px solid white;
+    border-top: 1px solid black;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
     text-align: center;
 }
 
 .coverageDay {
-    border-top: 1px solid white;
-    border-bottom: 1px solid white;
-    border-left: 1px solid white;
-    border-right: 1px solid white;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
     text-align: center;
 }
 
 .coverageHour {
-    border-top: 1px solid white;
-    border-bottom: 1px solid white;
-    border-left: 1px solid white;
-    border-right: 1px solid white;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
     text-align: center;
 }
 
 .goodCoverage {
     background-color: #4dd25d;
-    color: #19ff19;
+    color: black;
 }
 
 .badCoverage {

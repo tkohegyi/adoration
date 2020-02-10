@@ -38,16 +38,16 @@
 				<th></th>
 			</tr>
 			<tr>
-				<td valign="top" align="right"><font color=#ff1919>2 - Piros&nbsp;</font></td>
+				<td valign="top" align="right" class="veryBadCoverage">2 - Piros&nbsp;</td>
 				<td>színűek azok az órák, amelyekben a jelentkezőkre leginkább szükség van. Ezért, ha teheted, jelentkezz a pirossal jelölt órák valamelyikére.</td>
 			</tr>
 			<tr>
-				<td valign="top" align="right"><font color=#ffff19>1 - Sárga&nbsp;</font></td>
+				<td valign="top" align="right" class="badCoverage">1 - Sárga&nbsp;</td>
 				<td>színűek azok az órák, amelyekben az Örökimádás folyamatos, de nem megfelelően biztosított -
 					ezekre az időpontokra is örömmel várunk még jelentkezőket.</td>
 			</tr>
 			<tr>
-				<td valign="top" align="right"><font color=#19ff19>Zöld&nbsp;</font></td>
+				<td valign="top" align="right" class="goodCoverage">Zöld&nbsp;</td>
 				<td>színűek azok az órák, amelyekben az Örökimádás folytonossága megfelelően biztosított. Természetesen ezekre az órákra is lehet még jelentkezni.</td>
 			</tr>
 		</table>

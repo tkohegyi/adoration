@@ -21,13 +21,13 @@
     <div class="container">
         <%@include file="../include/navbar.html" %>
         <fieldset class="form-horizontal">
-            <legend class="message-legend" style="height: 50px; text-align:center; color:#39c2d7; padding: 0px; font-family: Oswald">Ön nincs bejelentkezve, kérjük lépjen be (vagy regisztráljon), hogy további oldalakhoz is hozzáférjen.</legend>
+            <legend class="message-legend" style="height: 50px; text-align:center; color:#E05050; padding: 0px; font-family: Oswald">Ön nincs bejelentkezve, kérjük lépjen be (vagy regisztráljon), hogy további oldalakhoz is hozzáférjen.</legend>
         </fieldset>
-        <fieldset class="form-horizontal" style="background-color: #373737; height: 50px">
+        <fieldset class="form-horizontal" style="height: 50px">
             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
             <div id="login-possibilities">
                 <br />
-                <p>Kérjük vegye figyelembe, hogy a legelső bejelentkezés után még eltelhet pár nap mire a végleges azonosítás megtörténik, és további információkhoz is hozzáférhet.</p>
+                <p><b>Kérjük vegye figyelembe, hogy a legelső bejelentkezés után még eltelhet pár nap mire a végleges azonosítás megtörténik, és további információkhoz is hozzáférhet.</b></p>
                 <br />A belépés többféleképpen is történhet:<br />
                 Használhatja például a Google-t azonosításra: <a id="gLoginAnchor" class="login" href="/adoration/loginGoogle"><img src="./../resources/img/google_login.png" /></a>, (kattintson a Google logora!)<br/>
                 de beléphet Facebook fiókjával is: <a id="fLoginAnchor" class="login" href="/adoration/loginFacebook"><img src="./../resources/img/facebook_login.png" /></a>, (kattintson a Facebook logora!)<br/>

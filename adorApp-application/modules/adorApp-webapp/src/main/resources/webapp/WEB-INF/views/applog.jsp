@@ -30,37 +30,37 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Name</th>
-                            <th>Adoration - Status</th>
-                            <th>Web - Status</th>
-                            <th>Mobile</th>
-                            <th>Mobile Visible</th>
-                            <th>Email</th>
-                            <th>Email Visible</th>
-                            <th>Administrator Comment</th>
-                            <th>Data Consent</th>
-                            <th>Data Consent Date</th>
-                            <th>Coordinator Comment</th>
-                            <th>Visible Comment</th>
-                            <th>Language Code</th>
+                            <th>Név</th>
+                            <th>Adoráló Státusz</th>
+                            <th>Web Státusz</th>
+                            <th>Telefonszám</th>
+                            <th>Telefonszám látható?</th>
+                            <th>e-mail</th>
+                            <th>e-mail látható?</th>
+                            <th>Adminisztrátor megjegyzés</th>
+                            <th>Adatkezelési Hozzájárulás</th>
+                            <th>Adatk. hozzájárulás dátuma</th>
+                            <th>Koordinátor megjegyzés</th>
+                            <th>Közös/Látható megjegyzés</th>
+                            <th>Nyelvkód</th>
                         </tr>
                     </thead>
                     <tfoot>
                         <tr>
                             <th>ID</th>
-                            <th>Name</th>
-                            <th>Adoration - Status</th>
-                            <th>Web - Status</th>
-                            <th>Mobile</th>
-                            <th>Mobile Visible</th>
-                            <th>Email</th>
-                            <th>Email Visible</th>
-                            <th>Administrator Comment</th>
-                            <th>Data Consent</th>
-                            <th>Data Consent Date</th>
-                            <th>Coordinator Comment</th>
-                            <th>Visible Comment</th>
-                            <th>Language Code</th>
+                            <th>Név</th>
+                            <th>Adoráló Státusz</th>
+                            <th>Web Státusz</th>
+                            <th>Telefonszám</th>
+                            <th>Telefonszám látható?</th>
+                            <th>e-mail</th>
+                            <th>e-mail látható?</th>
+                            <th>Adminisztrátor megjegyzés</th>
+                            <th>Adatkezelési Hozzájárulás</th>
+                            <th>Adatk. hozzájárulás dátuma</th>
+                            <th>Koordinátor megjegyzés</th>
+                            <th>Közös/Látható megjegyzés</th>
+                            <th>Nyelvkód</th>
                         </tr>
                     </tfoot>
                 </table>
