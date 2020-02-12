@@ -23,12 +23,17 @@
     <%@include file="../include/navbar.html" %>
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 
-    <fieldset class="form-horizontal">
-        <legend class="message-legend"d>Az órák aktuális fedettsége</legend>
-        <div class="control-group">
-            <%@include file="../include/coverageBar.html" %>
-        </div>
-    </fieldset>
+    <div class="centerwidediv" style="text-align: center">
+        <br />
+        <img alt="Örökimádás" src="./../resources/img/topimage3.jpg">
+    </div>
+
+        <fieldset class="form-horizontal">
+            <legend class="message-legend h4"d>Az órák aktuális fedettsége</legend>
+            <div class="control-group">
+                <%@include file="../include/coverageBar.html" %>
+            </div>
+        </fieldset>
 
 <div class="centerwidediv">
 		<br />

@@ -29,7 +29,6 @@
         <%@include file="../include/navbar.html" %>
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
         <br />
-        <img alt="Örökimádás" src="./../resources/img/topimage3.jpg">
 
         <div class="centerdiv">
             <h3>Minden hónap második péntekén, imanapot tartunk,<br />amely 18:30-kor Szentmisével zárul.</h3>

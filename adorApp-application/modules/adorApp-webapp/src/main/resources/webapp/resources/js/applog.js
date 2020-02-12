@@ -55,6 +55,33 @@ function setupPersonTable() {
             { "data": "coordinatorComment" },
             { "data": "visibleComment" },
             { "data": "languageCode" }
+        ],
+        "columnDefs": [
+            {
+                "render": function ( data, type, row ) {
+                    return '<a href=\"/adorationSecure/editPerson?id=' + data + '\">' + data +'</a>';
+                },
+                "targets": 0
+            },
+            {
+                "render": function ( data, type, row ) {
+                    var z;
+                    switch (data) {
+                    case 1: z = 'Jelentkező-Adoráló'; break;
+                    case 2: z = 'Adoráló'; break;
+                    case 3: z = 'Óra-koordinátor'; break;
+                    case 4: z = 'Napszak-koordinátor'; break;
+                    case 5: z = 'Fő koordinátor'; break;
+                    case 6: z = 'Spiritualis vezető'; break;
+                    case 7: z = 'Adminisztrátor'; break;
+                    case 8: z = 'Ex-Adoráló'; break;
+                    case 9: z = 'Elhunyt'; break;
+                    default: z = '???';
+                    }
+                    return z;
+                },
+                "targets": 2
+            }
         ]
     } );
 }

@@ -1,9 +1,8 @@
 package org.rockhill.adorApp.web.controller;
 
-
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import org.rockhill.adorApp.web.json.CurrentUserInformationJson;
+import org.rockhill.adorApp.web.controller.helper.ControllerBase;
 import org.rockhill.adorApp.web.json.TableDataInformationJson;
 import org.rockhill.adorApp.web.provider.CurrentUserProvider;
 import org.rockhill.adorApp.web.provider.LogFileProvider;
@@ -21,6 +20,7 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -33,7 +33,7 @@ import java.util.Map;
  * Controller for accessing the application log files.
  */
 @Controller
-public class AppLogController {
+public class AppLogController extends ControllerBase {
 
     private static final String JSON_NAME = "files";
     private static final String CONTENT_DISPOSITION = "Content-Disposition";
@@ -60,7 +60,11 @@ public class AppLogController {
      * @return the name of the applog jsp file
      */
     @RequestMapping(value = "/adorationSecure/applog", method = RequestMethod.GET)
-    public String applog() {
+    public String applog(HttpSession httpSession,
+                         HttpServletResponse httpServletResponse) {
+        if (!isAdoratorAdmin(currentUserProvider, httpSession)) {
+            return "redirect:/adoration/";
+        }
         return "applog";
     }
 
@@ -161,14 +165,12 @@ public class AppLogController {
     @RequestMapping(value = "/adorationSecure/getPersonTable", method = {RequestMethod.GET, RequestMethod.POST})
     public TableDataInformationJson getPersonTable(HttpSession httpSession) {
         TableDataInformationJson content = null;
-        CurrentUserInformationJson currentUserInformationJson = currentUserProvider.getUserInformation(httpSession);
-        if (currentUserInformationJson.isAdoratorAdmin) {
+        if (isAdoratorAdmin(currentUserProvider, httpSession)) {
             //can get the person table
             Object people = peopleProvider.getPersonListAsObject(); // this says [{"id":372,"name" we need data in head
             content = new TableDataInformationJson(people);
         }
         return content;
     }
-
 
 }
