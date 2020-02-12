@@ -81,6 +81,21 @@ function setupPersonTable() {
                     return z;
                 },
                 "targets": 2
+            },
+            {
+                "render": function ( data, type, row ) {
+                    var z;
+                    switch (data) {
+                    case 0: z = 'Nem adoráló'; break;
+                    case 1: z = 'Azonosításra vár'; break;
+                    case 2: z = 'Adoráló Google azonosítóval'; break;
+                    case 3: z = 'Adoráló Facebook azonosítással'; break;
+                    case 4: z = 'Adoráló Google/Facebook azonosítással'; break;
+                    default: z = '???';
+                    }
+                    return z;
+                },
+                "targets": 3
             }
         ]
     } );
