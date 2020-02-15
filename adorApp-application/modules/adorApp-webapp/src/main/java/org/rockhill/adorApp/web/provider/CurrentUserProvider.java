@@ -92,5 +92,27 @@ public class CurrentUserProvider {
         }
         return currentUserInformationJson;
     }
+
+    public String getQuickUserName(Authentication authentication) {
+        Object principal = authentication.getPrincipal();
+        String loggedInUserName = "";
+        Person person; // = null;
+        if (principal instanceof AuthenticatedUser) {
+            AuthenticatedUser user = (AuthenticatedUser) principal;
+            person = user.getPerson();
+            if (person != null) {
+                loggedInUserName = person.getName();
+            } else {
+                loggedInUserName = "Vend\u00e9g - Anonymous";
+                if (principal instanceof GoogleUser) {
+                    loggedInUserName = "Vend\u00e9g - " + user.getSocial().getGoogleUserName();
+                }
+                if (principal instanceof FacebookUser) {
+                    loggedInUserName = "Vend\u00e9g - " + user.getSocial().getFacebookUserName();
+                }
+            }
+        }
+        return loggedInUserName;
+    }
     
 }

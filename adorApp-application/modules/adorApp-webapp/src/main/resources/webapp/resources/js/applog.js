@@ -58,6 +58,10 @@ function setupPersonTable() {
         ],
         "columnDefs": [
             {
+                "className": "text-center",
+                "targets": [0,5,7,9,13]
+            },
+            {
                 "render": function ( data, type, row ) {
                     return '<a href=\"/adorationSecure/editPerson?id=' + data + '\">' + data +'</a>';
                 },
@@ -96,6 +100,42 @@ function setupPersonTable() {
                     return z;
                 },
                 "targets": 3
+            },
+            {
+                "render": function ( data, type, row ) {
+                    var z;
+                    switch (data) {
+                    case true: z = 'I'; break;
+                    case false: z = 'N'; break;
+                    default: z = '???';
+                    }
+                    return z;
+                },
+                "targets": [5,7,9]
+            },
+            {
+                "render": function ( data, type, row ) {
+                    var z;
+                    switch (data) {
+                    case "hu": z = 'magyar'; break;
+                    case "ge": z = 'német'; break;
+                    case "en": z = 'angol'; break;
+                    default: z = '???';
+                    }
+                    return z;
+                },
+                "targets": 13
+            },
+            {
+                "render": function ( data, type, row ) {
+                    var z = '';
+                    if (typeof data != "undefined") {
+                        var dateTime = new Date(data);
+                        z = dateTime.toLocaleDateString("hu-HU");
+                    }
+                    return z;
+                },
+                "targets": 10
             }
         ]
     } );

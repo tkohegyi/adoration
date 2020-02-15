@@ -1,6 +1,7 @@
 package org.rockhill.adorApp.web.controller;
 
 import org.rockhill.adorApp.web.configuration.WebAppConfigurationAccess;
+import org.rockhill.adorApp.web.provider.CurrentUserProvider;
 import org.rockhill.adorApp.web.service.FacebookOauth2Service;
 import org.rockhill.adorApp.web.service.GoogleOauth2Service;
 import org.slf4j.Logger;
@@ -33,6 +34,8 @@ public class LoginController {
     GoogleOauth2Service googleOauth2Service;
     @Autowired
     FacebookOauth2Service facebookOauth2Service;
+    @Autowired
+    private CurrentUserProvider currentUserProvider;
 
     @Autowired
     WebAppConfigurationAccess webAppConfigurationAccess;
@@ -103,6 +106,7 @@ public class LoginController {
             SecurityContext sc = SecurityContextHolder.getContext();
             sc.setAuthentication(authentication);
             httpSession.setAttribute(SPRING_SECURITY_CONTEXT_KEY, sc);
+            logger.info("User logged in with Google: " + currentUserProvider.getQuickUserName(authentication));
             try {
                 httpServletResponse.sendRedirect(webAppConfigurationAccess.getProperties().getGoogleRedirectUrl());
             } catch (IOException e) {
@@ -115,6 +119,7 @@ public class LoginController {
             SecurityContext sc = SecurityContextHolder.getContext();
             sc.setAuthentication(authentication);
             httpSession.setAttribute(SPRING_SECURITY_CONTEXT_KEY, sc);
+            logger.info("User logged in with Facebook: " + currentUserProvider.getQuickUserName(authentication));
             try {
                 httpServletResponse.sendRedirect(webAppConfigurationAccess.getProperties().getGoogleRedirectUrl());
             } catch (IOException e) {
@@ -133,6 +138,10 @@ public class LoginController {
         //clean up the session info
         SecurityContext sc = (SecurityContext) httpSession.getAttribute(SPRING_SECURITY_CONTEXT_KEY);
         if (sc != null) {
+            Authentication authentication = sc.getAuthentication();
+            if (authentication != null) {
+                logger.info("User logout: " + currentUserProvider.getQuickUserName(authentication));
+            }
             sc.setAuthentication(null); // this cleans up the authentication data technically
             httpSession.removeAttribute(SPRING_SECURITY_CONTEXT_KEY); // this clean up the session itself
         }
