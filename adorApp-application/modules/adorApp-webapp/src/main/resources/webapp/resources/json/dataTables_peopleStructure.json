@@ -150,8 +150,9 @@
       "id": "languageCode",
       "text": "Nyelvkód:",
       "type": "fixText",
-      "helpText": "Adoráló által használt nyelv.",
+      "helpText": "Adoráló által használt nyelv. Nem változtatható.",
       "mandatory": true,
+      "renderer": "getReadableLanguageCode",
       "new": {
         "default": "hu"
       }

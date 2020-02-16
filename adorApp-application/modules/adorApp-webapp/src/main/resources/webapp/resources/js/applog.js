@@ -122,25 +122,13 @@ function setupPersonTable() {
             },
             {
                 "render": function ( data, type, row ) {
-                    var z;
-                    switch (data) {
-                    case "hu": z = 'magyar'; break;
-                    case "ge": z = 'német'; break;
-                    case "en": z = 'angol'; break;
-                    default: z = '???';
-                    }
-                    return z;
+                    return getReadableLanguageCode(data);
                 },
                 "targets": 13
             },
             {
                 "render": function ( data, type, row ) {
-                    var z = '';
-                    if (typeof data != "undefined") {
-                        var dateTime = new Date(data);
-                        z = dateTime.toLocaleDateString("hu-HU");
-                    }
-                    return z;
+                    return getReadableDateString(data);
                 },
                 "targets": 10
             }
@@ -163,10 +151,6 @@ function reBuildModal() {
     //get and fill modal
     var person;
     var editId = $("#editId").val(); //filled by the button's onclick method
-    //let personUrl = "/adorationSecure/getPerson/" + editId;
-    //$.get(url, function(data, status) {
-    //    person = data.data;
-    //});
     $.ajax({
         type: "GET",
         url: '/adorationSecure/getPerson/' + editId,
@@ -183,8 +167,7 @@ function reBuildModal() {
         for (var i = 0; i < info.length; i++) {
             var row = info[i];
             //first is about visibility - if not visible, skip
-            if (typeof row.edit.visible == "undefined") break;
-            if (row.edit.visible == false) break;
+            if ((typeof row.edit != "undefined") && (typeof row.edit.visible != "undefined") && (row.edit.visible == false)) break;
             var r = $("<tr/>");
             //additional help text, based on behavior
             let addMandatory = "";
@@ -211,8 +194,7 @@ function reBuildModal() {
             var td2 = $("<td id=\"td-" + idText + "\">" + text + originalValue + "</td>");
             //help text
             var td3 = $("<td>" + row.helpText + "</td>");
-            var td4 = $("<td id=\"man-" + idText + "\"/>");
-            r.append(td1);r.append(td2);r.append(td3);r.append(td4);
+            r.append(td1);r.append(td2);r.append(td3);
             c.append(r);
         }
     }
