@@ -23,4 +23,8 @@ public class PeopleProvider {
         return people;
     }
 
+    public Object getPersonAsObject(final Long id) {
+        Person p = businessWithPerson.getPersonById(id);
+        return p;
+    }
 }

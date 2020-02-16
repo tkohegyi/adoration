@@ -2,16 +2,22 @@ $(document).ready(function() {
   $("#nav-application-log").addClass("active");
     $("#nav-home").addClass("active");
     setupMenu();
-    setupVersion();
     setupLogs();
     setupPersonTable();
+    loadStructure();
 });
 
-function setupVersion() {
-  //TODO
-  //$.get('/adorationSecure/version', function(data) {
-  //    $("#span-version").text(data.uooVersion);
-  //});
+var structureInfo;
+
+function loadStructure() {
+    $.get("/resources/json/dataTables_peopleStructure.json", function(data) {
+        structureInfo = data;
+    });
+}
+
+function changeClick(e) {
+   $("#editId").val(e);
+   reBuildModal();
 }
 
 function setupLogs() {
@@ -63,7 +69,8 @@ function setupPersonTable() {
             },
             {
                 "render": function ( data, type, row ) {
-                    return '<a href=\"/adorationSecure/editPerson?id=' + data + '\">' + data +'</a>';
+                    var z = "<button type=\"button\" class=\"btn btn-info btn-sm\" data-toggle=\"modal\" data-target=\"#editModal\" onclick=\"changeClick(" + data + ")\">" + data + "</button>";
+                    return z;
                 },
                 "targets": 0
             },
@@ -141,3 +148,73 @@ function setupPersonTable() {
     } );
 }
 
+function requestComplete() {
+    $('#saveChangesButton').removeAttr('disabled');
+}
+
+function reBuildModal() {
+    requestComplete(); //ensure availability of save button when the modal is refreshed
+    //reconstruct modal
+    var c = $('#editContent');
+    c.remove();
+    var t = $('#editTable');
+    var c = $("<tbody id=\"editContent\"/>");
+    t.append(c);
+    //get and fill modal
+    var person;
+    var editId = $("#editId").val(); //filled by the button's onclick method
+    //let personUrl = "/adorationSecure/getPerson/" + editId;
+    //$.get(url, function(data, status) {
+    //    person = data.data;
+    //});
+    $.ajax({
+        type: "GET",
+        url: '/adorationSecure/getPerson/' + editId,
+        async: false,
+        success: function(response) {
+            person = response.data;
+        }
+    });
+    //identify the person
+    if (typeof person == "undefined") return; //if person is not available, there is no point to rebuild
+    if (typeof structureInfo != "undefined") {
+        //we have structureInfo
+        var info = structureInfo.info;
+        for (var i = 0; i < info.length; i++) {
+            var row = info[i];
+            //first is about visibility - if not visible, skip
+            if (typeof row.edit.visible == "undefined") break;
+            if (row.edit.visible == false) break;
+            var r = $("<tr/>");
+            //additional help text, based on behavior
+            let addMandatory = "";
+            let mandatoryFlag = row.mandatory;
+            if ((typeof mandatory != "undefined") && mandatory) {
+                addMandatory = "-m-";  // -m- is added
+            }
+            var td1 = $("<th>" + row.text + "</th>");
+            var text = "";
+            var idText = "field-" + row.id;
+            var nameText = idText + "-" + row.type + addMandatory;
+            let command = "person." + row.id;
+            var original = eval(command);
+            if (row.type == "fixText") {
+                text = original;
+            }
+            if (row.type.split("-")[0] == "input") { //input-100, input-1000 etc
+                text = "<input class=\"customField\" onchange=\"valueChanged(this)\" type=\"text\" name=\"" + nameText + "\" id=\"" + idText + "\" value=\"" + original + "\"/>";
+            }
+            if (row.type == "singleSelect") {
+            }
+            //preserve original value too
+            var originalValue = "<input id=\"orig-" + idText + "\" type=\"hidden\" value=\"" + original + "\">";
+            var td2 = $("<td id=\"td-" + idText + "\">" + text + originalValue + "</td>");
+            //help text
+            var td3 = $("<td>" + row.helpText + "</td>");
+            var td4 = $("<td id=\"man-" + idText + "\"/>");
+            r.append(td1);r.append(td2);r.append(td3);r.append(td4);
+            c.append(r);
+        }
+    }
+
+}

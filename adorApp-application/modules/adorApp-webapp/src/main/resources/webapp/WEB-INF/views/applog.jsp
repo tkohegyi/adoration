@@ -22,9 +22,9 @@
   <div class="container">
     <%@include file="../include/navbar.html" %>
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-    <span id="span-version" class="badge badge-info control-group"></span>
     <fieldset class="form-horizontal">
         <legend>Adorator Table</legend>
+        <div class="container" style="padding:5px" align="right"><a id="add-button" class="btn btn-primary" href="/adorationSecure/adoratorAdd">Új adoráló felvétele...</a></div>
         <div class="control-group">
             <table id="person" class="table table-striped table-bordered table-hover compact cell-border" style="width:100%">
                     <thead>
@@ -78,6 +78,41 @@
         </div>
     </fieldset>
   </div>
+
+    <!-- Modal Edit -->
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="editCenterTitle">Módosítás</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Cancel">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+              <form>
+                  <table id="editTable" class="table table-hover table-bordered">
+                      <thead>
+                          <tr>
+                              <th>Oszlop név</th>
+                              <th style="width:40%">Tartalom</th>
+                              <th>Segítség</th>
+                          </tr>
+                      </thead>
+                      <tbody id="editContent"/>
+                  </table>
+                  <input id="editId" type="hidden" value="">
+               </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" onclick="reBuildModal()">Eredeti adatok visszanyerése</button>
+            <button type="button" class="btn btn-info" data-dismiss="modal">Felejtés</button>
+            <button id="saveChangesButton" type="button" class="btn btn-success" onclick="saveChanges()">Mentés</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   <script src="/resources/js/external/jquery-3.4.1.js"></script>
   <script src="/resources/js/external/bootstrap-4.3.1.min.js"></script>
   <script src="/resources/js/external/dataTables/datatables.min.js"></script>

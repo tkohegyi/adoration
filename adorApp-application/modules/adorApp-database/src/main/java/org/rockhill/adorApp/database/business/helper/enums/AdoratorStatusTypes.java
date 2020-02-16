@@ -3,6 +3,7 @@ package org.rockhill.adorApp.database.business.helper.enums;
 import org.rockhill.adorApp.database.exception.DatabaseHandlingException;
 
 public enum AdoratorStatusTypes {
+    USER("External User/Adorator", 0),
     PRE_ADORATOR("Pre-Adorator", 1),
     ADORATOR("Adorator", 2),
     ADORATOR_HOURLY_COORDINATOR("Hourly Coordinator", 3),
@@ -32,6 +33,7 @@ public enum AdoratorStatusTypes {
     // helper functions
     public static String getAdoratorStatusTypeTranslated(Integer adoratorStatusValue) {
         String adoratorStatusText = null;
+        if (USER.getAdoratorStatusValue().equals(adoratorStatusValue)) { adoratorStatusText = USER.getAdoratorStatusText(); }
         if (PRE_ADORATOR.getAdoratorStatusValue().equals(adoratorStatusValue)) { adoratorStatusText = PRE_ADORATOR.getAdoratorStatusText(); }
         if (ADORATOR.getAdoratorStatusValue().equals(adoratorStatusValue)) { adoratorStatusText = ADORATOR.getAdoratorStatusText(); }
         if (ADORATOR_HOURLY_COORDINATOR.getAdoratorStatusValue().equals(adoratorStatusValue)) { adoratorStatusText = ADORATOR_HOURLY_COORDINATOR.getAdoratorStatusText(); }
@@ -48,6 +50,7 @@ public enum AdoratorStatusTypes {
     }
 
     public static AdoratorStatusTypes getAdoratorStatusTypeFromId(Integer id) {
+        if (USER.adoratorStatusValue.equals(id)) return USER;
         if (PRE_ADORATOR.adoratorStatusValue.equals(id)) return PRE_ADORATOR;
         if (ADORATOR.adoratorStatusValue.equals(id)) return ADORATOR;
         if (ADORATOR_HOURLY_COORDINATOR.adoratorStatusValue.equals(id)) return ADORATOR_HOURLY_COORDINATOR;

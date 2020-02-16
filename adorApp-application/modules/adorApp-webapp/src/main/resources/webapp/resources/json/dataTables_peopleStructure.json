@@ -1,0 +1,160 @@
+{
+  "tableName": "people",
+  "modalId": "edit",
+  "edit" : {
+    "title": "Módosítás",
+    "type": "standard-noDelete"
+  },
+  "new" : {
+    "title": "Új Felhasználó/Adorátor felvétele",
+    "type": "standard"
+  },
+  "info": [
+    {
+      "id": "id",
+      "type": "fixText",
+      "text": "ID:",
+      "helpText": "Felhasználó/Adorátor azonosítószáma, nem változtatható.",
+      "edit": {
+        "visible" : true
+      },
+      "new": {
+        "visible" : false,
+        "default": "0"
+      }
+    },
+    {
+      "id": "name",
+      "type": "input-100",
+      "text": "Név:",
+      "helpText": "A felhasználó/adoráló neve.",
+      "mandatory": true
+    },
+    {
+      "id": "adorationStatus",
+      "text": "Adoráló Státusz:",
+      "type": "singleSelect",
+      "helpText": "Ha valaki több státuszban is van, a nagyobb jogosultságút kell kiválasztani.",
+      "mandatory": true,
+      "selection": [
+        { "id": 0, "value": "Külsős/Alkalmi-Adoráló" },
+        { "id": 1, "value": "Jelentkező-Adoráló" },
+        { "id": 2, "value": "Adoráló" },
+        { "id": 3, "value": "Óra-koordinátor" },
+        { "id": 4, "value": "Napszak-koordinátor" },
+        { "id": 5, "value": "Fő koordinátor" },
+        { "id": 6, "value": "Spiritualis vezető" },
+        { "id": 7, "value": "Adminisztrátor" },
+        { "id": 8, "value": "Ex-Adoráló" },
+        { "id": 9, "value": "Elhunyt" }
+      ],
+      "edit": {
+        "visible" : true
+      },
+      "new": {
+        "enabledSelections": [0,1,2,3,4,5,6,7,8],
+        "default": "2"
+      }
+    },
+    {
+      "id": "webStatus",
+      "text": "Web Státusz:",
+      "type": "singleSelect",
+      "helpText": "",
+      "mandatory": true,
+      "selection": [
+        { "id": 0, "value": "Anoním adoráló" },
+        { "id": 1, "value": "Azonosításra vár" },
+        { "id": 2, "value": "Adoráló Google azonosítóval" },
+        { "id": 3, "value": "Adoráló Facebook azonosítással" },
+        { "id": 4, "value": "Adoráló Google/Facebook azonosítással" },
+        { "id": 5, "value": "Adoráló közösségi belépés nélkül" }
+      ],
+      "edit": {
+        "visible" : true
+      },
+      "new": {
+        "default": 5
+      }
+    },
+    {
+      "id": "mobile",
+      "text": "Telefonszám:",
+      "type": "input-100",
+      "helpText": "Telefonszám(ok)."
+    },
+    {
+      "id": "mobileVisible",
+      "text": "Telefonszám látható?",
+      "type": "i/n-boolean",
+      "helpText": "Publikus-e az adoráló telefonszáma?",
+      "mandatory": true,
+      "edit": {
+        "visible" : true
+      },
+      "new": {
+        "default": true
+      }
+    },
+    {
+      "id": "email",
+      "text": "e-mail",
+      "type": "input-200",
+      "helpText": "Az adoráló e-mail címe(i)."
+    },
+    {
+      "id": "emailVisible",
+      "text": "E-mail látható?",
+      "type": "i/n-boolean",
+      "helpText": "Publikus-e az adoráló e-mail címe?",
+      "mandatory": true,
+      "new": {
+        "default": true
+      }
+    },
+    {
+      "id": "adminComment",
+      "text": "Adminisztrátor megjegyzés:",
+      "type": "input-1000",
+      "helpText": "Az Adminisztrátor megjegyzése, csak a koordinátorok láthatják."
+    },
+    {
+      "id": "dhcSigned",
+      "text": "Adatkezelési hozzájárulás:",
+      "type": "i/n-boolean",
+      "helpText": "Az adoráló hozzájárulása az adatkezeléshez, megtörtént-e?",
+      "mandatory": true,
+      "new": {
+        "default": true
+      }
+    },
+    {
+      "id": "dhcSignedDate",
+      "text": "Adatkezelési hozzájárulás dátuma:",
+      "type": "date-nullable",
+      "helpText": "Az adatkezelési hozzájárulás dátuma."
+    },
+    {
+      "id": "coordinatorComment",
+      "text": "Koordinátorok megjegyzése:",
+      "type": "input-1000",
+      "helpText": "Az koordinátorok megjegyzése, csak a koordinátorok láthatják."
+    },
+    {
+      "id": "visibleComment",
+      "text": "Megjegyzés:",
+      "type": "input-1000",
+      "helpText": "Minden adoráló által látható megjegyzés."
+    },
+    {
+      "id": "languageCode",
+      "text": "Nyelvkód:",
+      "type": "fixText",
+      "helpText": "Adoráló által használt nyelv.",
+      "mandatory": true,
+      "new": {
+        "default": "hu"
+      }
+    }
+  ]
+}

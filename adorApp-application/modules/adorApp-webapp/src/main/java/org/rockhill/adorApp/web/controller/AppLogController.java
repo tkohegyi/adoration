@@ -157,9 +157,9 @@ public class AppLogController extends ControllerBase {
     }
 
     /**
-     * Gets the list of log files.
+     * Gets the list of Adorators
      *
-     * @return with the list of log files as a JSON response
+     * @return with the list of people as a JSON response
      */
     @ResponseBody
     @RequestMapping(value = "/adorationSecure/getPersonTable", method = {RequestMethod.GET, RequestMethod.POST})
@@ -169,6 +169,24 @@ public class AppLogController extends ControllerBase {
             //can get the person table
             Object people = peopleProvider.getPersonListAsObject(); // this says [{"id":372,"name" we need data in head
             content = new TableDataInformationJson(people);
+        }
+        return content;
+    }
+
+    /**
+     * Gets specific Adorator
+     *
+     * @return with the person as a JSON response
+     */
+    @ResponseBody
+    @RequestMapping(value = "/adorationSecure/getPerson/{id:.+}", method = {RequestMethod.GET, RequestMethod.POST})
+    public TableDataInformationJson getPersonById(HttpSession httpSession, @PathVariable("id") final String requestedId) {
+        TableDataInformationJson content = null;
+        if (isAdoratorAdmin(currentUserProvider, httpSession)) {
+            //can get the person
+            Long id = Long.valueOf(requestedId);
+            Object person = peopleProvider.getPersonAsObject(id);
+            content = new TableDataInformationJson(person);
         }
         return content;
     }
