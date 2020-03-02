@@ -36,7 +36,7 @@ function getReadableDateString(data) {
     var z = '';
     if (typeof data != "undefined") {
         var dateTime = new Date(data);
-        z = dateTime.toLocaleDateString("hu-HU");
+        z = dateTime.toISOString().substring(0, 10);
     }
     return z;
 }

@@ -8,6 +8,7 @@ $(document).ready(function() {
 });
 
 var structureInfo;
+var imgSrc; //used by renderer
 
 function loadStructure() {
     $.get("/resources/json/dataTables_peopleStructure.json", function(data) {
@@ -112,8 +113,14 @@ function setupPersonTable() {
                 "render": function ( data, type, row ) {
                     var z;
                     switch (data) {
-                    case true: z = 'I'; break;
-                    case false: z = 'N'; break;
+                    case true:
+                        imgSrc = "/resources/img/dark-green-check-mark-th.png"
+                        z = "<img alt=\"Igen\" src=\"" + imgSrc + "\" height=\"20\" width=\"20\" />";
+                        break;
+                    case false:
+                        imgSrc = "/resources/img/orange-cross-th.png";
+                        z = "<img alt=\"Nem\" src=\"" + imgSrc + "\" height=\"20\" width=\"20\" />";
+                        break;
                     default: z = '???';
                     }
                     return z;
@@ -164,7 +171,7 @@ function reBuildModal() {
     if (typeof structureInfo != "undefined") {
         //we have structureInfo
         var info = structureInfo.info;
-        for (var i = 0; i < info.length; i++) {
+        for (var i = 0; i < info.length; i++) { //iterate through columns
             var row = info[i];
             //first is about visibility - if not visible, skip
             if ((typeof row.edit != "undefined") && (typeof row.edit.visible != "undefined") && (row.edit.visible == false)) break;
@@ -185,9 +192,20 @@ function reBuildModal() {
                 text = original;
             }
             if (row.type.split("-")[0] == "input") { //input-100, input-1000 etc
-                text = "<input class=\"customField\" onchange=\"valueChanged(this)\" type=\"text\" name=\"" + nameText + "\" id=\"" + idText + "\" value=\"" + original + "\"/>";
+                text = "<input class=\"customField\" onchange=\"valueChanged(this)\" type=\"text\" name=\"" + nameText + "\" id=\"" + idText + "\" value=\"" + original + "\" />";
+            }
+            if (row.type == "date-nullable") {
+                original = getReadableDateString(original);
+                text =  "<input onchange=\"valueChanged(this)\" type=\"date\" name=\"" + nameText + "\" id=\"" + idText + "\"  value=\"" + original + "\"/>";
             }
             if (row.type == "singleSelect") {
+            }
+            if (row.type == "i/n-boolean") {
+                let checked = "";
+                if (original == true) {
+                    checked = " checked ";
+                }
+                text =  "<input onchange=\"valueChanged(this)\" type=\"checkbox\" " + checked + " name=\"" + nameText + "\" id=\"" + idText + "\" />";
             }
             //preserve original value too
             var originalValue = "<input id=\"orig-" + idText + "\" type=\"hidden\" value=\"" + original + "\">";
