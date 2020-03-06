@@ -192,20 +192,29 @@ function reBuildModal() {
                 text = original;
             }
             if (row.type.split("-")[0] == "input") { //input-100, input-1000 etc
-                text = "<input class=\"customField\" onchange=\"valueChanged(this)\" type=\"text\" name=\"" + nameText + "\" id=\"" + idText + "\" value=\"" + original + "\" />";
+                text = "<input class=\"customField\" onchange=\"valueChanged(this,'" + row.type + "')\" type=\"text\" name=\"" + nameText + "\" id=\"" + idText + "\" value=\"" + original + "\" />";
             }
             if (row.type == "date-nullable") {
                 original = getReadableDateString(original);
-                text =  "<input onchange=\"valueChanged(this)\" type=\"date\" name=\"" + nameText + "\" id=\"" + idText + "\"  value=\"" + original + "\"/>";
+                text =  "<input onchange=\"valueChanged(this,'" + row.type + "')\" type=\"date\" name=\"" + nameText + "\" id=\"" + idText + "\"  value=\"" + original + "\"/>";
             }
             if (row.type == "singleSelect") {
+                text = "";
+                for (var j = 0; j < row.selection.length; j++) {
+                    let selected = "";
+                    if (original == row.selection[j].id) {
+                        selected = " selected ";
+                    }
+                    text += "<option value=\"" + row.selection[j].id + "\"" + selected + ">" + row.selection[j].value + "</option>";
+                }
+                text = "<select id=\"" + idText + "\" class=\"custom-select\" onchange=\"valueChanged(this,'" + row.type + "')\">" + text + "</select>"
             }
             if (row.type == "i/n-boolean") {
                 let checked = "";
                 if (original == true) {
                     checked = " checked ";
                 }
-                text =  "<input onchange=\"valueChanged(this)\" type=\"checkbox\" " + checked + " name=\"" + nameText + "\" id=\"" + idText + "\" />";
+                text =  "<input onchange=\"valueChanged(this,'" + row.type + "')\" type=\"checkbox\" " + checked + " name=\"" + nameText + "\" id=\"" + idText + "\" />";
             }
             //preserve original value too
             var originalValue = "<input id=\"orig-" + idText + "\" type=\"hidden\" value=\"" + original + "\">";
@@ -217,4 +226,30 @@ function reBuildModal() {
         }
     }
 
+}
+
+function valueChanged(theObject, type) {
+	var o = $("#" + theObject.id);
+	var origO = $("#" + "orig-" + theObject.id);
+	var td = $("#" + "td-" + theObject.id);
+	let v;
+	type = type.split("-")[0]; // date , input etc
+	switch (type) {
+	    case "date": // val();
+	        v = o.val();
+	        break;
+	    case "singleSelect": // select
+	        v = o.find(":selected").val();
+	        break;
+	    case "input":
+	        v = o.prop("value");
+	        break;
+	    case "i/n-boolean":
+	        v = o.prop("checked").toString();
+	}
+	if (v == origO.val()) {
+	    td.removeClass("table-danger");
+	} else {
+	    td.addClass("table-danger");
+	}
 }

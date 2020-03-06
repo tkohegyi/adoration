@@ -67,7 +67,7 @@
         { "id": 1, "value": "Azonosításra vár" },
         { "id": 2, "value": "Adoráló Google azonosítóval" },
         { "id": 3, "value": "Adoráló Facebook azonosítással" },
-        { "id": 4, "value": "Adoráló Google/Facebook azonosítással" },
+        { "id": 4, "value": "Adoráló Google és Facebook azonosítással" },
         { "id": 5, "value": "Adoráló közösségi belépés nélkül" }
       ],
       "edit": {
