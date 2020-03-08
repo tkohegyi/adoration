@@ -3,7 +3,6 @@ package org.rockhill.adorApp.web.provider;
 import org.apache.commons.text.StringEscapeUtils;
 import org.rockhill.adorApp.database.business.BusinessWithAuditTrail;
 import org.rockhill.adorApp.database.business.BusinessWithPerson;
-import org.rockhill.adorApp.database.business.helper.Converter;
 import org.rockhill.adorApp.database.business.helper.enums.AdoratorStatusTypes;
 import org.rockhill.adorApp.database.business.helper.enums.WebStatusTypes;
 import org.rockhill.adorApp.database.tables.AuditTrail;
@@ -15,12 +14,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 @Component
@@ -129,18 +124,9 @@ public class PeopleProvider {
             auditTrailCollection.add(prepareAuditTrail(person.getId(), currentUserInformationJson.userName, "DhcSigned", oldBoolean.toString(), newBoolean.toString()));
         }
 
-        Date oldDate = person.getDhcSignedDate();
-        Date newDate;
-        try {
-            DateFormat df1 = new SimpleDateFormat("yyyy-MM-dd");
-            newDate = df1.parse(p.dhcSignedDate);
-        } catch (ParseException e) {
-            newDate = null;
-        }
-        person.setDhcSignedDate(newDate);
-        Converter converter = new Converter();
-        newValue = converter.getDateAsString(newDate);
-        oldValue = converter.getDateAsString(oldDate);
+        oldValue = person.getDhcSignedDate();
+        newValue = p.dhcSignedDate;
+        person.setDhcSignedDate(newValue);
         if (!oldValue.contentEquals(newValue)) {
             auditTrailCollection.add(prepareAuditTrail(person.getId(), currentUserInformationJson.userName, "DhcSignedDate", oldValue, newValue));
         }

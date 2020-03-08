@@ -131,7 +131,7 @@
     {
       "id": "dhcSignedDate",
       "text": "Adatkezelési hozzájárulás dátuma:",
-      "type": "date-nullable",
+      "type": "dateString-nullable",
       "helpText": "Az adatkezelési hozzájárulás dátuma."
     },
     {

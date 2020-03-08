@@ -8,7 +8,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.util.Date;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 @Entity
 @Table(name = "adoration.dbo.person")
@@ -24,7 +26,7 @@ public class Person {
     private Boolean emailVisible;
     private String adminComment;
     private Boolean dhcSigned;
-    private Date dhcSignedDate;
+    private String dhcSignedDate;
     private String coordinatorComment;
     private String visibleComment;
     private String languageCode;
@@ -139,11 +141,23 @@ public class Person {
 
     @Column(name = "dhcSignedDate", nullable = true)
     //this also might be null
-    public Date getDhcSignedDate() {
-        return dhcSignedDate;
+    public String getDhcSignedDate() {
+        if (dhcSignedDate != null) {
+            return dhcSignedDate;
+        } else {
+            return "";
+        }
     }
 
-    public void setDhcSignedDate(Date dhcSignedDate) {
+    public void setDhcSignedDate(String dhcSignedDate) {
+        if ((dhcSignedDate != null) && (dhcSignedDate.length() > 0)){
+            try {
+                DateFormat df1 = new SimpleDateFormat("yyyy-MM-dd");
+                df1.parse(dhcSignedDate);
+            } catch (ParseException e) {
+                throw new DatabaseHandlingException("DhcSignedDate date format is unacceptable, it must be YYYY-MM-DD");
+            }
+        }
         this.dhcSignedDate = dhcSignedDate;
     }
 

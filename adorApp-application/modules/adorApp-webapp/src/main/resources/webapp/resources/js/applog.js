@@ -132,12 +132,6 @@ function setupPersonTable() {
                     return getReadableLanguageCode(data);
                 },
                 "targets": 13
-            },
-            {
-                "render": function ( data, type, row ) {
-                    return getReadableDateString(data);
-                },
-                "targets": 10
             }
         ]
     } );
@@ -199,8 +193,7 @@ function reBuildModal() {
             if (row.type.split("-")[0] == "input") { //input-100, input-1000 etc
                 text = "<input class=\"customField\" onchange=\"valueChanged(this,'" + row.type + "')\" type=\"text\" name=\"" + nameText + "\" id=\"" + idText + "\" value=\"" + original + "\" />";
             }
-            if (row.type == "date-nullable") {
-                original = getReadableDateString(original);
+            if (row.type == "dateString-nullable") {
                 text =  "<input onchange=\"valueChanged(this,'" + row.type + "')\" type=\"date\" name=\"" + nameText + "\" id=\"" + idText + "\"  value=\"" + original + "\"/>";
             }
             if (row.type == "singleSelect") {
@@ -238,9 +231,9 @@ function valueChanged(theObject, type) {
 	var origO = $("#" + "orig-" + theObject.id);
 	var td = $("#" + "td-" + theObject.id);
 	let v;
-	type = type.split("-")[0]; // date , input etc
+	type = type.split("-")[0]; // dateString , input etc
 	switch (type) {
-	    case "date": // val();
+	    case "dateString": // val();
 	        v = o.val();
 	        break;
 	    case "singleSelect": // select
@@ -277,11 +270,11 @@ function saveChanges() {
         if ((typeof row.edit != "undefined") && (typeof row.edit.visible != "undefined") && (row.edit.visible == false)) continue;
         if (row.type == "fixText") continue; //don't bother us with such a value
         let v;
-        type = row.type.split("-")[0]; // date , input etc
+        type = row.type.split("-")[0]; // dateString , input etc
         var idText = "field-" + row.id;
         var o = $("#" + idText);
         switch (type) {
-            case "date": // val();
+            case "dateString": // val();
                 v = o.val();
                 break;
             case "singleSelect": // select
@@ -290,7 +283,7 @@ function saveChanges() {
             default:
             case "input":
                 v = o.prop("value");
-                v = escapeHTML(v);
+                //v = escapeHTML(v);
                 if ((typeof row.mandatory != "undefined") && (row.mandatory == true)) { // if mandatory, cannot be empty
                     if (v.length <= 0) {
                         eStr = "Value of \"" + row.name + "\" is not specified, pls specify!";
@@ -335,7 +328,5 @@ function saveChanges() {
 }
 
 function processEntityUpdated() {
-    console.log("---=== Entity UPDATE, going back to details... ===---")
-    $('#editModal').modal('hide');
-    setupPersonTable(); //just update
+    window.location.pathname = "/adorationSecure/applog"
 }
