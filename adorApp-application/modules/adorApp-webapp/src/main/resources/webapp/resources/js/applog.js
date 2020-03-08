@@ -147,6 +147,11 @@ function requestComplete() {
     $('#saveChangesButton').removeAttr('disabled');
 }
 
+function beforeRequest() {
+    $('#saveChangesButton').attr('disabled', 'disabled');
+}
+
+
 function reBuildModal() {
     requestComplete(); //ensure availability of save button when the modal is refreshed
     //reconstruct modal
@@ -174,7 +179,7 @@ function reBuildModal() {
         for (var i = 0; i < info.length; i++) { //iterate through columns
             var row = info[i];
             //first is about visibility - if not visible, skip
-            if ((typeof row.edit != "undefined") && (typeof row.edit.visible != "undefined") && (row.edit.visible == false)) break;
+            if ((typeof row.edit != "undefined") && (typeof row.edit.visible != "undefined") && (row.edit.visible == false)) continue;
             var r = $("<tr/>");
             //additional help text, based on behavior
             let addMandatory = "";
@@ -252,4 +257,85 @@ function valueChanged(theObject, type) {
 	} else {
 	    td.addClass("table-danger");
 	}
+}
+
+function saveChanges() {
+    var b = {}; //empty object
+    var editId = $("#editId").val(); //filled by the button's onclick method
+    b.id = editId;
+	//validations + prepare object
+	var eStr = "";
+    var bad = 0;
+    if (typeof structureInfo == "undefined") {
+        alert("Cannot Save Person.");
+    }
+    //we have structureInfo
+    var info = structureInfo.info;
+    for (var i = 0; i < info.length; i++) { //iterate through columns
+        var row = info[i];
+        //first is about visibility - if not visible, skip
+        if ((typeof row.edit != "undefined") && (typeof row.edit.visible != "undefined") && (row.edit.visible == false)) continue;
+        if (row.type == "fixText") continue; //don't bother us with such a value
+        let v;
+        type = row.type.split("-")[0]; // date , input etc
+        var idText = "field-" + row.id;
+        var o = $("#" + idText);
+        switch (type) {
+            case "date": // val();
+                v = o.val();
+                break;
+            case "singleSelect": // select
+                v = o.find(":selected").val();
+                break;
+            default:
+            case "input":
+                v = o.prop("value");
+                v = escapeHTML(v);
+                if ((typeof row.mandatory != "undefined") && (row.mandatory == true)) { // if mandatory, cannot be empty
+                    if (v.length <= 0) {
+                        eStr = "Value of \"" + row.name + "\" is not specified, pls specify!";
+                        bad = 1;
+                        }
+                }
+                break;
+            case "i/n-boolean":
+                v = o.prop("checked").toString();
+                break;
+        } //value in v
+        let command = "b." + row.id + "=\"" + v.toString() + "\"";
+        eval(command); //add object to b structure
+    }
+    // b is ready
+    //validation done (cannot validate more at client level
+    if (bad == 1) {
+        alert(eStr);
+        console.log("---=== ALERT ===---")
+        return;
+    }
+    //save
+    var token = $("meta[name='_csrf']").attr("content");
+    var header = $("meta[name='_csrf_header']").attr("content");
+    beforeRequest();
+    $.ajax({
+        url : '/adorationSecure/updatePerson',
+        type : 'POST',
+        async: false,
+        contentType: 'application/json',
+        data: JSON.stringify(b),
+        dataType: 'json',
+        success : processEntityUpdated,
+        beforeSend : function(request) {
+            request.setRequestHeader(header, token);
+        },
+        complete : requestComplete,
+    }).fail( function(xhr, status) {
+        var obj = JSON.parse(xhr.responseText);
+        alert(obj.entityUpdate);
+    });
+}
+
+function processEntityUpdated() {
+    console.log("---=== Entity UPDATE, going back to details... ===---")
+    $('#editModal').modal('hide');
+    setupPersonTable(); //just update
 }

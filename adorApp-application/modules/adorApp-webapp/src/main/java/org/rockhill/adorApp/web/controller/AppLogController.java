@@ -2,7 +2,10 @@ package org.rockhill.adorApp.web.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import org.rockhill.adorApp.exception.SystemException;
 import org.rockhill.adorApp.web.controller.helper.ControllerBase;
+import org.rockhill.adorApp.web.json.CurrentUserInformationJson;
+import org.rockhill.adorApp.web.json.PersonInformationJson;
 import org.rockhill.adorApp.web.json.TableDataInformationJson;
 import org.rockhill.adorApp.web.provider.CurrentUserProvider;
 import org.rockhill.adorApp.web.provider.LogFileProvider;
@@ -189,6 +192,49 @@ public class AppLogController extends ControllerBase {
             content = new TableDataInformationJson(person);
         }
         return content;
+    }
+
+    /**
+     * Update an existing Person.
+     *
+     * @param session is the actual HTTP session
+     * @return list of hits as a JSON response
+     */
+    @ResponseBody
+    @RequestMapping(value = "/adorationSecure/updatePerson", method = RequestMethod.POST)
+    public ResponseEntity<String> updatePerson(@RequestBody final String body, final HttpSession session) {
+        String resultString = "OK";
+        ResponseEntity<String> result;
+        HttpHeaders responseHeaders = setHeadersForJSON();
+        try {
+            CurrentUserInformationJson currentUserInformationJson = currentUserProvider.getUserInformation(session);
+            Gson g = new Gson();
+            PersonInformationJson p = g.fromJson(body, PersonInformationJson.class);
+            //check authorization: user must have right user type
+            if (!currentUserInformationJson.isAdoratorAdmin) {
+                resultString = "Unauthorized action.";
+                result = new ResponseEntity<String>(getJsonString(JSON_RESPONSE_UPDATE, resultString), responseHeaders, HttpStatus.FORBIDDEN);
+            } else {
+                //authorization checked, ok
+                Long updateInformation = peopleProvider.updatePerson(p, currentUserInformationJson);
+                if (updateInformation != null) {
+                    resultString = "OK-" + updateInformation.toString();
+                    result = new ResponseEntity<String>(getJsonString(JSON_RESPONSE_UPDATE, resultString), responseHeaders, HttpStatus.CREATED);
+                } else {
+                    resultString = "Cannot update the Person, please check the values and retry.";
+                    logger.info("Cannot update the Person with ID:" + p.id);
+                    result = new ResponseEntity<String>(getJsonString(JSON_RESPONSE_UPDATE, resultString), responseHeaders, HttpStatus.BAD_REQUEST);
+                }
+            }
+        } catch (SystemException e) {
+            resultString = e.getMessage();
+            result = new ResponseEntity<String>(getJsonString(JSON_RESPONSE_UPDATE, resultString), responseHeaders, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            resultString = "Cannot update the Person, please contact to maintainers.";
+            logger.warn("Error happened at Person, pls contact to maintainers", e);
+            result = new ResponseEntity<String>(getJsonString(JSON_RESPONSE_UPDATE, resultString), responseHeaders, HttpStatus.BAD_REQUEST);
+        }
+        return result;
     }
 
 }
