@@ -31,7 +31,7 @@ public enum AdoratorStatusTypes {
     }
 
     // helper functions
-    public static String getAdoratorStatusTypeTranslated(Integer adoratorStatusValue) {
+    public static String getTranslatedString(Integer adoratorStatusValue) {
         String adoratorStatusText = null;
         if (USER.getAdoratorStatusValue().equals(adoratorStatusValue)) { adoratorStatusText = USER.getAdoratorStatusText(); }
         if (PRE_ADORATOR.getAdoratorStatusValue().equals(adoratorStatusValue)) { adoratorStatusText = PRE_ADORATOR.getAdoratorStatusText(); }
@@ -49,7 +49,7 @@ public enum AdoratorStatusTypes {
         return adoratorStatusText;
     }
 
-    public static AdoratorStatusTypes getAdoratorStatusTypeFromId(Integer id) {
+    public static AdoratorStatusTypes getTypeFromId(Integer id) {
         if (USER.adoratorStatusValue.equals(id)) return USER;
         if (PRE_ADORATOR.adoratorStatusValue.equals(id)) return PRE_ADORATOR;
         if (ADORATOR.adoratorStatusValue.equals(id)) return ADORATOR;

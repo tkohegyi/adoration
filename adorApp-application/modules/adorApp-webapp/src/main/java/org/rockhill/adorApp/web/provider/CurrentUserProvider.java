@@ -78,7 +78,7 @@ public class CurrentUserProvider {
                         currentUserInformationJson.isAuthorized = true; //not just logged in, but since the person is known, authorized too
                         currentUserInformationJson.id = person.getId();
                         currentUserInformationJson.userName = person.getName();
-                        AdoratorStatusTypes status = AdoratorStatusTypes.getAdoratorStatusTypeFromId(person.getAdorationStatus());
+                        AdoratorStatusTypes status = AdoratorStatusTypes.getTypeFromId(person.getAdorationStatus());
                         currentUserInformationJson.isRegisteredAdorator = registeredAdorator.contains(status);
                         currentUserInformationJson.isAdoratorLeader = leaders.contains(status);
                         currentUserInformationJson.isAdoratorAdmin = admins.contains(status);

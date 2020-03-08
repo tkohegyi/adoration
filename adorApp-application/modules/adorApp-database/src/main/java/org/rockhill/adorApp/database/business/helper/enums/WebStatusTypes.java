@@ -27,7 +27,7 @@ public enum WebStatusTypes {
     }
 
     // helper functions
-    public static String getWebStatusTypeTranslated(Integer typeValue) {
+    public static String getTranslatedString(Integer typeValue) {
         String webStatusType = null;
         if (NO_ID.getTypeValue().equals(typeValue)) { webStatusType = NO_ID.getTranslatedText(); }
         if (WAIT_FOR_AUTHORIZATION.getTypeValue().equals(typeValue)) { webStatusType = WAIT_FOR_AUTHORIZATION.getTranslatedText(); }
@@ -41,7 +41,7 @@ public enum WebStatusTypes {
         return webStatusType;
     }
 
-    public static WebStatusTypes getWebStatusTypeFromId(Integer id) {
+    public static WebStatusTypes getTypeFromId(Integer id) {
         if (NO_ID.getTypeValue().equals(id)) return NO_ID;
         if (WAIT_FOR_AUTHORIZATION.getTypeValue().equals(id)) return WAIT_FOR_AUTHORIZATION;
         if (GOOGLE_OK.getTypeValue().equals(id)) return GOOGLE_OK;

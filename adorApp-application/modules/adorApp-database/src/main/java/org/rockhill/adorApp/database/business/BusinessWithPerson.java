@@ -5,12 +5,14 @@ import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.rockhill.adorApp.database.SessionFactoryHelper;
 import org.rockhill.adorApp.database.business.helper.NextGeneralKey;
+import org.rockhill.adorApp.database.tables.AuditTrail;
 import org.rockhill.adorApp.database.tables.Person;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -133,5 +135,27 @@ public class BusinessWithPerson {
             return result.get(0);
         }
         return null;
+    }
+
+    public Long updatePerson(Person person, Collection<AuditTrail> auditTrailCollection) {
+        SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
+        if (sessionFactory != null) {
+            Session session = sessionFactory.openSession();
+            try {
+                session.beginTransaction();
+                session.update(person);
+                for (AuditTrail auditTrail : auditTrailCollection) {
+                    session.save(auditTrail);
+                }
+                session.getTransaction().commit();
+                session.close();
+                logger.info("Person updated successfully: " + person.getId().toString());
+            } catch (Exception e) {
+                session.getTransaction().rollback();
+                session.close();
+                throw e;
+            }
+        }
+        return person.getId();
     }
 }

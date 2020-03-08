@@ -1,5 +1,9 @@
 package org.rockhill.adorApp.database.tables;
 
+import org.rockhill.adorApp.database.business.helper.enums.AdoratorStatusTypes;
+import org.rockhill.adorApp.database.business.helper.enums.WebStatusTypes;
+import org.rockhill.adorApp.database.exception.DatabaseHandlingException;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -45,6 +49,9 @@ public class Person {
     }
 
     public void setName(String name) {
+        if ((name == null) || (name.length() == 0)) {
+            throw new DatabaseHandlingException("Person name tried to set to null/zero length.");
+        }
         this.name = name;
     }
 
@@ -54,6 +61,7 @@ public class Person {
     }
 
     public void setAdorationStatus(Integer adorationStatus) {
+        AdoratorStatusTypes.getTypeFromId(adorationStatus);
         this.adorationStatus = adorationStatus;
     }
 
@@ -63,6 +71,7 @@ public class Person {
     }
 
     public void setWebStatus(Integer webStatus) {
+        WebStatusTypes.getTypeFromId(webStatus);
         this.webStatus = webStatus;
     }
 
@@ -147,7 +156,7 @@ public class Person {
         }
     }
 
-    public void setCoordinatorComment(String adminComment) {
+    public void setCoordinatorComment(String coordinatorComment) {
         this.coordinatorComment = coordinatorComment;
     }
 
