@@ -283,7 +283,6 @@ function saveChanges() {
             default:
             case "input":
                 v = o.prop("value");
-                //v = escapeHTML(v);
                 if ((typeof row.mandatory != "undefined") && (row.mandatory == true)) { // if mandatory, cannot be empty
                     if (v.length <= 0) {
                         eStr = "Value of \"" + row.name + "\" is not specified, pls specify!";

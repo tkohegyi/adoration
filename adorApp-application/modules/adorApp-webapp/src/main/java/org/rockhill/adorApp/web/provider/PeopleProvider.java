@@ -1,10 +1,10 @@
 package org.rockhill.adorApp.web.provider;
 
-import org.apache.commons.text.StringEscapeUtils;
 import org.rockhill.adorApp.database.business.BusinessWithAuditTrail;
 import org.rockhill.adorApp.database.business.BusinessWithPerson;
 import org.rockhill.adorApp.database.business.helper.enums.AdoratorStatusTypes;
 import org.rockhill.adorApp.database.business.helper.enums.WebStatusTypes;
+import org.rockhill.adorApp.database.exception.DatabaseHandlingException;
 import org.rockhill.adorApp.database.tables.AuditTrail;
 import org.rockhill.adorApp.database.tables.Person;
 import org.rockhill.adorApp.web.json.CurrentUserInformationJson;
@@ -17,6 +17,8 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Component
 public class PeopleProvider {
@@ -39,6 +41,15 @@ public class PeopleProvider {
         return p;
     }
 
+    protected void checkDangerousValue(final String text, final String userName) {
+        Pattern p = Pattern.compile("[\\\\#&\\<\\>]");
+        Matcher m = p.matcher(text);
+        if (m.find()) {
+            logger.warn("User:" + userName + " tried to use dangerous string value:" + text);
+            throw new DatabaseHandlingException("Field content is not allowed.");
+        }
+    }
+
     private AuditTrail prepareAuditTrail(Long id, String userName, String fieldName, String oldValue, String newValue) {
         AuditTrail auditTrail;
         auditTrail = businessWithAuditTrail.prepareAuditTrail(id, userName, "Person::Update", fieldName + " changed from:\"" + oldValue + "\" to:\"" + newValue + "\"");
@@ -54,7 +65,8 @@ public class PeopleProvider {
             return null;
         }
         //prepare new name and validate it
-        String newValue = StringEscapeUtils.escapeHtml4(p.name.trim());
+        String newValue = p.name.trim();
+        checkDangerousValue(newValue, currentUserInformationJson.userName);
         String oldValue = person.getName();
         //name length must be > 0, and shall not fit to other existing names
         if (newValue.length() == 0) {
@@ -83,7 +95,8 @@ public class PeopleProvider {
         }
 
         oldValue = person.getMobile();
-        newValue = StringEscapeUtils.escapeHtml4(p.mobile.trim());
+        newValue = p.mobile.trim();
+        checkDangerousValue(newValue, currentUserInformationJson.userName);
         person.setMobile(newValue);
         if (!oldValue.contentEquals(newValue)) {
             auditTrailCollection.add(prepareAuditTrail(person.getId(), currentUserInformationJson.userName, "Mobile", oldValue, newValue));
@@ -97,7 +110,8 @@ public class PeopleProvider {
         }
 
         oldValue = person.getEmail();
-        newValue = StringEscapeUtils.escapeHtml4(p.email.trim());
+        newValue = p.email.trim();
+        checkDangerousValue(newValue, currentUserInformationJson.userName);
         person.setEmail(newValue);
         if (!oldValue.contentEquals(newValue)) {
             auditTrailCollection.add(prepareAuditTrail(person.getId(), currentUserInformationJson.userName, "Email", oldValue, newValue));
@@ -111,7 +125,8 @@ public class PeopleProvider {
         }
 
         oldValue = person.getAdminComment();
-        newValue = StringEscapeUtils.escapeHtml4(p.adminComment.trim());
+        newValue = p.adminComment.trim();
+        checkDangerousValue(newValue, currentUserInformationJson.userName);
         person.setAdminComment(newValue);
         if (!oldValue.contentEquals(newValue)) {
             auditTrailCollection.add(prepareAuditTrail(person.getId(), currentUserInformationJson.userName, "AdminComment", oldValue, newValue));
@@ -126,20 +141,23 @@ public class PeopleProvider {
 
         oldValue = person.getDhcSignedDate();
         newValue = p.dhcSignedDate;
+        checkDangerousValue(newValue, currentUserInformationJson.userName);
         person.setDhcSignedDate(newValue);
         if (!oldValue.contentEquals(newValue)) {
             auditTrailCollection.add(prepareAuditTrail(person.getId(), currentUserInformationJson.userName, "DhcSignedDate", oldValue, newValue));
         }
 
         oldValue = person.getCoordinatorComment();
-        newValue = StringEscapeUtils.escapeHtml4(p.coordinatorComment.trim());
+        newValue = p.coordinatorComment.trim();
+        checkDangerousValue(newValue, currentUserInformationJson.userName);
         person.setCoordinatorComment(newValue);
         if (!oldValue.contentEquals(newValue)) {
             auditTrailCollection.add(prepareAuditTrail(person.getId(), currentUserInformationJson.userName, "CoordinatorComment", oldValue, newValue));
         }
 
         oldValue = person.getVisibleComment();
-        newValue = StringEscapeUtils.escapeHtml4(p.visibleComment.trim());
+        newValue = p.visibleComment.trim();
+        checkDangerousValue(newValue, currentUserInformationJson.userName);
         person.setVisibleComment(newValue);
         if (!oldValue.contentEquals(newValue)) {
             auditTrailCollection.add(prepareAuditTrail(person.getId(), currentUserInformationJson.userName, "VisibleComment", oldValue, newValue));
