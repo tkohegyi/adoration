@@ -94,6 +94,14 @@ public class PeopleProvider {
                     WebStatusTypes.getTranslatedString(oldStatus), WebStatusTypes.getTranslatedString(newStatus)));
         }
 
+        Boolean oldBoolean = person.getIsOnlineOnly();
+        Boolean newBoolean = p.isOnlineOnly.contains("on");
+        person.setIsOnlineOnly(newBoolean);
+        if (oldBoolean != newBoolean) {
+            auditTrailCollection.add(prepareAuditTrail(person.getId(), currentUserInformationJson.userName, "IsOnlineOnly", oldBoolean.toString(), newBoolean.toString()));
+        }
+
+
         oldValue = person.getMobile();
         newValue = p.mobile.trim();
         checkDangerousValue(newValue, currentUserInformationJson.userName);
@@ -102,8 +110,8 @@ public class PeopleProvider {
             auditTrailCollection.add(prepareAuditTrail(person.getId(), currentUserInformationJson.userName, "Mobile", oldValue, newValue));
         }
 
-        Boolean oldBoolean = person.getMobileVisible();
-        Boolean newBoolean = p.mobileVisible.contains("on");
+        oldBoolean = person.getMobileVisible();
+        newBoolean = p.mobileVisible.contains("on");
         person.setMobileVisible(newBoolean);
         if (oldBoolean != newBoolean) {
             auditTrailCollection.add(prepareAuditTrail(person.getId(), currentUserInformationJson.userName, "MobileVisible", oldBoolean.toString(), newBoolean.toString()));

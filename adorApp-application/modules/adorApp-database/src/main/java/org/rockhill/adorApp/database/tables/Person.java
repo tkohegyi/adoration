@@ -20,6 +20,7 @@ public class Person {
     private String name;
     private Integer adorationStatus;
     private Integer webStatus;
+    private Boolean isOnlineOnly;
     private String mobile;
     private Boolean mobileVisible;
     private String email; //single e-mail
@@ -75,6 +76,15 @@ public class Person {
     public void setWebStatus(Integer webStatus) {
         WebStatusTypes.getTypeFromId(webStatus);
         this.webStatus = webStatus;
+    }
+
+    @Column(name = "isOnlineOnly", nullable = false)
+    public Boolean getIsOnlineOnly() {
+        return isOnlineOnly;
+    }
+
+    public void setIsOnlineOnly(Boolean isOnlineOnly) {
+        this.isOnlineOnly = isOnlineOnly;
     }
 
     @Column(name = "mobile", nullable = true)

@@ -78,6 +78,16 @@
       }
     },
     {
+      "id": "isOnlineOnly",
+      "text": "Online Adoráló?",
+      "type": "i/n-boolean",
+      "helpText": "Az adoráló csak Online adorálásban vesz részt?",
+      "mandatory": true,
+      "new": {
+        "default": false
+      }
+    },
+    {
       "id": "mobile",
       "text": "Telefonszám:",
       "type": "input-100",
