@@ -16,11 +16,6 @@ function loadStructure() {
     });
 }
 
-function changeClick(e) {
-   $("#editId").val(e);
-   reBuildModal();
-}
-
 function setupLogs() {
   $.get('/adorationSecure/logs', function(data) {
 	data.files.sort();
@@ -52,6 +47,7 @@ function setupPersonTable() {
             { "data": "name", "width": "200px" },
             { "data": "adorationStatus" },
             { "data": "webStatus" },
+            { "data": "isOnlineOnly" },
             { "data": "mobile" },
             { "data": "mobileVisible" },
             { "data": "email" },
@@ -66,11 +62,13 @@ function setupPersonTable() {
         "columnDefs": [
             {
                 "className": "text-center",
-                "targets": [0,5,7,9,13]
+                "targets": [0,4,6,8,10,14]
             },
             {
                 "render": function ( data, type, row ) {
                     var z = "<button type=\"button\" class=\"btn btn-info btn-sm\" data-toggle=\"modal\" data-target=\"#editModal\" onclick=\"changeClick(" + data + ")\">" + data + "</button>";
+                    z = z + "<button type=\"button\" class=\"btn btn-secondary btn-sm\" data-toggle=\"modal\" data-target=\"#timeModal\" onclick=\"changeTimeClick(" + data + ")\">H</button>";
+                    z = z + "<button type=\"button\" class=\"btn btn-warning btn-sm\" data-toggle=\"modal\" data-target=\"#historyModal\" onclick=\"changeHistoryClick(" + data + ")\">T</button>";
                     return z;
                 },
                 "targets": 0
@@ -125,16 +123,26 @@ function setupPersonTable() {
                     }
                     return z;
                 },
-                "targets": [5,7,9]
+                "targets": [4,6,8,10]
             },
             {
                 "render": function ( data, type, row ) {
                     return getReadableLanguageCode(data);
                 },
-                "targets": 13
+                "targets": 14
             }
         ]
     } );
+}
+
+function addClick() {
+   $("#editId").val(0);
+   reBuildAddModal();
+}
+
+function changeClick(e) {
+   $("#editId").val(e);
+   reBuildModal();
 }
 
 function requestComplete() {
@@ -144,7 +152,6 @@ function requestComplete() {
 function beforeRequest() {
     $('#saveChangesButton').attr('disabled', 'disabled');
 }
-
 
 function reBuildModal() {
     requestComplete(); //ensure availability of save button when the modal is refreshed
@@ -178,7 +185,7 @@ function reBuildModal() {
             //additional help text, based on behavior
             let addMandatory = "";
             let mandatoryFlag = row.mandatory;
-            if ((typeof mandatory != "undefined") && mandatory) {
+            if ((typeof row.mandatory != "undefined") && mandatoryFlag) {
                 addMandatory = "-m-";  // -m- is added
             }
             var td1 = $("<th>" + row.text + "</th>");
@@ -187,6 +194,77 @@ function reBuildModal() {
             var nameText = idText + "-" + row.type + addMandatory;
             let command = "person." + row.id;
             var original = eval(command);
+            if (row.type == "fixText") {
+                text = original;
+            }
+            if (row.type.split("-")[0] == "input") { //input-100, input-1000 etc
+                text = "<input class=\"customField\" onchange=\"valueChanged(this,'" + row.type + "')\" type=\"text\" name=\"" + nameText + "\" id=\"" + idText + "\" value=\"" + original + "\" />";
+            }
+            if (row.type == "dateString-nullable") {
+                text =  "<input onchange=\"valueChanged(this,'" + row.type + "')\" type=\"date\" name=\"" + nameText + "\" id=\"" + idText + "\"  value=\"" + original + "\"/>";
+            }
+            if (row.type == "singleSelect") {
+                text = "";
+                for (var j = 0; j < row.selection.length; j++) {
+                    let selected = "";
+                    if (original == row.selection[j].id) {
+                        selected = " selected ";
+                    }
+                    text += "<option value=\"" + row.selection[j].id + "\"" + selected + ">" + row.selection[j].value + "</option>";
+                }
+                text = "<select id=\"" + idText + "\" class=\"custom-select\" onchange=\"valueChanged(this,'" + row.type + "')\">" + text + "</select>"
+            }
+            if (row.type == "i/n-boolean") {
+                let checked = "";
+                if (original == true) {
+                    checked = " checked ";
+                }
+                text =  "<input onchange=\"valueChanged(this,'" + row.type + "')\" type=\"checkbox\" " + checked + " name=\"" + nameText + "\" id=\"" + idText + "\" />";
+            }
+            //preserve original value too
+            var originalValue = "<input id=\"orig-" + idText + "\" type=\"hidden\" value=\"" + original + "\">";
+            var td2 = $("<td id=\"td-" + idText + "\">" + text + originalValue + "</td>");
+            //help text
+            var td3 = $("<td>" + row.helpText + "</td>");
+            r.append(td1);r.append(td2);r.append(td3);
+            c.append(r);
+        }
+    }
+
+}
+
+function reBuildAddModal() {
+    requestComplete(); //ensure availability of save button when the modal is refreshed
+    //reconstruct modal
+    var c = $('#editContent');
+    c.remove();
+    var t = $('#editTable');
+    var c = $("<tbody id=\"editContent\"/>");
+    t.append(c);
+    //get and fill modal
+    var editId = 0; //indicator of new person - $("#editId").val(); //filled by the button's onclick method
+    if (typeof structureInfo != "undefined") {
+        //we have structureInfo
+        var info = structureInfo.info;
+        for (var i = 0; i < info.length; i++) { //iterate through columns
+            var row = info[i];
+            //first is about visibility - if not visible, skip
+            if ((typeof row.new != "undefined") && (typeof row.new.visible != "undefined") && (row.new.visible == false)) continue;
+            var r = $("<tr/>");
+            //additional help text, based on behavior
+            let addMandatory = "";
+            let mandatoryFlag = row.mandatory;
+            if ((typeof row.mandatory != "undefined") && mandatoryFlag) {
+                addMandatory = "-m-";  // -m- is added
+            }
+            var td1 = $("<th>" + row.text + "</th>");
+            var text = "";
+            var idText = "field-" + row.id;
+            var nameText = idText + "-" + row.type + addMandatory;
+            var original = "";
+            if ((typeof row.new != "undefined") && (typeof row.new.default != "undefined")) {
+                original = row.new.default;
+            }
             if (row.type == "fixText") {
                 text = original;
             }
