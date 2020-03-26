@@ -32,7 +32,7 @@
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
     <fieldset class="form-horizontal">
         <legend>Adorator Table</legend>
-        <div class="container" style="padding:5px" align="right"><button id="add-button" type="button" class="btn btn-primary" data-toggle=\"modal\" data-target=\"#editModal\" onclick="addClick()">Új adoráló felvétele...</button></div>
+        <div class="container" style="padding:5px" align="right"><button id="add-button" type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal" onclick="addClick()">Új adoráló felvétele...</button></div>
         <div class="container" style="padding:5px" align="right"><button id="refreshAll-button" type="button" class="btn btn-secondary" onclick="processEntityUpdated()">Frissítés</button></div>
         <div class="control-group">
             <table id="person" class="table table-striped table-bordered table-hover compact cell-border" style="width:100%">

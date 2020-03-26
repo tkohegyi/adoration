@@ -1,6 +1,5 @@
 $(document).ready(function() {
-  $("#nav-application-log").addClass("active");
-    $("#nav-home").addClass("active");
+    $("#nav-application-log").addClass("active");
     setupMenu();
     setupLogs();
     setupPersonTable();
