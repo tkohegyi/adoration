@@ -32,6 +32,6 @@ public class VersionController {
         String jsonData = "{\"adorAppVersion\":\"" + adorAppVersion + "\"}";
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.setContentType(MediaType.APPLICATION_JSON);
-        return new ResponseEntity<String>(jsonData, responseHeaders, HttpStatus.CREATED);
+        return new ResponseEntity<String>(jsonData, responseHeaders, HttpStatus.OK);
     }
 }
