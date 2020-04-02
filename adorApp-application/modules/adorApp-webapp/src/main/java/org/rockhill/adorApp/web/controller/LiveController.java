@@ -3,6 +3,8 @@ package org.rockhill.adorApp.web.controller;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
 import org.rockhill.adorApp.web.controller.helper.ControllerBase;
+import org.rockhill.adorApp.web.json.CurrentUserInformationJson;
+import org.rockhill.adorApp.web.provider.CurrentUserProvider;
 import org.rockhill.adorApp.web.provider.LiveAdoratorProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -29,6 +31,8 @@ public class LiveController extends ControllerBase {
 
     @Autowired
     LiveAdoratorProvider liveAdoratorProvider;
+    @Autowired
+    CurrentUserProvider currentUserProvider;
 
     /**
      * Serves the applog page.
@@ -51,7 +55,8 @@ public class LiveController extends ControllerBase {
         Map<String, Collection<String>> jsonResponse = new HashMap<>();
         Collection<String> jsonString = new ArrayList<>();
 
-        String hash = liveAdoratorProvider.registerLiveAdorator();
+        CurrentUserInformationJson currentUserInformationJson = currentUserProvider.getUserInformation(httpSession);
+        String hash = liveAdoratorProvider.registerLiveAdorator(currentUserInformationJson);
 
         jsonString.add(hash);
         jsonResponse.put(JSON_INFO, jsonString);
