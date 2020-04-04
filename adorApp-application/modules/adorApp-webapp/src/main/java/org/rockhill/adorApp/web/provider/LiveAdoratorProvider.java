@@ -24,7 +24,6 @@ public class LiveAdoratorProvider {
 
     public void incomingTick(String hashString) {
         if (hashString != null) {
-            logger.info("Incoming tick from:" + hashString);
             liveMap.reNewLiveAdorator(hashString);
         }
     }

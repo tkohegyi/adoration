@@ -15,4 +15,12 @@ public class LiveMapElement {
     public void extend() {
         deadline = System.currentTimeMillis() + TIMEOUT;
     }
+
+    public long getDeadline() {
+        return deadline;
+    }
+
+    public CurrentUserInformationJson getCurrentUserInformationJson() {
+        return currentUserInformationJson;
+    }
 }

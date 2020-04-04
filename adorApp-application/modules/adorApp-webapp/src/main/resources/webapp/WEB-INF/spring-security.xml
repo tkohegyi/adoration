@@ -5,30 +5,6 @@
 	http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
     http://www.springframework.org/schema/security/oauth2 http://www.springframework.org/schema/security/spring-security-oauth2.xsd">
 
-    <!-- old part
-    <http auto-config="true">
-        <intercept-url pattern="/adorationSecure/**" access="ROLE_USER" />
-        <intercept-url pattern="/adoration/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
-        <form-login
-                login-page="/login"
-                default-target-url="/"
-                authentication-failure-url="/login?error"
-                username-parameter="username"
-                password-parameter="password"
-                always-use-default-target="true" />
-        <logout logout-success-url="/login?logout"
-                delete-cookies="JSESSIONID"
-                invalidate-session="true" />
-        <! - - enable csrf protection - - >
-        <csrf/>
-    </http>
-    <authentication-manager>
-        <authentication-provider ref="adorationCustomAuthenticationProvider" />
-    </authentication-manager>
-
-    -->
-
-    <!-- new part -->
     <http pattern="/adoration/**" security="none"/>
     <http pattern="/" security="none"/>
     <http pattern="/resources/**" security="none"/>
