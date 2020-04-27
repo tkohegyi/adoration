@@ -31,6 +31,7 @@
 
     <fieldset class="form-horizontal">
         <legend>Élő közvetítés</legend>
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/Iy5nd-jqIzs" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
     </fieldset>
 
   </div>

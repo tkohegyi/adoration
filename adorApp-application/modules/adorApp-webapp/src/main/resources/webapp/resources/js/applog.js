@@ -61,7 +61,7 @@ function setupPersonTable() {
         "columnDefs": [
             {
                 "className": "text-center",
-                "targets": [0,4,6,8,10,14]
+                "targets": [0,5,7,9,13]
             },
             {
                 "render": function ( data, type, row ) {
@@ -122,13 +122,13 @@ function setupPersonTable() {
                     }
                     return z;
                 },
-                "targets": [4,6,8,10]
+                "targets": [5,7,9]
             },
             {
                 "render": function ( data, type, row ) {
                     return getReadableLanguageCode(data);
                 },
-                "targets": 14
+                "targets": 13
             }
         ]
     } );

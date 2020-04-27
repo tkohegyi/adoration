@@ -2,6 +2,7 @@ package org.rockhill.adorApp.web.provider;
 
 import org.rockhill.adorApp.database.business.BusinessWithLink;
 import org.rockhill.adorApp.database.business.BusinessWithTranslator;
+import org.rockhill.adorApp.database.business.helper.enums.AdorationMethodTypes;
 import org.rockhill.adorApp.database.business.helper.enums.TranslatorDayNames;
 import org.rockhill.adorApp.database.tables.Link;
 import org.rockhill.adorApp.database.tables.Translator;
@@ -41,21 +42,32 @@ public class CoverageProvider {
         //fill the hour coverage information
         List<Link> linkList = businessWithLink.getLinkList();
         coverageInformationJson.hours = new HashMap<>();
+        coverageInformationJson.onlineHours = new HashMap<>();
         //ensure that we have initial info about all the hours
         for (int i = 0; i < 168; i++) {
             coverageInformationJson.hours.put(Integer.valueOf(i), 0);
+            coverageInformationJson.onlineHours.put(Integer.valueOf(i), 0);
         }
         for (Link link : linkList) {
             Integer hourId = link.getHourId();
-            if (coverageInformationJson.hours.containsKey(hourId)) {
-                //we already have this in the map
-                coverageInformationJson.hours.put(hourId, coverageInformationJson.hours.get(hourId) + 1);
-            } else {
-                //we don't have this in our map, data error !
-                logger.warn("Unexpected row in Link table, with Id:" + link.getId());
+            if (AdorationMethodTypes.getTypeFromId(link.getType()) == AdorationMethodTypes.PHYSICAL) {
+                if (coverageInformationJson.hours.containsKey(hourId)) {
+                    //we already have this in the map
+                    coverageInformationJson.hours.put(hourId, coverageInformationJson.hours.get(hourId) + 1);
+                } else {
+                    //we don't have this in our map, data error !
+                    logger.warn("Unexpected row in Link table, with Id:" + link.getId());
+                }
+            } else {//AdorationMethodTypes.ONLINE
+                if (coverageInformationJson.onlineHours.containsKey(hourId)) {
+                    //we already have this in the map
+                    coverageInformationJson.onlineHours.put(hourId, coverageInformationJson.onlineHours.get(hourId) + 1);
+                } else {
+                    //we don't have this in our map, data error !
+                    logger.warn("Unexpected row in Link table, with Id:" + link.getId());
+                }
             }
         }
-
         return coverageInformationJson;
     }
 

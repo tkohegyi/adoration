@@ -1,5 +1,7 @@
 package org.rockhill.adorApp.database.tables;
 
+import org.rockhill.adorApp.database.business.helper.enums.AdorationMethodTypes;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -12,6 +14,7 @@ public class Link {
     private Long id;
     private Long personId;
     private Integer hourId;
+    private Integer type;
     private Integer priority;
     private String adminComment;
     private String publicComment;
@@ -46,6 +49,16 @@ public class Link {
 
     public void setHourId(Integer hourId) {
         this.hourId = hourId;
+    }
+
+    @Column(name = "type", nullable = false)
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        AdorationMethodTypes.getTypeFromId(type); //this will fail if the type is incorrect
+        this.type = type;
     }
 
     @Column(name = "priority", nullable = false)
