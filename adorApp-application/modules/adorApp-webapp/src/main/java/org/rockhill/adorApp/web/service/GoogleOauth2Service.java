@@ -87,6 +87,12 @@ public class GoogleOauth2Service {
         return googleAuthorizationCodeRequestUrl.build();
     }
 
+    /**
+     * Beware that this can be NULL, if something is wrong.
+     *
+     * @param authCode
+     * @return
+     */
     public Authentication getGoogleUserInfoJson(final String authCode) {
         GoogleUser googleUser = null;
         Authentication authentication = null;
@@ -125,7 +131,7 @@ public class GoogleOauth2Service {
     }
 
     private Social detectSocial(GoogleUserInfoJson googleUserInfoJson) {
-        Social social = businessWithSocial.getSocialByGUserId(googleUserInfoJson.id);
+        Social social = businessWithSocial.getSocialByGUserId(googleUserInfoJson.id); //if there is no soccial this will cause exception that is unhandled !!!
         if (social == null) {
             social = new Social();
             social.setGoogleEmail(googleUserInfoJson.email);

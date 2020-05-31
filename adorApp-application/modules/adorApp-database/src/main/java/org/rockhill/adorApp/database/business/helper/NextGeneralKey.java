@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigInteger;
 import java.util.Iterator;
+import java.util.List;
 
 @Component
 public class NextGeneralKey {
@@ -18,8 +19,9 @@ public class NextGeneralKey {
     public Long getNextGeneralKay(Session session) {
         {
             Iterator<BigInteger> iter;
-            Query query = session.createSQLQuery( "SELECT NEXT VALUE FOR dbo.AdorationUniqueNumber");
-            iter = (Iterator<BigInteger>) query.list().iterator();
+            //MS SQL solution is:            Query query = session.createSQLQuery( "SELECT NEXT VALUE FOR dbo.AdorationUniqueNumber");
+            Query query = session.createSQLQuery( "select nextval('\"dbo\".\"AdorationUniqueNumber\"')");
+            iter = (Iterator<BigInteger>) query.getResultList();
             return iter.next().longValue();
         }
     }

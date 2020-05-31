@@ -11,7 +11,7 @@ public class PeopleProviderTest {
     private PeopleProvider underTest;
 
     @BeforeMethod
-    public void setUp() throws Exception {
+    public void setUp() {
         MockitoAnnotations.initMocks(this);
     }
 

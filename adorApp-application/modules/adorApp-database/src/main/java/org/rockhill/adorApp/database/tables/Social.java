@@ -6,7 +6,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "adoration.dbo.social")
+@Table(name = "dbo.social")
 public class Social {
 
     private Long id;

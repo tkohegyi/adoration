@@ -103,6 +103,9 @@ public class LoginController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if ((code.length() > 0) && (state.length() == 0) && (auth == null)) {  //if GOOGLE login can be performed and it is not yet authenticated for Ador App
             Authentication authentication = googleOauth2Service.getGoogleUserInfoJson(code);
+            if (authentication == null) { //was unable to get user info properly
+                return "login";
+            }
             SecurityContext sc = SecurityContextHolder.getContext();
             sc.setAuthentication(authentication);
             httpSession.setAttribute(SPRING_SECURITY_CONTEXT_KEY, sc);

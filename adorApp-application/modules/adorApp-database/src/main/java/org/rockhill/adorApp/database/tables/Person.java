@@ -13,7 +13,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 @Entity
-@Table(name = "adoration.dbo.person")
+@Table(name = "dbo.person")
 public class Person {
 
     private Long id;

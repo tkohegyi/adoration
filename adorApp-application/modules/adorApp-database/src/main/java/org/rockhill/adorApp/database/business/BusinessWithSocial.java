@@ -5,6 +5,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.rockhill.adorApp.database.SessionFactoryHelper;
 import org.rockhill.adorApp.database.business.helper.NextGeneralKey;
+import org.rockhill.adorApp.database.tables.AuditTrail;
 import org.rockhill.adorApp.database.tables.Social;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,19 +21,30 @@ public class BusinessWithSocial {
     @Autowired
     NextGeneralKey nextGeneralKey;
 
+    @Autowired
+    BusinessWithAuditTrail businessWithAuditTrail;
+
     public Long newSocial(Social newS) {
         Long id = null;
         SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
         if (sessionFactory != null) {
             Session session = sessionFactory.openSession();
-            session.beginTransaction();
-            id = nextGeneralKey.getNextGeneralKay(session);
-            logger.info("New sequence arrived:" + id.toString());
-            newS.setId(id);
-            session.save(newS); //insert into Social table !
-            session.getTransaction().commit();
+            try {
+                session.beginTransaction();
+                id = nextGeneralKey.getNextGeneralKay(session);
+                logger.info("New sequence arrived:" + id.toString());
+                newS.setId(id);
+                session.save(newS); //insert into Social table !
+                //and audit trail
+                AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(nextGeneralKey.getNextGeneralKay(session),businessWithAuditTrail.SYSTEM_SELF,"Create","Created upon first social login");
+                session.save(auditTrail);
+                session.getTransaction().commit();
+                logger.info("Social record created successfully: " + id.toString());
+            } catch (Exception e) {
+                session.getTransaction().rollback();
+                logger.warn("Social record creation failure", e);
+            }
             session.close();
-            logger.info("Social link created successfully: " + id.toString());
         }
         return id;
     }

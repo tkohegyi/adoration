@@ -6,7 +6,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "adoration.dbo.translator")
+@Table(name = "dbo.translator")
 public class Translator {
 
     private String textId;
@@ -36,7 +36,7 @@ public class Translator {
         this.languageCode = languageCode;
     }
 
-    @Column(name = "text", nullable = false)
+    @Column(name = "text", nullable = true)
     public String getText() {
         return text;
     }

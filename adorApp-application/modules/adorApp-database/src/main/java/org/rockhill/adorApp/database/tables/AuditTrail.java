@@ -6,7 +6,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "adoration.dbo.auditTrail")
+@Table(name = "dbo.auditTrail")
 public class AuditTrail {
 
     private Long id;
