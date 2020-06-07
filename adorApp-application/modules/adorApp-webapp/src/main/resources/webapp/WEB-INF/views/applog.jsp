@@ -31,7 +31,7 @@
     <%@include file="../include/navbar.html" %>
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
     <fieldset class="form-horizontal">
-        <legend>Adorator Table</legend>
+        <legend>Adorálók listája</legend>
         <div class="container" style="padding:5px" align="right"><button id="add-button" type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal" onclick="addClick()">Új adoráló felvétele...</button></div>
         <div class="container" style="padding:5px" align="right"><button id="refreshAll-button" type="button" class="btn btn-secondary" onclick="processEntityUpdated()">Frissítés</button></div>
         <div class="control-group">
@@ -114,8 +114,8 @@
                </form>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" onclick="reBuildModal()">Eredeti adatok visszanyerése</button>
-            <button type="button" class="btn btn-info" data-dismiss="modal">Felejtés</button>
+            <button id="resetChangesButton" type="button" class="btn btn-secondary" onclick="reBuildModal()">Eredeti adatok visszanyerése</button>
+            <button id="cancelButton" type="button" class="btn btn-info" data-dismiss="modal">Mégsem</button>
             <button id="saveChangesButton" type="button" class="btn btn-success" onclick="saveChanges()">Mentés</button>
           </div>
         </div>

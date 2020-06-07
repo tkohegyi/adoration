@@ -135,11 +135,23 @@ function setupPersonTable() {
 
 function addClick() {
    $("#editId").val(0);
+   $('#resetChangesButton').attr('onclick', 'reBuildAddModal()');
+   if ((typeof structureInfo != "undefined") && (typeof structureInfo.new != "undefined") && (typeof structureInfo.new.title != "undefined")) {
+       $('#editCenterTitle').text(structureInfo.new.title);
+   } else {
+       $('#editCenterTitle').text('Új felvétele');
+   }
    reBuildAddModal();
 }
 
 function changeClick(e) {
    $("#editId").val(e);
+   $('#resetChangesButton').attr('onclick', 'reBuildModal()');
+   if ((typeof structureInfo != "undefined") && (typeof structureInfo.edit != "undefined") && (typeof structureInfo.edit.title != "undefined")) {
+       $('#editCenterTitle').text(structureInfo.edit.title);
+   } else {
+       $('#editCenterTitle').text('Módosítás');
+   }
    reBuildModal();
 }
 
