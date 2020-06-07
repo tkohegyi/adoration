@@ -122,5 +122,38 @@
       </div>
     </div>
 
+    <!-- Modal Log/History -->
+    <div class="modal fade" id="historyModal" tabindex="-1" role="dialog" aria-labelledby="historyCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="historyCenterTitle">Log</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Cancel">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+              <form>
+                  <table id="historyTable" class="table table-hover table-bordered">
+                      <thead>
+                          <tr>
+                              <th>Típus</th>
+                              <th>Időpont</th>
+                              <th>Végrehajtó</th>
+                              <th style="width:40%">Leírás</th>
+                              <th>Egyéb</th>
+                          </tr>
+                      </thead>
+                      <tbody id="historyContent"/>
+                  </table>
+               </form>
+          </div>
+          <div class="modal-footer">
+            <button id="cancelButton" type="button" class="btn btn-info" data-dismiss="modal">Mégsem</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
 </body>
 </html>

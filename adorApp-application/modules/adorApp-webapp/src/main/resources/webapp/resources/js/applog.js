@@ -65,8 +65,8 @@ function setupPersonTable() {
             {
                 "render": function ( data, type, row ) {
                     var z = "<button type=\"button\" class=\"btn btn-info btn-sm\" data-toggle=\"modal\" data-target=\"#editModal\" onclick=\"changeClick(" + data + ")\">" + data + "</button>";
-                    z = z + "<button type=\"button\" class=\"btn btn-secondary btn-sm\" data-toggle=\"modal\" data-target=\"#timeModal\" onclick=\"changeTimeClick(" + data + ")\">H</button>";
-                    z = z + "<button type=\"button\" class=\"btn btn-warning btn-sm\" data-toggle=\"modal\" data-target=\"#historyModal\" onclick=\"changeHistoryClick(" + data + ")\">T</button>";
+                    z = z + "<button type=\"button\" class=\"btn btn-warning btn-sm\" data-toggle=\"modal\" data-target=\"#timeModal\" onclick=\"changeTimeClick(" + data + ")\">Órák</button>";
+                    z = z + "<button type=\"button\" class=\"btn btn-secondary btn-sm\" data-toggle=\"modal\" data-target=\"#historyModal\" onclick=\"changeHistoryClick(" + data + ")\">Log</button>";
                     return z;
                 },
                 "targets": 0
@@ -416,4 +416,30 @@ function saveChanges() {
 
 function processEntityUpdated() {
     window.location.pathname = "/adorationSecure/applog"
+}
+
+function changeHistoryClick(data) {
+   reBuildHistoryModal(data);
+}
+
+function reBuildHistoryModal(personId) {
+    var hc = $("<tbody id=\"historyContent\"/>");
+    $.get('/adorationSecure/getPersonHistory/' + personId , function(data) {
+        //HANDLE DATA - fill table
+        var info = data.data;
+        for (var i = 0; i < info.length; i++) {
+          var r = $("<tr/>");
+          var d = $("<td>" + info[i].activityType + "</td>");r.append(d);
+          d = $("<td>" + info[i].atWhen + "</td>");r.append(d);
+          d = $("<td>" + info[i].byWho + "</td>");r.append(d);
+          d = $("<td>" + info[i].description + "</td>");r.append(d);
+          if (info[i].data != null) {
+              d = $("<td>" + info[i].data + "</td>");r.append(d);
+          } else {
+              d = $("<td/>");r.append(d);
+          }
+          hc.append(r);
+        }
+    });
+    $('#historyContent').replaceWith(hc);
 }

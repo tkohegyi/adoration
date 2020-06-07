@@ -5,7 +5,6 @@ public class PersonInformationJson {
     public String name;
     public String adorationStatus;
     public String webStatus;
-    public String isOnlineOnly;
     public String mobile;
     public String mobileVisible;
     public String email;

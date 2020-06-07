@@ -167,4 +167,9 @@ public class PeopleProvider {
         id = businessWithPerson.updatePerson(person, auditTrailCollection);
         return id;
     }
+
+    public Object getPersonHistoryAsObject(Long id) {
+        List<AuditTrail> a = businessWithAuditTrail.getAuditTrailOfObject(id);
+        return a;
+    }
 }

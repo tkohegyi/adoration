@@ -237,4 +237,23 @@ public class AppLogController extends ControllerBase {
         return result;
     }
 
+    /**
+     * Gets log history of a specific Adorator
+     *
+     * @return with the person history as a JSON response
+     */
+    @ResponseBody
+    @RequestMapping(value = "/adorationSecure/getPersonHistory/{id:.+}", method = {RequestMethod.GET, RequestMethod.POST})
+    public TableDataInformationJson getPersonHistoryById(HttpSession httpSession, @PathVariable("id") final String requestedId) {
+        TableDataInformationJson content = null;
+        if (isAdoratorAdmin(currentUserProvider, httpSession)) {
+            //can get the person history
+            Long id = Long.valueOf(requestedId);
+            Object personHistory = peopleProvider.getPersonHistoryAsObject(id);
+            content = new TableDataInformationJson(personHistory);
+        }
+        return content;
+    }
+
+
 }
