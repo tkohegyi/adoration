@@ -42,7 +42,6 @@
                             <th>Név</th>
                             <th>Adoráló Státusz</th>
                             <th>Web Státusz</th>
-                            <th>Online Adoráló?</th>
                             <th>Telefonszám</th>
                             <th>Telefonszám látható?</th>
                             <th>e-mail</th>
@@ -61,7 +60,6 @@
                             <th>Név</th>
                             <th>Adoráló Státusz</th>
                             <th>Web Státusz</th>
-                            <th>Online Adoráló?</th>
                             <th>Telefonszám</th>
                             <th>Telefonszám látható?</th>
                             <th>e-mail</th>

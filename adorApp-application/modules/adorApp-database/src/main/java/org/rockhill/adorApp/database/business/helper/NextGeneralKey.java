@@ -5,6 +5,7 @@ import org.hibernate.query.Query;
 import org.springframework.stereotype.Component;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -18,11 +19,15 @@ public class NextGeneralKey {
      */
     public Long getNextGeneralKay(Session session) {
         {
-            Iterator<BigInteger> iter;
-            //MS SQL solution is:            Query query = session.createSQLQuery( "SELECT NEXT VALUE FOR dbo.AdorationUniqueNumber");
+            //MS SQL solution is:
+            // Iterator<BigInteger> iter;
+            // Query query = session.createSQLQuery( "SELECT NEXT VALUE FOR dbo.AdorationUniqueNumber");
+            // iter = (Iterator<BigInteger>) query.getResultList();
+            // iter.next().longValue();
+            ArrayList<BigInteger> values;
             Query query = session.createSQLQuery( "select nextval('\"dbo\".\"AdorationUniqueNumber\"')");
-            iter = (Iterator<BigInteger>) query.getResultList();
-            return iter.next().longValue();
+            values = (ArrayList<BigInteger>) query.getResultList();
+            return values.get(0).longValue();
         }
     }
 

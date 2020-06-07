@@ -46,7 +46,6 @@ function setupPersonTable() {
             { "data": "name", "width": "200px" },
             { "data": "adorationStatus" },
             { "data": "webStatus" },
-            { "data": "isOnlineOnly" },
             { "data": "mobile" },
             { "data": "mobileVisible" },
             { "data": "email" },
