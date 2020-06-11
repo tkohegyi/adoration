@@ -9,6 +9,7 @@ function setupCoverage() {
         var coverageInfo = JSON.parse(data.coverageInfo[0]);
         var dayNames = coverageInfo.dayNames; // eg FRIDAY: "péntek"
         var hours = coverageInfo.hours; // hour is 0-167,  eg: 75: 0
+        var onlineHours = coverageInfo.onlineHours; // hour is 0-167,  eg: 75: 0
 
         var days = document.getElementsByClassName('coverageDay');
         for (var i = 0; i < days.length; ++i) {
@@ -38,6 +39,12 @@ function setupCoverage() {
                 item.removeClass("veryBadCoverage");
                 item.removeClass("badCoverage");
                 item.addClass("goodCoverage");
+            }
+            var onlineValue = onlineHours[i];
+            if (onlineValue > 0) {
+                item.addClass("onlineAdorator");
+            } else {
+                item.removeClass("onlineAdorator");
             }
         }
     });

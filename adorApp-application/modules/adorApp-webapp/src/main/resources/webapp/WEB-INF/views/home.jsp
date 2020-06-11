@@ -47,13 +47,17 @@
 				<td>színűek azok az órák, amelyekben a jelentkezőkre leginkább szükség van. Ezért, ha teheted, jelentkezz a pirossal jelölt órák valamelyikére.</td>
 			</tr>
 			<tr>
-				<td valign="top" align="right" class="badCoverage">1 - Sárga&nbsp;</td>
+				<td valign="middle" align="right" class="badCoverage">1 - Sárga&nbsp;</td>
 				<td>színűek azok az órák, amelyekben az Örökimádás folyamatos, de nem megfelelően biztosított -
 					ezekre az időpontokra is örömmel várunk még jelentkezőket.</td>
 			</tr>
 			<tr>
-				<td valign="top" align="right" class="goodCoverage">Zöld&nbsp;</td>
+				<td valign="middle" align="right" class="goodCoverage">Zöld&nbsp;</td>
 				<td>színűek azok az órák, amelyekben az Örökimádás folytonossága megfelelően biztosított. Természetesen ezekre az órákra is lehet még jelentkezni.</td>
+			</tr>
+			<tr>
+				<td valign="middle" align="right" class="onlineAdorator">Kék keret&nbsp;&nbsp;</td>
+				<td>-tel rendelkeznek azok az órák, amelyekben Online módon, távolról van biztosítva az Örökimádás. Online adorálásra az ország bármely pontjáról lehet jelentkezni, illetve azon idősebb vagy beteg testvéreinknek is ezt a módot ajánljuk, akik személyesen nem tudják felkeresni a kápolnát.</td>
 			</tr>
 		</table>
 		<br />

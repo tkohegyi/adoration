@@ -40,6 +40,7 @@
     border-left: 1px solid black;
     border-right: 1px solid black;
     text-align: center;
+    padding: 2px;
 }
 
 .goodCoverage {
@@ -55,4 +56,8 @@
 .veryBadCoverage {
     background-color: #fd726f;
     color: black;
+}
+
+.onlineAdorator {
+    box-shadow: inset 0 0 0 4px lightskyblue;
 }

@@ -425,7 +425,6 @@ function changeHistoryClick(data) {
 function reBuildHistoryModal(personId) {
     var hc = $("<tbody id=\"historyContent\"/>");
     $.get('/adorationSecure/getPersonHistory/' + personId , function(data) {
-        //HANDLE DATA - fill table
         var info = data.data;
         for (var i = 0; i < info.length; i++) {
           var r = $("<tr/>");
@@ -442,4 +441,21 @@ function reBuildHistoryModal(personId) {
         }
     });
     $('#historyContent').replaceWith(hc);
+}
+
+function changeTimeClick(data) {
+   reBuildTimeModal(data);
+}
+
+function reBuildTimeModal(personId) {
+    var hc = $("<tbody id=\"timeContent\"/>");
+    $.get('/adorationSecure/getPersonCommitments/' + personId , function(data) {
+        var info = data.data;
+        for (var i = 0; i < info.length; i++) {
+          var r = $("<tr/>");
+          var d = $("<td>" + info[i].xxx + "</td>");r.append(d);
+          hc.append(r);
+        }
+    });
+    $('#timeContent').replaceWith(hc);
 }
