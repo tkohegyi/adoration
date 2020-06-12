@@ -155,5 +155,40 @@
       </div>
     </div>
 
+    <!-- Modal Time -->
+    <div class="modal fade" id="timeModal" tabindex="-1" role="dialog" aria-labelledby="timeCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-l" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="timeCenterTitle">Órák</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Cancel">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+              <form>
+                  <table id="timeTable" class="table table-hover table-bordered">
+                      <thead>
+                          <tr>
+                              <th>Nap</th>
+                              <th>Óra</th>
+                              <th>Prioritás</th>
+                              <th>Online</th>
+                              <th>Más adorálók</th>
+                              <th>Admin megjegyzés</th>
+                              <th>Publikus megjegyzés</th>
+                          </tr>
+                      </thead>
+                      <tbody id="timeContent"/>
+                  </table>
+               </form>
+          </div>
+          <div class="modal-footer">
+            <button id="cancelButton" type="button" class="btn btn-info" data-dismiss="modal">Mégsem</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
 </body>
 </html>

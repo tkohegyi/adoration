@@ -16,6 +16,7 @@ public class LiveMap {
     private final Object o = new Object();
     private Map<String, LiveMapElement> liveMap = new ConcurrentHashMap<>();
     private static Timer liveMapCheckerTimer;
+    private static Boolean isLogActive = true;
 
     /**
      * Method that generates the list of the live users in JSON format.
@@ -48,7 +49,8 @@ public class LiveMap {
             if (liveMap.get(uuid) == null) {
                 logger.info("Live Adorator joined - " + currentUserInformationJson.userName + " - " + uuid);
             }
-            liveMap.putIfAbsent(uuid,new LiveMapElement(currentUserInformationJson));
+            liveMap.putIfAbsent(uuid,new LiveMapElement(currentUserInformationJson)); //add new online adorator
+            isLogActive = true; //turn on logging
             if (liveMapCheckerTimer == null) { //initiate timer
                 liveMapCheckerTimer = new Timer(true);
                 liveMapCheckerTimer.scheduleAtFixedRate(new LiveMapTimerTask(this),30000,30000);
@@ -73,7 +75,9 @@ public class LiveMap {
      * This is to clean up obsolete entries from the map.
      */
     public void timerTick() {
-        logger.info("LiveMap Timer tick... online adorators: " + liveMap.size());
+        if (isLogActive) {
+            logger.info("LiveMap Timer tick... online adorators: " + liveMap.size());
+        }
         if (!liveMap.isEmpty()) {
             long now = System.currentTimeMillis();
             synchronized (o) {
@@ -87,6 +91,9 @@ public class LiveMap {
                     }
                 }
             }
+        } else {
+            //no online adorator
+            isLogActive = false;
         }
     }
 }
