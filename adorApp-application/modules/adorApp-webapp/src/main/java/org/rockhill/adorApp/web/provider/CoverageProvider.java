@@ -8,13 +8,16 @@ import org.rockhill.adorApp.database.tables.Link;
 import org.rockhill.adorApp.database.tables.Translator;
 import org.rockhill.adorApp.web.json.CoverageInformationJson;
 import org.rockhill.adorApp.web.json.CurrentUserInformationJson;
+import org.rockhill.adorApp.web.json.PersonCommitmentJson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Component
 public class CoverageProvider {
@@ -69,6 +72,26 @@ public class CoverageProvider {
             }
         }
         return coverageInformationJson;
+    }
+
+    public Object getPersonCommitmentAsObject(Long id) {
+        PersonCommitmentJson personCommitmentJson = new PersonCommitmentJson();
+        List<Link> linkList = businessWithLink.getLinkList();
+        Set<Integer> committedHours = new HashSet<>();
+        //first fill hours of the person
+        for (Link link : linkList) {
+            if (link.getPersonId() == id) {
+                committedHours.add(link.getHourId());
+                personCommitmentJson.linkedHours.add(link);
+            }
+        }
+        //now fill others who help for the person at his/her hours
+        for (Link link : linkList) {
+            if (committedHours.contains(link.getHourId())) {
+                personCommitmentJson.others.add(link);
+            }
+        }
+        return personCommitmentJson;
     }
 
 }

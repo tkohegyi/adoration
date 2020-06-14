@@ -7,6 +7,7 @@ import org.rockhill.adorApp.web.controller.helper.ControllerBase;
 import org.rockhill.adorApp.web.json.CurrentUserInformationJson;
 import org.rockhill.adorApp.web.json.PersonInformationJson;
 import org.rockhill.adorApp.web.json.TableDataInformationJson;
+import org.rockhill.adorApp.web.provider.CoverageProvider;
 import org.rockhill.adorApp.web.provider.CurrentUserProvider;
 import org.rockhill.adorApp.web.provider.LogFileProvider;
 import org.rockhill.adorApp.web.provider.PeopleProvider;
@@ -51,6 +52,8 @@ public class AppLogController extends ControllerBase {
     private CurrentUserProvider currentUserProvider;
     @Autowired
     private PeopleProvider peopleProvider;
+    @Autowired
+    private CoverageProvider coverageProvider;
 
     @Autowired
     public AppLogController(RequestMappingHandlerMapping handlerMapping) {
@@ -255,5 +258,22 @@ public class AppLogController extends ControllerBase {
         return content;
     }
 
+    /**
+     * Gets hour assignments of a specific Adorator
+     *
+     * @return with the hour assignments of a person as a JSON response
+     */
+    @ResponseBody
+    @RequestMapping(value = "/adorationSecure/getPersonCommitments/{id:.+}", method = {RequestMethod.GET, RequestMethod.POST})
+    public TableDataInformationJson getPersonCommitmentsById(HttpSession httpSession, @PathVariable("id") final String requestedId) {
+        TableDataInformationJson content = null;
+        if (isAdoratorAdmin(currentUserProvider, httpSession)) {
+            //can get the person commitments
+            Long id = Long.valueOf(requestedId);
+            Object personCommitments = coverageProvider.getPersonCommitmentAsObject(id);
+            content = new TableDataInformationJson(personCommitments);
+        }
+        return content;
+    }
 
 }

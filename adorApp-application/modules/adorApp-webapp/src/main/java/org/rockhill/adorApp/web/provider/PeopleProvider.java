@@ -172,4 +172,5 @@ public class PeopleProvider {
         List<AuditTrail> a = businessWithAuditTrail.getAuditTrailOfObject(id);
         return a;
     }
+
 }
