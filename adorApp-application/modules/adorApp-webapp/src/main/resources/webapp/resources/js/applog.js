@@ -448,14 +448,108 @@ function changeTimeClick(data) {
 }
 
 function reBuildTimeModal(personId) {
+    $('#editHourPersonId').val(personId); //remember about who we are talking
+    $('#editHourId').val(0); //remember about who we are talking
     var hc = $("<tbody id=\"timeContent\"/>");
     $.get('/adorationSecure/getPersonCommitments/' + personId , function(data) {
-        var info = data.data;
+        var info = data.data.linkedHours;
+        var info2 = data.data.others;
+        var info3 = data.data.dayNames;
         for (var i = 0; i < info.length; i++) {
           var r = $("<tr/>");
-          var d = $("<td>" + info[i].xxx + "</td>");r.append(d);
+          //day
+          var x = Math.floor(info[i].hourId / 24);
+          var d = $("<td>" + info3[x] + "</td>");r.append(d);
+          //hour
+          var x = info[i].hourId % 24;
+          var d = $("<td>" + x + "</td>");r.append(d);
+          //priority
+          var d = $("<td>" + info[i].priority + "</td>");r.append(d);
+          //type/online
+          if (info[i].type > 0) {
+              var d = $("<td><input type=\"checkbox\" checked disabled></td>");r.append(d);
+          } else {
+              var d = $("<td><input type=\"checkbox\" disabled></td>");r.append(d);
+          }
+          //other adorators
+          var d = $("<td>" + "TBD..." + "</td>");r.append(d);
+          //admin comment
+          var d = $("<td>" + info[i].adminComment + "</td>");r.append(d);
+          //public comment
+          var d = $("<td>" + info[i].publicComment + "</td>");r.append(d);
           hc.append(r);
+        }
+        if (info.length == 0) {
+            showNewPartOfModal();
+        } else {
+            cancelNewPartOfModal();
         }
     });
     $('#timeContent').replaceWith(hc);
+}
+
+function cancelNewPartOfModal() {
+    $('#newTimeTable').hide(500);
+    $('#newButton').show(500);
+}
+
+function showNewPartOfModal() {
+    $('#newTimeTable').show(500);
+    $('#newButton').hide(500);
+}
+
+function saveNewHour() {
+    var b = {}; //empty object
+	//validations + prepare object
+	var eStr = "";
+    var bad = 0;
+    //let v;
+    b.id = $("#editHourId").val(); //filled by the button's onclick method, should be 0 in case of new, or the ID of the link in case of update
+    b.hourId = parseInt($("#newDay").find(":selected").val()) + parseInt($("#newHour").val());
+    b.personId = $("#editHourPersonId").val();
+    b.priority = $("#newPriority").val();
+    b.adminComment = $("#newAdminComment").val();
+    b.publicComment = $("#newPublicComment").val();
+    if ($("#newOnline").prop("checked").toString() == "true") {
+        b.type = 1;
+    } else {
+        b.type = 0;
+    }
+    // b is ready
+    //validation
+    //validation done (cannot validate more at client level)
+    if (bad == 1) {
+        alert(eStr);
+        console.log("---=== ALERT ===---")
+        return;
+    }
+    //save
+    var token = $("meta[name='_csrf']").attr("content");
+    var header = $("meta[name='_csrf_header']").attr("content");
+    //beforeRequest();
+    $.ajax({
+        url : '/adorationSecure/updatePersonCommitment',
+        type : 'POST',
+        async: false,
+        contentType: 'application/json',
+        data: JSON.stringify(b),
+        dataType: 'json',
+        success : processLinkEntityUpdated,
+        beforeSend : function(request) {
+            request.setRequestHeader(header, token);
+        },
+        complete : requestLinkComplete,
+    }).fail( function(xhr, status) {
+        var obj = JSON.parse(xhr.responseText);
+        alert(obj.entityUpdate);
+    });
+}
+
+function processLinkEntityUpdated() {
+    var personId = $('#editHourPersonId').val();
+    reBuildTimeModal(personId);
+}
+
+function requestLinkComplete() {
+    processLinkEntityUpdated();
 }

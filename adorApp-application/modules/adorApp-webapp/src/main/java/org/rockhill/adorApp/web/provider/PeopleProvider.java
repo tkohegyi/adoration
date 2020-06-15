@@ -41,18 +41,9 @@ public class PeopleProvider {
         return p;
     }
 
-    protected void checkDangerousValue(final String text, final String userName) {
-        Pattern p = Pattern.compile("[\\\\#&\\<\\>]");
-        Matcher m = p.matcher(text);
-        if (m.find()) {
-            logger.warn("User:" + userName + " tried to use dangerous string value:" + text);
-            throw new DatabaseHandlingException("Field content is not allowed.");
-        }
-    }
-
     private AuditTrail prepareAuditTrail(Long id, String userName, String fieldName, String oldValue, String newValue) {
         AuditTrail auditTrail;
-        auditTrail = businessWithAuditTrail.prepareAuditTrail(id, userName, "Person::Update", fieldName + " changed from:\"" + oldValue + "\" to:\"" + newValue + "\"");
+        auditTrail = businessWithAuditTrail.prepareAuditTrail(id, userName, "Person::Update", fieldName + " changed from:\"" + oldValue + "\" to:\"" + newValue + "\"", "");
         return auditTrail;
     }
 
@@ -66,7 +57,7 @@ public class PeopleProvider {
         }
         //prepare new name and validate it
         String newValue = p.name.trim();
-        checkDangerousValue(newValue, currentUserInformationJson.userName);
+        businessWithAuditTrail.checkDangerousValue(newValue, currentUserInformationJson.userName);
         String oldValue = person.getName();
         //name length must be > 0, and shall not fit to other existing names
         if (newValue.length() == 0) {
@@ -96,7 +87,7 @@ public class PeopleProvider {
 
         oldValue = person.getMobile();
         newValue = p.mobile.trim();
-        checkDangerousValue(newValue, currentUserInformationJson.userName);
+        businessWithAuditTrail.checkDangerousValue(newValue, currentUserInformationJson.userName);
         person.setMobile(newValue);
         if (!oldValue.contentEquals(newValue)) {
             auditTrailCollection.add(prepareAuditTrail(person.getId(), currentUserInformationJson.userName, "Mobile", oldValue, newValue));
@@ -111,7 +102,7 @@ public class PeopleProvider {
 
         oldValue = person.getEmail();
         newValue = p.email.trim();
-        checkDangerousValue(newValue, currentUserInformationJson.userName);
+        businessWithAuditTrail.checkDangerousValue(newValue, currentUserInformationJson.userName);
         person.setEmail(newValue);
         if (!oldValue.contentEquals(newValue)) {
             auditTrailCollection.add(prepareAuditTrail(person.getId(), currentUserInformationJson.userName, "Email", oldValue, newValue));
@@ -126,7 +117,7 @@ public class PeopleProvider {
 
         oldValue = person.getAdminComment();
         newValue = p.adminComment.trim();
-        checkDangerousValue(newValue, currentUserInformationJson.userName);
+        businessWithAuditTrail.checkDangerousValue(newValue, currentUserInformationJson.userName);
         person.setAdminComment(newValue);
         if (!oldValue.contentEquals(newValue)) {
             auditTrailCollection.add(prepareAuditTrail(person.getId(), currentUserInformationJson.userName, "AdminComment", oldValue, newValue));
@@ -141,7 +132,7 @@ public class PeopleProvider {
 
         oldValue = person.getDhcSignedDate();
         newValue = p.dhcSignedDate;
-        checkDangerousValue(newValue, currentUserInformationJson.userName);
+        businessWithAuditTrail.checkDangerousValue(newValue, currentUserInformationJson.userName);
         person.setDhcSignedDate(newValue);
         if (!oldValue.contentEquals(newValue)) {
             auditTrailCollection.add(prepareAuditTrail(person.getId(), currentUserInformationJson.userName, "DhcSignedDate", oldValue, newValue));
@@ -149,7 +140,7 @@ public class PeopleProvider {
 
         oldValue = person.getCoordinatorComment();
         newValue = p.coordinatorComment.trim();
-        checkDangerousValue(newValue, currentUserInformationJson.userName);
+        businessWithAuditTrail.checkDangerousValue(newValue, currentUserInformationJson.userName);
         person.setCoordinatorComment(newValue);
         if (!oldValue.contentEquals(newValue)) {
             auditTrailCollection.add(prepareAuditTrail(person.getId(), currentUserInformationJson.userName, "CoordinatorComment", oldValue, newValue));
@@ -157,7 +148,7 @@ public class PeopleProvider {
 
         oldValue = person.getVisibleComment();
         newValue = p.visibleComment.trim();
-        checkDangerousValue(newValue, currentUserInformationJson.userName);
+        businessWithAuditTrail.checkDangerousValue(newValue, currentUserInformationJson.userName);
         person.setVisibleComment(newValue);
         if (!oldValue.contentEquals(newValue)) {
             auditTrailCollection.add(prepareAuditTrail(person.getId(), currentUserInformationJson.userName, "VisibleComment", oldValue, newValue));

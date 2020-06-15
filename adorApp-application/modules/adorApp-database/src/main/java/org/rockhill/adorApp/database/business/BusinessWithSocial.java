@@ -36,7 +36,7 @@ public class BusinessWithSocial {
                 newS.setId(id);
                 session.save(newS); //insert into Social table !
                 //and audit trail
-                AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(nextGeneralKey.getNextGeneralKay(session),businessWithAuditTrail.SYSTEM_SELF,"Create","Created upon first social login");
+                AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(nextGeneralKey.getNextGeneralKay(session),businessWithAuditTrail.SYSTEM_SELF,"Create","Created upon first social login", "");
                 session.save(auditTrail);
                 session.getTransaction().commit();
                 logger.info("Social record created successfully: " + id.toString());

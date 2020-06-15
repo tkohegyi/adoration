@@ -2,6 +2,7 @@ package org.rockhill.adorApp.web.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import org.rockhill.adorApp.database.tables.Link;
 import org.rockhill.adorApp.exception.SystemException;
 import org.rockhill.adorApp.web.controller.helper.ControllerBase;
 import org.rockhill.adorApp.web.json.CurrentUserInformationJson;
@@ -270,10 +271,53 @@ public class AppLogController extends ControllerBase {
         if (isAdoratorAdmin(currentUserProvider, httpSession)) {
             //can get the person commitments
             Long id = Long.valueOf(requestedId);
-            Object personCommitments = coverageProvider.getPersonCommitmentAsObject(id);
+            Object personCommitments = coverageProvider.getPersonCommitmentAsObject(id, getLanguageCode(currentUserProvider, httpSession));
             content = new TableDataInformationJson(personCommitments);
         }
         return content;
+    }
+
+    /**
+     * Update an existing Person.
+     *
+     * @param session is the actual HTTP session
+     * @return list of hits as a JSON response
+     */
+    @ResponseBody
+    @RequestMapping(value = "/adorationSecure/updatePersonCommitment", method = RequestMethod.POST)
+    public ResponseEntity<String> updatePersonCommitment(@RequestBody final String body, final HttpSession session) {
+        String resultString = "OK";
+        ResponseEntity<String> result;
+        HttpHeaders responseHeaders = setHeadersForJSON();
+        try {
+            CurrentUserInformationJson currentUserInformationJson = currentUserProvider.getUserInformation(session);
+            Gson g = new Gson();
+            Link p = g.fromJson(body, Link.class);
+            //check authorization: user must have right user type
+            if (!currentUserInformationJson.isAdoratorAdmin) {
+                resultString = "Unauthorized action.";
+                result = new ResponseEntity<String>(getJsonString(JSON_RESPONSE_UPDATE, resultString), responseHeaders, HttpStatus.FORBIDDEN);
+            } else {
+                //authorization checked, ok
+                Long updateInformation = coverageProvider.updatePersonCommitment(p, currentUserInformationJson);
+                if (updateInformation != null) {
+                    resultString = "OK-" + updateInformation.toString();
+                    result = new ResponseEntity<String>(getJsonString(JSON_RESPONSE_UPDATE, resultString), responseHeaders, HttpStatus.CREATED);
+                } else {
+                    resultString = "Cannot update the Person Commitment, please check the values and retry.";
+                    logger.info("Cannot update the Person Commitment with ID:" + p.getId());
+                    result = new ResponseEntity<String>(getJsonString(JSON_RESPONSE_UPDATE, resultString), responseHeaders, HttpStatus.BAD_REQUEST);
+                }
+            }
+        } catch (SystemException e) {
+            resultString = e.getMessage();
+            result = new ResponseEntity<String>(getJsonString(JSON_RESPONSE_UPDATE, resultString), responseHeaders, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            resultString = "Cannot update the Person Commitment, please contact to maintainers.";
+            logger.warn("Error happened at PersonCommitment, pls contact to maintainers", e);
+            result = new ResponseEntity<String>(getJsonString(JSON_RESPONSE_UPDATE, resultString), responseHeaders, HttpStatus.BAD_REQUEST);
+        }
+        return result;
     }
 
 }

@@ -18,6 +18,11 @@ public class ControllerBase {
         return currentUserInformationJson.isAdoratorAdmin;
     }
 
+    public String getLanguageCode(CurrentUserProvider currentUserProvider, HttpSession httpSession) {
+        CurrentUserInformationJson currentUserInformationJson = currentUserProvider.getUserInformation(httpSession);
+        return currentUserInformationJson.languageCode;
+    }
+
     protected HttpHeaders setHeadersForJSON() {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.setContentType(MediaType.APPLICATION_JSON);
