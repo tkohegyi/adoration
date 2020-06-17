@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 public class ControllerBase {
 
     public static final String JSON_RESPONSE_UPDATE = "entityUpdate";
+    public static final String JSON_RESPONSE_DELETE = "entityDelete";
 
     public Boolean isAdoratorAdmin(CurrentUserProvider currentUserProvider, HttpSession httpSession) {
         CurrentUserInformationJson currentUserInformationJson = currentUserProvider.getUserInformation(httpSession);

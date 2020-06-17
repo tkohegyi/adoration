@@ -43,7 +43,7 @@ public class PeopleProvider {
 
     private AuditTrail prepareAuditTrail(Long id, String userName, String fieldName, String oldValue, String newValue) {
         AuditTrail auditTrail;
-        auditTrail = businessWithAuditTrail.prepareAuditTrail(id, userName, "Person::Update", fieldName + " changed from:\"" + oldValue + "\" to:\"" + newValue + "\"", "");
+        auditTrail = businessWithAuditTrail.prepareAuditTrail(id, userName, "Person:Update:" + id.toString(), fieldName + " changed from:\"" + oldValue + "\" to:\"" + newValue + "\"", "");
         return auditTrail;
     }
 

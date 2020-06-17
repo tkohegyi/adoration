@@ -243,6 +243,7 @@
                           </td></tr>
                       </tbody>
                   </table>
+              <button id="deleteHourButton" type="button" class="btn btn-danger" onclick="deleteHour()">Óra törlése</button>
               <button type="button" class="btn btn-info" onclick="cancelNewPartOfModal()">Mégsem</button>
               <button id="saveChangesButton" type="button" class="btn btn-success" onclick="saveNewHour()">Mentés</button>
               </form>

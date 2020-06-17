@@ -2,15 +2,13 @@ package org.rockhill.adorApp.web.provider;
 
 import org.rockhill.adorApp.database.business.*;
 import org.rockhill.adorApp.database.business.helper.enums.AdorationMethodTypes;
-import org.rockhill.adorApp.database.business.helper.enums.AdoratorStatusTypes;
 import org.rockhill.adorApp.database.business.helper.enums.TranslatorDayNames;
-import org.rockhill.adorApp.database.business.helper.enums.WebStatusTypes;
 import org.rockhill.adorApp.database.tables.AuditTrail;
 import org.rockhill.adorApp.database.tables.Link;
 import org.rockhill.adorApp.database.tables.Person;
-import org.rockhill.adorApp.database.tables.Translator;
 import org.rockhill.adorApp.web.json.CoverageInformationJson;
 import org.rockhill.adorApp.web.json.CurrentUserInformationJson;
+import org.rockhill.adorApp.web.json.DeleteEntityJson;
 import org.rockhill.adorApp.web.json.PersonCommitmentJson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,7 +38,6 @@ public class CoverageProvider {
         CoverageInformationJson coverageInformationJson = new CoverageInformationJson();
 
         //fill the day names first
-        List<Translator> translatorList = businessWithTranslator.getTranslatorList(currentUserInformationJson.languageCode);
         coverageInformationJson.dayNames = new HashMap<>();
         for (TranslatorDayNames dayName : TranslatorDayNames.values()) {
             String textId = dayName.toString();
@@ -54,8 +51,8 @@ public class CoverageProvider {
         coverageInformationJson.onlineHours = new HashMap<>();
         //ensure that we have initial info about all the hours
         for (int i = 0; i < 168; i++) {
-            coverageInformationJson.hours.put(Integer.valueOf(i), 0);
-            coverageInformationJson.onlineHours.put(Integer.valueOf(i), 0);
+            coverageInformationJson.hours.put(i, 0);
+            coverageInformationJson.onlineHours.put(i, 0);
         }
         for (Link link : linkList) {
             Integer hourId = link.getHourId();
@@ -104,9 +101,9 @@ public class CoverageProvider {
         return personCommitmentJson;
     }
 
-    private AuditTrail prepareAuditTrail(Long id, String userName, String fieldName, String oldValue, String newValue) {
+    private AuditTrail prepareUpdateAuditTrail(Long id, Long linkId, String userName, String fieldName, String oldValue, String newValue) {
         AuditTrail auditTrail;
-        auditTrail = businessWithAuditTrail.prepareAuditTrail(id, userName, "Link::Update", fieldName + " changed from:\"" + oldValue + "\" to:\"" + newValue + "\"", "");
+        auditTrail = businessWithAuditTrail.prepareAuditTrail(id, userName, "Link:Update:" + linkId.toString(), fieldName + " changed from:\"" + oldValue + "\" to:\"" + newValue + "\"", "");
         return auditTrail;
     }
 
@@ -119,7 +116,7 @@ public class CoverageProvider {
             //new Link
             l.setId(businessWithNextGeneralKey.getNextGeneralId());
             AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(l.getPersonId(), currentUserInformationJson.userName,
-                    "Link::New", "Day: " + businessWithLink.getDayNameFromHourId(l.getHourId())
+                    "Link:New:" + l.getId().toString(), "Day: " + businessWithLink.getDayNameFromHourId(l.getHourId())
                             + ", Hour: " + businessWithLink.getHourFromHourId(l.getHourId()),
                     "Type: " + AdorationMethodTypes.getTranslatedString(l.getType())
                             + ", Priority: " + l.getPriority().toString());
@@ -129,7 +126,7 @@ public class CoverageProvider {
         } else {
             oldLink = businessWithLink.getLink(l.getId());
             if (oldLink == null) {
-                logger.info("User:" + currentUserInformationJson.userName + " tried to update not existing Person Commitment/Link");
+                logger.info("User:" + currentUserInformationJson.userName + " tried to update a not existing Person Commitment/Link");
                 return null;
             }
         }
@@ -141,11 +138,10 @@ public class CoverageProvider {
                     + newInt.toString() + "\".");
             return null;
         }
-        if (newInt != oldInt) {
-            prepareAuditTrail(l.getPersonId(), currentUserInformationJson.userName,"Day",
-                    businessWithLink.getDayNameFromHourId(oldLink.getHourId()), businessWithLink.getDayNameFromHourId(l.getHourId()));
-            prepareAuditTrail(l.getPersonId(), currentUserInformationJson.userName,"Hour",
-                    businessWithLink.getHourFromHourId(oldLink.getHourId()), businessWithLink.getHourFromHourId(l.getHourId()));
+        if (!newInt.equals(oldInt)) {
+            auditTrailCollection.add(prepareUpdateAuditTrail(l.getPersonId(), l.getId(), currentUserInformationJson.userName,"Day/Hour",
+                    businessWithLink.getDayNameFromHourId(oldLink.getHourId()) + "/" + businessWithLink.getHourFromHourId(oldLink.getHourId()),
+                    businessWithLink.getDayNameFromHourId(l.getHourId()) + "/" + businessWithLink.getHourFromHourId(l.getHourId())));
         }
         //personId
         Person p = businessWithPerson.getPersonById(l.getPersonId());
@@ -160,26 +156,27 @@ public class CoverageProvider {
         }
         //priority
         newInt = l.getPriority();
+        oldInt = oldLink.getPriority();
         if ((newInt < 0) || (newInt > 25)) { //need to synch with applog.jsp
             logger.info("User:" + currentUserInformationJson.userName + " tried to create/update Link with bad priority.");
             return null;
         }
-        if (newInt != oldInt) {
-            prepareAuditTrail(l.getPersonId(), currentUserInformationJson.userName,"Priority", oldInt.toString(), newInt.toString());
+        if (!newInt.equals(oldInt)) {
+            auditTrailCollection.add(prepareUpdateAuditTrail(l.getPersonId(), l.getId(), currentUserInformationJson.userName,"Priority", oldInt.toString(), newInt.toString()));
         }
         //admincomment
         String newValue = l.getAdminComment();
         String oldValue = oldLink.getAdminComment();
         businessWithAuditTrail.checkDangerousValue(newValue, currentUserInformationJson.userName);
         if (!newValue.contentEquals(oldValue)) {
-            prepareAuditTrail(l.getPersonId(), currentUserInformationJson.userName,"Admin Comment", oldValue, newValue);
+            auditTrailCollection.add(prepareUpdateAuditTrail(l.getPersonId(), l.getId(), currentUserInformationJson.userName,"Admin Comment", oldValue, newValue));
         }
         //publicComment
         newValue = l.getPublicComment();
         oldValue = oldLink.getPublicComment();
         businessWithAuditTrail.checkDangerousValue(newValue, currentUserInformationJson.userName);
         if (!newValue.contentEquals(oldValue)) {
-            prepareAuditTrail(l.getPersonId(), currentUserInformationJson.userName,"Public Comment", oldValue, newValue);
+            auditTrailCollection.add(prepareUpdateAuditTrail(l.getPersonId(), l.getId(), currentUserInformationJson.userName,"Public Comment", oldValue, newValue));
         }
         //type
         newInt = l.getType();
@@ -188,12 +185,24 @@ public class CoverageProvider {
             logger.info("User:" + currentUserInformationJson.userName + " tried to create/update Link with bad type.");
             return null;
         }
-        if (newInt != oldInt) {
-            prepareAuditTrail(l.getPersonId(), currentUserInformationJson.userName,"Type",
-                    AdorationMethodTypes.getTranslatedString(oldInt), AdorationMethodTypes.getTranslatedString(newInt));
+        if (!newInt.equals(oldInt)) {
+            auditTrailCollection.add(prepareUpdateAuditTrail(l.getPersonId(), l.getId(), currentUserInformationJson.userName,"Type",
+                    AdorationMethodTypes.getTranslatedString(oldInt), AdorationMethodTypes.getTranslatedString(newInt)));
         }
 
         Long id = businessWithLink.updateLink(l, auditTrailCollection);
+        return id;
+    }
+
+    public Long deletePersonCommitment(DeleteEntityJson p, CurrentUserInformationJson currentUserInformationJson) {
+        Long id = Long.parseLong(p.entityId);
+        Link l = businessWithLink.getLink(id);
+        AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(l.getPersonId(), currentUserInformationJson.userName,
+                "Link:Delete:" + l.getId().toString(), "Day/Hour: " + businessWithLink.getDayNameFromHourId(l.getHourId())
+                        + "/" + businessWithLink.getHourFromHourId(l.getHourId()),
+                "Type: " + AdorationMethodTypes.getTranslatedString(l.getType())
+                        + ", Priority: " + l.getPriority().toString());
+        id = businessWithLink.deleteLink(l, auditTrail);
         return id;
     }
 }

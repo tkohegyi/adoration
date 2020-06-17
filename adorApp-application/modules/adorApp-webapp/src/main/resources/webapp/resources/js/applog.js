@@ -8,6 +8,7 @@ $(document).ready(function() {
 
 var structureInfo;
 var imgSrc; //used by renderer
+var hourInfo;
 
 function loadStructure() {
     $.get("/resources/json/dataTables_peopleStructure.json", function(data) {
@@ -425,19 +426,24 @@ function changeHistoryClick(data) {
 function reBuildHistoryModal(personId) {
     var hc = $("<tbody id=\"historyContent\"/>");
     $.get('/adorationSecure/getPersonHistory/' + personId , function(data) {
-        var info = data.data;
-        for (var i = 0; i < info.length; i++) {
-          var r = $("<tr/>");
-          var d = $("<td>" + info[i].activityType + "</td>");r.append(d);
-          d = $("<td>" + info[i].atWhen + "</td>");r.append(d);
-          d = $("<td>" + info[i].byWho + "</td>");r.append(d);
-          d = $("<td>" + info[i].description + "</td>");r.append(d);
-          if (info[i].data != null) {
-              d = $("<td>" + info[i].data + "</td>");r.append(d);
-          } else {
-              d = $("<td/>");r.append(d);
-          }
-          hc.append(r);
+        if ((typeof data != "undefined") && (typeof data.data != "undefined")) {
+            var info = data.data;
+            for (var i = 0; i < info.length; i++) {
+              var r = $("<tr/>");
+              var d = $("<td>" + info[i].activityType + "</td>");r.append(d);
+              d = $("<td>" + info[i].atWhen + "</td>");r.append(d);
+              d = $("<td>" + info[i].byWho + "</td>");r.append(d);
+              d = $("<td>" + info[i].description + "</td>");r.append(d);
+              if (info[i].data != null) {
+                  d = $("<td>" + info[i].data + "</td>");r.append(d);
+              } else {
+                  d = $("<td/>");r.append(d);
+              }
+              hc.append(r);
+            }
+        } else { //logged out or other error at server side
+            alert( "User Logged out, please login again." );
+            window.location.pathname = "/adoration/"
         }
     });
     $('#historyContent').replaceWith(hc);
@@ -452,40 +458,50 @@ function reBuildTimeModal(personId) {
     $('#editHourId').val(0); //remember about who we are talking
     var hc = $("<tbody id=\"timeContent\"/>");
     $.get('/adorationSecure/getPersonCommitments/' + personId , function(data) {
-        var info = data.data.linkedHours;
-        var info2 = data.data.others;
-        var info3 = data.data.dayNames;
-        for (var i = 0; i < info.length; i++) {
-          var r = $("<tr/>");
-          //day
-          var x = Math.floor(info[i].hourId / 24);
-          var d = $("<td>" + info3[x] + "</td>");r.append(d);
-          //hour
-          var x = info[i].hourId % 24;
-          var d = $("<td>" + x + "</td>");r.append(d);
-          //priority
-          var d = $("<td>" + info[i].priority + "</td>");r.append(d);
-          //type/online
-          if (info[i].type > 0) {
-              var d = $("<td><input type=\"checkbox\" checked disabled></td>");r.append(d);
-          } else {
-              var d = $("<td><input type=\"checkbox\" disabled></td>");r.append(d);
-          }
-          //other adorators
-          var d = $("<td>" + "TBD..." + "</td>");r.append(d);
-          //admin comment
-          var d = $("<td>" + info[i].adminComment + "</td>");r.append(d);
-          //public comment
-          var d = $("<td>" + info[i].publicComment + "</td>");r.append(d);
-          hc.append(r);
-        }
-        if (info.length == 0) {
-            showNewPartOfModal();
-        } else {
-            cancelNewPartOfModal();
+        if ((typeof data != "undefined") && (typeof data.data != "undefined") && (typeof data.data.linkedHours != "undefined")) {
+            hourInfo = data.data.linkedHours;;
+            var info2 = data.data.others;
+            var info3 = data.data.dayNames;
+            for (var i = 0; i < hourInfo.length; i++) {
+              var r = $("<tr onclick=\"clickHourEdit(" + hourInfo[i].hourId + ")\" />");
+              //day
+              var x = Math.floor(hourInfo[i].hourId / 24);
+              var d = $("<td>" + info3[x] + "</td>");r.append(d);
+              //hour
+              var x = hourInfo[i].hourId % 24;
+              var d = $("<td>" + x + "</td>");r.append(d);
+              //priority
+              var d = $("<td>" + hourInfo[i].priority + "</td>");r.append(d);
+              //type/online
+              var z;
+              if (hourInfo[i].type > 0) {
+                  imgSrc = "/resources/img/dark-green-check-mark-th.png"
+                  z = "<td><img alt=\"Igen\" src=\"" + imgSrc + "\" height=\"20\" width=\"20\" /></td>";
+              } else {
+                  imgSrc = "/resources/img/orange-cross-th.png";
+                  z = "<td><img alt=\"Nem\" src=\"" + imgSrc + "\" height=\"20\" width=\"20\" /></td>";
+              }
+              var d = $(z);r.append(d);
+              //other adorators
+              var d = $("<td>" + "TBD..." + "</td>");r.append(d);
+              //admin comment
+              var d = $("<td>" + hourInfo[i].adminComment + "</td>");r.append(d);
+              //public comment
+              var d = $("<td>" + hourInfo[i].publicComment + "</td>");r.append(d);
+              hc.append(r);
+            }
+            if (hourInfo.length == 0) {
+                showNewPartOfModal();
+            } else {
+                cancelNewPartOfModal();
+            }
+        } else { //logged out or other error at server side
+            alert( "User Logged out, please login again." );
+            window.location.pathname = "/adoration/"
         }
     });
     $('#timeContent').replaceWith(hc);
+    $('#deleteHourButton').hide();
 }
 
 function cancelNewPartOfModal() {
@@ -494,6 +510,8 @@ function cancelNewPartOfModal() {
 }
 
 function showNewPartOfModal() {
+    $('#deleteHourButton').hide();
+    $("#editHourId").val(0);
     $('#newTimeTable').show(500);
     $('#newButton').hide(500);
 }
@@ -552,4 +570,66 @@ function processLinkEntityUpdated() {
 
 function requestLinkComplete() {
     processLinkEntityUpdated();
+}
+
+function clickHourEdit(hourId) {
+    //identify the hour
+    for (var i = 0; i < hourInfo.length; i++) {
+        if (hourInfo[i].hourId == hourId) {
+            break;
+        }
+    }
+    if (hourInfo[i].hourId == hourId) { //if we really found it
+        var x = Math.floor(hourInfo[i].hourId / 24) * 24;
+        $("#newDay option[value=" + x + "]").prop('selected', 'selected').change();
+        x = hourInfo[i].hourId % 24;
+        $("#newHour option[value=" + x + "]").prop('selected', 'selected').change();
+        $("#newPriority").val(hourInfo[i].priority);
+        $("#newAdminComment").val(hourInfo[i].adminComment);
+        $("#newPublicComment").val(hourInfo[i].publicComment);
+        if (hourInfo[i].type > 0) {
+            $("#newOnline").prop("checked", true);
+        } else {
+            $("#newOnline").removeProp("checked");
+        }
+        showNewPartOfModal();
+        $("#editHourId").val(hourInfo[i].id);
+        $('#deleteHourButton').show();
+    } else {
+        $('#deleteHourButton').hide();
+        cancelNewPartOfModal();
+        alert( "Data consistency error, reload is necessary." );
+        window.location.pathname = "/adorationSecure/applog"
+    }
+}
+
+function deleteHour() {
+	console.log("---=== Delete Link Entity Clicked ===---");
+    var entityId = $("#editHourId").val(); //filled during the original on-load page
+    var req = {
+        entityId : entityId,
+    };
+    var token = $("meta[name='_csrf']").attr("content");
+    var header = $("meta[name='_csrf_header']").attr("content");
+    $.ajax({
+        url : '/adorationSecure/deletePersonCommitment',
+        type : 'POST',
+        async: false,
+        contentType: 'application/json',
+        data: JSON.stringify(req),
+        dataType: 'json',
+        success : processHourDeleted,
+        beforeSend : function(request) {
+            request.setRequestHeader(header, token);
+        },
+        complete : requestComplete,
+    }).fail( function(xhr, status) {
+        var obj = JSON.parse(xhr.responseText);
+        alert(obj.entityUpdate);
+    });
+}
+
+function processHourDeleted() {
+    console.log("---=== Entity DELETED, going back to Entity list... ===---");
+    reBuildTimeModal($("#editHourPersonId").val());
 }

@@ -6,6 +6,7 @@ import org.rockhill.adorApp.database.tables.Link;
 import org.rockhill.adorApp.exception.SystemException;
 import org.rockhill.adorApp.web.controller.helper.ControllerBase;
 import org.rockhill.adorApp.web.json.CurrentUserInformationJson;
+import org.rockhill.adorApp.web.json.DeleteEntityJson;
 import org.rockhill.adorApp.web.json.PersonInformationJson;
 import org.rockhill.adorApp.web.json.TableDataInformationJson;
 import org.rockhill.adorApp.web.provider.CoverageProvider;
@@ -316,6 +317,49 @@ public class AppLogController extends ControllerBase {
             resultString = "Cannot update the Person Commitment, please contact to maintainers.";
             logger.warn("Error happened at PersonCommitment, pls contact to maintainers", e);
             result = new ResponseEntity<String>(getJsonString(JSON_RESPONSE_UPDATE, resultString), responseHeaders, HttpStatus.BAD_REQUEST);
+        }
+        return result;
+    }
+
+    /**
+     * Delete an existing Link.
+     *
+     * @param session is the actual HTTP session
+     * @return list of hits as a JSON response
+     */
+    @ResponseBody
+    @RequestMapping(value = "/adorationSecure/deletePersonCommitment", method = RequestMethod.POST)
+    public ResponseEntity<String> deletePersonCommitment(@RequestBody final String body, final HttpSession session) {
+        String resultString = "OK";
+        ResponseEntity<String> result;
+        HttpHeaders responseHeaders = setHeadersForJSON();
+        try {
+            CurrentUserInformationJson currentUserInformationJson = currentUserProvider.getUserInformation(session);
+            Gson g = new Gson();
+            DeleteEntityJson p = g.fromJson(body, DeleteEntityJson.class);
+            //check authorization
+            if (!currentUserInformationJson.isAdoratorAdmin) {
+                resultString = "Unauthorized action.";
+                result = new ResponseEntity<String>(getJsonString(JSON_RESPONSE_DELETE, resultString), responseHeaders, HttpStatus.FORBIDDEN);
+            } else {
+                //authorization checked, ok
+                Long updatedObjectId = coverageProvider.deletePersonCommitment(p, currentUserInformationJson);
+                if (updatedObjectId != null) {
+                    resultString = "OK";
+                    result = new ResponseEntity<String>(getJsonString(resultString, JSON_RESPONSE_DELETE), responseHeaders, HttpStatus.CREATED);
+                } else {
+                    resultString = "Cannot delete Person Commitment, please check and retry.";
+                    logger.info("Cannot delete Link - data issue.");
+                    result = new ResponseEntity<String>(getJsonString(resultString, JSON_RESPONSE_DELETE), responseHeaders, HttpStatus.BAD_REQUEST);
+                }
+            }
+        } catch (SystemException e) {
+            resultString = e.getMessage();
+            result = new ResponseEntity<String>(getJsonString(resultString, JSON_RESPONSE_DELETE), responseHeaders, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            logger.warn("Error happened at delete Person Commitment call", e);
+            resultString = "Cannot delete Person Commitment, pls contact to maintainers.";
+            result = new ResponseEntity<String>(getJsonString(resultString, JSON_RESPONSE_DELETE), responseHeaders, HttpStatus.BAD_REQUEST);
         }
         return result;
     }

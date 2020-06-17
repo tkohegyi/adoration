@@ -74,13 +74,13 @@ public class BusinessWithLink {
                 }
                 session.getTransaction().commit();
                 session.close();
+                id = l.getId();
+                logger.info("Link created successfully: " + id.toString());
             } catch (Exception e) {
                 session.getTransaction().rollback();
                 session.close();
                 throw e;
             }
-            id = l.getId();
-            logger.info("Account Activity created successfully: " + id.toString());
         }
         return id;
     }
@@ -98,14 +98,34 @@ public class BusinessWithLink {
                 }
                 session.getTransaction().commit();
                 session.close();
+                id = l.getId();
+                logger.info("Link updated successfully: " + id.toString());
             } catch (Exception e) {
                 session.getTransaction().rollback();
                 session.close();
                 throw e;
             }
-            id = l.getId();
-            logger.info("Account Activity created successfully: " + id.toString());
         }
         return id;
+    }
+
+    public Long deleteLink(Link l, AuditTrail auditTrail) {
+        SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
+        if (sessionFactory != null) {
+            Session session = sessionFactory.openSession();
+            try {
+                session.beginTransaction();
+                session.delete(l);
+                session.save(auditTrail);
+                session.getTransaction().commit();
+                session.close();
+                logger.info("Link deleted successfully: " + l.getId().toString());
+            } catch (Exception e) {
+                session.getTransaction().rollback();
+                session.close();
+                throw e;
+            }
+        }
+        return l.getId();
     }
 }
