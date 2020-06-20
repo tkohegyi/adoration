@@ -13,7 +13,7 @@
         <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
         <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/adoration</property>
 
-        <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQL10Dialect</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.ProgressDialect</property>
         <property name="hbm2ddl.auto">update</property> <!-- create / create-drop / update -->
 
         <property name="connection.username">adorApp</property>

@@ -6,6 +6,7 @@ import org.hibernate.query.Query;
 import org.rockhill.adorApp.database.SessionFactoryHelper;
 import org.rockhill.adorApp.database.business.helper.NextGeneralKey;
 import org.rockhill.adorApp.database.tables.AuditTrail;
+import org.rockhill.adorApp.database.tables.Person;
 import org.rockhill.adorApp.database.tables.Social;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -106,4 +107,21 @@ public class BusinessWithSocial {
         return null;
     }
 
+    public List<Social> getSocialsOfPerson(Person person) {
+        List<Social> result = null;
+        SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
+        if (sessionFactory != null) {
+            Session session = sessionFactory.openSession();
+            session.beginTransaction();
+            String hql = "from Social as S where S.personId = " + person.getId().toString();
+            Query query = session.createQuery(hql);
+            result = (List<Social>) query.list();
+            session.getTransaction().commit();
+            session.close();
+        }
+        if (result.size() > 0) {
+            return result;
+        }
+        return null;
+    }
 }

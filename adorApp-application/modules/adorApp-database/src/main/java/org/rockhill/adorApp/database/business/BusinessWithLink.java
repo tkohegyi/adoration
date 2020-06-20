@@ -9,6 +9,8 @@ import org.rockhill.adorApp.database.business.helper.enums.TranslatorDayNames;
 import org.rockhill.adorApp.database.exception.DatabaseHandlingException;
 import org.rockhill.adorApp.database.tables.AuditTrail;
 import org.rockhill.adorApp.database.tables.Link;
+import org.rockhill.adorApp.database.tables.Person;
+import org.rockhill.adorApp.database.tables.Social;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -127,5 +129,23 @@ public class BusinessWithLink {
             }
         }
         return l.getId();
+    }
+
+    public List<Link> getLinksOfPerson(Person person) {
+        List<Link> result = null;
+        SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
+        if (sessionFactory != null) {
+            Session session = sessionFactory.openSession();
+            session.beginTransaction();
+            String hql = "from Link as L where L.personId = " + person.getId().toString();
+            Query query = session.createQuery(hql);
+            result = (List<Link>) query.list();
+            session.getTransaction().commit();
+            session.close();
+        }
+        if (result.size() > 0) {
+            return result;
+        }
+        return null;
     }
 }

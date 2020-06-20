@@ -6,7 +6,9 @@ import org.hibernate.query.Query;
 import org.rockhill.adorApp.database.SessionFactoryHelper;
 import org.rockhill.adorApp.database.business.helper.NextGeneralKey;
 import org.rockhill.adorApp.database.tables.AuditTrail;
+import org.rockhill.adorApp.database.tables.Link;
 import org.rockhill.adorApp.database.tables.Person;
+import org.rockhill.adorApp.database.tables.Social;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,19 +67,24 @@ public class BusinessWithPerson {
         return null;
     }
 
-    public Long newPerson(Person newP) {
+    public Long newPerson(Person newP, AuditTrail auditTrail) {
         Long id = null;
         SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
         if (sessionFactory != null) {
             Session session = sessionFactory.openSession();
-            session.beginTransaction();
-            id = nextGeneralKey.getNextGeneralKay(session);
-            logger.info("New sequence arrived:" + id.toString());
-            newP.setId(id);
-            session.save(newP); //insert into People table !
-            session.getTransaction().commit();
-            session.close();
-            logger.info("Person created successfully: " + id.toString() + " with name:" + newP.getName());
+            try {
+                session.beginTransaction();
+                session.save(newP);
+                session.save(auditTrail);
+                session.getTransaction().commit();
+                session.close();
+                id = newP.getId();
+                logger.info("Person created successfully: " + id.toString() + " with name:" + newP.getName());
+            } catch (Exception e) {
+                session.getTransaction().rollback();
+                session.close();
+                throw e;
+            }
         }
         return id;
     }
@@ -153,6 +160,42 @@ public class BusinessWithPerson {
             } catch (Exception e) {
                 session.getTransaction().rollback();
                 session.close();
+                throw e;
+            }
+        }
+        return person.getId();
+    }
+
+    public Long deletePerson(Person person, List<Social> socialList, List<Link> linkList, List<AuditTrail> auditTrailList) {
+        //the huge method of deleting an activity from DB.
+        SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
+        if (sessionFactory != null) {
+            Session session = sessionFactory.openSession();
+            try {
+                session.beginTransaction();
+                if (socialList != null) {
+                    for (Social social : socialList) {
+                        session.update(social); //this is just update, the rest is delete
+                    }
+                }
+                if (linkList != null) {
+                    for (Link link : linkList) {
+                        session.delete(link);
+                    }
+                }
+                if (auditTrailList != null) {
+                    for (AuditTrail auditTrail : auditTrailList) {
+                        session.delete(auditTrail);
+                    }
+                }
+                session.delete(person);
+                session.getTransaction().commit();
+                session.close();
+                logger.info("Person deleted successfully: " + person.getId().toString());
+            } catch (Exception e) {
+                session.getTransaction().rollback();
+                session.close();
+                logger.info("Person delete failed: " + person.getId().toString());
                 throw e;
             }
         }

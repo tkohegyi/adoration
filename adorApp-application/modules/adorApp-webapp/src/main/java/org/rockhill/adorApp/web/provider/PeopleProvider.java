@@ -1,13 +1,14 @@
 package org.rockhill.adorApp.web.provider;
 
-import org.rockhill.adorApp.database.business.BusinessWithAuditTrail;
-import org.rockhill.adorApp.database.business.BusinessWithPerson;
+import org.rockhill.adorApp.database.business.*;
 import org.rockhill.adorApp.database.business.helper.enums.AdoratorStatusTypes;
 import org.rockhill.adorApp.database.business.helper.enums.WebStatusTypes;
-import org.rockhill.adorApp.database.exception.DatabaseHandlingException;
 import org.rockhill.adorApp.database.tables.AuditTrail;
+import org.rockhill.adorApp.database.tables.Link;
 import org.rockhill.adorApp.database.tables.Person;
+import org.rockhill.adorApp.database.tables.Social;
 import org.rockhill.adorApp.web.json.CurrentUserInformationJson;
+import org.rockhill.adorApp.web.json.DeleteEntityJson;
 import org.rockhill.adorApp.web.json.PersonInformationJson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,8 +18,6 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Component
 public class PeopleProvider {
@@ -30,6 +29,13 @@ public class PeopleProvider {
     BusinessWithPerson businessWithPerson;
     @Autowired
     BusinessWithAuditTrail businessWithAuditTrail;
+    @Autowired
+    BusinessWithNextGeneralKey businessWithNextGeneralKey;
+    @Autowired
+    BusinessWithLink businessWithLink;
+    @Autowired
+    BusinessWithSocial businessWithSocial;
+
 
     public Object getPersonListAsObject() {
         List<Person> people = businessWithPerson.getPersonList();
@@ -52,8 +58,27 @@ public class PeopleProvider {
         Long id = Long.parseLong(p.id);
         Person person = businessWithPerson.getPersonById(id);
         if (person == null) {
-            logger.info("User:" + currentUserInformationJson.userName + " tried to create/update not existing Person");
-            return null;
+            //new Person
+            person = new Person();
+            person.setId(businessWithNextGeneralKey.getNextGeneralId());
+            person.setName(p.name);
+            person.setAdorationStatus(Integer.parseInt(p.adorationStatus));
+            person.setAdminComment(p.adminComment);
+            person.setCoordinatorComment(p.coordinatorComment);
+            person.setDhcSigned(new Boolean(p.dhcSigned));
+            person.setDhcSignedDate(p.dhcSignedDate);
+            person.setEmail(p.email);
+            person.setEmailVisible(new Boolean(p.emailVisible));
+            person.setLanguageCode("hu");
+            person.setMobile(p.mobile);
+            person.setMobileVisible(new Boolean(p.mobileVisible));
+            person.setVisibleComment(p.visibleComment);
+            person.setWebStatus(Integer.parseInt(p.webStatus));
+            AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(person.getId(), currentUserInformationJson.userName,
+                    "Person:New:" + person.getId(), "Name: " + person.getName() + ", e-mail: " + person.getEmail()
+                            + ", Phone: " + person.getMobile(), "");
+            id = businessWithPerson.newPerson(person, auditTrail);
+            return id;
         }
         //prepare new name and validate it
         String newValue = p.name.trim();
@@ -94,7 +119,7 @@ public class PeopleProvider {
         }
 
         Boolean oldBoolean = person.getMobileVisible();
-        Boolean newBoolean = p.mobileVisible.contains("on");
+        Boolean newBoolean = p.mobileVisible.contains("true");
         person.setMobileVisible(newBoolean);
         if (oldBoolean != newBoolean) {
             auditTrailCollection.add(prepareAuditTrail(person.getId(), currentUserInformationJson.userName, "MobileVisible", oldBoolean.toString(), newBoolean.toString()));
@@ -109,7 +134,7 @@ public class PeopleProvider {
         }
 
         oldBoolean = person.getEmailVisible();
-        newBoolean = p.emailVisible.contains("on");
+        newBoolean = p.emailVisible.contains("true");
         person.setEmailVisible(newBoolean);
         if (oldBoolean != newBoolean) {
             auditTrailCollection.add(prepareAuditTrail(person.getId(), currentUserInformationJson.userName, "EmailVisible", oldBoolean.toString(), newBoolean.toString()));
@@ -124,7 +149,7 @@ public class PeopleProvider {
         }
 
         oldBoolean = person.getDhcSigned();
-        newBoolean = p.dhcSigned.contains("on");
+        newBoolean = p.dhcSigned.contains("true");
         person.setDhcSigned(newBoolean);
         if (oldBoolean != newBoolean) {
             auditTrailCollection.add(prepareAuditTrail(person.getId(), currentUserInformationJson.userName, "DhcSigned", oldBoolean.toString(), newBoolean.toString()));
@@ -164,4 +189,16 @@ public class PeopleProvider {
         return a;
     }
 
+    public Long deletePerson(DeleteEntityJson p, CurrentUserInformationJson currentUserInformationJson) {
+        Long personId = Long.parseLong(p.entityId);
+        Person person = businessWithPerson.getPersonById(personId);
+        //collect related social - this can be null, if there was no social for the person + we need to clear the social - person connection only
+        List<Social> socialList = businessWithSocial.getSocialsOfPerson(person);
+        //collect related links
+        List<Link> linkList = businessWithLink.getLinksOfPerson(person);
+        //collect related audit records
+        List<AuditTrail> auditTrailList = businessWithAuditTrail.getAuditTrailOfObject(personId);
+        Long result = businessWithPerson.deletePerson(person, socialList, linkList, auditTrailList);
+        return result;
+    }
 }
