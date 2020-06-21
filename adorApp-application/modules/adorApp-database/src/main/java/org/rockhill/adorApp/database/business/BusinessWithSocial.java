@@ -112,4 +112,61 @@ public class BusinessWithSocial {
         }
         return null;
     }
+
+    public List<Social> getSocialList() {
+        List<Social> result = null;
+        SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
+        if (sessionFactory != null) {
+            Session session = sessionFactory.openSession();
+            session.beginTransaction();
+            result = (List<Social>) session.createQuery("from Social").list();
+            session.getTransaction().commit();
+            session.close();
+        }
+        return result;
+    }
+
+    public Social getSocialById(Long id) {
+        List<Social> result = null;
+        SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
+        if (sessionFactory != null) {
+            Session session = sessionFactory.openSession();
+            session.beginTransaction();
+            String hql = "from Social as S where S.id = :expectedId";
+            Query query = session.createQuery(hql);
+            query.setParameter("expectedId", id);
+            result = (List<Social>) query.list();
+            session.getTransaction().commit();
+            session.close();
+        }
+        if (result.size() > 0) {
+            return result.get(0);
+        }
+        return null;
+    }
+
+    public Long deleteSocial(Social social, List<AuditTrail> auditTrailList) {
+        SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
+        if (sessionFactory != null) {
+            Session session = sessionFactory.openSession();
+            try {
+                session.beginTransaction();
+                if (auditTrailList != null) {
+                    for (AuditTrail auditTrail : auditTrailList) {
+                        session.delete(auditTrail);
+                    }
+                }
+                session.delete(social);
+                session.getTransaction().commit();
+                session.close();
+                logger.info("Social deleted successfully: " + social.getId().toString());
+            } catch (Exception e) {
+                session.getTransaction().rollback();
+                session.close();
+                logger.info("Social delete failed: " + social.getId().toString());
+                throw e;
+            }
+        }
+        return social.getId();
+    }
 }

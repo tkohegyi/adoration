@@ -1,7 +1,6 @@
 package org.rockhill.adorApp.web.controller;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import org.rockhill.adorApp.database.tables.Link;
 import org.rockhill.adorApp.exception.SystemException;
 import org.rockhill.adorApp.web.controller.helper.ControllerBase;
@@ -18,22 +17,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
-import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Controller for accessing the application log files.
@@ -41,11 +30,6 @@ import java.util.Map;
 @Controller
 public class AdoratorsController extends ControllerBase {
 
-    private static final String JSON_NAME = "files";
-    private static final String CONTENT_DISPOSITION = "Content-Disposition";
-    private static final String ATTACHMENT_TEMPLATE = "attachment; filename=%s";
-    private static final String JSON_APP_INFO = "adorAppApplication";
-    private final RequestMappingHandlerMapping handlerMapping;
     private final Logger logger = LoggerFactory.getLogger(AdoratorsController.class);
 
     @Autowired
@@ -57,18 +41,13 @@ public class AdoratorsController extends ControllerBase {
     @Autowired
     private CoverageProvider coverageProvider;
 
-    @Autowired
-    public AdoratorsController(RequestMappingHandlerMapping handlerMapping) {
-        this.handlerMapping = handlerMapping;
-    }
-
     /**
      * Serves the adorators page.
      *
      * @return the name of the adorators jsp file
      */
     @RequestMapping(value = "/adorationSecure/adorators", method = RequestMethod.GET)
-    public String applog(HttpSession httpSession,
+    public String adorators(HttpSession httpSession,
                          HttpServletResponse httpServletResponse) {
         if (!isAdoratorAdmin(currentUserProvider, httpSession)) {
             return "redirect:/adoration/";
@@ -261,7 +240,7 @@ public class AdoratorsController extends ControllerBase {
                     resultString = "OK";
                     result = new ResponseEntity<String>(getJsonString(resultString, JSON_RESPONSE_DELETE), responseHeaders, HttpStatus.CREATED);
                 } else {
-                    resultString = "Cannot delete Person Commitment, please check and retry.";
+                    resultString = "Cannot delete Person, please check and retry.";
                     logger.info("Cannot delete Link - data issue.");
                     result = new ResponseEntity<String>(getJsonString(resultString, JSON_RESPONSE_DELETE), responseHeaders, HttpStatus.BAD_REQUEST);
                 }
@@ -270,7 +249,7 @@ public class AdoratorsController extends ControllerBase {
             resultString = e.getMessage();
             result = new ResponseEntity<String>(getJsonString(resultString, JSON_RESPONSE_DELETE), responseHeaders, HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            logger.warn("Error happened at delete Person Commitment call", e);
+            logger.warn("Error happened at delete Person call", e);
             resultString = "Cannot delete Person Commitment, pls contact to maintainers.";
             result = new ResponseEntity<String>(getJsonString(resultString, JSON_RESPONSE_DELETE), responseHeaders, HttpStatus.BAD_REQUEST);
         }

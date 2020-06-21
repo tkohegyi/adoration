@@ -16,14 +16,29 @@
       }
     },
     {
-      "id": "name",
+      "id": "personId",
       "type": "input-100",
       "text": "Adoráló neve:",
       "helpText": "A felhasználó/adoráló neve.",
       "mandatory": false
     },
     {
-      "id": "facebookusername",
+      "id": "socialStatus",
+      "text": "Státusz:",
+      "type": "singleSelect",
+      "helpText": "Azonosítás állapota.",
+      "mandatory": true,
+      "selection": [
+        { "id": 1, "value": "Azonosításra vár" },
+        { "id": 2, "value": "Azonosított adoráló" },
+        { "id": 3, "value": "Vendég/érdeklődő" }
+      ],
+      "edit": {
+        "visible" : true
+      }
+    },
+    {
+      "id": "facebookUserName",
       "type": "input-255",
       "text": "Facebook - username:",
       "helpText": "Felhasználó \"user\" neve Facebookban.",
@@ -33,7 +48,7 @@
       }
     },
     {
-      "id": "facebookfirstname",
+      "id": "facebookFirstName",
       "type": "input-255",
       "text": "Facebook - firstname:",
       "helpText": "Felhasználó \"first\" neve Facebookban.",
@@ -43,19 +58,19 @@
       }
     },
     {
-      "id": "facebookemail",
+      "id": "facebookEmail",
       "text": "Facebook - e-mail:",
       "type": "input-200",
       "helpText": "Az Facebook e-mail címe."
     },
     {
-      "id": "facebookuserid",
+      "id": "facebookUserId",
       "text": "Facebook - UID:",
       "type": "input-200",
       "helpText": "Felhasználó UID-je Facebookban."
     },
     {
-      "id": "googleusername",
+      "id": "googleUserName",
       "type": "input-255",
       "text": "Google - username:",
       "helpText": "Felhasználó \"user\" neve Google-ban.",
@@ -64,7 +79,7 @@
       }
     },
     {
-      "id": "googlepicture",
+      "id": "googleUserPicture",
       "type": "input-255",
       "text": "Google - picture:",
       "helpText": "Felhasználó képe Google-ban.",
@@ -73,13 +88,13 @@
       }
     },
     {
-      "id": "googleemail",
+      "id": "googleEmail",
       "text": "Google - e-mail:",
       "type": "input-200",
       "helpText": "A Google e-mail címe."
     },
     {
-      "id": "googleuserid",
+      "id": "googleUserId",
       "text": "Google - UID:",
       "type": "input-200",
       "helpText": "Felhasználó UID-je Google-ban."

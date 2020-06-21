@@ -34,7 +34,7 @@
         <legend>Közösségi portálokon való bejelentkezettek listája</legend>
         <div class="container" style="padding:5px" align="right"><button id="refreshAll-button" type="button" class="btn btn-secondary" onclick="processEntityUpdated()">Frissítés</button></div>
         <div class="control-group">
-            <table id="person" class="table table-striped table-bordered table-hover compact cell-border" style="width:100%">
+            <table id="social" class="table table-striped table-bordered table-hover compact cell-border" style="width:100%">
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -54,6 +54,7 @@
                         <tr>
                             <th>ID</th>
                             <th>Adoráló regisztrált neve</th>
+                            <th>Státusz</th>
                             <th>Facebook - username</th>
                             <th>Facebook - firstname</th>
                             <th>Facebook - e-mail</th>
