@@ -110,6 +110,7 @@ public class LoginController {
             sc.setAuthentication(authentication);
             httpSession.setAttribute(SPRING_SECURITY_CONTEXT_KEY, sc);
             logger.info("User logged in with Google: " + currentUserProvider.getQuickUserName(authentication));
+            currentUserProvider.registerLogin(httpSession);
             try {
                 httpServletResponse.sendRedirect(webAppConfigurationAccess.getProperties().getGoogleRedirectUrl());
             } catch (IOException e) {
@@ -123,6 +124,7 @@ public class LoginController {
             sc.setAuthentication(authentication);
             httpSession.setAttribute(SPRING_SECURITY_CONTEXT_KEY, sc);
             logger.info("User logged in with Facebook: " + currentUserProvider.getQuickUserName(authentication));
+            currentUserProvider.registerLogin(httpSession);
             try {
                 httpServletResponse.sendRedirect(webAppConfigurationAccess.getProperties().getGoogleRedirectUrl());
             } catch (IOException e) {
@@ -144,6 +146,7 @@ public class LoginController {
             Authentication authentication = sc.getAuthentication();
             if (authentication != null) {
                 logger.info("User logout: " + currentUserProvider.getQuickUserName(authentication));
+                currentUserProvider.registerLogout(httpSession);
             }
             sc.setAuthentication(null); // this cleans up the authentication data technically
             httpSession.removeAttribute(SPRING_SECURITY_CONTEXT_KEY); // this clean up the session itself

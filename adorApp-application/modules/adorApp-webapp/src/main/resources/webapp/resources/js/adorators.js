@@ -535,6 +535,10 @@ function saveNewHour() {
     }
     // b is ready
     //validation
+    if (b.priority == "") {
+        bad = 1;
+        eStr = "Prioritás megadása kötelező!";
+    }
     //validation done (cannot validate more at client level)
     if (bad == 1) {
         alert(eStr);
@@ -604,6 +608,10 @@ function clickHourEdit(hourId) {
 }
 
 function deleteHour() {
+    if (!confirm('Are you sure you want to DELETE this Committed Hour?')) {
+      console.log('Thing was deleted from the database.');
+      return;
+    }
 	console.log("---=== Delete Link Entity Clicked ===---");
     var entityId = $("#editHourId").val(); //filled during the original on-load page
     var req = {
@@ -632,4 +640,39 @@ function deleteHour() {
 function processHourDeleted() {
     console.log("---=== Entity DELETED, going back to Entity list... ===---");
     reBuildTimeModal($("#editHourPersonId").val());
+}
+
+function deletePerson() {
+    if (!confirm('Are you sure you want to DELETE this Adorator - permanently?')) {
+      console.log('Thing was deleted from the database.');
+      return;
+    }
+	console.log("---=== Delete Person Entity Clicked ===---");
+    var entityId = $("#editId").val(); //filled by the button's onclick method
+    var req = {
+        entityId : entityId,
+    };
+    var token = $("meta[name='_csrf']").attr("content");
+    var header = $("meta[name='_csrf_header']").attr("content");
+    $.ajax({
+        url : '/adorationSecure/deletePerson',
+        type : 'POST',
+        async: false,
+        contentType: 'application/json',
+        data: JSON.stringify(req),
+        dataType: 'json',
+        success : processPersonDeleted,
+        beforeSend : function(request) {
+            request.setRequestHeader(header, token);
+        },
+        complete : requestComplete,
+    }).fail( function(xhr, status) {
+        var obj = JSON.parse(xhr.responseText);
+        alert(obj.entityUpdate);
+    });
+}
+
+function processPersonDeleted() {
+    console.log("---=== Entity DELETED, going back to Entity list... ===---");
+    processEntityUpdated();
 }

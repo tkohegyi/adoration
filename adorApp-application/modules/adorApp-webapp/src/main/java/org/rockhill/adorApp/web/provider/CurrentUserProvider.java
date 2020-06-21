@@ -1,11 +1,14 @@
 package org.rockhill.adorApp.web.provider;
 
+import org.rockhill.adorApp.database.business.BusinessWithAuditTrail;
 import org.rockhill.adorApp.database.business.helper.enums.AdoratorStatusTypes;
+import org.rockhill.adorApp.database.tables.AuditTrail;
 import org.rockhill.adorApp.database.tables.Person;
 import org.rockhill.adorApp.web.json.CurrentUserInformationJson;
 import org.rockhill.adorApp.web.service.AuthenticatedUser;
 import org.rockhill.adorApp.web.service.FacebookUser;
 import org.rockhill.adorApp.web.service.GoogleUser;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.stereotype.Component;
@@ -18,6 +21,10 @@ import static org.springframework.security.web.context.HttpSessionSecurityContex
 
 @Component
 public class CurrentUserProvider {
+
+    @Autowired
+    BusinessWithAuditTrail businessWithAuditTrail;
+
     private Set<AdoratorStatusTypes> registeredAdorator;
     private Set<AdoratorStatusTypes> leaders;
     private Set<AdoratorStatusTypes> admins;
@@ -114,5 +121,18 @@ public class CurrentUserProvider {
         }
         return loggedInUserName;
     }
-    
+
+    public void registerLogin(HttpSession httpSession) {
+        CurrentUserInformationJson currentUserInformationJson = getUserInformation(httpSession);
+        AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(currentUserInformationJson.id.longValue(),
+                currentUserInformationJson.userName, "Login", "User logged in: " + currentUserInformationJson.userName, "");
+        businessWithAuditTrail.saveAuditTrainSafe(auditTrail);
+    }
+
+    public void registerLogout(HttpSession httpSession) {
+        CurrentUserInformationJson currentUserInformationJson = getUserInformation(httpSession);
+        AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(currentUserInformationJson.id.longValue(),
+                currentUserInformationJson.userName, "Logout", "User logged out: " + currentUserInformationJson.userName, "");
+        businessWithAuditTrail.saveAuditTrainSafe(auditTrail);
+    }
 }

@@ -78,7 +78,7 @@
 
   </div>
 
-    <!-- Modal Edit -->
+    <!-- Modal Edit Person -->
     <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editCenterTitle" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
         <div class="modal-content">
@@ -104,9 +104,14 @@
                </form>
           </div>
           <div class="modal-footer">
-            <button id="resetChangesButton" type="button" class="btn btn-secondary" onclick="reBuildModal()">Eredeti adatok visszanyerése</button>
-            <button id="cancelButton" type="button" class="btn btn-info" data-dismiss="modal">Mégsem</button>
-            <button id="saveChangesButton" type="button" class="btn btn-success" onclick="saveChanges()">Mentés</button>
+            <table width="100%"><tr>
+                <td align="left"><button id="deleteButton" type="button" class="btn btn-danger" onclick="deletePerson()">Adoráló törlése</button></td>
+                <td align="right">
+                    <button id="resetChangesButton" type="button" class="btn btn-secondary" onclick="reBuildModal()">Eredeti adatok visszanyerése</button>
+                    <button id="cancelButton" type="button" class="btn btn-info" data-dismiss="modal">Mégsem</button>
+                    <button id="saveChangesButton" type="button" class="btn btn-success" onclick="saveChanges()">Mentés</button>
+                </td>
+            </tr></table>
           </div>
         </div>
       </div>
@@ -174,9 +179,9 @@
               </form>
               <div>&nbsp;<div/>
               <form id="newTimeTable">
-                  <input id="editHourPersonId" type="hidden" value="">
-                  <input id="editHourId" type="hidden" value="">
-                  <table class="table table-hover table-bordered">
+                <input id="editHourPersonId" type="hidden" value="">
+                <input id="editHourId" type="hidden" value="">
+                <table class="table table-hover table-bordered">
                       <thead>
                           <tr>
                               <th>Mező</th>
@@ -232,10 +237,14 @@
                             <input type="text" id="newPublicComment">
                           </td></tr>
                       </tbody>
-                  </table>
-              <button id="deleteHourButton" type="button" class="btn btn-danger" onclick="deleteHour()">Óra törlése</button>
-              <button type="button" class="btn btn-info" onclick="cancelNewPartOfModal()">Mégsem</button>
-              <button id="saveChangesButton" type="button" class="btn btn-success" onclick="saveNewHour()">Mentés</button>
+                </table>
+                <table width="100%"><tr>
+                    <td align="left"><button id="deleteHourButton" type="button" class="btn btn-danger" onclick="deleteHour()">Óra törlése</button></td>
+                    <td align="right">
+                        <button type="button" class="btn btn-info" onclick="cancelNewPartOfModal()">Mégsem</button>
+                        <button id="saveChangesButton" type="button" class="btn btn-success" onclick="saveNewHour()">Mentés</button>
+                    </td>
+                </tr></table>
               </form>
           </div>
           <div class="modal-footer">

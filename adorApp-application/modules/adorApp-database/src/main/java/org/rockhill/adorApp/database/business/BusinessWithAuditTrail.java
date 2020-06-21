@@ -65,4 +65,25 @@ public class BusinessWithAuditTrail {
         }
     }
 
+    /**
+     * Just record a prepared audit trail, not critical so don't need to throw exception if it fails.
+     *
+     * @param auditTrail the record to be stored.
+     */
+    public void saveAuditTrainSafe(AuditTrail auditTrail) {
+        SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
+        if (sessionFactory != null) {
+            Session session = sessionFactory.openSession();
+            try {
+                session.beginTransaction();
+                session.save(auditTrail);
+                session.getTransaction().commit();
+                session.close();
+            } catch (Exception e) {
+                session.getTransaction().rollback();
+                session.close();
+                logger.warn("Cannot save Audit record, issue: " + e.getLocalizedMessage());
+            }
+        }
+    }
 }
