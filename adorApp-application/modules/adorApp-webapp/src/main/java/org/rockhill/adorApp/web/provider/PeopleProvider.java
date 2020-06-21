@@ -2,7 +2,6 @@ package org.rockhill.adorApp.web.provider;
 
 import org.rockhill.adorApp.database.business.*;
 import org.rockhill.adorApp.database.business.helper.enums.AdoratorStatusTypes;
-import org.rockhill.adorApp.database.business.helper.enums.WebStatusTypes;
 import org.rockhill.adorApp.database.tables.AuditTrail;
 import org.rockhill.adorApp.database.tables.Link;
 import org.rockhill.adorApp.database.tables.Person;
@@ -73,7 +72,7 @@ public class PeopleProvider {
             person.setMobile(p.mobile);
             person.setMobileVisible(new Boolean(p.mobileVisible));
             person.setVisibleComment(p.visibleComment);
-            person.setWebStatus(Integer.parseInt(p.webStatus));
+            person.setIsAnonymous(new Boolean(p.isAnonymous));
             AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(person.getId(), currentUserInformationJson.userName,
                     "Person:New:" + person.getId(), "Name: " + person.getName() + ", e-mail: " + person.getEmail()
                             + ", Phone: " + person.getMobile(), "");
@@ -102,12 +101,11 @@ public class PeopleProvider {
                     AdoratorStatusTypes.getTranslatedString(oldStatus), AdoratorStatusTypes.getTranslatedString(newStatus)));
         }
 
-        oldStatus = person.getWebStatus();
-        newStatus = Integer.parseInt(p.webStatus);
-        person.setWebStatus(newStatus);
-        if (!oldStatus.equals(newStatus)) {
-            auditTrailCollection.add(prepareAuditTrail(person.getId(), currentUserInformationJson.userName, "WebStatus",
-                    WebStatusTypes.getTranslatedString(oldStatus), WebStatusTypes.getTranslatedString(newStatus)));
+        Boolean oldBoolean = person.getIsAnonymous();
+        Boolean newBoolean = p.isAnonymous.contains("true");
+        person.setIsAnonymous(newBoolean);
+        if (oldBoolean != newBoolean) {
+            auditTrailCollection.add(prepareAuditTrail(person.getId(), currentUserInformationJson.userName, "isAnonymous", oldBoolean.toString(), newBoolean.toString()));
         }
 
         oldValue = person.getMobile();
@@ -118,8 +116,8 @@ public class PeopleProvider {
             auditTrailCollection.add(prepareAuditTrail(person.getId(), currentUserInformationJson.userName, "Mobile", oldValue, newValue));
         }
 
-        Boolean oldBoolean = person.getMobileVisible();
-        Boolean newBoolean = p.mobileVisible.contains("true");
+        oldBoolean = person.getMobileVisible();
+        newBoolean = p.mobileVisible.contains("true");
         person.setMobileVisible(newBoolean);
         if (oldBoolean != newBoolean) {
             auditTrailCollection.add(prepareAuditTrail(person.getId(), currentUserInformationJson.userName, "MobileVisible", oldBoolean.toString(), newBoolean.toString()));

@@ -1,0 +1,88 @@
+{
+  "tableName": "social",
+  "modalId": "edit",
+  "edit" : {
+    "title": "Módosítás",
+    "type": "standard"
+  },
+  "info": [
+    {
+      "id": "id",
+      "type": "fixText",
+      "text": "ID:",
+      "helpText": "Közösségi azonosító száma, nem változtatható.",
+      "edit": {
+        "visible" : true
+      }
+    },
+    {
+      "id": "name",
+      "type": "input-100",
+      "text": "Adoráló neve:",
+      "helpText": "A felhasználó/adoráló neve.",
+      "mandatory": false
+    },
+    {
+      "id": "facebookusername",
+      "type": "input-255",
+      "text": "Facebook - username:",
+      "helpText": "Felhasználó \"user\" neve Facebookban.",
+      "mandatory": false,
+      "edit": {
+        "visible" : true
+      }
+    },
+    {
+      "id": "facebookfirstname",
+      "type": "input-255",
+      "text": "Facebook - firstname:",
+      "helpText": "Felhasználó \"first\" neve Facebookban.",
+      "mandatory": false,
+      "edit": {
+        "visible" : true
+      }
+    },
+    {
+      "id": "facebookemail",
+      "text": "Facebook - e-mail:",
+      "type": "input-200",
+      "helpText": "Az Facebook e-mail címe."
+    },
+    {
+      "id": "facebookuserid",
+      "text": "Facebook - UID:",
+      "type": "input-200",
+      "helpText": "Felhasználó UID-je Facebookban."
+    },
+    {
+      "id": "googleusername",
+      "type": "input-255",
+      "text": "Google - username:",
+      "helpText": "Felhasználó \"user\" neve Google-ban.",
+      "edit": {
+        "visible" : true
+      }
+    },
+    {
+      "id": "googlepicture",
+      "type": "input-255",
+      "text": "Google - picture:",
+      "helpText": "Felhasználó képe Google-ban.",
+      "edit": {
+        "visible": true
+      }
+    },
+    {
+      "id": "googleemail",
+      "text": "Google - e-mail:",
+      "type": "input-200",
+      "helpText": "A Google e-mail címe."
+    },
+    {
+      "id": "googleuserid",
+      "text": "Google - UID:",
+      "type": "input-200",
+      "helpText": "Felhasználó UID-je Google-ban."
+    }
+  ]
+}

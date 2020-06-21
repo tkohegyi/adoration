@@ -1,5 +1,7 @@
 package org.rockhill.adorApp.database.tables;
 
+import org.rockhill.adorApp.database.business.helper.enums.SocialStatusTypes;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -11,6 +13,7 @@ public class Social {
 
     private Long id;
     private Long personId;
+    private Integer socialStatus;
     private String googleEmail;
     private String googleUserName;
     private String googleUserId;
@@ -39,6 +42,16 @@ public class Social {
     }
     public void setPersonId(Long personId) {
         this.personId = personId;
+    }
+
+    @Column(name = "socialStatus", nullable = false)
+    public Integer getSocialStatus() {
+        return socialStatus;
+    }
+
+    public void setSocialStatus(Integer socialStatus) {
+        SocialStatusTypes.getTypeFromId(socialStatus); //validation
+        this.socialStatus = socialStatus;
     }
 
     @Column(name = "googleEmail", nullable = true)

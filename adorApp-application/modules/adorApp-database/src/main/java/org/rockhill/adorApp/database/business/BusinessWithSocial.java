@@ -4,13 +4,11 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.rockhill.adorApp.database.SessionFactoryHelper;
-import org.rockhill.adorApp.database.business.helper.NextGeneralKey;
 import org.rockhill.adorApp.database.tables.AuditTrail;
 import org.rockhill.adorApp.database.tables.Person;
 import org.rockhill.adorApp.database.tables.Social;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -19,27 +17,17 @@ import java.util.List;
 public class BusinessWithSocial {
     private final Logger logger = LoggerFactory.getLogger(BusinessWithSocial.class);
 
-    @Autowired
-    NextGeneralKey nextGeneralKey;
-
-    @Autowired
-    BusinessWithAuditTrail businessWithAuditTrail;
-
-    public Long newSocial(Social newS) {
+    public Long newSocial(Social newS, AuditTrail auditTrail) {
         Long id = null;
         SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
         if (sessionFactory != null) {
             Session session = sessionFactory.openSession();
             try {
                 session.beginTransaction();
-                id = nextGeneralKey.getNextGeneralKay(session);
-                logger.info("New sequence arrived:" + id.toString());
-                newS.setId(id);
                 session.save(newS); //insert into Social table !
-                //and audit trail
-                AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(nextGeneralKey.getNextGeneralKay(session),businessWithAuditTrail.SYSTEM_SELF,"Create","Created upon first social login", "");
                 session.save(auditTrail);
                 session.getTransaction().commit();
+                id = newS.getId();
                 logger.info("Social record created successfully: " + id.toString());
             } catch (Exception e) {
                 session.getTransaction().rollback();

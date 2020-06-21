@@ -11,8 +11,12 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.gson.Gson;
+import org.rockhill.adorApp.database.business.BusinessWithAuditTrail;
+import org.rockhill.adorApp.database.business.BusinessWithNextGeneralKey;
 import org.rockhill.adorApp.database.business.BusinessWithPerson;
 import org.rockhill.adorApp.database.business.BusinessWithSocial;
+import org.rockhill.adorApp.database.business.helper.enums.SocialStatusTypes;
+import org.rockhill.adorApp.database.tables.AuditTrail;
 import org.rockhill.adorApp.database.tables.Person;
 import org.rockhill.adorApp.database.tables.Social;
 import org.rockhill.adorApp.web.configuration.PropertyDto;
@@ -58,6 +62,11 @@ public class GoogleOauth2Service {
     @Autowired
     BusinessWithPerson businessWithPerson;
 
+    @Autowired
+    BusinessWithAuditTrail businessWithAuditTrail;
+
+    @Autowired
+    BusinessWithNextGeneralKey businessWithNextGeneralKey;
 
     @PostConstruct
     private void GoogleOauth2Service() {
@@ -131,22 +140,26 @@ public class GoogleOauth2Service {
     }
 
     private Social detectSocial(GoogleUserInfoJson googleUserInfoJson) {
-        Social social = businessWithSocial.getSocialByGUserId(googleUserInfoJson.id); //if there is no soccial this will cause exception that is unhandled !!!
+        Social social = businessWithSocial.getSocialByGUserId(googleUserInfoJson.id); //if there is no social this will cause exception that is unhandled !!!
         if (social == null) {
             social = new Social();
             social.setGoogleEmail(googleUserInfoJson.email);
             social.setGoogleUserName(googleUserInfoJson.name);
             social.setGoogleUserId(googleUserInfoJson.id);
             social.setGoogleUserPicture(googleUserInfoJson.picture);
-
+            social.setSocialStatus(SocialStatusTypes.WAIT_FOR_IDENTIFICATION.getTypeValue());
+            social.setId(businessWithNextGeneralKey.getNextGeneralId());
+            AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(0l, social.getGoogleUserName(), "Social:New:" + social.getId().toString(), "New Google Social login created.", "");
             //this is a brand new login, try to identify - by using e-mail
             if ( (googleUserInfoJson.email != null) && (googleUserInfoJson.email.length() > 0) ) {
                 Person p = businessWithPerson.getPersonByEmail(googleUserInfoJson.email);
                 if (p != null) { // we were able to identify the person by e-mail
                     social.setPersonId(p.getId());
+                    social.setSocialStatus(SocialStatusTypes.IDENTIFIED_USER.getTypeValue());
+                    auditTrail.setRefId(p.getId()); //audit linked to person
                 }
             }
-            Long id = businessWithSocial.newSocial(social);
+            Long id = businessWithSocial.newSocial(social, auditTrail);
             social.setId(id); //Social object is ready
         }
         return social;

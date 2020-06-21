@@ -1,7 +1,6 @@
 package org.rockhill.adorApp.database.tables;
 
 import org.rockhill.adorApp.database.business.helper.enums.AdoratorStatusTypes;
-import org.rockhill.adorApp.database.business.helper.enums.WebStatusTypes;
 import org.rockhill.adorApp.database.exception.DatabaseHandlingException;
 
 import javax.persistence.Column;
@@ -19,7 +18,7 @@ public class Person {
     private Long id;
     private String name;
     private Integer adorationStatus;
-    private Integer webStatus;
+    private Boolean isAnonymous;
     private String mobile;
     private Boolean mobileVisible;
     private String email; //single e-mail
@@ -67,14 +66,13 @@ public class Person {
         this.adorationStatus = adorationStatus;
     }
 
-    @Column(name = "webStatus", nullable = false)
-    public Integer getWebStatus() {
-        return webStatus;
+    @Column(name = "isAnonymous", nullable = false)
+    public Boolean getIsAnonymous() {
+        return isAnonymous;
     }
 
-    public void setWebStatus(Integer webStatus) {
-        WebStatusTypes.getTypeFromId(webStatus);
-        this.webStatus = webStatus;
+    public void setIsAnonymous(Boolean isAnonymous) {
+        this.isAnonymous = isAnonymous;
     }
 
     @Column(name = "mobile", nullable = true)

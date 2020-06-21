@@ -46,7 +46,6 @@ function setupPersonTable() {
             { "data": "id" },
             { "data": "name", "width": "200px" },
             { "data": "adorationStatus" },
-            { "data": "webStatus" },
             { "data": "mobile" },
             { "data": "mobileVisible" },
             { "data": "email" },
@@ -56,12 +55,13 @@ function setupPersonTable() {
             { "data": "dhcSignedDate" },
             { "data": "coordinatorComment" },
             { "data": "visibleComment" },
+            { "data": "isAnonymous" },
             { "data": "languageCode" }
         ],
         "columnDefs": [
             {
                 "className": "text-center",
-                "targets": [0,5,7,9,13]
+                "targets": [0,4,6,8,12,13]
             },
             {
                 "render": function ( data, type, row ) {
@@ -95,21 +95,6 @@ function setupPersonTable() {
                 "render": function ( data, type, row ) {
                     var z;
                     switch (data) {
-                    case 0: z = 'Nem adoráló'; break;
-                    case 1: z = 'Azonosításra vár'; break;
-                    case 2: z = 'Adoráló Google azonosítóval'; break;
-                    case 3: z = 'Adoráló Facebook azonosítással'; break;
-                    case 4: z = 'Adoráló Google/Facebook azonosítással'; break;
-                    default: z = '???';
-                    }
-                    return z;
-                },
-                "targets": 3
-            },
-            {
-                "render": function ( data, type, row ) {
-                    var z;
-                    switch (data) {
                     case true:
                         imgSrc = "/resources/img/dark-green-check-mark-th.png"
                         z = "<img alt=\"Igen\" src=\"" + imgSrc + "\" height=\"20\" width=\"20\" />";
@@ -122,7 +107,7 @@ function setupPersonTable() {
                     }
                     return z;
                 },
-                "targets": [5,7,9]
+                "targets": [4,6,8,12]
             },
             {
                 "render": function ( data, type, row ) {

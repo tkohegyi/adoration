@@ -124,15 +124,29 @@ public class CurrentUserProvider {
 
     public void registerLogin(HttpSession httpSession) {
         CurrentUserInformationJson currentUserInformationJson = getUserInformation(httpSession);
-        AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(currentUserInformationJson.id.longValue(),
-                currentUserInformationJson.userName, "Login", "User logged in: " + currentUserInformationJson.userName, "");
+        String data = "";
+        long userId = 0;
+        if (currentUserInformationJson.id != null) {
+            userId = currentUserInformationJson.id;
+        } else {
+            data = "Unidentified Person.";
+        }
+        AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(userId,
+                currentUserInformationJson.userName, "Login", "User logged in: " + currentUserInformationJson.userName, data);
         businessWithAuditTrail.saveAuditTrainSafe(auditTrail);
     }
 
     public void registerLogout(HttpSession httpSession) {
         CurrentUserInformationJson currentUserInformationJson = getUserInformation(httpSession);
-        AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(currentUserInformationJson.id.longValue(),
-                currentUserInformationJson.userName, "Logout", "User logged out: " + currentUserInformationJson.userName, "");
+        String data = "";
+        long userId = 0;
+        if (currentUserInformationJson.id != null) {
+            userId = currentUserInformationJson.id;
+        } else {
+            data = "Unidentified Person.";
+        }
+        AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(userId,
+                currentUserInformationJson.userName, "Logout", "User logged out: " + currentUserInformationJson.userName, data);
         businessWithAuditTrail.saveAuditTrainSafe(auditTrail);
     }
 }

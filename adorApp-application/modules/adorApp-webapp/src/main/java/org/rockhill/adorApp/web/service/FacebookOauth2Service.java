@@ -3,8 +3,12 @@ package org.rockhill.adorApp.web.service;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
+import org.rockhill.adorApp.database.business.BusinessWithAuditTrail;
+import org.rockhill.adorApp.database.business.BusinessWithNextGeneralKey;
 import org.rockhill.adorApp.database.business.BusinessWithPerson;
 import org.rockhill.adorApp.database.business.BusinessWithSocial;
+import org.rockhill.adorApp.database.business.helper.enums.SocialStatusTypes;
+import org.rockhill.adorApp.database.tables.AuditTrail;
 import org.rockhill.adorApp.database.tables.Person;
 import org.rockhill.adorApp.database.tables.Social;
 import org.rockhill.adorApp.exception.SystemException;
@@ -48,6 +52,12 @@ public class FacebookOauth2Service {
 
     @Autowired
     BusinessWithPerson businessWithPerson;
+
+    @Autowired
+    BusinessWithAuditTrail businessWithAuditTrail;
+
+    @Autowired
+    BusinessWithNextGeneralKey businessWithNextGeneralKey;
 
     @PostConstruct
     private void FacebookOauth2Service() {
@@ -158,15 +168,20 @@ public class FacebookOauth2Service {
             social.setFacebookEmail(email);
             social.setFacebookFirstName(facebookUserInfoJson.getAsString("name"));
             social.setFacebookUserName(social.getFacebookFirstName());  // this is what we can access by default...
+            social.setSocialStatus(SocialStatusTypes.WAIT_FOR_IDENTIFICATION.getTypeValue());
+            social.setId(businessWithNextGeneralKey.getNextGeneralId());
+            AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(0l, social.getGoogleUserName(), "Social:New:" + social.getId().toString(), "New Facebook Social login created.", "");
 
             //this is a brand new login, try to identify - by using e-mail
             if ( (email != null) && (email.length() > 0) ) {
                 Person p = businessWithPerson.getPersonByEmail(email);
                 if (p != null) { // we were able to identify the person by e-mail
                     social.setPersonId(p.getId());
+                    social.setSocialStatus(SocialStatusTypes.IDENTIFIED_USER.getTypeValue());
+                    auditTrail.setRefId(p.getId()); //audit linked to person
                 }
             }
-            Long id = businessWithSocial.newSocial(social);
+            Long id = businessWithSocial.newSocial(social, auditTrail);
             social.setId(id); //Social object is ready
         }
         return social;

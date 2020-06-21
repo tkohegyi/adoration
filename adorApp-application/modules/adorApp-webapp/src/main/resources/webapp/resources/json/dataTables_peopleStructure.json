@@ -57,24 +57,16 @@
       }
     },
     {
-      "id": "webStatus",
-      "text": "Web Státusz:",
-      "type": "singleSelect",
-      "helpText": "",
+      "id": "isAnonymous",
+      "text": "Anonymous?",
+      "type": "i/n-boolean",
+      "helpText": "Anonymous-ként jelenljen meg?",
       "mandatory": true,
-      "selection": [
-        { "id": 0, "value": "Anoním adoráló" },
-        { "id": 1, "value": "Azonosításra vár" },
-        { "id": 2, "value": "Adoráló Google azonosítóval" },
-        { "id": 3, "value": "Adoráló Facebook azonosítással" },
-        { "id": 4, "value": "Adoráló Google és Facebook azonosítással" },
-        { "id": 5, "value": "Adoráló közösségi belépés nélkül" }
-      ],
       "edit": {
         "visible" : true
       },
       "new": {
-        "default": 5
+        "default": true
       }
     },
     {

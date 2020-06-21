@@ -41,7 +41,6 @@
                             <th>ID</th>
                             <th>Név</th>
                             <th>Adoráló Státusz</th>
-                            <th>Web Státusz</th>
                             <th>Telefonszám</th>
                             <th>Telefonszám látható?</th>
                             <th>e-mail</th>
@@ -51,6 +50,7 @@
                             <th>Adatk. hozzájárulás dátuma</th>
                             <th>Koordinátor megjegyzés</th>
                             <th>Közös/Látható megjegyzés</th>
+                            <th>Anoním?</th>
                             <th>Nyelvkód</th>
                         </tr>
                     </thead>
@@ -59,7 +59,6 @@
                             <th>ID</th>
                             <th>Név</th>
                             <th>Adoráló Státusz</th>
-                            <th>Web Státusz</th>
                             <th>Telefonszám</th>
                             <th>Telefonszám látható?</th>
                             <th>e-mail</th>
@@ -69,6 +68,7 @@
                             <th>Adatk. hozzájárulás dátuma</th>
                             <th>Koordinátor megjegyzés</th>
                             <th>Közös/Látható megjegyzés</th>
+                            <th>Anoním?</th>
                             <th>Nyelvkód</th>
                         </tr>
                     </tfoot>
