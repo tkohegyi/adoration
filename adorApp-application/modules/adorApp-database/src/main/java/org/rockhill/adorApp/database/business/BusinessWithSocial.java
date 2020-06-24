@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.List;
 
 @Component
@@ -169,4 +170,27 @@ public class BusinessWithSocial {
         }
         return social.getId();
     }
+
+    public Long updateSocial(Social social, Collection<AuditTrail> auditTrailCollection) {
+        SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
+        if (sessionFactory != null) {
+            Session session = sessionFactory.openSession();
+            try {
+                session.beginTransaction();
+                session.update(social);
+                for (AuditTrail auditTrail : auditTrailCollection) {
+                    session.save(auditTrail);
+                }
+                session.getTransaction().commit();
+                session.close();
+                logger.info("Social updated successfully: " + social.getId().toString());
+            } catch (Exception e) {
+                session.getTransaction().rollback();
+                session.close();
+                throw e;
+            }
+        }
+        return social.getId();
+    }
+
 }

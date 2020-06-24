@@ -31,7 +31,7 @@
     <%@include file="../include/navbar.html" %>
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
     <fieldset class="form-horizontal">
-        <legend>Közösségi portálokon való bejelentkezettek listája</legend>
+        <legend>Közösségi portálokon bejelentkezettek listája</legend>
         <div class="container" style="padding:5px" align="right"><button id="refreshAll-button" type="button" class="btn btn-secondary" onclick="processEntityUpdated()">Frissítés</button></div>
         <div class="control-group">
             <table id="social" class="table table-striped table-bordered table-hover compact cell-border" style="width:100%">
@@ -40,14 +40,14 @@
                             <th>ID</th>
                             <th>Adoráló regisztrált neve</th>
                             <th>Státusz</th>
-                            <th>Facebook - username</th>
-                            <th>Facebook - firstname</th>
-                            <th>Facebook - e-mail</th>
-                            <th>Facebook - UID</th>
                             <th>Google - username</th>
                             <th>Google - picture</th>
                             <th>Google - e-mail</th>
                             <th>Google - UID</th>
+                            <th>Facebook - username</th>
+                            <th>Facebook - firstname</th>
+                            <th>Facebook - e-mail</th>
+                            <th>Facebook - UID</th>
                         </tr>
                     </thead>
                     <tfoot>
@@ -55,14 +55,14 @@
                             <th>ID</th>
                             <th>Adoráló regisztrált neve</th>
                             <th>Státusz</th>
-                            <th>Facebook - username</th>
-                            <th>Facebook - firstname</th>
-                            <th>Facebook - e-mail</th>
-                            <th>Facebook - UID</th>
                             <th>Google - username</th>
                             <th>Google - picture</th>
                             <th>Google - e-mail</th>
                             <th>Google - UID</th>
+                            <th>Facebook - username</th>
+                            <th>Facebook - firstname</th>
+                            <th>Facebook - e-mail</th>
+                            <th>Facebook - UID</th>
                         </tr>
                     </tfoot>
                 </table>
@@ -70,6 +70,78 @@
     </fieldset>
 
   </div>
+
+    <!-- Modal Edit Social -->
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="editCenterTitle">Módosítás</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Cancel">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+              <form>
+                  <table id="editTable" class="table table-hover table-bordered">
+                      <thead>
+                          <tr>
+                              <th>Oszlop név</th>
+                              <th style="width:40%">Tartalom</th>
+                              <th>Segítség</th>
+                          </tr>
+                      </thead>
+                      <tbody id="editContent"/>
+                  </table>
+                  <input id="editId" type="hidden" value="">
+               </form>
+          </div>
+          <div class="modal-footer">
+            <table width="100%"><tr>
+                <td align="left"><button id="deleteButton" type="button" class="btn btn-danger" onclick="deleteSocial()">Social törlése</button></td>
+                <td align="right">
+                    <button id="resetChangesButton" type="button" class="btn btn-secondary" onclick="reBuildModal()">Eredeti adatok visszanyerése</button>
+                    <button id="cancelButton" type="button" class="btn btn-info" data-dismiss="modal">Mégsem</button>
+                    <button id="saveChangesButton" type="button" class="btn btn-success" onclick="saveChanges()">Mentés</button>
+                </td>
+            </tr></table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Log/History -->
+    <div class="modal fade" id="historyModal" tabindex="-1" role="dialog" aria-labelledby="historyCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="historyCenterTitle">Log</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Cancel">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+              <form>
+                  <table id="historyTable" class="table table-hover table-bordered">
+                      <thead>
+                          <tr>
+                              <th>Típus</th>
+                              <th>Időpont</th>
+                              <th>Végrehajtó</th>
+                              <th style="width:40%">Leírás</th>
+                              <th>Egyéb</th>
+                          </tr>
+                      </thead>
+                      <tbody id="historyContent"/>
+                  </table>
+               </form>
+          </div>
+          <div class="modal-footer">
+            <button id="cancelButton" type="button" class="btn btn-info" data-dismiss="modal">Mégsem</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
 </body>
 </html>

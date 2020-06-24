@@ -2,6 +2,7 @@ package org.rockhill.adorApp.web.provider;
 
 import org.rockhill.adorApp.database.business.BusinessWithAuditTrail;
 import org.rockhill.adorApp.database.business.BusinessWithSocial;
+import org.rockhill.adorApp.database.business.helper.enums.SocialStatusTypes;
 import org.rockhill.adorApp.database.tables.AuditTrail;
 import org.rockhill.adorApp.database.tables.Social;
 import org.rockhill.adorApp.web.json.CurrentUserInformationJson;
@@ -42,16 +43,150 @@ public class SocialProvider {
         return auditTrail;
     }
 
-    public Long updateSocial(Social s, CurrentUserInformationJson currentUserInformationJson) {
+    public Long updateSocial(Social newSocial, CurrentUserInformationJson currentUserInformationJson) {
         Collection<AuditTrail> auditTrailCollection = new ArrayList<>();
-        Long id = s.getId();
+        Long id = newSocial.getId();
         Social social = businessWithSocial.getSocialById(id);
-        if (social == null) {
+        if (newSocial == null) {
             //ERROR we shall update existing Socials only.
             return null;
         }
-        //TODO
-        return null;
+        //personId
+        Long newLongValue = newSocial.getPersonId();
+        Long oldLongValue = social.getPersonId();
+        Long refId = newSocial.getId();
+        if ((oldLongValue != null) && (!oldLongValue.equals(0))) { refId = oldLongValue; }
+        if ((newLongValue != null) && (!newLongValue.equals(0))) { refId = newLongValue; }
+        if (!((oldLongValue == null) && (newLongValue == null))) { //if both null, it was not changed
+            if ( ((oldLongValue == null) && (newLongValue != null)) //at least one of them is not null
+                    || ((oldLongValue != null) && (newLongValue == null))
+                    || (!oldLongValue.equals(newLongValue)) ) { //here both of them is not null
+                social.setPersonId(newLongValue); //if we are here, it must have been changed
+                String oldValue = "N/A";
+                if (oldLongValue != null) {
+                    oldValue = oldLongValue.toString();
+                }
+                String newValue = "N/A";
+                if (newLongValue != null) {
+                    newValue = newLongValue.toString();
+                }
+                auditTrailCollection.add(prepareAuditTrail(refId, currentUserInformationJson.userName, "PersonId", oldValue, newValue));
+            }
+        }
+        //socialStatus
+        Integer newStatus = newSocial.getSocialStatus();
+        Integer oldStatus = social.getSocialStatus();
+        if (!oldStatus.equals(newStatus)) {
+            social.setSocialStatus(newStatus);
+            auditTrailCollection.add(prepareAuditTrail(refId, currentUserInformationJson.userName, "SocialStatus",
+                    SocialStatusTypes.getTranslatedString(oldStatus), SocialStatusTypes.getTranslatedString(newStatus)));
+        }
+        //facebookUserName
+        String newString = newSocial.getFacebookUserName();
+        String oldString = social.getFacebookUserName();
+        if ((oldString == null) || (newString == null)) {
+            logger.info("User:" + currentUserInformationJson.userName + " tried to create/update Social with empty string.");
+            return null;
+        }
+        businessWithAuditTrail.checkDangerousValue(newString, currentUserInformationJson.userName);
+        if (!oldString.contentEquals(newString)) {
+            social.setFacebookUserName(newString);
+            auditTrailCollection.add(prepareAuditTrail(refId, currentUserInformationJson.userName, "FacebookUserName",
+                    oldString, newString));
+        }
+        //facebookFirstName
+        newString = newSocial.getFacebookFirstName();
+        oldString = social.getFacebookFirstName();
+        if ((oldString == null) || (newString == null)) {
+            logger.info("User:" + currentUserInformationJson.userName + " tried to create/update Social with empty string.");
+            return null;
+        }
+        businessWithAuditTrail.checkDangerousValue(newString, currentUserInformationJson.userName);
+        if (!oldString.contentEquals(newString)) {
+            social.setFacebookFirstName(newString);
+            auditTrailCollection.add(prepareAuditTrail(refId, currentUserInformationJson.userName, "FacebookFirstName",
+                    oldString, newString));
+        }
+        //facebookEmail
+        newString = newSocial.getFacebookEmail();
+        oldString = social.getFacebookEmail();
+        if ((oldString == null) || (newString == null)) {
+            logger.info("User:" + currentUserInformationJson.userName + " tried to create/update Social with empty string.");
+            return null;
+        }
+        businessWithAuditTrail.checkDangerousValue(newString, currentUserInformationJson.userName);
+        if (!oldString.contentEquals(newString)) {
+            social.setFacebookEmail(newString);
+            auditTrailCollection.add(prepareAuditTrail(refId, currentUserInformationJson.userName, "FacebookEmail",
+                    oldString, newString));
+        }
+        //facebookUserId
+        newString = newSocial.getFacebookUserId();
+        oldString = social.getFacebookUserId();
+        if ((oldString == null) || (newString == null)) {
+            logger.info("User:" + currentUserInformationJson.userName + " tried to create/update Social with empty string.");
+            return null;
+        }
+        businessWithAuditTrail.checkDangerousValue(newString, currentUserInformationJson.userName);
+        if (!oldString.contentEquals(newString)) {
+            social.setFacebookUserId(newString);
+            auditTrailCollection.add(prepareAuditTrail(refId, currentUserInformationJson.userName, "FacebookUserId",
+                    oldString, newString));
+        }
+        //googleUserName
+        newString = newSocial.getGoogleUserName();
+        oldString = social.getGoogleUserName();
+        if ((oldString == null) || (newString == null)) {
+            logger.info("User:" + currentUserInformationJson.userName + " tried to create/update Social with empty string.");
+            return null;
+        }
+        businessWithAuditTrail.checkDangerousValue(newString, currentUserInformationJson.userName);
+        if (!oldString.contentEquals(newString)) {
+            social.setGoogleUserName(newString);
+            auditTrailCollection.add(prepareAuditTrail(refId, currentUserInformationJson.userName, "GoogleUserName",
+                    oldString, newString));
+        }
+        //googleUserPicture
+        newString = newSocial.getGoogleUserPicture();
+        oldString = social.getGoogleUserPicture();
+        if ((oldString == null) || (newString == null)) {
+            logger.info("User:" + currentUserInformationJson.userName + " tried to create/update Social with empty string.");
+            return null;
+        }
+        businessWithAuditTrail.checkDangerousValue(newString, currentUserInformationJson.userName);
+        if (!oldString.contentEquals(newString)) {
+            social.setGoogleUserPicture(newString);
+            auditTrailCollection.add(prepareAuditTrail(refId, currentUserInformationJson.userName, "GoogleUserPicture",
+                    oldString, newString));
+        }
+        //googleEmail
+        newString = newSocial.getGoogleEmail();
+        oldString = social.getGoogleEmail();
+        if ((oldString == null) || (newString == null)) {
+            logger.info("User:" + currentUserInformationJson.userName + " tried to create/update Social with empty string.");
+            return null;
+        }
+        businessWithAuditTrail.checkDangerousValue(newString, currentUserInformationJson.userName);
+        if (!oldString.contentEquals(newString)) {
+            social.setGoogleEmail(newString);
+            auditTrailCollection.add(prepareAuditTrail(refId, currentUserInformationJson.userName, "GoogleEmail",
+                    oldString, newString));
+        }
+        //googleUserId
+        newString = newSocial.getGoogleUserId();
+        oldString = social.getGoogleUserId();
+        if ((oldString == null) || (newString == null)) {
+            logger.info("User:" + currentUserInformationJson.userName + " tried to create/update Social with empty string.");
+            return null;
+        }
+        businessWithAuditTrail.checkDangerousValue(newString, currentUserInformationJson.userName);
+        if (!oldString.contentEquals(newString)) {
+            social.setGoogleUserId(newString);
+            auditTrailCollection.add(prepareAuditTrail(refId, currentUserInformationJson.userName, "GoogleUserId",
+                    oldString, newString));
+        }
+        id = businessWithSocial.updateSocial(social, auditTrailCollection);
+        return id;
     }
 
     public Object getSocialHistoryAsObject(Long id) {

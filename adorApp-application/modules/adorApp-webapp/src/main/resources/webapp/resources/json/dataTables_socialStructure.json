@@ -17,9 +17,10 @@
     },
     {
       "id": "personId",
-      "type": "input-100",
-      "text": "Adoráló neve:",
-      "helpText": "A felhasználó/adoráló neve.",
+      "type": "id-nullable",
+      "text": "Adoráló azonosítója:",
+      "name": "Adoráló azonosítója",
+      "helpText": "A felhasználó/adoráló azonosítószáma.",
       "mandatory": false
     },
     {
@@ -41,6 +42,7 @@
       "id": "facebookUserName",
       "type": "input-255",
       "text": "Facebook - username:",
+      "name": "Facebook - username",
       "helpText": "Felhasználó \"user\" neve Facebookban.",
       "mandatory": false,
       "edit": {
@@ -51,6 +53,7 @@
       "id": "facebookFirstName",
       "type": "input-255",
       "text": "Facebook - firstname:",
+      "name": "Facebook - firstname",
       "helpText": "Felhasználó \"first\" neve Facebookban.",
       "mandatory": false,
       "edit": {
@@ -60,18 +63,21 @@
     {
       "id": "facebookEmail",
       "text": "Facebook - e-mail:",
+      "name": "Facebook - e-mail",
       "type": "input-200",
       "helpText": "Az Facebook e-mail címe."
     },
     {
       "id": "facebookUserId",
       "text": "Facebook - UID:",
+      "name": "Facebook - UID",
       "type": "input-200",
       "helpText": "Felhasználó UID-je Facebookban."
     },
     {
       "id": "googleUserName",
       "type": "input-255",
+      "name": "Google - username",
       "text": "Google - username:",
       "helpText": "Felhasználó \"user\" neve Google-ban.",
       "edit": {
@@ -81,6 +87,7 @@
     {
       "id": "googleUserPicture",
       "type": "input-255",
+      "name": "Google - picture",
       "text": "Google - picture:",
       "helpText": "Felhasználó képe Google-ban.",
       "edit": {
@@ -90,12 +97,14 @@
     {
       "id": "googleEmail",
       "text": "Google - e-mail:",
+      "name": "Google - e-mail",
       "type": "input-200",
       "helpText": "A Google e-mail címe."
     },
     {
       "id": "googleUserId",
       "text": "Google - UID:",
+      "name": "Google - UID",
       "type": "input-200",
       "helpText": "Felhasználó UID-je Google-ban."
     }
