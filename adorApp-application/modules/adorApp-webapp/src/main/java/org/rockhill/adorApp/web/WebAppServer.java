@@ -1,11 +1,18 @@
 package org.rockhill.adorApp.web;
 
+import org.apache.tomcat.InstanceManager;
+import org.apache.tomcat.SimpleInstanceManager;
+import org.eclipse.jetty.annotations.ServletContainerInitializersStarter;
+import org.eclipse.jetty.apache.jsp.JettyJasperInitializer;
+import org.eclipse.jetty.plus.annotation.ContainerInitializer;
 import org.eclipse.jetty.server.*;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.rockhill.adorApp.web.service.ServerException;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Responsible for configuring, starting and stopping the jetty server.
@@ -52,6 +59,14 @@ public class WebAppServer {
         }
     }
 
+    private static List<ContainerInitializer> jspInitializers() {
+        JettyJasperInitializer sci = new JettyJasperInitializer();
+        ContainerInitializer initializer = new ContainerInitializer(sci, null);
+        List<ContainerInitializer> initializers = new ArrayList<ContainerInitializer>();
+        initializers.add(initializer);
+        return initializers;
+    }
+
     private WebAppContext configureWebAppContext() {
         final WebAppContext context = new WebAppContext();
         String baseUrl = getBaseUrl();
@@ -59,6 +74,14 @@ public class WebAppServer {
         context.setResourceBase(baseUrl + "");
         context.setContextPath("/");
         context.setParentLoaderPriority(true);
+
+        context.setAttribute("org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern",
+                ".*/.*jsp-api-[^/]*\\.jar$|.*/.*jsp-[^/]*\\.jar$|.*/.*taglibs[^/]*\\.jar$");
+
+        context.setAttribute("org.eclipse.jetty.containerInitializers", jspInitializers());
+        context.setAttribute(InstanceManager.class.getName(), new SimpleInstanceManager());
+        context.addBean(new ServletContainerInitializersStarter(context), true);
+
         return context;
     }
 
