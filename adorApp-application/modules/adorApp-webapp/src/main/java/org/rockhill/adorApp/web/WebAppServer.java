@@ -103,7 +103,6 @@ public class WebAppServer {
             http_config.setSecurePort(port);
             HttpConfiguration https_config = new HttpConfiguration(http_config);
             https_config.addCustomizer(new SecureRequestCustomizer());
-            //TODO both keystore and its pwd need to be stored in property file
             SslContextFactory sslContextFactory = new SslContextFactory(keyStoreFile);
             sslContextFactory.setKeyStorePassword(keyStorePassword);
             ServerConnector httpsConnector = new ServerConnector(server,
