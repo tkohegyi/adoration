@@ -8,6 +8,7 @@ adorApp-application/modules/adorApp-engine/log
 *.iml
 *.ipr
 *.iws
+*.log
 build
 bin
 release
