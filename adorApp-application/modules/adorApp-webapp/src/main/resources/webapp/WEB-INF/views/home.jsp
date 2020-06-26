@@ -70,7 +70,7 @@
     			</tr>
     			<tr>
     				<td />
-    				<td>- Közvetlenül, ezen az oldalon: <a href="./orok-jelentkezes.php" target="_self">Jelentkezés örökimádásra</a>.</td>
+    				<td>- Közvetlenül, ezen az oldalon: <a href="/adoration/adorRegistration" target="_self">Jelentkezés örökimádásra</a>.</td>
     			</tr>
     			<tr>
     				<td />
@@ -96,15 +96,15 @@
     			</tr>
     			<tr>
     				<td />
-    				<td>- <a href="./resources/PüspökiLevél.pdf" target="new">dr. Beer Miklós püspök atya levele a regisztrált szentségimádókhoz</a></td>
+    				<td>- <a href="/resources/img/BishopLetter-BeerM.pdf" target="new">dr. Beer Miklós püspök atya levele a regisztrált szentségimádókhoz</a></td>
     			</tr>
     			<tr>
     				<td />
-    				<td>- <a href="./resources/AlapvetőSzabályokSzentségimádókSzámára-Web.pdf" target="new">Alapvető szabályok szentségimádók számára</a></td>
+    				<td>- <a href="/resources/img/AlapvetoSzabalyok.pdf" target="new">Alapvető szabályok szentségimádók számára</a></td>
     			</tr>
     			<tr>
     				<td />
-    				<td>- <a href="./resources/AdatkezelésiSzabályzat.pdf" target="new">Adatkezelési Szabályzat</a>.</td>
+    				<td>- <a href="/resources/img/AdatkezelesiSzabalyzat.pdf" target="new">Adatkezelési Szabályzat</a>.</td>
     			</tr>
     		</table>
     	</div>

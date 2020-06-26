@@ -53,6 +53,11 @@ public class HomeController {
         return "home";
     }
 
+    @RequestMapping(value = "/adoration/e404", method = {RequestMethod.GET, RequestMethod.POST})
+    public String e404() {
+        return "E404";
+    }
+
     @RequestMapping(value = "/adorationSecure/myInfoMyAccounts", method = RequestMethod.GET)
     public String myInfoMyAccounts() {
         return "myInfoMyAccounts";
