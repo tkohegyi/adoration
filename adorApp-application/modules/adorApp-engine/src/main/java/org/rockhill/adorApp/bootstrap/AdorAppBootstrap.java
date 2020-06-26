@@ -2,6 +2,7 @@ package org.rockhill.adorApp.bootstrap;
 
 import org.rockhill.adorApp.bootstrap.helper.SystemExceptionSelector;
 import org.rockhill.adorApp.database.SessionFactoryHelper;
+import org.rockhill.adorApp.database.property.HibernateConfig;
 import org.rockhill.adorApp.exception.InvalidPropertyException;
 import org.rockhill.adorApp.exception.SystemException;
 import org.rockhill.adorApp.properties.PropertyLoader;
@@ -32,8 +33,20 @@ public class AdorAppBootstrap {
      */
     public void bootstrap(final String[] args) {
 
+        HibernateConfig.HIBERNATE_CONNECTION_PASSWORD = null;
+        HibernateConfig.HIBERNATE_CONNECTION_URL = null;
+        HibernateConfig.HIBERNATE_CONNECTION_USERNAME = null;
+
         WebAppServer webAppServer = createWebAppServer();
         try {
+            //prepare hibernate
+            String hibernateUsername = getHibernateInfo(args, "hibernate.connection.username");
+            String hibernatePassword = getHibernateInfo(args, "hibernate.connection.password");
+            String hibernateUrl = getHibernateInfo(args, "hibernate.connection.url");
+            HibernateConfig.HIBERNATE_CONNECTION_USERNAME = hibernateUsername;
+            HibernateConfig.HIBERNATE_CONNECTION_PASSWORD = hibernatePassword;
+            HibernateConfig.HIBERNATE_CONNECTION_URL = hibernateUrl;
+            //prepare web server
             Integer port = getPort(args);
             Boolean isHttpsInUse = getIsHttpsInUse(args);
             webAppServer.createServer(port, isHttpsInUse.booleanValue());
@@ -46,6 +59,13 @@ public class AdorAppBootstrap {
             SessionFactoryHelper.shutdownHibernateSessionFactory();
         }
 
+    }
+
+    private String getHibernateInfo(String[] args, String propertyName) {
+        checkPropertyFileArgument(args);
+        Properties properties = propertyLoader.loadProperties(args[0]);
+        String info = properties.getProperty(propertyName);
+        return info;
     }
 
     private Integer getPort(final String[] args) {
