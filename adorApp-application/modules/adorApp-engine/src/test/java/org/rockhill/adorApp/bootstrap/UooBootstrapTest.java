@@ -68,7 +68,7 @@ public class UooBootstrapTest {
         properties.setProperty("webapp.port", "8080");
         BeanCreationException exception = new BeanCreationException("exception");
         doReturn(webAppServer).when(underTest).createWebAppServer();
-        willThrow(exception).given(webAppServer).createServer(8080, false);
+        willThrow(exception).given(webAppServer).createServer(8080, false, "", "");
         given(systemExceptionSelector.getSystemException(exception)).willReturn(systemException);
         //WHEN
         underTest.bootstrap(ARGS);
@@ -82,7 +82,7 @@ public class UooBootstrapTest {
         properties.setProperty("webapp.port", "8080");
         BeanCreationException exception = new BeanCreationException("exception");
         doReturn(webAppServer).when(underTest).createWebAppServer();
-        willThrow(exception).given(webAppServer).createServer(8080, false);
+        willThrow(exception).given(webAppServer).createServer(8080, false, "", "");
         given(systemExceptionSelector.getSystemException(exception)).willReturn(null);
         //WHEN
         underTest.bootstrap(ARGS);

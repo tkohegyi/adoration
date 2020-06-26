@@ -31,9 +31,9 @@ public class WebAppServer {
      *
      * @param port the port the server listens on
      */
-    public void createServer(final Integer port, final boolean isHttpsInUse) {
+    public void createServer(final Integer port, final boolean isHttpsInUse, final String keyStoreFile, final String keyStorePassword) {
         WebAppContext context = configureWebAppContext();
-        createServer(context, port, isHttpsInUse);
+        createServer(context, port, isHttpsInUse, keyStoreFile, keyStorePassword);
     }
 
     /**
@@ -89,7 +89,8 @@ public class WebAppServer {
         return context;
     }
 
-    void createServer(final WebAppContext context, final Integer port, final boolean isHttpsInUse) {
+    void createServer(final WebAppContext context, final Integer port, final boolean isHttpsInUse,
+                      final String keyStoreFile, final String keyStorePassword) {
         server = new Server(port);
         server.setStopAtShutdown(true);
         server.setStopTimeout(STOP_TIMEOUT);
@@ -103,8 +104,8 @@ public class WebAppServer {
             HttpConfiguration https_config = new HttpConfiguration(http_config);
             https_config.addCustomizer(new SecureRequestCustomizer());
             //TODO both keystore and its pwd need to be stored in property file
-            SslContextFactory sslContextFactory = new SslContextFactory("security/adorApp.keystore");
-            sslContextFactory.setKeyStorePassword("OBF:1rhd1v921aps1apu1apo1apq1v9k1rj1");      //Rf7856op
+            SslContextFactory sslContextFactory = new SslContextFactory(keyStoreFile);
+            sslContextFactory.setKeyStorePassword(keyStorePassword);
             ServerConnector httpsConnector = new ServerConnector(server,
                     new SslConnectionFactory(sslContextFactory, "http/1.1"),
                     new HttpConnectionFactory(https_config));

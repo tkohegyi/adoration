@@ -40,16 +40,18 @@ public class AdorAppBootstrap {
         WebAppServer webAppServer = createWebAppServer();
         try {
             //prepare hibernate
-            String hibernateUsername = getHibernateInfo(args, "hibernate.connection.username");
-            String hibernatePassword = getHibernateInfo(args, "hibernate.connection.password");
-            String hibernateUrl = getHibernateInfo(args, "hibernate.connection.url");
+            String hibernateUsername = getStringInfo(args, "hibernate.connection.username");
+            String hibernatePassword = getStringInfo(args, "hibernate.connection.password");
+            String hibernateUrl = getStringInfo(args, "hibernate.connection.url");
             HibernateConfig.HIBERNATE_CONNECTION_USERNAME = hibernateUsername;
             HibernateConfig.HIBERNATE_CONNECTION_PASSWORD = hibernatePassword;
             HibernateConfig.HIBERNATE_CONNECTION_URL = hibernateUrl;
             //prepare web server
+            String serverKeyStoreFile = getStringInfo(args, "keyStoreFile");
+            String serverKeyStorePassword = getStringInfo(args, "keyStorePassword");
             Integer port = getPort(args);
             Boolean isHttpsInUse = getIsHttpsInUse(args);
-            webAppServer.createServer(port, isHttpsInUse.booleanValue());
+            webAppServer.createServer(port, isHttpsInUse.booleanValue(), serverKeyStoreFile, serverKeyStorePassword);
             webAppServer.start();
         } catch (BeanCreationException e) {
             handleException(webAppServer, e);
@@ -61,7 +63,7 @@ public class AdorAppBootstrap {
 
     }
 
-    private String getHibernateInfo(String[] args, String propertyName) {
+    private String getStringInfo(String[] args, String propertyName) {
         checkPropertyFileArgument(args);
         Properties properties = propertyLoader.loadProperties(args[0]);
         String info = properties.getProperty(propertyName);
