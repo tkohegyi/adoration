@@ -107,7 +107,11 @@ public class Person {
     }
 
     public void setEmail(String email) {
-        this.email = email.toLowerCase();
+        if (email != null) {
+            this.email = email.toLowerCase();
+        } else {
+            this.email = null;
+        }
     }
 
     @Column(name = "emailVisible", nullable = false)
