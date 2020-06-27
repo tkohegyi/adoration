@@ -42,6 +42,7 @@ function setupPersonTable() {
                     "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Hungarian.json"
              },
         "scrollX": true,
+        "lengthMenu": [[5, 50, 100, -1], [5, 50, 100, "All"]],
         "columns": [
             { "data": "id" },
             { "data": "name", "width": "200px" },
@@ -59,6 +60,7 @@ function setupPersonTable() {
             { "data": "languageCode" }
         ],
         "columnDefs": [
+            { type: 'numeric-id', targets: 0 },
             {
                 "className": "text-center",
                 "targets": [0,4,6,8,12,13]
