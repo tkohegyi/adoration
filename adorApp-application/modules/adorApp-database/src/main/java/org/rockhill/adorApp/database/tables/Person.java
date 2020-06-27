@@ -97,9 +97,13 @@ public class Person {
         this.mobileVisible = mobileVisible;
     }
 
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", nullable = true)
     public String getEmail() {
-        return email;
+        if (email != null) {
+            return email;
+        } else {
+            return "";
+        }
     }
 
     public void setEmail(String email) {

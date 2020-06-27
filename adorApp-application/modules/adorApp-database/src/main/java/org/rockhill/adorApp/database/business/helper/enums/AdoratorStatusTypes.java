@@ -12,7 +12,8 @@ public enum AdoratorStatusTypes {
     ADORATOR_SPIRITUAL_COORDINATOR("Spiritual Coordinator", 6),
     ADORATOR_ADMIN("Admin Coordinator", 7),
     POST_ADORATOR("Post-Adorator", 8),
-    DIED_ADORATOR("Died", 9);
+    DIED_ADORATOR("Died", 9),
+    REGISTERED_BY_MISTAKE("Registered by mistake", 9);
 
     private String adoratorStatusText;
     private Integer adoratorStatusValue;
@@ -43,6 +44,7 @@ public enum AdoratorStatusTypes {
         if (ADORATOR_ADMIN.getAdoratorStatusValue().equals(adoratorStatusValue)) { adoratorStatusText = ADORATOR_ADMIN.getAdoratorStatusText(); }
         if (POST_ADORATOR.getAdoratorStatusValue().equals(adoratorStatusValue)) { adoratorStatusText = POST_ADORATOR.getAdoratorStatusText(); }
         if (DIED_ADORATOR.getAdoratorStatusValue().equals(adoratorStatusValue)) { adoratorStatusText = DIED_ADORATOR.getAdoratorStatusText(); }
+        if (REGISTERED_BY_MISTAKE.getAdoratorStatusValue().equals(adoratorStatusValue)) { adoratorStatusText = REGISTERED_BY_MISTAKE.getAdoratorStatusText(); }
         if (adoratorStatusText == null) {
             throw new DatabaseHandlingException("Incorrect usage of data -> AdoratorStatusTypes number:" + adoratorStatusValue.toString() + " was requested.");
         }
@@ -60,6 +62,7 @@ public enum AdoratorStatusTypes {
         if (ADORATOR_ADMIN.adoratorStatusValue.equals(id)) return ADORATOR_ADMIN;
         if (POST_ADORATOR.adoratorStatusValue.equals(id)) return POST_ADORATOR;
         if (DIED_ADORATOR.adoratorStatusValue.equals(id)) return DIED_ADORATOR;
+        if (REGISTERED_BY_MISTAKE.adoratorStatusValue.equals(id)) return REGISTERED_BY_MISTAKE;
         throw new DatabaseHandlingException("Invalid AdoratorStatusTypes requested: " + id);
     }
 
