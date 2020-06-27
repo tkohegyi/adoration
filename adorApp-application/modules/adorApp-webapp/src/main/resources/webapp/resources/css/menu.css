@@ -112,6 +112,10 @@
     color: #373737;
 }
 
+.error {
+    color: red;
+}
+
 hr {
     color: #39C2D7;
 }
