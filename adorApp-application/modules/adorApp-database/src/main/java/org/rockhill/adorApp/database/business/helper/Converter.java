@@ -31,6 +31,10 @@ public class Converter {
         return date;
     }
 
+    public String getCurrentDateAsString() {
+        return getDateAsString(new Date());
+    }
+
     public String getDateAsString(final Date date) {
         String dateStr = "";
         if (date != null) {

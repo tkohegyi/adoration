@@ -1,7 +1,9 @@
 package org.rockhill.adorApp.web.provider;
 
 import org.rockhill.adorApp.database.business.*;
+import org.rockhill.adorApp.database.business.helper.Converter;
 import org.rockhill.adorApp.database.business.helper.enums.AdoratorStatusTypes;
+import org.rockhill.adorApp.database.exception.DatabaseHandlingException;
 import org.rockhill.adorApp.database.tables.AuditTrail;
 import org.rockhill.adorApp.database.tables.Link;
 import org.rockhill.adorApp.database.tables.Person;
@@ -9,6 +11,7 @@ import org.rockhill.adorApp.database.tables.Social;
 import org.rockhill.adorApp.web.json.CurrentUserInformationJson;
 import org.rockhill.adorApp.web.json.DeleteEntityJson;
 import org.rockhill.adorApp.web.json.PersonInformationJson;
+import org.rockhill.adorApp.web.json.RegisterAdoratorJson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,15 +67,15 @@ public class PeopleProvider {
             person.setAdorationStatus(Integer.parseInt(p.adorationStatus));
             person.setAdminComment(p.adminComment);
             person.setCoordinatorComment(p.coordinatorComment);
-            person.setDhcSigned(new Boolean(p.dhcSigned));
+            person.setDhcSigned(Boolean.getBoolean(p.dhcSigned));
             person.setDhcSignedDate(p.dhcSignedDate);
             person.setEmail(p.email);
-            person.setEmailVisible(new Boolean(p.emailVisible));
+            person.setEmailVisible(Boolean.getBoolean(p.emailVisible));
             person.setLanguageCode("hu");
             person.setMobile(p.mobile);
-            person.setMobileVisible(new Boolean(p.mobileVisible));
+            person.setMobileVisible(Boolean.getBoolean(p.mobileVisible));
             person.setVisibleComment(p.visibleComment);
-            person.setIsAnonymous(new Boolean(p.isAnonymous));
+            person.setIsAnonymous(Boolean.getBoolean(p.isAnonymous));
             AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(person.getId(), currentUserInformationJson.userName,
                     "Person:New:" + person.getId(), "Name: " + person.getName() + ", e-mail: " + person.getEmail()
                             + ", Phone: " + person.getMobile(), "");
@@ -198,5 +201,52 @@ public class PeopleProvider {
         List<AuditTrail> auditTrailList = businessWithAuditTrail.getAuditTrailOfObject(personId);
         Long result = businessWithPerson.deletePerson(person, socialList, linkList, auditTrailList);
         return result;
+    }
+
+    public Long registerAdorator(RegisterAdoratorJson p, CurrentUserInformationJson currentUserInformationJson) {
+        //validations
+        businessWithAuditTrail.checkDangerousValue(p.name, currentUserInformationJson.userName);
+        businessWithAuditTrail.checkDangerousValue(p.comment, currentUserInformationJson.userName);
+        businessWithAuditTrail.checkDangerousValue(p.email, currentUserInformationJson.userName);
+        businessWithAuditTrail.checkDangerousValue(p.coordinate, currentUserInformationJson.userName);
+        businessWithAuditTrail.checkDangerousValue(p.dhc, currentUserInformationJson.userName);
+        businessWithAuditTrail.checkDangerousValue(p.mobile, currentUserInformationJson.userName);
+        if (p.dayId == null || p.hourId == null || p.dayId < 0 || p.dayId > 6 || p.hourId < 0 || p.hourId > 23
+        || p.method < 1 || p.method > 3) {
+            logger.warn("User:" + currentUserInformationJson.userName + "/" + p.name + " tried to use dangerous value for a new Adorator.");
+            throw new DatabaseHandlingException("Field content (Integer) is not allowed.");
+        }
+        //if person is identified, then it is not a new adorator
+        if (p.personId != null) {
+            logger.warn("User:" + currentUserInformationJson.userName + "/" + p.name + " tried to register again.");
+            throw new DatabaseHandlingException("Duplicated registration is not allowed.");
+        }
+        if (p.dhc == null || !p.dhc.contentEquals("consent-yes")) {
+            logger.warn("User:" + currentUserInformationJson.userName + "/" + p.name + " tried to register without consent.");
+            throw new DatabaseHandlingException("Data handling consent is missing.");
+        }
+        //send mail about the person
+        //TODO
+        //new Person
+        Person person = new Person();
+        person.setId(businessWithNextGeneralKey.getNextGeneralId());
+        person.setName(p.name);
+        person.setAdorationStatus(AdoratorStatusTypes.PRE_ADORATOR.getAdoratorStatusValue());
+        person.setAdminComment("Coordinator:" + p.coordinate + ", DHC:" + p.dhc + ", SelfComment: " + p.comment );
+        person.setDhcSigned(true);
+        Converter converter = new Converter();
+        person.setDhcSignedDate(converter.getCurrentDateAsString());
+        person.setEmail(p.email);
+        person.setEmailVisible(true);
+        person.setLanguageCode("hu");
+        person.setMobile(p.mobile);
+        person.setMobileVisible(true);
+        person.setVisibleComment("");
+        person.setIsAnonymous(false);
+        AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(person.getId(), currentUserInformationJson.userName,
+                "Person:New:" + person.getId(), "Name: " + person.getName() + ", e-mail: " + person.getEmail()
+                        + ", Phone: " + person.getMobile(), "");
+        Long id = businessWithPerson.newPerson(person, auditTrail);
+        return id;
     }
 }

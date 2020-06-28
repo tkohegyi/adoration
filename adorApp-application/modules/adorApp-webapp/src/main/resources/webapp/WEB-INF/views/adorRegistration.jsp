@@ -112,8 +112,8 @@
                 <td class="right">Adorálás módja:&nbsp;<font color="red">*</font></td>
                 <td class="left"><select id="method">
                         <option id="method-1" value="1">Heti rendszerességgel, az Vácott, az Örökimádás kápolnából</option>
-                        <option id="method-1" value="2">Heti rendszerességgel, távolról, online módon</option>
-                        <option id="method-1" value="3">Alkalmanként, nem rendszeresen</option>
+                        <option id="method-2" value="2">Heti rendszerességgel, távolról, online módon</option>
+                        <option id="method-3" value="3">Alkalmanként, nem rendszeresen</option>
                 </select></td>
             </tr>
             <tr>
@@ -134,9 +134,9 @@
                         <span id="dhcError" class="error" style="display:none">Adatkezelési hozzájárulás nélkül a jelentkezést nem tudjuk elfogadni!</span>
                         <br/>
                         <select class="wideselect" id="dhc">
-                        <option id="concent-yes" value="concent-yes">Igen,
+                        <option id="consent-yes" value="consent-yes">Igen,
                             hozzájárulok, az Európai Parlament és a Tanács (EU) 2016/679 rendeletével (GDPR) összhangban.</option>
-                        <option id="concent-no" value="concent-no" selected>Nem
+                        <option id="consent-no" value="consent-no" selected>Nem
                             járulok hozzá, és így a regisztrált szentségimádásról is lemondok.</option>
                 </select><br/><a href="/resources/img/AdatkezelesiSzabalyzat.pdf" target="new">Az Adatkezelési Szabályzat megtekinthető itt.&nbsp;
                 </td>

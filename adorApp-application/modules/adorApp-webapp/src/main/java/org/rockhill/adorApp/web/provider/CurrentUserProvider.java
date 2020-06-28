@@ -4,6 +4,7 @@ import org.rockhill.adorApp.database.business.BusinessWithAuditTrail;
 import org.rockhill.adorApp.database.business.helper.enums.AdoratorStatusTypes;
 import org.rockhill.adorApp.database.tables.AuditTrail;
 import org.rockhill.adorApp.database.tables.Person;
+import org.rockhill.adorApp.database.tables.Social;
 import org.rockhill.adorApp.web.json.CurrentUserInformationJson;
 import org.rockhill.adorApp.web.service.AuthenticatedUser;
 import org.rockhill.adorApp.web.service.FacebookUser;
@@ -62,6 +63,7 @@ public class CurrentUserProvider {
             Object principal = authentication.getPrincipal();
             String loggedInUserName;
             Person person; // = null;
+            Social social; // = null;
             if (principal instanceof AuthenticatedUser) {
                 AuthenticatedUser user = (AuthenticatedUser) principal;
                 if (user.isSessionValid()) {
@@ -81,9 +83,13 @@ public class CurrentUserProvider {
                     }
                     currentUserInformationJson.loggedInUserName = loggedInUserName; //user who logged in via social
                     currentUserInformationJson.userName = loggedInUserName; //user who registered as adorator (his/her name may differ from the username used in Social)
+                    social = user.getSocial();
+                    if (social != null) {
+                        currentUserInformationJson.socialId = user.getSocial().getId();
+                    }
                     if (person != null) {
                         currentUserInformationJson.isAuthorized = true; //not just logged in, but since the person is known, authorized too
-                        currentUserInformationJson.id = person.getId();
+                        currentUserInformationJson.personId = person.getId();
                         currentUserInformationJson.userName = person.getName();
                         AdoratorStatusTypes status = AdoratorStatusTypes.getTypeFromId(person.getAdorationStatus());
                         currentUserInformationJson.isRegisteredAdorator = registeredAdorator.contains(status);
@@ -126,8 +132,8 @@ public class CurrentUserProvider {
         CurrentUserInformationJson currentUserInformationJson = getUserInformation(httpSession);
         String data = "";
         long userId = 0;
-        if (currentUserInformationJson.id != null) {
-            userId = currentUserInformationJson.id;
+        if (currentUserInformationJson.personId != null) {
+            userId = currentUserInformationJson.personId;
         } else {
             data = "Unidentified Person.";
         }
@@ -140,8 +146,8 @@ public class CurrentUserProvider {
         CurrentUserInformationJson currentUserInformationJson = getUserInformation(httpSession);
         String data = "";
         long userId = 0;
-        if (currentUserInformationJson.id != null) {
-            userId = currentUserInformationJson.id;
+        if (currentUserInformationJson.personId != null) {
+            userId = currentUserInformationJson.personId;
         } else {
             data = "Unidentified Person.";
         }

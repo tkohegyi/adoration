@@ -69,4 +69,5 @@ function doRegisterClick() {
     }
     //everything is ok, send registration request
 
+
 }
