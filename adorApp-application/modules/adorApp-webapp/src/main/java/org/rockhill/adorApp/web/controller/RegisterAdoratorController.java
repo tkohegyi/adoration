@@ -79,11 +79,17 @@ public class RegisterAdoratorController extends ControllerBase {
             resultString = e.getMessage();
             result = new ResponseEntity<String>(getJsonString(JSON_RESPONSE_UPDATE, resultString), responseHeaders, HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            resultString = "Cannot register new Adorator, please contact to maintainers.";
+            resultString = "A regiszrálás sikertelen, kérjük lépjen kapcsolatba a weboldal karbantartójával!";
             logger.warn("Error happened at register new Adorator function, pls contact to maintainers", e);
             result = new ResponseEntity<String>(getJsonString(JSON_RESPONSE_UPDATE, resultString), responseHeaders, HttpStatus.BAD_REQUEST);
         }
         return result;
+    }
+
+    @RequestMapping(value = "/adoration/registrationSuccess", method = RequestMethod.GET)
+    public String registrationSuccess(HttpSession httpSession,
+                                   HttpServletResponse httpServletResponse) {
+        return "registrationSuccess";
     }
 
 }

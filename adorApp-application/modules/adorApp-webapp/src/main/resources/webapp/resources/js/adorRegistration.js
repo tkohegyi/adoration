@@ -68,6 +68,36 @@ function doRegisterClick() {
         return;
     }
     //everything is ok, send registration request
+    beforeRequest();
+    var token = $("meta[name='_csrf']").attr("content");
+    var header = $("meta[name='_csrf_header']").attr("content");
+    $.ajax({
+        url : '/adoration/registerAdorator',
+        type : 'POST',
+        async: false,
+        contentType: 'application/json',
+        data: JSON.stringify(b),
+        dataType: 'json',
+        success : processRegisterSuccess,
+        beforeSend : function(request) {
+            if (token.length > 0) {
+            request.setRequestHeader(header, token);
+            }
+        },
+        complete : afterRequest,
+    }).fail( function(xhr, status) {
+        alert(xhr.responseText);
+    });
+}
 
+function beforeRequest() {
+    $('#registerButton').attr('disabled', 'disabled');
+}
 
+function afterRequest() {
+    $('#registerButton').removeAttr('disabled');
+}
+
+function processRegisterSuccess() {
+    window.location.pathname = "/adoration/registrationSuccess"
 }

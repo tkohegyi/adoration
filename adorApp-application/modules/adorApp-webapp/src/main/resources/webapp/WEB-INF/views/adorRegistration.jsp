@@ -2,6 +2,9 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta charset="UTF-8">
+<meta name="_csrf" content="${_csrf.token}"/>
+<meta name="_csrf_header" content="${_csrf.headerName}"/>
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
 <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
@@ -145,7 +148,9 @@
         <br />
         <button type="button" class="btn btn-warning btn-sm" onclick="notRegisterClick()">Mégsem jelentkezem</button>
         &nbsp;&nbsp;&nbsp;
-        <button type="button" class="btn btn-success btn-sm" onclick="doRegisterClick()">Jelentkezés elküldése</button>
+        <button id="registerButton" type="button" class="btn btn-success btn-sm" onclick="doRegisterClick()">Jelentkezés elküldése</button>
+        <br />
+        <p/>
 </div>
 <script src="./../resources/js/external/jquery-3.4.1.js"></script>
 <script src="./../resources/js/external/bootstrap-4.3.1.min.js"></script>

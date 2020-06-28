@@ -2,12 +2,14 @@ package org.rockhill.adorApp.web.provider;
 
 import org.rockhill.adorApp.database.business.*;
 import org.rockhill.adorApp.database.business.helper.Converter;
+import org.rockhill.adorApp.database.business.helper.enums.AdorationMethodTypes;
 import org.rockhill.adorApp.database.business.helper.enums.AdoratorStatusTypes;
 import org.rockhill.adorApp.database.exception.DatabaseHandlingException;
 import org.rockhill.adorApp.database.tables.AuditTrail;
 import org.rockhill.adorApp.database.tables.Link;
 import org.rockhill.adorApp.database.tables.Person;
 import org.rockhill.adorApp.database.tables.Social;
+import org.rockhill.adorApp.helper.EmailSender;
 import org.rockhill.adorApp.web.json.CurrentUserInformationJson;
 import org.rockhill.adorApp.web.json.DeleteEntityJson;
 import org.rockhill.adorApp.web.json.PersonInformationJson;
@@ -25,7 +27,7 @@ import java.util.List;
 public class PeopleProvider {
 
     private final Logger logger = LoggerFactory.getLogger(PeopleProvider.class);
-
+    private final String subject = "[AdoratorApp] - Új adoráló";
 
     @Autowired
     BusinessWithPerson businessWithPerson;
@@ -37,6 +39,8 @@ public class PeopleProvider {
     BusinessWithLink businessWithLink;
     @Autowired
     BusinessWithSocial businessWithSocial;
+    @Autowired
+    EmailSender emailSender;
 
 
     public Object getPersonListAsObject() {
@@ -205,6 +209,10 @@ public class PeopleProvider {
 
     public Long registerAdorator(RegisterAdoratorJson p, CurrentUserInformationJson currentUserInformationJson) {
         //validations
+        if (p.name == null || p.comment == null || p.email == null || p.coordinate == null || p.dhc == null || p.mobile == null) {
+            logger.warn("User:" + currentUserInformationJson.userName + " tried to use null value(s) for a new Adorator.");
+            throw new DatabaseHandlingException("Field content (nullString) is not allowed.");
+        }
         businessWithAuditTrail.checkDangerousValue(p.name, currentUserInformationJson.userName);
         businessWithAuditTrail.checkDangerousValue(p.comment, currentUserInformationJson.userName);
         businessWithAuditTrail.checkDangerousValue(p.email, currentUserInformationJson.userName);
@@ -225,17 +233,21 @@ public class PeopleProvider {
             logger.warn("User:" + currentUserInformationJson.userName + "/" + p.name + " tried to register without consent.");
             throw new DatabaseHandlingException("Data handling consent is missing.");
         }
+        Long newId = businessWithNextGeneralKey.getNextGeneralId();
+        Converter converter = new Converter();
+        String dhcSignedDate = converter.getCurrentDateAsString();
+        p.dhcSignedDate = dhcSignedDate;
         //send mail about the person
-        //TODO
+        String text = "New id: " + newId + "\nDHC Signed Date: " + dhcSignedDate + "\nAdatok:\n" + p.toString();
+        emailSender.sendMail(subject, text);
         //new Person
         Person person = new Person();
-        person.setId(businessWithNextGeneralKey.getNextGeneralId());
+        person.setId(newId);
         person.setName(p.name);
         person.setAdorationStatus(AdoratorStatusTypes.PRE_ADORATOR.getAdoratorStatusValue());
-        person.setAdminComment("Coordinator:" + p.coordinate + ", DHC:" + p.dhc + ", SelfComment: " + p.comment );
+        person.setAdminComment("Adorálás módja: " + p.method + ", Segítség:" + p.coordinate + ", DHC:" + p.dhc + ", SelfComment: " + p.comment );
         person.setDhcSigned(true);
-        Converter converter = new Converter();
-        person.setDhcSignedDate(converter.getCurrentDateAsString());
+        person.setDhcSignedDate(dhcSignedDate);
         person.setEmail(p.email);
         person.setEmailVisible(true);
         person.setLanguageCode("hu");
@@ -243,9 +255,9 @@ public class PeopleProvider {
         person.setMobileVisible(true);
         person.setVisibleComment("");
         person.setIsAnonymous(false);
-        AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(person.getId(), currentUserInformationJson.userName,
-                "Person:New:" + person.getId(), "Name: " + person.getName() + ", e-mail: " + person.getEmail()
-                        + ", Phone: " + person.getMobile(), "");
+        person.setCoordinatorComment("");
+        AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(person.getId(), "SYSTEM",
+                "Person:New:" + person.getId(), "Új adoráló regisztrációja.", text);
         Long id = businessWithPerson.newPerson(person, auditTrail);
         return id;
     }
