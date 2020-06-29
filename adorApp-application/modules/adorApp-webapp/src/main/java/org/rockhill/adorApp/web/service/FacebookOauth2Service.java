@@ -12,6 +12,7 @@ import org.rockhill.adorApp.database.tables.AuditTrail;
 import org.rockhill.adorApp.database.tables.Person;
 import org.rockhill.adorApp.database.tables.Social;
 import org.rockhill.adorApp.exception.SystemException;
+import org.rockhill.adorApp.helper.EmailSender;
 import org.rockhill.adorApp.web.configuration.PropertyDto;
 import org.rockhill.adorApp.web.configuration.WebAppConfigurationAccess;
 import org.slf4j.Logger;
@@ -38,6 +39,8 @@ import java.net.URLEncoder;
 public class FacebookOauth2Service {
 
     private final Logger logger = LoggerFactory.getLogger(FacebookOauth2Service.class);
+    private final String subject = "[AdoratorApp] - Új Facebook Social";
+
     private FacebookConnectionFactory facebookConnectionFactory;
 
     @Autowired
@@ -58,6 +61,9 @@ public class FacebookOauth2Service {
 
     @Autowired
     BusinessWithNextGeneralKey businessWithNextGeneralKey;
+
+    @Autowired
+    EmailSender emailSender;
 
     @PostConstruct
     private void FacebookOauth2Service() {
@@ -161,6 +167,9 @@ public class FacebookOauth2Service {
     private Social detectSocial(JSONObject facebookUserInfoJson) {
         String userId = facebookUserInfoJson.getAsString("id");
         String email = facebookUserInfoJson.getAsString("email");
+        if (email == null) {
+            email = "?";
+        }
         Social social = businessWithSocial.getSocialByFUserId(userId);
         if (social == null) {
             social = new Social();
@@ -181,6 +190,8 @@ public class FacebookOauth2Service {
                     auditTrail.setRefId(p.getId()); //audit linked to person
                 }
             }
+            String text = "New id: " + social.getId() + "\nFacebook Type, Name: " + social.getFacebookUserName() + ",\nEmail: " + social.getFacebookEmail();
+            emailSender.sendMail(subject, text);
             Long id = businessWithSocial.newSocial(social, auditTrail);
             social.setId(id); //Social object is ready
         }

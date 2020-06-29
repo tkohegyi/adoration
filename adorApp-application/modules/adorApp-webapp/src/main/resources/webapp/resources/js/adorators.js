@@ -631,7 +631,6 @@ function processHourDeleted() {
 
 function deletePerson() {
     if (!confirm('Are you sure you want to DELETE this Adorator - permanently?')) {
-      console.log('Thing was deleted from the database.');
       return;
     }
 	console.log("---=== Delete Person Entity Clicked ===---");

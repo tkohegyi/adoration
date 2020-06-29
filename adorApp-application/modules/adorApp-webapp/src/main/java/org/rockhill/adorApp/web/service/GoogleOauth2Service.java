@@ -19,6 +19,7 @@ import org.rockhill.adorApp.database.business.helper.enums.SocialStatusTypes;
 import org.rockhill.adorApp.database.tables.AuditTrail;
 import org.rockhill.adorApp.database.tables.Person;
 import org.rockhill.adorApp.database.tables.Social;
+import org.rockhill.adorApp.helper.EmailSender;
 import org.rockhill.adorApp.web.configuration.PropertyDto;
 import org.rockhill.adorApp.web.configuration.WebAppConfigurationAccess;
 import org.rockhill.adorApp.database.json.GoogleUserInfoJson;
@@ -40,6 +41,7 @@ import java.util.List;
 public class GoogleOauth2Service {
 
     private final Logger logger = LoggerFactory.getLogger(GoogleOauth2Service.class);
+    private final String subject = "[AdoratorApp] - Új Google Social";
 
 
     private static final String USER_INFO_URL = "https://www.googleapis.com/oauth2/v1/userinfo";
@@ -67,6 +69,9 @@ public class GoogleOauth2Service {
 
     @Autowired
     BusinessWithNextGeneralKey businessWithNextGeneralKey;
+
+    @Autowired
+    EmailSender emailSender;
 
     @PostConstruct
     private void GoogleOauth2Service() {
@@ -159,6 +164,8 @@ public class GoogleOauth2Service {
                     auditTrail.setRefId(p.getId()); //audit linked to person
                 }
             }
+            String text = "New id: " + social.getId() + "\nGoogle Type, Name: " + social.getGoogleUserName() + ",\nEmail: " + social.getGoogleEmail();
+            emailSender.sendMail(subject, text);
             Long id = businessWithSocial.newSocial(social, auditTrail);
             social.setId(id); //Social object is ready
         }

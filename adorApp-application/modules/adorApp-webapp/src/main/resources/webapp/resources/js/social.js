@@ -356,3 +356,37 @@ function valueChanged(theObject, type) {
 	    td.addClass("table-danger");
 	}
 }
+
+function deleteSocial() {
+    if (!confirm('Are you sure you want to DELETE this Social login - permanently?')) {
+      return;
+    }
+	console.log("---=== Delete Social Entity Clicked ===---");
+    var entityId = $("#editId").val(); //filled by the button's onclick method
+    var req = {
+        entityId : entityId,
+    };
+    var token = $("meta[name='_csrf']").attr("content");
+    var header = $("meta[name='_csrf_header']").attr("content");
+    $.ajax({
+        url : '/adorationSecure/deleteSocial',
+        type : 'POST',
+        async: false,
+        contentType: 'application/json',
+        data: JSON.stringify(req),
+        dataType: 'json',
+        success : processEntityDeleted,
+        beforeSend : function(request) {
+            request.setRequestHeader(header, token);
+        },
+        complete : requestComplete,
+    }).fail( function(xhr, status) {
+        var obj = JSON.parse(xhr.responseText);
+        alert(obj.entityUpdate);
+    });
+}
+
+function processEntityDeleted() {
+    console.log("---=== Entity DELETED, going back to Entity list... ===---");
+    processEntityUpdated();
+}
