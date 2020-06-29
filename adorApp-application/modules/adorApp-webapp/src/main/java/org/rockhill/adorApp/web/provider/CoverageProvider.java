@@ -56,7 +56,8 @@ public class CoverageProvider {
         }
         for (Link link : linkList) {
             Integer hourId = link.getHourId();
-            if (AdorationMethodTypes.getTypeFromId(link.getType()) == AdorationMethodTypes.PHYSICAL) {
+            if ((AdorationMethodTypes.getTypeFromId(link.getType()) == AdorationMethodTypes.PHYSICAL)
+                    && (link.getPriority() < 3)) { //must be physical + prio 1 or 2
                 if (coverageInformationJson.hours.containsKey(hourId)) {
                     //we already have this in the map
                     coverageInformationJson.hours.put(hourId, coverageInformationJson.hours.get(hourId) + 1);
