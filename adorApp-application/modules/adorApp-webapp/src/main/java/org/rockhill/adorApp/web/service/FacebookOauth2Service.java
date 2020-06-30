@@ -179,7 +179,7 @@ public class FacebookOauth2Service {
             social.setFacebookUserName(social.getFacebookFirstName());  // this is what we can access by default...
             social.setSocialStatus(SocialStatusTypes.WAIT_FOR_IDENTIFICATION.getTypeValue());
             social.setId(businessWithNextGeneralKey.getNextGeneralId());
-            AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(0l, social.getGoogleUserName(), "Social:New:" + social.getId().toString(), "New Facebook Social login created.", "");
+            AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(0l, social.getFacebookUserName(), "Social:New:" + social.getId().toString(), "New Facebook Social login created.", "");
 
             //this is a brand new login, try to identify - by using e-mail
             if ( (email != null) && (email.length() > 0) ) {

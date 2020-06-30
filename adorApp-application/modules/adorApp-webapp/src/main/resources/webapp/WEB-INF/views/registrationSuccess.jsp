@@ -23,12 +23,13 @@
 	<div class="centerwidediv" align="center">
         <legend class="message-legend h4"d>Sikeres Regisztráció</legend>
 		<p>
-			Jelentkezését hamarosan feldolgozzuk, és a megadott telefonszámon, vagy e-mailen felkeressük Önt adategyeztetésre.<br />
+			Jelentkezését hamarosan feldolgozzuk, és a megadott telefonszámon, vagy e-mailen felkeressük Önt adategyeztetésre.
+			<br /><br />
 			Addig is, kérjük olvassa el dr. Beer Miklós püspök atya levelét <a href="/resources/img/BishopLetter-BeerM.pdf" target="new">itt</a>,
 			a szentségimádóknak szóló <a href="/resources/img/AlapvetoSzabalyok.pdf" target="new2">tájékoztatót</a>,
 			<br/>valamint nyugodtan - a vállalt órájában - kezdje meg a heti rendszeres szentségimádást.
-			 <br />
-		<br /> Néhány másodperc múlva átirányítjuk Önt az Örökimádás
+			 <br /><br />
+			 Néhány másodperc múlva átirányítjuk Önt az Örökimádás
 		főoldalára. <br /> Amennyiben ez mégsem történne meg, kérjük folytassa
 		az Örökimádás oldalán <a href="/adoration/" target="_self">erre a
 			linkre kattintva,</a><br /> vagy térjen vissza a templom weboldalára

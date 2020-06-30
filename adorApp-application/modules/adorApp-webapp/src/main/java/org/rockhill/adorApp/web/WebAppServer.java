@@ -12,6 +12,7 @@ import org.eclipse.jetty.webapp.WebAppContext;
 import org.rockhill.adorApp.web.service.ServerException;
 
 import java.net.URL;
+import java.security.KeyStore;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -103,7 +104,8 @@ public class WebAppServer {
             http_config.setSecurePort(port);
             HttpConfiguration https_config = new HttpConfiguration(http_config);
             https_config.addCustomizer(new SecureRequestCustomizer());
-            SslContextFactory sslContextFactory = new SslContextFactory(keyStoreFile);
+            SslContextFactory sslContextFactory = new SslContextFactory.Server();
+            sslContextFactory.setKeyStorePath(keyStoreFile);
             sslContextFactory.setKeyStorePassword(keyStorePassword);
             ServerConnector httpsConnector = new ServerConnector(server,
                     new SslConnectionFactory(sslContextFactory, "http/1.1"),
