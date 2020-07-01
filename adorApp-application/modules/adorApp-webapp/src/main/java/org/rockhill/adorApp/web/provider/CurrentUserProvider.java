@@ -131,13 +131,13 @@ public class CurrentUserProvider {
     public void registerLogin(HttpSession httpSession) {
         CurrentUserInformationJson currentUserInformationJson = getUserInformation(httpSession);
         String data = "";
-        long userId = 0;
-        if (currentUserInformationJson.personId != null) {
-            userId = currentUserInformationJson.personId;
+        long socialId = 0;
+        if (currentUserInformationJson.socialId != null) {
+            socialId = currentUserInformationJson.socialId;
         } else {
-            data = "Unidentified Person.";
+            data = "Unidentified Social data.";
         }
-        AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(userId,
+        AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(socialId,
                 currentUserInformationJson.userName, "Login", "User logged in: " + currentUserInformationJson.userName, data);
         businessWithAuditTrail.saveAuditTrainSafe(auditTrail);
     }
