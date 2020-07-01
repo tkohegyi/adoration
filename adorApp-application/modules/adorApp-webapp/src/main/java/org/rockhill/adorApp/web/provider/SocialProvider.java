@@ -51,12 +51,10 @@ public class SocialProvider {
             //ERROR we shall update existing Socials only.
             return null;
         }
+        Long refId = newSocial.getId();
         //personId
         Long newLongValue = newSocial.getPersonId();
         Long oldLongValue = social.getPersonId();
-        Long refId = newSocial.getId();
-        if ((oldLongValue != null) && (!oldLongValue.equals(0))) { refId = oldLongValue; }
-        if ((newLongValue != null) && (!newLongValue.equals(0))) { refId = newLongValue; }
         if (!((oldLongValue == null) && (newLongValue == null))) { //if both null, it was not changed
             if ( ((oldLongValue == null) && (newLongValue != null)) //at least one of them is not null
                     || ((oldLongValue != null) && (newLongValue == null))

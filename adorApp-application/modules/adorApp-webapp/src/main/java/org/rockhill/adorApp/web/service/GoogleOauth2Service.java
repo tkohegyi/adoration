@@ -153,20 +153,20 @@ public class GoogleOauth2Service {
             social.setGoogleUserId(googleUserInfoJson.id);
             social.setGoogleUserPicture(googleUserInfoJson.picture);
             social.setSocialStatus(SocialStatusTypes.WAIT_FOR_IDENTIFICATION.getTypeValue());
-            social.setId(businessWithNextGeneralKey.getNextGeneralId());
-            AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(0l, social.getGoogleUserName(), "Social:New:" + social.getId().toString(), "New Google Social login created.", "");
+            Long id = businessWithNextGeneralKey.getNextGeneralId();
+            social.setId(id);
+            AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(id, social.getGoogleUserName(), "Social:New:" + id.toString(), "New Google Social login created.", "");
             //this is a brand new login, try to identify - by using e-mail
             if ( (googleUserInfoJson.email != null) && (googleUserInfoJson.email.length() > 0) ) {
                 Person p = businessWithPerson.getPersonByEmail(googleUserInfoJson.email);
                 if (p != null) { // we were able to identify the person by e-mail
                     social.setPersonId(p.getId());
                     social.setSocialStatus(SocialStatusTypes.IDENTIFIED_USER.getTypeValue());
-                    auditTrail.setRefId(p.getId()); //audit linked to person
                 }
             }
-            String text = "New id: " + social.getId() + "\nGoogle Type, Name: " + social.getGoogleUserName() + ",\nEmail: " + social.getGoogleEmail();
+            String text = "New Social id: " + id.toString() + "\nGoogle Type,\nName: " + social.getGoogleUserName() + ",\nEmail: " + social.getGoogleEmail();
             emailSender.sendMail(subject, text);
-            Long id = businessWithSocial.newSocial(social, auditTrail);
+            id = businessWithSocial.newSocial(social, auditTrail);
             social.setId(id); //Social object is ready
         }
         return social;

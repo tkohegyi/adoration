@@ -138,7 +138,7 @@ public class SocialController extends ControllerBase {
     public TableDataInformationJson getSocialHistoryById(HttpSession httpSession, @PathVariable("id") final String requestedId) {
         TableDataInformationJson content = null;
         if (isAdoratorAdmin(currentUserProvider, httpSession)) {
-            //can get the person history
+            //can get the social history
             Long id = Long.valueOf(requestedId);
             Object socialHistory = socialProvider.getSocialHistoryAsObject(id);
             content = new TableDataInformationJson(socialHistory);

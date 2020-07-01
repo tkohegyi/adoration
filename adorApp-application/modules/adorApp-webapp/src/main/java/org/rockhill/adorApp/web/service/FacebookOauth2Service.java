@@ -178,21 +178,20 @@ public class FacebookOauth2Service {
             social.setFacebookFirstName(facebookUserInfoJson.getAsString("name"));
             social.setFacebookUserName(social.getFacebookFirstName());  // this is what we can access by default...
             social.setSocialStatus(SocialStatusTypes.WAIT_FOR_IDENTIFICATION.getTypeValue());
-            social.setId(businessWithNextGeneralKey.getNextGeneralId());
-            AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(0l, social.getFacebookUserName(), "Social:New:" + social.getId().toString(), "New Facebook Social login created.", "");
-
+            Long id = businessWithNextGeneralKey.getNextGeneralId();
+            social.setId(id);
+            AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(id, social.getFacebookUserName(), "Social:New:" + id.toString(), "New Facebook Social login created.", "");
             //this is a brand new login, try to identify - by using e-mail
             if ( (email != null) && (email.length() > 0) ) {
                 Person p = businessWithPerson.getPersonByEmail(email);
                 if (p != null) { // we were able to identify the person by e-mail
                     social.setPersonId(p.getId());
                     social.setSocialStatus(SocialStatusTypes.IDENTIFIED_USER.getTypeValue());
-                    auditTrail.setRefId(p.getId()); //audit linked to person
                 }
             }
-            String text = "New id: " + social.getId() + "\nFacebook Type, Name: " + social.getFacebookUserName() + ",\nEmail: " + social.getFacebookEmail();
+            String text = "New Social id: " + id.toString() + "\nFacebook Type,\n Name: " + social.getFacebookUserName() + ",\nEmail: " + social.getFacebookEmail();
             emailSender.sendMail(subject, text);
-            Long id = businessWithSocial.newSocial(social, auditTrail);
+            id = businessWithSocial.newSocial(social, auditTrail);
             social.setId(id); //Social object is ready
         }
         return social;

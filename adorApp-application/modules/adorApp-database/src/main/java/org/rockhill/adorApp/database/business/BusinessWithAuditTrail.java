@@ -28,14 +28,16 @@ public class BusinessWithAuditTrail {
     BusinessWithNextGeneralKey businessWithNextGeneralKey;
 
     public List<AuditTrail> getAuditTrailOfObject(Long id) {
+        if (id == null) {
+            throw new DatabaseHandlingException("Tried to get audit trail for a null id, pls contact to maintainers");
+        }
         List<AuditTrail> result = null;
         SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
         if (sessionFactory != null) {
             Session session = sessionFactory.openSession();
             session.beginTransaction();
-            String hql = "from AuditTrail as AT where AT.refId = :refId order by AT.id ASC";
+            String hql = "from AuditTrail as AT where AT.refId = " + id.toString() + " OR AT.activityType like '%:" + id.toString() + " 'order by AT.atWhen ASC";
             Query query = session.createQuery(hql);
-            query.setParameter("refId", id);
             result = (List<AuditTrail>) query.list();
             session.getTransaction().commit();
             session.close();
@@ -85,5 +87,27 @@ public class BusinessWithAuditTrail {
                 logger.warn("Cannot save Audit record, issue: " + e.getLocalizedMessage());
             }
         }
+    }
+
+    public List<AuditTrail> getSpecialAuditTrailOfObject(Long id, Long idInActivityType) {
+        if (id == null) {
+            throw new DatabaseHandlingException("Tried to get audit trail for a null id, pls contact to maintainers");
+        }
+        String extraParam = "";
+        if (idInActivityType != null) {
+            extraParam = " OR AT.activityType like '%:" + idInActivityType.toString() + "' ";
+        }
+        List<AuditTrail> result = null;
+        SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
+        if (sessionFactory != null) {
+            Session session = sessionFactory.openSession();
+            session.beginTransaction();
+            String hql = "from AuditTrail as AT where AT.refId = " + id.toString() + " OR AT.activityType like '%:" + id.toString() + "' " + extraParam + " order by AT.atWhen ASC";
+            Query query = session.createQuery(hql);
+            result = (List<AuditTrail>) query.list();
+            session.getTransaction().commit();
+            session.close();
+        }
+        return result;
     }
 }
