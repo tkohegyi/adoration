@@ -89,25 +89,4 @@ public class BusinessWithAuditTrail {
         }
     }
 
-    public List<AuditTrail> getSpecialAuditTrailOfObject(Long id, Long idInActivityType) {
-        if (id == null) {
-            throw new DatabaseHandlingException("Tried to get audit trail for a null id, pls contact to maintainers");
-        }
-        String extraParam = "";
-        if (idInActivityType != null) {
-            extraParam = " OR AT.activityType like '%:" + idInActivityType.toString() + "' ";
-        }
-        List<AuditTrail> result = null;
-        SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
-        if (sessionFactory != null) {
-            Session session = sessionFactory.openSession();
-            session.beginTransaction();
-            String hql = "from AuditTrail as AT where AT.refId = " + id.toString() + " OR AT.activityType like '%:" + id.toString() + "' " + extraParam + " order by AT.atWhen ASC";
-            Query query = session.createQuery(hql);
-            result = (List<AuditTrail>) query.list();
-            session.getTransaction().commit();
-            session.close();
-        }
-        return result;
-    }
 }
