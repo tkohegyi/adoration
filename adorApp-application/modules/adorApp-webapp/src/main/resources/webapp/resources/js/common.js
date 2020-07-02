@@ -11,7 +11,6 @@ function setupMenu() {
         if (loggedInUserInfo.isRegisteredAdorator) {
             $("#nav-information").show();
             $("#nav-ador-list").show();
-            $("#nav-ador-status").show();
         } else {
             $("#nav-ador-registration").show();
         }
