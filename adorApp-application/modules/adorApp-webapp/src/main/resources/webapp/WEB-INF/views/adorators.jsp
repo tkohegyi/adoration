@@ -17,7 +17,7 @@
 <script src="/resources/js/external/jquery-3.4.1.js"></script>
 <script src="/resources/js/external/bootstrap-4.3.1.min.js"></script>
 <script src="/resources/js/external/dataTables/datatables.min.js"></script>
-<script src="/resources/js/commonDataTables.js"></script>
+<script src="/resources/js/commonDataTable.js"></script>
 <script src="/resources/js/common.js"></script>
 <script src="/resources/js/adorators.js" nonce></script>
 <title>Örökimádás - Vác - Adminisztráció - Adorálók</title>

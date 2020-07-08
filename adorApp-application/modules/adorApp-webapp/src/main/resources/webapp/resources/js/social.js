@@ -1,7 +1,7 @@
 $(document).ready(function() {
     $("#nav-application-log").addClass("active");
     setupMenu();
-    setupPersonTable();
+    setupSocialTable();
     loadStructure();
 });
 
@@ -15,7 +15,7 @@ function loadStructure() {
     });
 }
 
-function setupPersonTable() {
+function setupSocialTable() {
     $('#social').DataTable( {
         "ajax": "/adorationSecure/getSocialTable",
         "language": {
@@ -87,10 +87,21 @@ function setupPersonTable() {
             }
         ]
     } );
+    var filter = findGetParameter("filter");
+    if ((filter != null) && (filter.length > 0)) {
+        var table = $('#social').DataTable();
+        table.search(filter).draw();
+    }
 }
 
 function processEntityUpdated() {
-    window.location.pathname = "/adorationSecure/social"
+    var table = $('#social').DataTable();
+    var filter = table.search(); //preserve filter
+    var path = "/adorationSecure/social";
+    if (typeof filter != "undefined" && filter.length > 0) {
+        path = path + "?filter=" + filter;
+    }
+    window.location = path;
 }
 
 function changeHistoryClick(data) {
@@ -325,10 +336,6 @@ function saveChanges() {
         var obj = JSON.parse(xhr.responseText);
         alert(obj.entityUpdate);
     });
-}
-
-function processEntityUpdated() {
-    window.location.pathname = "/adorationSecure/social"
 }
 
 function valueChanged(theObject, type) {

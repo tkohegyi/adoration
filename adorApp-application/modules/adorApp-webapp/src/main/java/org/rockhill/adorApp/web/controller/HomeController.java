@@ -63,11 +63,6 @@ public class HomeController {
         return "myInfoMyAccounts";
     }
 
-    @RequestMapping(value = "/adoration/myInfoMyProfile", method = RequestMethod.GET)
-    public String myInfoMyProfile() {
-        return "myInfoMyProfile";
-    }
-
     @ResponseBody
     @RequestMapping(value = "/adoration/getLoggedInUserInfo", method = {RequestMethod.GET})
     public Map<String, Collection<String>> getLoggedInUserInfo(HttpSession httpSession, HttpServletResponse httpServletResponse

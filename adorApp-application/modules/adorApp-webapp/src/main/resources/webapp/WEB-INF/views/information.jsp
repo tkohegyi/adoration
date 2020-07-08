@@ -25,16 +25,16 @@
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 	<div class="centerwidediv" align="center">
         <legend class="message-legend h4"d>Információk</legend>
-		<p>
-			Az ön neve: ???<br/>
-			Státusza:???? <br/>
-		</p>
+			<div id="name">...</div><br/>
+			<div id="status">...</div><br/>
 	</div>
 	<div class="centerwidediv" align="center">
         <legend class="message-legend h4"d>Vállalt órák</legend>
-		<p>
-			Ide egy táblázat fog jönni...
-		</p>
+		<p><table><tbody>
+		    <tr class="tableHead"><th colspan="3">Vállalt órám/óráim:</th><th colspan="3">Órafelelős:</th></tr>
+		    <tr class="tableHead"><th>Azonosítóm:</th><th>Nap:</th><th>Óra:</th><th>Név:</th><th>Telefon:</th><th>E-mail:</th></tr>
+		    <tr id="offeredHours"/>
+		</tbody></table></p>
 	</div>
 	<div class="centerwidediv" align="center">
         <legend class="message-legend h4"d>Napszak koordinátorok elérhetősége</legend>

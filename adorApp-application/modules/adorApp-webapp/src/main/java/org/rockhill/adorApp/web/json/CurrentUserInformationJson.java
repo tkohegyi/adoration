@@ -1,5 +1,7 @@
 package org.rockhill.adorApp.web.json;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
+
 public class CurrentUserInformationJson {
     public boolean isLoggedIn;
     public boolean isAuthorized;
@@ -29,5 +31,9 @@ public class CurrentUserInformationJson {
         isRegisteredAdorator = false;
         isAdoratorLeader = false;
         isAdoratorAdmin = false;
+    }
+
+    public boolean isPrivilegedUser() {
+        return isAdoratorLeader || isAdoratorAdmin;
     }
 }

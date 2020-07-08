@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.Optional;
 
 /**
  * Controller for accessing the application log files.
@@ -63,7 +64,7 @@ public class AdoratorsController extends ControllerBase {
      */
     @ResponseBody
     @RequestMapping(value = "/adorationSecure/getPersonTable", method = {RequestMethod.GET, RequestMethod.POST})
-    public TableDataInformationJson getPersonTable(HttpSession httpSession) {
+    public TableDataInformationJson getPersonTable(HttpSession httpSession, @RequestParam("filter") Optional<String> filter) {
         TableDataInformationJson content = null;
         if (isAdoratorAdmin(currentUserProvider, httpSession)) {
             //can get the person table

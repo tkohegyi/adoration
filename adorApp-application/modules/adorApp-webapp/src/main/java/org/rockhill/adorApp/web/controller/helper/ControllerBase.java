@@ -19,6 +19,11 @@ public class ControllerBase {
         return currentUserInformationJson.isAdoratorAdmin;
     }
 
+    public Boolean isRegisteredAdorator(CurrentUserProvider currentUserProvider, HttpSession httpSession) {
+        CurrentUserInformationJson currentUserInformationJson = currentUserProvider.getUserInformation(httpSession);
+        return currentUserInformationJson.isRegisteredAdorator;
+    }
+
     public String getLanguageCode(CurrentUserProvider currentUserProvider, HttpSession httpSession) {
         CurrentUserInformationJson currentUserInformationJson = currentUserProvider.getUserInformation(httpSession);
         return currentUserInformationJson.languageCode;
