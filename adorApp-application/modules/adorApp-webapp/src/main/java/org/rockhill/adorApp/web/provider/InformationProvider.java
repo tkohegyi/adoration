@@ -58,14 +58,20 @@ public class InformationProvider {
             informationJson.currentHourList = businessWithLink.getLinksOfHour(hourId);
             informationJson.futureHourList = businessWithLink.getLinksOfHour(hourId + 1);
             Set<Long> personIds = new HashSet<>();
-            for (Link l: informationJson.linkList) {
-                personIds.add(l.getPersonId());
+            if (informationJson.linkList != null) {
+                for (Link l: informationJson.linkList) {
+                    personIds.add(l.getPersonId());
+                }
             }
-            for (Link l: informationJson.currentHourList) {
-                personIds.add(l.getPersonId());
+            if (informationJson.currentHourList != null) {
+                for (Link l: informationJson.currentHourList) {
+                    personIds.add(l.getPersonId());
+                }
             }
-            for (Link l: informationJson.futureHourList) {
-                personIds.add(l.getPersonId());
+            if (informationJson.futureHourList != null) {
+                for (Link l: informationJson.futureHourList) {
+                    personIds.add(l.getPersonId());
+                }
             }
             Iterator<Long> ppl = personIds.iterator();
             List<PersonJson> relatedPersonList = new LinkedList<>();
