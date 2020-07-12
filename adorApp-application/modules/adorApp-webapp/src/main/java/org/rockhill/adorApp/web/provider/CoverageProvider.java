@@ -1,6 +1,10 @@
 package org.rockhill.adorApp.web.provider;
 
-import org.rockhill.adorApp.database.business.*;
+import org.rockhill.adorApp.database.business.BusinessWithAuditTrail;
+import org.rockhill.adorApp.database.business.BusinessWithLink;
+import org.rockhill.adorApp.database.business.BusinessWithNextGeneralKey;
+import org.rockhill.adorApp.database.business.BusinessWithPerson;
+import org.rockhill.adorApp.database.business.BusinessWithTranslator;
 import org.rockhill.adorApp.database.business.helper.enums.AdorationMethodTypes;
 import org.rockhill.adorApp.database.business.helper.enums.TranslatorDayNames;
 import org.rockhill.adorApp.database.tables.AuditTrail;
@@ -10,6 +14,7 @@ import org.rockhill.adorApp.web.json.CoverageInformationJson;
 import org.rockhill.adorApp.web.json.CurrentUserInformationJson;
 import org.rockhill.adorApp.web.json.DeleteEntityJson;
 import org.rockhill.adorApp.web.json.PersonCommitmentJson;
+import org.rockhill.adorApp.web.json.PersonJson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +41,8 @@ public class CoverageProvider {
 
     public CoverageInformationJson getCoverageInfo(CurrentUserInformationJson currentUserInformationJson) {
         CoverageInformationJson coverageInformationJson = new CoverageInformationJson();
+        //determine if adorator info is required
+        boolean canSeeAdorators = currentUserInformationJson.isLoggedIn && currentUserInformationJson.isAdoratorLeader;
 
         //fill the day names first
         coverageInformationJson.dayNames = new HashMap<>();
@@ -47,32 +54,57 @@ public class CoverageProvider {
 
         //fill the hour coverage information
         List<Link> linkList = businessWithLink.getLinkList();
-        coverageInformationJson.hours = new HashMap<>();
+        coverageInformationJson.visibleHours = new HashMap<>();
+        coverageInformationJson.allHours = new HashMap<>();
         coverageInformationJson.onlineHours = new HashMap<>();
+        coverageInformationJson.adorators = new HashMap<>();
         //ensure that we have initial info about all the hours
         for (int i = 0; i < 168; i++) {
-            coverageInformationJson.hours.put(i, 0);
-            coverageInformationJson.onlineHours.put(i, 0);
+            coverageInformationJson.visibleHours.put(i, 0);
+            coverageInformationJson.allHours.put(i, new HashSet<>());
+            coverageInformationJson.onlineHours.put(i, new HashSet<>());
         }
         for (Link link : linkList) {
             Integer hourId = link.getHourId();
             if (AdorationMethodTypes.getTypeFromId(link.getType()) == AdorationMethodTypes.PHYSICAL) {
-                if (link.getPriority() < 3) { //for physical we ask priority 1,2 too
-                    if (coverageInformationJson.hours.containsKey(hourId)) {
-                        //we already have this in the map
-                        coverageInformationJson.hours.put(hourId, coverageInformationJson.hours.get(hourId) + 1);
-                    } else {
-                        //we don't have this in our map, data error !
-                        logger.warn("Unexpected row in Link table, with Id:" + link.getId());
+                //fill all hours first, if that is necessary
+                if (coverageInformationJson.allHours.containsKey(hourId)) {
+                    //we already have this in the map
+                    if (canSeeAdorators) {
+                        Set<Long> idSet = coverageInformationJson.allHours.get(hourId);
+                        idSet.add(link.getPersonId());
                     }
+                } else {
+                    //we don't have this in our map, data error !
+                    logger.warn("Unexpected row in Link table, with Id:" + link.getId());
+                }
+                //fill visible hours
+                if (link.getPriority() < 3) { //for physical we ask priority 1,2 too
+                    if (coverageInformationJson.visibleHours.containsKey(hourId)) {
+                        //we already have this in the map
+                        coverageInformationJson.visibleHours.put(hourId, coverageInformationJson.visibleHours.get(hourId) + 1);
+                    } //else part already handled at allHours
                 }
             } else {//AdorationMethodTypes.ONLINE
                 if (coverageInformationJson.onlineHours.containsKey(hourId)) {
                     //we already have this in the map
-                    coverageInformationJson.onlineHours.put(hourId, coverageInformationJson.onlineHours.get(hourId) + 1);
+                    Set<Long> idSet = coverageInformationJson.onlineHours.get(hourId);
+                    if (canSeeAdorators) {
+                        idSet.add(link.getPersonId()); //we add real ids only if user can see them
+                    } else { //otherwise we use a fake id
+                        idSet.add(Long.valueOf(0));
+                    }
                 } else {
                     //we don't have this in our map, data error !
                     logger.warn("Unexpected row in Link table, with Id:" + link.getId());
+                }
+            }
+            //fill adorator info, now only for leaders (for the rest it is problematic, who can see what)
+            if (canSeeAdorators) {
+                Person p = businessWithPerson.getPersonById(link.getPersonId());
+                if (p != null && !coverageInformationJson.adorators.containsKey(p.getId())) {
+                    PersonJson personJson = new PersonJson(p, currentUserInformationJson.isPrivilegedUser());
+                    coverageInformationJson.adorators.put(p.getId(), personJson);
                 }
             }
         }

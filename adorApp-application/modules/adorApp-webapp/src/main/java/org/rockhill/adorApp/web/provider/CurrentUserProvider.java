@@ -38,6 +38,7 @@ public class CurrentUserProvider {
         registeredAdorator.add(AdoratorStatusTypes.ADORATOR_HOURLY_COORDINATOR);
         registeredAdorator.add(AdoratorStatusTypes.ADORATOR_SPIRITUAL_COORDINATOR);
         registeredAdorator.add(AdoratorStatusTypes.ADORATOR);
+        registeredAdorator.add(AdoratorStatusTypes.ADORATOR_EMPHASIZED);
 
         leaders = new HashSet<>();
         leaders.add(AdoratorStatusTypes.ADORATOR_ADMIN);
@@ -45,6 +46,7 @@ public class CurrentUserProvider {
         leaders.add(AdoratorStatusTypes.ADORATOR_DAILY_COORDINATOR);
         leaders.add(AdoratorStatusTypes.ADORATOR_HOURLY_COORDINATOR);
         leaders.add(AdoratorStatusTypes.ADORATOR_SPIRITUAL_COORDINATOR);
+        leaders.add(AdoratorStatusTypes.ADORATOR_EMPHASIZED);
 
         admins = new HashSet<>();
         admins.add(AdoratorStatusTypes.ADORATOR_ADMIN);

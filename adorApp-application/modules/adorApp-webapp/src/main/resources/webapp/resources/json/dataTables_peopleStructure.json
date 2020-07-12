@@ -39,8 +39,10 @@
       "mandatory": true,
       "selection": [
         { "id": 0, "value": "Külsős/Alkalmi-Adoráló" },
+        { "id": 10, "value": "Céltalanul regisztrált" },
         { "id": 1, "value": "Jelentkező-Adoráló" },
         { "id": 2, "value": "Adoráló" },
+        { "id": 11, "value": "Kiemelt adoráló" },
         { "id": 3, "value": "Óra-koordinátor" },
         { "id": 4, "value": "Napszak-koordinátor" },
         { "id": 5, "value": "Fő koordinátor" },
