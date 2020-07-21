@@ -1,23 +1,18 @@
 package org.rockhill.adorApp.web.provider;
 
-import org.rockhill.adorApp.database.business.BusinessWithAuditTrail;
 import org.rockhill.adorApp.database.business.BusinessWithLink;
 import org.rockhill.adorApp.database.business.BusinessWithPerson;
-import org.rockhill.adorApp.database.business.BusinessWithSocial;
+import org.rockhill.adorApp.database.business.BusinessWithTranslator;
 import org.rockhill.adorApp.database.business.helper.enums.AdoratorStatusTypes;
-import org.rockhill.adorApp.database.business.helper.enums.SocialStatusTypes;
-import org.rockhill.adorApp.database.tables.AuditTrail;
+import org.rockhill.adorApp.database.business.helper.enums.TranslatorDayNames;
 import org.rockhill.adorApp.database.tables.Link;
 import org.rockhill.adorApp.database.tables.Person;
-import org.rockhill.adorApp.database.tables.Social;
 import org.rockhill.adorApp.web.json.CurrentUserInformationJson;
-import org.rockhill.adorApp.web.json.DeleteEntityJson;
 import org.rockhill.adorApp.web.json.InformationJson;
 import org.rockhill.adorApp.web.json.PersonJson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpSession;
@@ -32,25 +27,28 @@ public class InformationProvider {
     BusinessWithPerson businessWithPerson;
     @Autowired
     BusinessWithLink businessWithLink;
+    @Autowired
+    BusinessWithTranslator businessWithTranslator;
 
-    public Object getInformation(CurrentUserInformationJson currentUserProvider, HttpSession httpSession) {
+    public Object getInformation(CurrentUserInformationJson currentUserInformationJson, HttpSession httpSession) {
         InformationJson informationJson = new InformationJson();
         //get name and status
-        Long personId = currentUserProvider.personId;
+        Long personId = currentUserInformationJson.personId;
         Person person = businessWithPerson.getPersonById(personId);
         if (person == null) {
             //wow, we should not be here
-            logger.warn("User got access to prohibited area: " + currentUserProvider.loggedInUserName);
+            logger.warn("User got access to prohibited area: " + currentUserInformationJson.loggedInUserName);
             informationJson.error = "access denied";
         } else {
             //we have person info
             informationJson.name = person.getName();
             informationJson.status = AdoratorStatusTypes.getTranslatedString(person.getAdorationStatus());
+            informationJson.id = person.getId().toString();
             informationJson.linkList = businessWithLink.getLinksOfPerson(person);
             List<Person> leadership = businessWithPerson.getLeadership();
             List<PersonJson> leadershipPerson = new LinkedList<>();
             for (Person p: leadership) {
-                leadershipPerson.add(new PersonJson(p, currentUserProvider.isPrivilegedUser()));
+                leadershipPerson.add(new PersonJson(p, currentUserInformationJson.isPrivilegedUser()));
             }
             Calendar cal = Calendar.getInstance();
             cal.setFirstDayOfWeek(0); //ensure that Sunday is the first day of the week
@@ -79,12 +77,20 @@ public class InformationProvider {
                 Long id = ppl.next();
                 Person p = businessWithPerson.getPersonById(id);
                 if (p != null) {
-                    relatedPersonList.add(new PersonJson(p,currentUserProvider.isPrivilegedUser()));
+                    relatedPersonList.add(new PersonJson(p,currentUserInformationJson.isPrivilegedUser()));
                 } else {
                     logger.warn("Person ID usage found without real Person, id: " + id.toString());
                 }
             }
             informationJson.relatedPersonList = relatedPersonList;
+            //fill the day names first
+            informationJson.dayNames = new HashMap<>();
+            for (TranslatorDayNames dayName : TranslatorDayNames.values()) {
+                String textId = dayName.toString();
+                String value = businessWithTranslator.getTranslatorValue(currentUserInformationJson.languageCode, textId, textId);
+                informationJson.dayNames.put(dayName.getDayValue(), value);
+            }
+
         }
         return informationJson;
     }

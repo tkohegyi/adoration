@@ -118,6 +118,7 @@
   <script src="./../resources/js/external/jquery-3.4.1.js"></script>
   <script src="./../resources/js/external/bootstrap-4.3.1.min.js"></script>
   <script src="./../resources/js/common.js"></script>
+  <script src="./../resources/js/coverage.js"></script>
   <script src="./../resources/js/home.js"></script>
 </body>
 </html>

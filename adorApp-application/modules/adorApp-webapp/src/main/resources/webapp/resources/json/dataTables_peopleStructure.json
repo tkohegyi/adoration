@@ -63,7 +63,7 @@
       "id": "isAnonymous",
       "text": "Anonymous?",
       "type": "i/n-boolean",
-      "helpText": "Anonymous-ként jelenljen meg?",
+      "helpText": "Anonymous-ként jelenjen meg?",
       "mandatory": true,
       "edit": {
         "visible" : true

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
@@ -54,7 +55,10 @@ public class HomeController {
     }
 
     @RequestMapping(value = "/adoration/e404", method = {RequestMethod.GET, RequestMethod.POST})
-    public String e404() {
+    public String e404(HttpServletRequest httpServletRequest) {
+        if (httpServletRequest != null && httpServletRequest.getRemoteAddr() != null) {
+            logger.info("Strange request arrived from: " + httpServletRequest.getRemoteAddr());
+        }
         return "E404";
     }
 

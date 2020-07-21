@@ -508,16 +508,16 @@ function saveNewHour() {
     b.priority = $("#newPriority").val();
     b.adminComment = $("#newAdminComment").val();
     b.publicComment = $("#newPublicComment").val();
-    if ($("#newOnline").prop("checked").toString() == "true") {
-        b.type = 1;
-    } else {
-        b.type = 0;
-    }
+    b.type = $("#newType").val();
     // b is ready
     //validation
     if (b.priority == "") {
         bad = 1;
         eStr = "Prioritás megadása kötelező!";
+    }
+    if (b.type == "") {
+        bad = 1;
+        eStr = "Típus megadása kötelező!";
     }
     //validation done (cannot validate more at client level)
     if (bad == 1) {
@@ -571,11 +571,7 @@ function clickHourEdit(hourId) {
         $("#newPriority").val(hourInfo[i].priority);
         $("#newAdminComment").val(hourInfo[i].adminComment);
         $("#newPublicComment").val(hourInfo[i].publicComment);
-        if (hourInfo[i].type > 0) {
-            $("#newOnline").prop("checked", true);
-        } else {
-            $("#newOnline").removeProp("checked");
-        }
+        $("#newType").val(hourInfo[i].type);
         showNewPartOfModal();
         $("#editHourId").val(hourInfo[i].id);
         $('#deleteHourButton').show();

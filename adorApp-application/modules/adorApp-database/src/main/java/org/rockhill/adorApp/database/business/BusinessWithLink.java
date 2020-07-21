@@ -21,14 +21,21 @@ import java.util.List;
 @Component
 public class BusinessWithLink {
     private final Logger logger = LoggerFactory.getLogger(BusinessWithLink.class);
+    public static final boolean WITHOUT_COORDINATORS = false;
+    public static final boolean WITH_COORDINATORS = true;
 
-    public List<Link> getLinkList() {
+
+    public List<Link> getLinkList(boolean withCoordinators) {
         List<Link> result = null;
         SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
         if (sessionFactory != null) {
             Session session = sessionFactory.openSession();
             session.beginTransaction();
-            result = (List<Link>) session.createQuery("from Link").list();
+            String query = "from Link";
+            if (!withCoordinators) {
+                query = query + " where type < 2";
+            }
+            result = (List<Link>) session.createQuery(query).list();
             session.getTransaction().commit();
             session.close();
         }

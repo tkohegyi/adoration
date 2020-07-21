@@ -27,7 +27,6 @@ public class CoverageProvider {
 
     private final Logger logger = LoggerFactory.getLogger(CoverageProvider.class);
 
-
     @Autowired
     BusinessWithTranslator businessWithTranslator;
     @Autowired
@@ -53,7 +52,7 @@ public class CoverageProvider {
         }
 
         //fill the hour coverage information
-        List<Link> linkList = businessWithLink.getLinkList();
+        List<Link> linkList = businessWithLink.getLinkList(BusinessWithLink.WITHOUT_COORDINATORS);
         coverageInformationJson.visibleHours = new HashMap<>();
         coverageInformationJson.allHours = new HashMap<>();
         coverageInformationJson.onlineHours = new HashMap<>();
@@ -85,7 +84,8 @@ public class CoverageProvider {
                         coverageInformationJson.visibleHours.put(hourId, coverageInformationJson.visibleHours.get(hourId) + 1);
                     } //else part already handled at allHours
                 }
-            } else {//AdorationMethodTypes.ONLINE
+            }
+            if (AdorationMethodTypes.getTypeFromId(link.getType()) == AdorationMethodTypes.ONLINE) {
                 if (coverageInformationJson.onlineHours.containsKey(hourId)) {
                     //we already have this in the map
                     Set<Long> idSet = coverageInformationJson.onlineHours.get(hourId);
@@ -113,7 +113,7 @@ public class CoverageProvider {
 
     public Object getPersonCommitmentAsObject(Long id, String languageCode) {
         PersonCommitmentJson personCommitmentJson = new PersonCommitmentJson();
-        List<Link> linkList = businessWithLink.getLinkList();
+        List<Link> linkList = businessWithLink.getLinkList(BusinessWithLink.WITH_COORDINATORS);
         Set<Integer> committedHours = new HashSet<>();
         //first fill hours of the person
         for (Link link : linkList) {
@@ -215,7 +215,7 @@ public class CoverageProvider {
         //type
         newInt = l.getType();
         oldInt = oldLink.getType();
-        if ((newInt < 0) || (newInt > 1)) {
+        if ((newInt < 0) || (newInt > 3)) {
             logger.info("User:" + currentUserInformationJson.userName + " tried to create/update Link with bad type.");
             return null;
         }

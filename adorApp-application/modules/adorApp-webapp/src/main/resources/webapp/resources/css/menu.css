@@ -123,4 +123,24 @@ hr {
 div.dataTables_wrapper {
         /* width: 1200px; */
         margin: 0 auto;
-    }
+}
+
+.infoTable {
+    border: 1px solid black;
+    border-collapse: collapse;
+    padding: 2px;
+    text-align: center;
+}
+
+.even {
+    background-color: #67beff;
+}
+
+.odd {
+    background-color: #67deff;
+}
+
+.tableHead {
+    background-color: #f8a33e;
+    color: black;
+}

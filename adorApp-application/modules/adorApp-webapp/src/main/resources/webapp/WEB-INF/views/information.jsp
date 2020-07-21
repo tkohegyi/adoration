@@ -24,13 +24,16 @@
     <%@include file="../include/navbar.html" %>
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 	<div class="centerwidediv" align="center">
+	    <br/>
         <legend class="message-legend h4"d>Információk</legend>
-			<div id="name">...</div><br/>
-			<div id="status">...</div><br/>
+			<div id="name">...</div>
+			<div id="status">...</div>
+			<div id="adoratorId">...</div><br/>
 	</div>
 	<div class="centerwidediv" align="center">
         <legend class="message-legend h4"d>Vállalt órák</legend>
-		<p><table><tbody>
+        <div id="noOfferedHours">Önnek nincs vállalt órája.</div>
+		<p><table id="yesOfferedHours"><tbody>
 		    <tr class="tableHead"><th colspan="3">Vállalt órám/óráim:</th><th colspan="3">Órafelelős:</th></tr>
 		    <tr class="tableHead"><th>Azonosítóm:</th><th>Nap:</th><th>Óra:</th><th>Név:</th><th>Telefon:</th><th>E-mail:</th></tr>
 		    <tr id="offeredHours"/>
