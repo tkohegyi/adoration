@@ -40,9 +40,9 @@ function getInformation() {
                 var hourName = getHourName(offeredHour.hourId);
                 tr = $("<tr/>");
                 if (i % 2 == 0) {
-                    tr.addClass("even");
+                    tr.addClass("evenInfo");
                 } else {
-                    tr.addClass("odd");
+                    tr.addClass("oddInfo");
                 }
                 tr.append($("<td class=\"infoTable\">" + dayName + "</td><td class=\"infoTable\">" + hourName + "<td class=\"infoTable\">?</td><td class=\"infoTable\">?</td><td class=\"infoTable\">?</td>"));
                 $("#yesOfferedHours").append(tr);

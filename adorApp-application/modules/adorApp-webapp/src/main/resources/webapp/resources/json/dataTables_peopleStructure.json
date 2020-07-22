@@ -39,23 +39,19 @@
       "mandatory": true,
       "selection": [
         { "id": 0, "value": "Külsős/Alkalmi-Adoráló" },
-        { "id": 10, "value": "Céltalanul regisztrált" },
+        { "id": 5, "value": "Céltalanul regisztrált" },
         { "id": 1, "value": "Jelentkező-Adoráló" },
         { "id": 2, "value": "Adoráló" },
-        { "id": 11, "value": "Kiemelt adoráló" },
-        { "id": 3, "value": "Óra-koordinátor" },
-        { "id": 4, "value": "Napszak-koordinátor" },
-        { "id": 5, "value": "Fő koordinátor" },
-        { "id": 6, "value": "Spiritualis vezető" },
-        { "id": 7, "value": "Adminisztrátor" },
-        { "id": 8, "value": "Ex-Adoráló" },
-        { "id": 9, "value": "Elhunyt" }
+        { "id": 3, "value": "Ex-Adoráló" },
+        { "id": 4, "value": "Elhunyt" },
+        { "id": 6, "value": "Kiemelt adoráló" },
+        { "id": 7, "value": "Adminisztrátor" }
       ],
       "edit": {
         "visible" : true
       },
       "new": {
-        "enabledSelections": [0,1,2,3,4,5,6,7,8],
+        "enabledSelections": [0,1,2,3,4,5,6,7],
         "default": "2"
       }
     },

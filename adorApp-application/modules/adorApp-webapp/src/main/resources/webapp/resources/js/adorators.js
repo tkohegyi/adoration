@@ -58,17 +58,14 @@ function setupPersonTable() {
                 "render": function ( data, type, row ) {
                     var z;
                     switch (data) {
+                    case 0: z = 'Külsős/Alkalmi-Adoráló'; break;
                     case 1: z = 'Jelentkező-Adoráló'; break;
                     case 2: z = 'Adoráló'; break;
-                    case 3: z = 'Óra-koordinátor'; break;
-                    case 4: z = 'Napszak-koordinátor'; break;
-                    case 5: z = 'Fő koordinátor'; break;
-                    case 6: z = 'Spiritualis vezető'; break;
+                    case 3: z = 'Ex-Adoráló'; break;
+                    case 4: z = 'Elhunyt'; break;
+                    case 5: z = 'Céltalanul regisztrált'; break;
+                    case 6: z = 'Kiemelt adoráló'; break;
                     case 7: z = 'Adminisztrátor'; break;
-                    case 8: z = 'Ex-Adoráló'; break;
-                    case 9: z = 'Elhunyt'; break;
-                    case 10: z = 'Céltalanul regisztrált'; break;
-                    case 11: z = 'Kiemelt adoráló'; break;
                     default: z = '???';
                     }
                     return z;
@@ -508,16 +505,16 @@ function saveNewHour() {
     b.priority = $("#newPriority").val();
     b.adminComment = $("#newAdminComment").val();
     b.publicComment = $("#newPublicComment").val();
-    b.type = $("#newType").val();
+    if ($("#newOnline").prop("checked").toString() == "true") {
+        b.type = 1;
+    } else {
+        b.type = 0;
+    }
     // b is ready
     //validation
     if (b.priority == "") {
         bad = 1;
         eStr = "Prioritás megadása kötelező!";
-    }
-    if (b.type == "") {
-        bad = 1;
-        eStr = "Típus megadása kötelező!";
     }
     //validation done (cannot validate more at client level)
     if (bad == 1) {
@@ -571,7 +568,11 @@ function clickHourEdit(hourId) {
         $("#newPriority").val(hourInfo[i].priority);
         $("#newAdminComment").val(hourInfo[i].adminComment);
         $("#newPublicComment").val(hourInfo[i].publicComment);
-        $("#newType").val(hourInfo[i].type);
+        if (hourInfo[i].type > 0) {
+            $("#newOnline").prop("checked", true);
+        } else {
+            $("#newOnline").removeProp("checked");
+        }
         showNewPartOfModal();
         $("#editHourId").val(hourInfo[i].id);
         $('#deleteHourButton').show();

@@ -36,6 +36,7 @@
     <a id="people-button" class="btn btn-primary" href="/adorationSecure/adorators">Adorálók</a>
     <a id="link-button" class="btn btn-primary" href="/adorationSecure/links">Órák</a>
     <a id="social-button" class="btn btn-primary" href="/adorationSecure/social">Azonosítások</a>
+    <a id="coordinator-button" class="btn btn-primary" href="/adorationSecure/coordinators">Koordinátorok</a>
     <a id="audit-button" class="btn btn-primary" href="/adorationSecure/audit">Audit Log</a>
     <a id="translator-button" class="btn btn-primary" href="/adorationSecure/translator">Nyelvek</a>
     </div>

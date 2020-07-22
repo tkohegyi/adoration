@@ -226,14 +226,7 @@
                                 <option value="22">22</option>
                                 <option value="23">23</option>
                               </select></td></tr>
-                          <tr><td>Típus</td><td>
-                                <select id="newType">
-                                  <option value="0">Physical</option>
-                                  <option value="1">Online</option>
-                                  <option value="2">Hourly Coordinator</option>
-                                  <option value="3">Daily Coordinator</option>
-                                </select>
-                            </td></tr>
+                          <tr><td>Online</td><td><input type="checkbox" id="newOnline" value=""></td></tr>
                           <tr><td>Prioritás (1..)</td><td>
                             <input type="number" id="newPriority" min="1" max="25">
                           </td></tr>

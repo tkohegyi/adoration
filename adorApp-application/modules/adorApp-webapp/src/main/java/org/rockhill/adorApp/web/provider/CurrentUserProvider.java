@@ -33,24 +33,15 @@ public class CurrentUserProvider {
     CurrentUserProvider() {
         registeredAdorator = new HashSet<>();
         registeredAdorator.add(AdoratorStatusTypes.ADORATOR_ADMIN);
-        registeredAdorator.add(AdoratorStatusTypes.ADORATOR_MAIN_COORDINATOR);
-        registeredAdorator.add(AdoratorStatusTypes.ADORATOR_DAILY_COORDINATOR);
-        registeredAdorator.add(AdoratorStatusTypes.ADORATOR_HOURLY_COORDINATOR);
-        registeredAdorator.add(AdoratorStatusTypes.ADORATOR_SPIRITUAL_COORDINATOR);
         registeredAdorator.add(AdoratorStatusTypes.ADORATOR);
         registeredAdorator.add(AdoratorStatusTypes.ADORATOR_EMPHASIZED);
 
         leaders = new HashSet<>();
         leaders.add(AdoratorStatusTypes.ADORATOR_ADMIN);
-        leaders.add(AdoratorStatusTypes.ADORATOR_MAIN_COORDINATOR);
-        leaders.add(AdoratorStatusTypes.ADORATOR_DAILY_COORDINATOR);
-        leaders.add(AdoratorStatusTypes.ADORATOR_HOURLY_COORDINATOR);
-        leaders.add(AdoratorStatusTypes.ADORATOR_SPIRITUAL_COORDINATOR);
         leaders.add(AdoratorStatusTypes.ADORATOR_EMPHASIZED);
 
         admins = new HashSet<>();
         admins.add(AdoratorStatusTypes.ADORATOR_ADMIN);
-        admins.add(AdoratorStatusTypes.ADORATOR_MAIN_COORDINATOR);
     }
 
     public CurrentUserInformationJson getUserInformation(HttpSession httpSession) {

@@ -132,11 +132,11 @@ div.dataTables_wrapper {
     text-align: center;
 }
 
-.even {
+.evenInfo {
     background-color: #67beff;
 }
 
-.odd {
+.oddInfo {
     background-color: #67deff;
 }
 

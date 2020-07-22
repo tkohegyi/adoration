@@ -215,7 +215,7 @@ public class CoverageProvider {
         //type
         newInt = l.getType();
         oldInt = oldLink.getType();
-        if ((newInt < 0) || (newInt > 3)) {
+        if ((newInt < 0) || (newInt > 1)) {
             logger.info("User:" + currentUserInformationJson.userName + " tried to create/update Link with bad type.");
             return null;
         }
