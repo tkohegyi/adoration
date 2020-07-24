@@ -56,9 +56,9 @@ public class HomeController {
 
     @RequestMapping(value = "/adoration/e404", method = {RequestMethod.GET, RequestMethod.POST})
     public String e404(HttpServletRequest httpServletRequest) {
-        if (httpServletRequest != null && httpServletRequest.getRemoteAddr() != null) {
+/*        if (httpServletRequest != null && httpServletRequest.getRemoteAddr() != null) {
             logger.info("Strange request arrived from: " + httpServletRequest.getRemoteAddr());
-        }
+        } */
         return "E404";
     }
 

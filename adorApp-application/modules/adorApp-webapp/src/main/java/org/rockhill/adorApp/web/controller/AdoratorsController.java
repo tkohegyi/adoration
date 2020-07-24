@@ -242,7 +242,7 @@ public class AdoratorsController extends ControllerBase {
                     result = new ResponseEntity<String>(getJsonString(resultString, JSON_RESPONSE_DELETE), responseHeaders, HttpStatus.CREATED);
                 } else {
                     resultString = "Cannot delete Person, please check and retry.";
-                    logger.info("Cannot delete Link - data issue.");
+                    logger.info("Cannot delete Person - data issue.");
                     result = new ResponseEntity<String>(getJsonString(resultString, JSON_RESPONSE_DELETE), responseHeaders, HttpStatus.BAD_REQUEST);
                 }
             }
@@ -251,7 +251,7 @@ public class AdoratorsController extends ControllerBase {
             result = new ResponseEntity<String>(getJsonString(resultString, JSON_RESPONSE_DELETE), responseHeaders, HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             logger.warn("Error happened at delete Person call", e);
-            resultString = "Cannot delete Person Commitment, pls contact to maintainers.";
+            resultString = "Cannot delete Person, pls contact to maintainers.";
             result = new ResponseEntity<String>(getJsonString(resultString, JSON_RESPONSE_DELETE), responseHeaders, HttpStatus.BAD_REQUEST);
         }
         return result;

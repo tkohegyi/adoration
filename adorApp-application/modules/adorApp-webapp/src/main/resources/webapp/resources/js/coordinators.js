@@ -1,55 +1,59 @@
 $(document).ready(function() {
     $("#nav-application-log").addClass("active");
     setupMenu();
-    setupPersonTable();
+    setupTable();
     loadStructure();
 });
 
 var structureInfo;
-var imgSrc; //used by renderer
-var hourInfo;
+
+jQuery.extend( jQuery.fn.dataTableExt.oSort, {
+    "coordinator-pre": function ( a ) {
+        var str = "st";
+        var startPos = a.indexOf(str) + str.length;
+        var endPos = a.indexOf("end");
+        str = a.substring(startPos, endPos);
+        return parseInt( str );
+    },
+    "coordinator-desc": function ( a, b ) {
+        return ((a < b) ? -1 : ((a > b) ? 1 : 0));
+    },
+    "coordinator-asc": function ( a, b ) {
+        return ((a < b) ? 1 : ((a > b) ? -1 : 0));
+    }
+} );
 
 function loadStructure() {
-    $.get("/resources/json/dataTables_peopleStructure.json", function(data) {
+    $.get("/resources/json/dataTables_coordinatorStructure.json", function(data) {
         structureInfo = data;
     });
 }
 
-function setupPersonTable() {
-    $('#person').DataTable( {
-        "ajax": "/adorationSecure/getPersonTable",
+function setupTable() {
+    $('#coordinator').DataTable( {
+        "ajax": "/adorationSecure/getCoordinators",
         stateSave: true,
         "language": {
                     "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Hungarian.json"
              },
         "scrollX": true,
-        "lengthMenu": [[5, 50, 100, -1], [5, 50, 100, "All"]],
+        "lengthMenu": [[50, 100, -1], [50, 100, "All"]],
+        "order": [[ 1, "asc" ]],
         "columns": [
             { "data": "id" },
-            { "data": "name", "width": "200px" },
-            { "data": "adorationStatus" },
-            { "data": "mobile" },
-            { "data": "mobileVisible" },
-            { "data": "email" },
-            { "data": "emailVisible" },
-            { "data": "adminComment" },
-            { "data": "dhcSigned" },
-            { "data": "dhcSignedDate" },
-            { "data": "coordinatorComment" },
-            { "data": "visibleComment" },
-            { "data": "isAnonymous" },
-            { "data": "languageCode" }
+            { "data": "coordinatorType", "width": "200px" },
+            { "data": "personId" },
+            { "data": "personName" }
         ],
         "columnDefs": [
-            { type: 'numeric-id', targets: 0 },
+            { type: 'coordinator', targets: 1 },
             {
                 "className": "text-center",
-                "targets": [0,4,6,8,12,13]
+                "targets": [0,1,2,3]
             },
             {
                 "render": function ( data, type, row ) {
                     var z = "<button type=\"button\" class=\"btn btn-info btn-sm\" data-toggle=\"modal\" data-target=\"#editModal\" onclick=\"changeClick(" + data + ")\">" + data + "</button>";
-                    z = z + "<button type=\"button\" class=\"btn btn-warning btn-sm\" data-toggle=\"modal\" data-target=\"#timeModal\" onclick=\"changeTimeClick(" + data + ")\">Órák</button>";
                     z = z + "<button type=\"button\" class=\"btn btn-secondary btn-sm\" data-toggle=\"modal\" data-target=\"#historyModal\" onclick=\"changeHistoryClick(" + data + ")\">Log</button>";
                     return z;
                 },
@@ -59,49 +63,47 @@ function setupPersonTable() {
                 "render": function ( data, type, row ) {
                     var z;
                     switch (data) {
-                    case 0: z = 'Külsős/Alkalmi-Adoráló'; break;
-                    case 1: z = 'Jelentkező-Adoráló'; break;
-                    case 2: z = 'Adoráló'; break;
-                    case 3: z = 'Ex-Adoráló'; break;
-                    case 4: z = 'Elhunyt'; break;
-                    case 5: z = 'Céltalanul regisztrált'; break;
-                    case 6: z = 'Kiemelt adoráló'; break;
-                    case 7: z = 'Adminisztrátor'; break;
-                    default: z = '???';
+                    case "0": z = '<input type="hidden" value="st0end">0. óra órakoordinátora'; break;
+                    case "1": z = '<input type="hidden" value="st1end">1. óra órakoordinátora'; break;
+                    case "2": z = '<input type="hidden" value="st2end">2. óra órakoordinátora'; break;
+                    case "3": z = '<input type="hidden" value="st3end">3. óra órakoordinátora'; break;
+                    case "4": z = '<input type="hidden" value="st4end">4. óra órakoordinátora'; break;
+                    case "5": z = '<input type="hidden" value="st5end">5. óra órakoordinátora'; break;
+                    case "6": z = '<input type="hidden" value="st6end">6. óra órakoordinátora'; break;
+                    case "7": z = '<input type="hidden" value="st7end">7. óra órakoordinátora'; break;
+                    case "8": z = '<input type="hidden" value="st8end">8. óra órakoordinátora'; break;
+                    case "9": z = '<input type="hidden" value="st9end">9. óra órakoordinátora'; break;
+                    case "10": z = '<input type="hidden" value="st10end">10. óra órakoordinátora'; break;
+                    case "11": z = '<input type="hidden" value="st11end">11. óra órakoordinátora'; break;
+                    case "12": z = '<input type="hidden" value="st12end">12. óra órakoordinátora'; break;
+                    case "13": z = '<input type="hidden" value="st13end">13. óra órakoordinátora'; break;
+                    case "14": z = '<input type="hidden" value="st14end">14. óra órakoordinátora'; break;
+                    case "15": z = '<input type="hidden" value="st15end">15. óra órakoordinátora'; break;
+                    case "16": z = '<input type="hidden" value="st16end">16. óra órakoordinátora'; break;
+                    case "17": z = '<input type="hidden" value="st17end">17. óra órakoordinátora'; break;
+                    case "18": z = '<input type="hidden" value="st18end">18. óra órakoordinátora'; break;
+                    case "19": z = '<input type="hidden" value="st19end">19. óra órakoordinátora'; break;
+                    case "20": z = '<input type="hidden" value="st20end">20. óra órakoordinátora'; break;
+                    case "21": z = '<input type="hidden" value="st21end">21. óra órakoordinátora'; break;
+                    case "22": z = '<input type="hidden" value="st22end">22. óra órakoordinátora'; break;
+                    case "23": z = '<input type="hidden" value="st23end">23. óra órakoordinátora'; break;
+                    case "24": z = '<input type="hidden" value="st24end">Éjszakai napszak-koordinátor'; break;
+                    case "30": z = '<input type="hidden" value="st30end">Délelőtti napszak-koordinátor'; break;
+                    case "36": z = '<input type="hidden" value="st36end">Délutáni napszak-koordinátor'; break;
+                    case "42": z = '<input type="hidden" value="st42end">Esti napszak-koordinátor'; break;
+                    case "48": z = '<input type="hidden" value="st48end">Általános koordinátor'; break;
+                    case "96": z = '<input type="hidden" value="st96end">Spirituális vezető'; break;
+                    default: z = '<input type="hidden" value="st255end">???';
                     }
                     return z;
                 },
-                "targets": 2
-            },
-            {
-                "render": function ( data, type, row ) {
-                    var z;
-                    switch (data) {
-                    case true:
-                        imgSrc = "/resources/img/dark-green-check-mark-th.png"
-                        z = "<img alt=\"Igen\" src=\"" + imgSrc + "\" height=\"20\" width=\"20\" />";
-                        break;
-                    case false:
-                        imgSrc = "/resources/img/orange-cross-th.png";
-                        z = "<img alt=\"Nem\" src=\"" + imgSrc + "\" height=\"20\" width=\"20\" />";
-                        break;
-                    default: z = '???';
-                    }
-                    return z;
-                },
-                "targets": [4,6,8,12]
-            },
-            {
-                "render": function ( data, type, row ) {
-                    return getReadableLanguageCode(data);
-                },
-                "targets": 13
+                "targets": 1
             }
         ]
     } );
     var filter = findGetParameter("filter");
     if ((filter != null) && (filter.length > 0)) {
-        var table = $('#person').DataTable();
+        var table = $('#coordinator').DataTable();
         table.search(filter).draw();
     }
 }
@@ -151,7 +153,7 @@ function reBuildModal() {
     var editId = $("#editId").val(); //filled by the button's onclick method
     $.ajax({
         type: "GET",
-        url: '/adorationSecure/getPerson/' + editId,
+        url: '/adorationSecure/getCoordinator/' + editId,
         async: false,
         success: function(response) {
             retObj = response.data;
@@ -215,7 +217,6 @@ function reBuildModal() {
             c.append(r);
         }
     }
-
 }
 
 function reBuildAddModal() {
@@ -323,7 +324,7 @@ function saveChanges() {
 	var eStr = "";
     var bad = 0;
     if (typeof structureInfo == "undefined") {
-        alert("Cannot Save Person.");
+        alert("Cannot Save Coordinator.");
     }
     //we have structureInfo
     var info = structureInfo.info;
@@ -376,7 +377,7 @@ function saveChanges() {
     var header = $("meta[name='_csrf_header']").attr("content");
     beforeRequest();
     $.ajax({
-        url : '/adorationSecure/updatePerson',
+        url : '/adorationSecure/updateCoordinator',
         type : 'POST',
         async: false,
         contentType: 'application/json',
@@ -394,9 +395,9 @@ function saveChanges() {
 }
 
 function processEntityUpdated() {
-    var table = $('#person').DataTable();
+    var table = $('#coordinator').DataTable();
     var filter = table.search(); //preserve filter
-    var path = "/adorationSecure/adorators";
+    var path = "/adorationSecure/coordinators";
     if (typeof filter != "undefined" && filter.length > 0) {
         path = path + "?filter=" + filter;
     }
@@ -437,200 +438,19 @@ function changeTimeClick(data) {
    reBuildTimeModal(data);
 }
 
-function reBuildTimeModal(personId) {
-    $('#editHourPersonId').val(personId); //remember about who we are talking
-    $('#editHourId').val(0); //remember about who we are talking
-    var hc = $("<tbody id=\"timeContent\"/>");
-    $.get('/adorationSecure/getPersonCommitments/' + personId , function(data) {
-        if ((typeof data != "undefined") && (typeof data.data != "undefined") && (typeof data.data.linkedHours != "undefined")) {
-            hourInfo = data.data.linkedHours;;
-            var info2 = data.data.others;
-            var info3 = data.data.dayNames;
-            for (var i = 0; i < hourInfo.length; i++) {
-              var r = $("<tr onclick=\"clickHourEdit(" + hourInfo[i].hourId + ")\" />");
-              //day
-              var x = Math.floor(hourInfo[i].hourId / 24);
-              var d = $("<td>" + info3[x] + "</td>");r.append(d);
-              //hour
-              var x = hourInfo[i].hourId % 24;
-              var d = $("<td>" + x + "</td>");r.append(d);
-              //priority
-              var d = $("<td>" + hourInfo[i].priority + "</td>");r.append(d);
-              //type/online
-              var z;
-              if (hourInfo[i].type > 0) {
-                  imgSrc = "/resources/img/dark-green-check-mark-th.png"
-                  z = "<td><img alt=\"Igen\" src=\"" + imgSrc + "\" height=\"20\" width=\"20\" /></td>";
-              } else {
-                  imgSrc = "/resources/img/orange-cross-th.png";
-                  z = "<td><img alt=\"Nem\" src=\"" + imgSrc + "\" height=\"20\" width=\"20\" /></td>";
-              }
-              var d = $(z);r.append(d);
-              //other adorators
-              var d = $("<td>" + "TBD..." + "</td>");r.append(d);
-              //admin comment
-              var d = $("<td>" + hourInfo[i].adminComment + "</td>");r.append(d);
-              //public comment
-              var d = $("<td>" + hourInfo[i].publicComment + "</td>");r.append(d);
-              hc.append(r);
-            }
-            if (hourInfo.length == 0) {
-                showNewPartOfModal();
-            } else {
-                cancelNewPartOfModal();
-            }
-        } else { //logged out or other error at server side
-            alert( "User Logged out, please login again." );
-            window.location.pathname = "/adoration/"
-        }
-    });
-    $('#timeContent').replaceWith(hc);
-    $('#deleteHourButton').hide();
-}
-
 function cancelNewPartOfModal() {
-    $('#newTimeTable').hide(500);
     $('#newButton').show(500);
 }
 
 function showNewPartOfModal() {
-    $('#deleteHourButton').hide();
-    $("#editHourId").val(0);
-    $('#newTimeTable').show(500);
     $('#newButton').hide(500);
 }
 
-function saveNewHour() {
-    var b = {}; //empty object
-	//validations + prepare object
-	var eStr = "";
-    var bad = 0;
-    //let v;
-    b.id = $("#editHourId").val(); //filled by the button's onclick method, should be 0 in case of new, or the ID of the link in case of update
-    b.hourId = parseInt($("#newDay").find(":selected").val()) + parseInt($("#newHour").val());
-    b.personId = $("#editHourPersonId").val();
-    b.priority = $("#newPriority").val();
-    b.adminComment = $("#newAdminComment").val();
-    b.publicComment = $("#newPublicComment").val();
-    if ($("#newOnline").prop("checked").toString() == "true") {
-        b.type = 1;
-    } else {
-        b.type = 0;
-    }
-    // b is ready
-    //validation
-    if (b.priority == "") {
-        bad = 1;
-        eStr = "Prioritás megadása kötelező!";
-    }
-    //validation done (cannot validate more at client level)
-    if (bad == 1) {
-        alert(eStr);
-        console.log("---=== ALERT ===---")
-        return;
-    }
-    //save
-    var token = $("meta[name='_csrf']").attr("content");
-    var header = $("meta[name='_csrf_header']").attr("content");
-    //beforeRequest();
-    $.ajax({
-        url : '/adorationSecure/updatePersonCommitment',
-        type : 'POST',
-        async: false,
-        contentType: 'application/json',
-        data: JSON.stringify(b),
-        dataType: 'json',
-        success : processLinkEntityUpdated,
-        beforeSend : function(request) {
-            request.setRequestHeader(header, token);
-        },
-        complete : requestLinkComplete,
-    }).fail( function(xhr, status) {
-        var obj = JSON.parse(xhr.responseText);
-        alert(obj.entityUpdate);
-    });
-}
-
-function processLinkEntityUpdated() {
-    var personId = $('#editHourPersonId').val();
-    reBuildTimeModal(personId);
-}
-
-function requestLinkComplete() {
-    processLinkEntityUpdated();
-}
-
-function clickHourEdit(hourId) {
-    //identify the hour
-    for (var i = 0; i < hourInfo.length; i++) {
-        if (hourInfo[i].hourId == hourId) {
-            break;
-        }
-    }
-    if (hourInfo[i].hourId == hourId) { //if we really found it
-        var x = Math.floor(hourInfo[i].hourId / 24) * 24;
-        $("#newDay option[value=" + x + "]").prop('selected', 'selected').change();
-        x = hourInfo[i].hourId % 24;
-        $("#newHour option[value=" + x + "]").prop('selected', 'selected').change();
-        $("#newPriority").val(hourInfo[i].priority);
-        $("#newAdminComment").val(hourInfo[i].adminComment);
-        $("#newPublicComment").val(hourInfo[i].publicComment);
-        if (hourInfo[i].type > 0) {
-            $("#newOnline").prop("checked", true);
-        } else {
-            $("#newOnline").removeProp("checked");
-        }
-        showNewPartOfModal();
-        $("#editHourId").val(hourInfo[i].id);
-        $('#deleteHourButton').show();
-    } else {
-        $('#deleteHourButton').hide();
-        cancelNewPartOfModal();
-        alert( "Data consistency error, reload is necessary." );
-        window.location.pathname = "/adorationSecure/adorators"
-    }
-}
-
-function deleteHour() {
-    if (!confirm('Are you sure you want to DELETE this Committed Hour?')) {
-      console.log('Thing was deleted from the database.');
+function deleteEntity() {
+    if (!confirm('Are you sure you want to DELETE this Coordinator assignment - permanently?')) {
       return;
     }
-	console.log("---=== Delete Link Entity Clicked ===---");
-    var entityId = $("#editHourId").val(); //filled during the original on-load page
-    var req = {
-        entityId : entityId,
-    };
-    var token = $("meta[name='_csrf']").attr("content");
-    var header = $("meta[name='_csrf_header']").attr("content");
-    $.ajax({
-        url : '/adorationSecure/deletePersonCommitment',
-        type : 'POST',
-        async: false,
-        contentType: 'application/json',
-        data: JSON.stringify(req),
-        dataType: 'json',
-        success : processHourDeleted,
-        beforeSend : function(request) {
-            request.setRequestHeader(header, token);
-        },
-        complete : requestComplete,
-    }).fail( function(xhr, status) {
-        var obj = JSON.parse(xhr.responseText);
-        alert(obj.entityUpdate);
-    });
-}
-
-function processHourDeleted() {
-    console.log("---=== Entity DELETED, going back to Entity list... ===---");
-    reBuildTimeModal($("#editHourPersonId").val());
-}
-
-function deletePerson() {
-    if (!confirm('Are you sure you want to DELETE this Adorator - permanently?')) {
-      return;
-    }
-	console.log("---=== Delete Person Entity Clicked ===---");
+	console.log("---=== Delete Entity Clicked ===---");
     var entityId = $("#editId").val(); //filled by the button's onclick method
     var req = {
         entityId : entityId,
@@ -638,13 +458,13 @@ function deletePerson() {
     var token = $("meta[name='_csrf']").attr("content");
     var header = $("meta[name='_csrf_header']").attr("content");
     $.ajax({
-        url : '/adorationSecure/deletePerson',
+        url : '/adorationSecure/deleteCoordinator',
         type : 'POST',
         async: false,
         contentType: 'application/json',
         data: JSON.stringify(req),
         dataType: 'json',
-        success : processPersonDeleted,
+        success : processDeleted,
         beforeSend : function(request) {
             request.setRequestHeader(header, token);
         },
@@ -655,7 +475,7 @@ function deletePerson() {
     });
 }
 
-function processPersonDeleted() {
+function processDeleted() {
     console.log("---=== Entity DELETED, going back to Entity list... ===---");
     processEntityUpdated();
 }

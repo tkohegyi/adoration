@@ -18,6 +18,7 @@ function loadStructure() {
 function setupSocialTable() {
     $('#social').DataTable( {
         "ajax": "/adorationSecure/getSocialTable",
+        stateSave: true,
         "language": {
                     "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Hungarian.json"
              },

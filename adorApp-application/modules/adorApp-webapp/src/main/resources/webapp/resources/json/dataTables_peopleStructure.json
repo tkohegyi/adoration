@@ -35,7 +35,7 @@
       "id": "adorationStatus",
       "text": "Adoráló Státusz:",
       "type": "singleSelect",
-      "helpText": "Ha valaki több státuszban is van, a nagyobb jogosultságút kell kiválasztani.",
+      "helpText": "Az adorálóra leginkább jellemző állapotot kell választani.",
       "mandatory": true,
       "selection": [
         { "id": 0, "value": "Külsős/Alkalmi-Adoráló" },
