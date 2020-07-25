@@ -44,7 +44,7 @@ function getInformation() {
         $("#adoratorId").text("Az Ön adorálói azonosítószáma: " + information.id);
         //show offered hours
         $("#yesOfferedHours").empty();
-        if (information.linkList.length > 0) {
+        if ((information.linkList != null) && (information.linkList.length > 0)) {
             //has offered hours
             $("#noOfferedHours").hide();
             $("#yesOfferedHours").show();

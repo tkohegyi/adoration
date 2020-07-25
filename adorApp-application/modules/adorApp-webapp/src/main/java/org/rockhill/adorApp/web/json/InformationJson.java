@@ -10,7 +10,7 @@ public class InformationJson {
     public String name; //name of the adorator
     public String status;   //status of the adorator
     public String id;   //id of the adorator
-    public List<Link> linkList; //commit hours of the adorator
+    public List<Link> linkList; //committed hours of the adorator
     public List<CoordinatorJson> leadership; //main coordinators
     public List<Link> currentHourList; //adorators in actual hour
     public List<Link> futureHourList; //adorators in next hour
