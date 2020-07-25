@@ -33,17 +33,7 @@
 	<div class="centerwidediv" align="center">
         <legend class="message-legend h4"d>Vállalt órák</legend>
         <div id="noOfferedHours">Önnek nincs vállalt órája.</div>
-		<p><table id="yesOfferedHours"><tbody>
-		    <tr class="tableHead"><th colspan="3">Vállalt órám/óráim:</th><th colspan="3">Órafelelős:</th></tr>
-		    <tr class="tableHead"><th>Azonosítóm:</th><th>Nap:</th><th>Óra:</th><th>Név:</th><th>Telefon:</th><th>E-mail:</th></tr>
-		    <tr id="offeredHours"/>
-		</tbody></table></p>
-	</div>
-	<div class="centerwidediv" align="center">
-        <legend class="message-legend h4"d>Napszak koordinátorok elérhetősége</legend>
-		<p>
-			IDE egy táblázat fog jönni...
-		</p>
+		<p><table id="yesOfferedHours"><tbody></tbody></table></p>
 	</div>
 	<div class="centerwidediv" align="center">
         <legend class="message-legend h4"d>Szentségimádók most</legend>
@@ -56,6 +46,11 @@
 		<p>
 			Ide egy táblázat fog jönni...
 		</p>
+	</div>
+	<div class="centerwidediv" align="center">
+        <legend class="message-legend h4"d>Napszak koordinátorok elérhetősége</legend>
+        <div id="noLeadership">Sajnos nincs megjeleníthető adat.</div>
+		<p><table id="yesLeadership"><tbody></tbody></table></p>
 	</div>
 	<div class="centerwidediv" align="center">
         <legend class="message-legend h4"d>Letöltések</legend>

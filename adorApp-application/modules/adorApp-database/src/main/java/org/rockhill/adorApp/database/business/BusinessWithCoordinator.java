@@ -117,4 +117,25 @@ public class BusinessWithCoordinator {
         return coordinator.getId();
     }
 
+    /**
+     * Returns with list of Coordinators, but only the main coordinators, so
+     * - Spiritual Coo
+     * - General coo
+     * - Daily Coo
+     * (so where the coordinatorType is > 23)
+     *
+     * @return with the list of such coordinators.
+     */
+    public List<Coordinator> getLeadership() {
+        List<Coordinator> result = null;
+        SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
+        if (sessionFactory != null) {
+            Session session = sessionFactory.openSession();
+            session.beginTransaction();
+            result = (List<Coordinator>) session.createQuery("from Coordinator as C where C.coordinatorType > 23").list();
+            session.getTransaction().commit();
+            session.close();
+        }
+        return result;
+    }
 }

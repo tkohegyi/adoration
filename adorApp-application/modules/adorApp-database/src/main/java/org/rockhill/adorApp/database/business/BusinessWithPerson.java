@@ -202,22 +202,4 @@ public class BusinessWithPerson {
         return person.getId();
     }
 
-    /**
-     * Returns with list of main coordinators and leaders.
-     * @return
-     */
-    public List<Person> getLeadership() {
-        List<Person> result = null;
-        SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
-        if (sessionFactory != null) {
-            Session session = sessionFactory.openSession();
-            session.beginTransaction();
-            String hql = "from Person as P where P.adorationStatus in (3,4,5,6,7) order by P.adorationStatus asc";
-            Query query = session.createQuery(hql);
-            result = (List<Person>) query.list();
-            session.getTransaction().commit();
-            session.close();
-        }
-        return result;
-    }
 }

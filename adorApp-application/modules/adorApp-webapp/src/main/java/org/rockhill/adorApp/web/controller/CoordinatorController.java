@@ -51,7 +51,7 @@ public class CoordinatorController extends ControllerBase {
         TableDataInformationJson content = null;
         if (isRegisteredAdorator(currentUserProvider, httpSession)) {
             //has right to collect and see information
-            Object coordinators = coordinatorProvider.getCoordinatorListAsObject();
+            Object coordinators = coordinatorProvider.getCoordinatorListAsObject(currentUserProvider.getUserInformation(httpSession));
             content = new TableDataInformationJson(coordinators);
         }
         return content;
@@ -69,7 +69,7 @@ public class CoordinatorController extends ControllerBase {
         if (isAdoratorAdmin(currentUserProvider, httpSession)) {
             //can get the coordinator
             Long id = Long.valueOf(requestedId);
-            Object coordinatorJson = coordinatorProvider.getCoordinatorAsObject(id);
+            Object coordinatorJson = coordinatorProvider.getCoordinatorAsObject(id, currentUserProvider.getUserInformation(httpSession));
             content = new TableDataInformationJson(coordinatorJson);
         }
         return content;

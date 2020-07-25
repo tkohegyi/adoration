@@ -1,5 +1,6 @@
 package org.rockhill.adorApp.web.provider;
 
+import org.rockhill.adorApp.database.business.BusinessWithCoordinator;
 import org.rockhill.adorApp.database.business.BusinessWithLink;
 import org.rockhill.adorApp.database.business.BusinessWithPerson;
 import org.rockhill.adorApp.database.business.BusinessWithTranslator;
@@ -7,6 +8,7 @@ import org.rockhill.adorApp.database.business.helper.enums.AdoratorStatusTypes;
 import org.rockhill.adorApp.database.business.helper.enums.TranslatorDayNames;
 import org.rockhill.adorApp.database.tables.Link;
 import org.rockhill.adorApp.database.tables.Person;
+import org.rockhill.adorApp.web.json.CoordinatorJson;
 import org.rockhill.adorApp.web.json.CurrentUserInformationJson;
 import org.rockhill.adorApp.web.json.InformationJson;
 import org.rockhill.adorApp.web.json.PersonJson;
@@ -29,6 +31,8 @@ public class InformationProvider {
     BusinessWithLink businessWithLink;
     @Autowired
     BusinessWithTranslator businessWithTranslator;
+    @Autowired
+    CoordinatorProvider coordinatorProvider;
 
     public Object getInformation(CurrentUserInformationJson currentUserInformationJson, HttpSession httpSession) {
         InformationJson informationJson = new InformationJson();
@@ -45,11 +49,7 @@ public class InformationProvider {
             informationJson.status = AdoratorStatusTypes.getTranslatedString(person.getAdorationStatus());
             informationJson.id = person.getId().toString();
             informationJson.linkList = businessWithLink.getLinksOfPerson(person);
-            List<Person> leadership = businessWithPerson.getLeadership();
-            List<PersonJson> leadershipPerson = new LinkedList<>();
-            for (Person p: leadership) {
-                leadershipPerson.add(new PersonJson(p, currentUserInformationJson.isPrivilegedUser()));
-            }
+            informationJson.leadership = coordinatorProvider.getLeadership(currentUserInformationJson);
             Calendar cal = Calendar.getInstance();
             cal.setFirstDayOfWeek(0); //ensure that Sunday is the first day of the week
             int hourId = cal.get(Calendar.DAY_OF_WEEK) * 24 + cal.get(Calendar.HOUR_OF_DAY);

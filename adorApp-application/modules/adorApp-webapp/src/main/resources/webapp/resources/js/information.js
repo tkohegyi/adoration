@@ -44,13 +44,63 @@ function getInformation() {
                 } else {
                     tr.addClass("oddInfo");
                 }
-                tr.append($("<td class=\"infoTable\">" + dayName + "</td><td class=\"infoTable\">" + hourName + "<td class=\"infoTable\">?</td><td class=\"infoTable\">?</td><td class=\"infoTable\">?</td>"));
+                var coordinatorName = "N/A";
+                var phone = "N/A";
+                var email = "N/A";
+                if (information.leadership.length > 0) { //detect hour coordinator
+                    for (var j = 0; j < information.leadership.length; j++) {
+                        var coordinator = information.leadership[j];
+                        if (parseInt(coordinator.coordinatorType) == hourName) {
+                            coordinatorName = coordinator.personName;
+                            phone = coordinator.phone;
+                            email = coordinator.eMail;
+                        }
+                    }
+                } // else N/A, already set
+                tr.append($("<td class=\"infoTable\">"
+                    + dayName + "</td><td class=\"infoTable\">"
+                    + hourName + "</td><td class=\"infoTable\">"
+                    + coordinatorName + "</td><td class=\"infoTable\">"
+                    + phone + "</td><td class=\"infoTable\">"
+                    + email +"</td>"));
                 $("#yesOfferedHours").append(tr);
             }
         } else {
             //has no offered hours
             $("#noOfferedHours").show();
             $("#yesOfferedHours").hide();
+        }
+        //show leadership
+        $("#yesLeadership").empty();
+        if (information.leadership.length > 0) {
+            //has leadership info
+            $("#noLeadership").hide();
+            $("#yesLeadership").show();
+            var tr = $("<tr class=\"tableHead\"><th class=\"infoTable\" colspan=\"5\">Napszak és Általános Koordinátorok:</th></tr>");
+            $("#yesLeadership").append(tr);
+            tr = $("<tr class=\"tableHead\"><th class=\"infoTable\">Időszak:</th><th class=\"infoTable\">Név:</th><th class=\"infoTable\">Telefon:</th><th class=\"infoTable\">E-mail:</th><th class=\"infoTable\">Megjegyzés:</th></tr>");
+            $("#yesLeadership").append(tr);
+            for (var i = 0; i < information.leadership.length; i++) {
+                var coordinator = information.leadership[i];
+                if (parseInt(coordinator.coordinatorType) > 24) { //only for main coordinators
+                    tr = $("<tr/>");
+                    if (i % 2 == 0) {
+                        tr.addClass("evenInfo");
+                    } else {
+                        tr.addClass("oddInfo");
+                    }
+                    tr.append($("<td class=\"infoTable\">" + coordinator.coordinatorTypeText
+                        + "</td><td class=\"infoTable\">" + coordinator.personName
+                        + "</td><td class=\"infoTable\">" + coordinator.phone
+                        + "</td><td class=\"infoTable\">" + coordinator.eMail
+                        + "</td><td class=\"infoTable\">" + coordinator.visibleComment));
+                    $("#yesLeadership").append(tr);
+                }
+            }
+        } else {
+            //has no leadership
+            $("#noLeadership").show();
+            $("#yesLeadership").hide();
         }
     });
 }

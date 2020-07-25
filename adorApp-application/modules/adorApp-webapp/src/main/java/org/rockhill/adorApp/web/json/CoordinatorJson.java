@@ -7,5 +7,7 @@ public class CoordinatorJson {
     public String personName;
     public String phone;
     public String eMail;
+    public String visibleComment;
+    public String coordinatorTypeText;
 }
 

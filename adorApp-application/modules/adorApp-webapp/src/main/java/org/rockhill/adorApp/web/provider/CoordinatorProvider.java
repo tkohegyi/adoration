@@ -14,10 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 @Component
 public class CoordinatorProvider {
@@ -32,39 +29,45 @@ public class CoordinatorProvider {
     BusinessWithPerson businessWithPerson;
     @Autowired
     BusinessWithNextGeneralKey businessWithNextGeneralKey;
+    @Autowired
+    BusinessWithTranslator businessWithTranslator;
 
-    private CoordinatorJson getCoordinatorJsonFromCoordinator(Coordinator coordinator) {
+    private CoordinatorJson getCoordinatorJsonFromCoordinator(CurrentUserInformationJson currentUserInformationJson, Coordinator coordinator) {
         CoordinatorJson coordinatorJson = new CoordinatorJson();
         coordinatorJson.id = coordinator.getId().toString();
         coordinatorJson.coordinatorType = coordinator.getCoordinatorType().toString();
+        coordinatorJson.coordinatorTypeText = businessWithTranslator.getTranslatorValue(currentUserInformationJson.languageCode,
+                "COORDINATOR-" + coordinatorJson.coordinatorType, "N/A");
         if (coordinator.getPersonId() != null) {
             coordinatorJson.personId = coordinator.getPersonId().toString();
             Person p = businessWithPerson.getPersonById(coordinator.getPersonId());
             coordinatorJson.personName = p.getName();
             coordinatorJson.phone = p.getMobile();
             coordinatorJson.eMail = p.getEmail();
+            coordinatorJson.visibleComment = p.getVisibleComment();
         } else {
             coordinatorJson.personId = "";
             coordinatorJson.personName = "";
             coordinatorJson.phone = "";
             coordinatorJson.eMail = "";
+            coordinatorJson.visibleComment = "";
         }
         return coordinatorJson;
     }
 
-    public Object getCoordinatorListAsObject() {
+    public Object getCoordinatorListAsObject(CurrentUserInformationJson currentUserInformationJson) {
         List<Coordinator> coordinatorList = businessWithCoordinator.getList();
         List<CoordinatorJson> coordinatorJsonList = new LinkedList<>();
         for (Coordinator coordinator: coordinatorList) {
-            CoordinatorJson coordinatorJson = getCoordinatorJsonFromCoordinator(coordinator);
+            CoordinatorJson coordinatorJson = getCoordinatorJsonFromCoordinator(currentUserInformationJson, coordinator);
             coordinatorJsonList.add(coordinatorJson);
         }
         return coordinatorJsonList;
     }
 
-    public Object getCoordinatorAsObject(final Long id) {
+    public Object getCoordinatorAsObject(final Long id, CurrentUserInformationJson currentUserInformationJson) {
         Coordinator coordinator = businessWithCoordinator.getById(id);
-        CoordinatorJson coordinatorJson = getCoordinatorJsonFromCoordinator(coordinator);
+        CoordinatorJson coordinatorJson = getCoordinatorJsonFromCoordinator(currentUserInformationJson, coordinator);
         return coordinatorJson;
     }
 
@@ -162,5 +165,17 @@ public class CoordinatorProvider {
 
     public Object getCoordinators(CurrentUserInformationJson userInformation, HttpSession httpSession) {
         return null;
+    }
+
+    public List<CoordinatorJson> getLeadership(CurrentUserInformationJson currentUserInformationJson) {
+        List<Coordinator> coordinatorList = businessWithCoordinator.getList();
+        //sort here by type
+        coordinatorList.sort(Comparator.comparing(Coordinator::getCoordinatorType));
+        List<CoordinatorJson> coordinatorJsonList = new LinkedList<>();
+        for (Coordinator coordinator: coordinatorList) {
+            CoordinatorJson coordinatorJson = getCoordinatorJsonFromCoordinator(currentUserInformationJson, coordinator);
+            coordinatorJsonList.add(coordinatorJson);
+        }
+        return coordinatorJsonList;
     }
 }
