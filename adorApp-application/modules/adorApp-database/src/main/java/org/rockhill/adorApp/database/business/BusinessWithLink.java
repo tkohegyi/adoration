@@ -158,7 +158,6 @@ public class BusinessWithLink {
 
     public List<Link> getLinksOfHour(int hourId) {
         List<Link> result = null;
-        hourId = hourId % 24;
         SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
         if (sessionFactory != null) {
             Session session = sessionFactory.openSession();

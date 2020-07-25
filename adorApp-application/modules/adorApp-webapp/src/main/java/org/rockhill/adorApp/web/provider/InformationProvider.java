@@ -53,6 +53,8 @@ public class InformationProvider {
             Calendar cal = Calendar.getInstance();
             cal.setFirstDayOfWeek(0); //ensure that Sunday is the first day of the week
             int hourId = cal.get(Calendar.DAY_OF_WEEK) * 24 + cal.get(Calendar.HOUR_OF_DAY);
+            informationJson.hourInDayNow = hourId % 24;
+            informationJson.hourInDayNext = (hourId + 1) % 24;
             informationJson.currentHourList = businessWithLink.getLinksOfHour(hourId);
             informationJson.futureHourList = businessWithLink.getLinksOfHour(hourId + 1);
             Set<Long> personIds = new HashSet<>();

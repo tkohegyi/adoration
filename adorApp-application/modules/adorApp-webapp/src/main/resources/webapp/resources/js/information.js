@@ -13,6 +13,24 @@ function getHourName(hourId) {
     return hourId % 24;
 }
 
+function getPerson(list, personId) {
+    for (var i = 0; i < list.length; i++) {
+        if (list[i].id == personId) {
+            return list[i];
+        }
+    }
+    return null;
+}
+
+function getCoordinator(list, hourInDayId) {
+    for (var i = 0; i < list.length; i++) {
+        if (parseInt(list[i].coordinatorType) == hourInDayId) {
+            return list[i];
+        }
+    }
+    return null;
+}
+
 function getInformation() {
     $.get('/adorationSecure/getInformation', function(data) {
         var information = data.data;
@@ -101,6 +119,80 @@ function getInformation() {
             //has no leadership
             $("#noLeadership").show();
             $("#yesLeadership").hide();
+        }
+        //show actual hour
+        $("#yesAdoratorNow").empty();
+        var c = getCoordinator(information.leadership, information.hourInDayNow);
+        if (c != null) {
+            tr = $("<tr class=\"tableHead\"><th class=\"infoTable\" colspan=\"3\">Órafelelős, "
+                + information.hourInDayNow + " óra:</th></tr>");
+            $("#yesAdoratorNow").append(tr);
+            tr = $("<td class=\"infoTable\">"
+                + c.personName + "</td><td class=\"infoTable\">"
+                + c.phone + "</td><td class=\"infoTable\">"
+                + c.eMail +"</td>");
+            $("#yesAdoratorNow").append(tr);
+        }
+        if (information.currentHourList.length > 0) {
+            //has offered hours
+            $("#noAdoratorNow").hide();
+            tr = $("<tr class=\"tableHead\"><th class=\"infoTable\">Név:</th><th class=\"infoTable\">Telefon:</th><th class=\"infoTable\">E-mail:</th></tr>");
+            $("#yesAdoratorNow").append(tr);
+            for (var i = 0; i < information.currentHourList.length; i++) {
+                var offeredHour = information.currentHourList[i];
+                var person = getPerson(information.relatedPersonList, offeredHour.personId);
+                tr = $("<tr/>");
+                if (i % 2 == 0) {
+                    tr.addClass("evenInfo");
+                } else {
+                    tr.addClass("oddInfo");
+                }
+                tr.append($("<td class=\"infoTable\">"
+                    + person.name + "</td><td class=\"infoTable\">"
+                    + person.mobile + "</td><td class=\"infoTable\">"
+                    + person.email +"</td>"));
+                $("#yesAdoratorNow").append(tr);
+            }
+        } else {
+            //has no adorator now
+            $("#noAdoratorNow").show();
+        }
+        //show future hour
+        $("#yesAdoratorNext").empty();
+        c = getCoordinator(information.leadership, information.hourInDayNext);
+        if (c != null) {
+            tr = $("<tr class=\"tableHead\"><th class=\"infoTable\" colspan=\"3\">Órafelelős, "
+                + information.hourInDayNext + " óra:</th></tr>");
+            $("#yesAdoratorNext").append(tr);
+            tr = $("<td class=\"infoTable\">"
+                + c.personName + "</td><td class=\"infoTable\">"
+                + c.phone + "</td><td class=\"infoTable\">"
+                + c.eMail +"</td>");
+            $("#yesAdoratorNext").append(tr);
+        }
+        if (information.futureHourList.length > 0) {
+            //has offered hours
+            $("#noAdoratorNext").hide();
+            tr = $("<tr class=\"tableHead\"><th class=\"infoTable\">Név:</th><th class=\"infoTable\">Telefon:</th><th class=\"infoTable\">E-mail:</th></tr>");
+            $("#yesAdoratorNext").append(tr);
+            for (var i = 0; i < information.futureHourList.length; i++) {
+                var offeredHour = information.futureHourList[i];
+                var person = getPerson(information.relatedPersonList, offeredHour.personId);
+                tr = $("<tr/>");
+                if (i % 2 == 0) {
+                    tr.addClass("evenInfo");
+                } else {
+                    tr.addClass("oddInfo");
+                }
+                tr.append($("<td class=\"infoTable\">"
+                    + person.name + "</td><td class=\"infoTable\">"
+                    + person.mobile + "</td><td class=\"infoTable\">"
+                    + person.email +"</td>"));
+                $("#yesAdoratorNext").append(tr);
+            }
+        } else {
+            //has no adorator now
+            $("#noAdoratorNext").show();
         }
     });
 }

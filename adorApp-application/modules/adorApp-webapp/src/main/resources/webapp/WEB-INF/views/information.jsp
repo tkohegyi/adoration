@@ -37,15 +37,13 @@
 	</div>
 	<div class="centerwidediv" align="center">
         <legend class="message-legend h4"d>Szentségimádók most</legend>
-		<p>
-			Ide egy táblázat fog jönni...
-		</p>
+        <div id="noAdoratorNow">Sajnos nincs megjeleníthető adat.</div>
+		<p><table id="yesAdoratorNow"><tbody></tbody></table></p>
 	</div>
 	<div class="centerwidediv" align="center">
         <legend class="message-legend h4"d>Szentségimádók a következő órában</legend>
-		<p>
-			Ide egy táblázat fog jönni...
-		</p>
+        <div id="noAdoratorNext">Sajnos nincs megjeleníthető adat.</div>
+		<p><table id="yesAdoratorNext"><tbody></tbody></table></p>
 	</div>
 	<div class="centerwidediv" align="center">
         <legend class="message-legend h4"d>Napszak koordinátorok elérhetősége</legend>
@@ -54,9 +52,8 @@
 	</div>
 	<div class="centerwidediv" align="center">
         <legend class="message-legend h4"d>Letöltések</legend>
-		<p>
-			Ide egy lista fog jönni...
-		</p>
+        <div id="noDownloads">Sajnos nincs megjeleníthető adat.</div>
+		<p><table id="yesDownloads"><tbody></tbody></table></p>
 	</div>
 <script src="./../resources/js/external/jquery-3.4.1.js"></script>
 <script src="./../resources/js/external/bootstrap-4.3.1.min.js"></script>
