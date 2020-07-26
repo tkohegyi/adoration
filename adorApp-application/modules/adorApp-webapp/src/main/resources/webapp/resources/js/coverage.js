@@ -23,26 +23,46 @@ function setupCoverage() {
             var item = $("#hour-" + i);
             var value = hours[i];
             if (value == 0) {
-                item.text("2");
-                item.removeClass("goodCoverage");
-                item.removeClass("badCoverage");
-                item.addClass("veryBadCoverage");
+                if (!item.hasClass("lowPriority")) {
+                    item.text("2");
+                    item.removeClass("goodCoverage");
+                    item.removeClass("badCoverage");
+                    item.addClass("veryBadCoverage");
+                } else {
+                    item.text("");
+                    item.addClass("lowPriorityColumn");
+                }
             }
             if (value == 1) {
-                item.text("1");
-                item.removeClass("goodCoverage");
-                item.removeClass("veryBadCoverage");
-                item.addClass("badCoverage");
+                if (!item.hasClass("lowPriority")) {
+                    item.text("1");
+                    item.removeClass("goodCoverage");
+                    item.removeClass("veryBadCoverage");
+                    item.addClass("badCoverage");
+                } else {
+                    item.text("");
+                    item.addClass("lowPriorityColumn");
+                }
             }
             if (value > 1) {
-                item.text("");
-                item.removeClass("veryBadCoverage");
-                item.removeClass("badCoverage");
-                item.addClass("goodCoverage");
+                if (!item.hasClass("lowPriority")) {
+                    item.text("");
+                    item.removeClass("veryBadCoverage");
+                    item.removeClass("badCoverage");
+                    item.addClass("goodCoverage");
+                } else {
+                    item.text("");
+                    item.addClass("lowPriorityColumn");
+                }
             }
             var onlineValue = coverageOnlineHourInfo[i];
             if (onlineValue.length > 0) {
-                item.addClass("onlineAdorator");
+                if (item.hasClass("lowPriority")) { //only online is possible, so emphasize it
+                    item.removeClass("lowPriorityColumn");
+                    item.addClass("exclusiveOnlineAdorator");
+                } else { //normal hour with online
+                    item.addClass("onlineAdorator");
+                }
             } else {
                 item.removeClass("onlineAdorator");
             }

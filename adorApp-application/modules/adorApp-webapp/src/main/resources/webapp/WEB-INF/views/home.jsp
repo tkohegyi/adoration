@@ -58,6 +58,14 @@
 				<td valign="middle" align="right" class="onlineAdorator">Kék keret&nbsp;&nbsp;</td>
 				<td>-tel rendelkeznek azok az órák, amelyekben Online módon, távolról van biztosítva az Örökimádás. Online adorálásra az ország bármely pontjáról lehet jelentkezni, illetve azon idősebb vagy beteg testvéreinknek is ezt a módot ajánljuk, akik személyesen nem tudják felkeresni a kápolnát.</td>
 			</tr>
+			<tr>
+				<td valign="middle" align="right" class="lowPriorityColumn">Szürke&nbsp;&nbsp;</td>
+				<td>színűek azok az órák, amelyekben a kápolnában ideiglenesen szünetel az Örökimádás. Ezeknél az óráknál csak Online adorálásra van lehetőség, így javasoljuk, hogy válassza azt.</td>
+			</tr>
+			<tr>
+				<td valign="middle" align="right" style="background-color:#60ABF3">Kék&nbsp;&nbsp;</td>
+				<td>színűek azok az órák, amelyekben a kápolnában ideiglenesen szünetel az Örökimádás, de van bejegyett Online adoráló, aki távolról végzi az Örökimádást.</td>
+			</tr>
 		</table>
 		<br />
 	</div>
