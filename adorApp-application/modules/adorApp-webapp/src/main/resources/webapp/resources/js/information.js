@@ -123,7 +123,7 @@ function getInformation() {
         //show actual hour
         $("#yesAdoratorNow").empty();
         var c = getCoordinator(information.leadership, information.hourInDayNow);
-        if (c != null) {
+        if (c != null && c.personName.length > 0) {
             tr = $("<tr class=\"tableHead\"><th class=\"infoTable\" colspan=\"3\">Órafelelős, "
                 + information.hourInDayNow + " óra:</th></tr>");
             $("#yesAdoratorNow").append(tr);
@@ -160,7 +160,7 @@ function getInformation() {
         //show future hour
         $("#yesAdoratorNext").empty();
         c = getCoordinator(information.leadership, information.hourInDayNext);
-        if (c != null) {
+        if (c != null && c.personName.length > 0) {
             tr = $("<tr class=\"tableHead\"><th class=\"infoTable\" colspan=\"3\">Órafelelős, "
                 + information.hourInDayNext + " óra:</th></tr>");
             $("#yesAdoratorNext").append(tr);
