@@ -9,7 +9,7 @@
 <META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
 <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0, user-scalable=yes" />
-<META http-equiv="refresh" content="3;URL=https://orok-imadas-vac-szent-anna-piarista-templom.click2stream.com/">
+<META http-equiv="refresh" content="2;URL=https://orok-imadas-vac-szent-anna-piarista-templom.click2stream.com/">
 <meta name="HandheldFriendly" content="true" />
 <meta name="apple-mobile-web-app-capable" content="YES" />
 <meta name="author" content="Tamas Kohegyi" />
