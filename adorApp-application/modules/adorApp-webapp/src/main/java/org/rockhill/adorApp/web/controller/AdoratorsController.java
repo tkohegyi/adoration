@@ -48,8 +48,7 @@ public class AdoratorsController extends ControllerBase {
      * @return the name of the adorators jsp file
      */
     @RequestMapping(value = "/adorationSecure/adorators", method = RequestMethod.GET)
-    public String adorators(HttpSession httpSession,
-                         HttpServletResponse httpServletResponse) {
+    public String adorators(HttpSession httpSession) {
         if (!isAdoratorAdmin(currentUserProvider, httpSession)) {
             return "redirect:/adoration/";
         }

@@ -4,13 +4,11 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.rockhill.adorApp.database.SessionFactoryHelper;
-import org.rockhill.adorApp.database.business.helper.Converter;
 import org.rockhill.adorApp.database.business.helper.enums.TranslatorDayNames;
 import org.rockhill.adorApp.database.exception.DatabaseHandlingException;
 import org.rockhill.adorApp.database.tables.AuditTrail;
 import org.rockhill.adorApp.database.tables.Link;
 import org.rockhill.adorApp.database.tables.Person;
-import org.rockhill.adorApp.database.tables.Social;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -21,21 +19,14 @@ import java.util.List;
 @Component
 public class BusinessWithLink {
     private final Logger logger = LoggerFactory.getLogger(BusinessWithLink.class);
-    public static final boolean WITHOUT_COORDINATORS = false;
-    public static final boolean WITH_COORDINATORS = true;
 
-
-    public List<Link> getLinkList(boolean withCoordinators) {
+    public List<Link> getLinkList() {
         List<Link> result = null;
         SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
         if (sessionFactory != null) {
             Session session = sessionFactory.openSession();
             session.beginTransaction();
-            String query = "from Link";
-            if (!withCoordinators) {
-                query = query + " where type < 2";
-            }
-            result = (List<Link>) session.createQuery(query).list();
+            result = (List<Link>) session.createQuery("from Link").list();
             session.getTransaction().commit();
             session.close();
         }

@@ -1,6 +1,5 @@
 package org.rockhill.adorApp.web.json;
 
-import org.rockhill.adorApp.database.business.helper.enums.AdorationMethodTypes;
 import org.rockhill.adorApp.database.business.helper.enums.TranslatorDayNames;
 
 public class RegisterAdoratorJson {

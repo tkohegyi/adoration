@@ -52,7 +52,7 @@ public class CoverageProvider {
         }
 
         //fill the hour coverage information
-        List<Link> linkList = businessWithLink.getLinkList(BusinessWithLink.WITHOUT_COORDINATORS);
+        List<Link> linkList = businessWithLink.getLinkList();
         coverageInformationJson.visibleHours = new HashMap<>();
         coverageInformationJson.allHours = new HashMap<>();
         coverageInformationJson.onlineHours = new HashMap<>();
@@ -113,7 +113,7 @@ public class CoverageProvider {
 
     public Object getPersonCommitmentAsObject(Long id, String languageCode) {
         PersonCommitmentJson personCommitmentJson = new PersonCommitmentJson();
-        List<Link> linkList = businessWithLink.getLinkList(BusinessWithLink.WITH_COORDINATORS);
+        List<Link> linkList = businessWithLink.getLinkList();
         Set<Integer> committedHours = new HashSet<>();
         //first fill hours of the person
         for (Link link : linkList) {

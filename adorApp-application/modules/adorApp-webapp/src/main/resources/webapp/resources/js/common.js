@@ -46,3 +46,30 @@ function findGetParameter(parameterName) {
     }
     return result;
 }
+
+function getDayName(hourId, dayNames) {
+    var x = Math.floor(hourId / 24);
+    return dayNames[x];
+}
+
+function getHourName(hourId) {
+    return hourId % 24;
+}
+
+function getPerson(list, personId) {
+    for (var i = 0; i < list.length; i++) {
+        if (list[i].id == personId) {
+            return list[i];
+        }
+    }
+    return null;
+}
+
+function getCoordinator(list, hourInDayId) {
+    for (var i = 0; i < list.length; i++) {
+        if (parseInt(list[i].coordinatorType) == hourInDayId) {
+            return list[i];
+        }
+    }
+    return null;
+}

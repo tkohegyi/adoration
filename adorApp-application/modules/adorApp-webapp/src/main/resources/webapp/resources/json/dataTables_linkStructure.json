@@ -1,0 +1,143 @@
+{
+  "tableName": "link",
+  "modalId": "edit",
+  "edit" : {
+    "title": "Módosítás",
+    "type": "standard-noDelete"
+  },
+  "new" : {
+    "title": "Új Óra felvétele",
+    "type": "standard"
+  },
+  "info": [
+    {
+      "id": "id",
+      "type": "fixText",
+      "text": "ID:",
+      "helpText": "Órabejegyzés azonosítószáma, nem változtatható.",
+      "edit": {
+        "visible" : true
+      },
+      "new": {
+        "visible" : false,
+        "default": "0"
+      }
+    },
+    {
+      "id": "day",
+      "type": "singleSelect",
+      "text": "Nap:",
+      "name": "Nap",
+      "helpText": "A hét napja.",
+      "mandatory": true,
+      "selection": [
+        { "id": 0, "value": "vasárnap" },
+        { "id": 1, "value": "hétfő" },
+        { "id": 2, "value": "kedd" },
+        { "id": 3, "value": "szerda" },
+        { "id": 4, "value": "csütörtök" },
+        { "id": 5, "value": "péntek" },
+        { "id": 6, "value": "szombat" }
+      ]
+    },
+    {
+      "id": "hour",
+      "type": "singleSelect",
+      "text": "Óra:",
+      "name": "Óra",
+      "helpText": "Óra.",
+      "mandatory": true,
+      "selection": [
+        { "id": 0, "value": "0" },
+        { "id": 1, "value": "1" },
+        { "id": 2, "value": "2" },
+        { "id": 3, "value": "3" },
+        { "id": 4, "value": "4" },
+        { "id": 5, "value": "5" },
+        { "id": 6, "value": "6" },
+        { "id": 7, "value": "7" },
+        { "id": 8, "value": "8" },
+        { "id": 9, "value": "9" },
+        { "id": 10, "value": "10" },
+        { "id": 11, "value": "11" },
+        { "id": 12, "value": "12" },
+        { "id": 13, "value": "13" },
+        { "id": 14, "value": "14" },
+        { "id": 15, "value": "15" },
+        { "id": 16, "value": "16" },
+        { "id": 17, "value": "17" },
+        { "id": 18, "value": "18" },
+        { "id": 19, "value": "19" },
+        { "id": 20, "value": "20" },
+        { "id": 21, "value": "21" },
+        { "id": 22, "value": "22" },
+        { "id": 23, "value": "23" }
+      ]
+    },
+    {
+      "id": "name",
+      "type": "input-100",
+      "text": "Adoráló Neve:",
+      "name": "Adoráló Neve",
+      "helpText": "Az adoráló neve.",
+      "mandatory": true
+    },
+    {
+      "id": "phone",
+      "text": "Telefonszám:",
+      "name": "Telefonszám",
+      "type": "input-100",
+      "helpText": "Telefonszám(ok)."
+    },
+    {
+      "id": "email",
+      "text": "e-mail",
+      "type": "input-200",
+      "helpText": "Az adoráló e-mail címe(i).",
+      "name": "Az adoráló e-mail címe"
+    },
+    {
+      "id": "priority",
+      "type": "singleSelect",
+      "text": "Prioritás:",
+      "name": "Prioritás",
+      "helpText": "Az adoráló részvételének prioritása. Ha nagyobb mint 2, akkor kevésbbé fontos.",
+      "mandatory": true,
+      "selection": [
+        { "id": 1, "value": "1" },
+        { "id": 2, "value": "2" },
+        { "id": 3, "value": "3" },
+        { "id": 4, "value": "4" },
+        { "id": 5, "value": "5" },
+        { "id": 6, "value": "6" },
+        { "id": 7, "value": "7" }
+        ]
+    },
+    {
+      "id": "online",
+      "type": "singleSelect",
+      "text": "Adorálás helye:",
+      "name": "Adorálás helye",
+      "helpText": "Az adorálás helye/módja.",
+      "mandatory": true,
+      "selection": [
+        { "id": 0, "value": "Jelenlét a kápolnában." },
+        { "id": 1, "value": "Online adorárás." }
+      ]
+    },
+    {
+      "id": "adminComment",
+      "text": "Adminisztrátor megjegyzés:",
+      "type": "input-1000",
+      "helpText": "Az Adminisztrátor megjegyzése, csak a koordinátorok láthatják.",
+      "name": "Adminisztrátor megjegyzés"
+    },
+    {
+      "id": "publicComment",
+      "text": "Publikus megjegyzés:",
+      "type": "input-1000",
+      "helpText": "Megjegyzés, amely mindenki által látható.",
+      "name": "Publikus megjegyzés"
+    }
+  ]
+}
