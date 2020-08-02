@@ -64,7 +64,7 @@
 			</tr>
 			<tr>
 				<td valign="middle" align="right" style="background-color:#60ABF3">Kék&nbsp;&nbsp;</td>
-				<td>színűek azok az órák, amelyekben a kápolnában ideiglenesen szünetel az Örökimádás, de van bejegyett Online adoráló, aki távolról végzi az Örökimádást.</td>
+				<td>színűek azok az órák, amelyekben a kápolnában ideiglenesen szünetel az Örökimádás, de van bejegyzett Online adoráló, aki távolról végzi az Örökimádást.</td>
 			</tr>
 		</table>
 		<br />

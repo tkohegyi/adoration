@@ -40,7 +40,7 @@
       "selection": [
         { "id": 0, "value": "Külsős/Alkalmi-Adoráló" },
         { "id": 5, "value": "Céltalanul regisztrált" },
-        { "id": 1, "value": "Jelentkező-Adoráló" },
+        { "id": 1, "value": "Újonnan regisztrált" },
         { "id": 2, "value": "Adoráló" },
         { "id": 3, "value": "Ex-Adoráló" },
         { "id": 4, "value": "Elhunyt" },

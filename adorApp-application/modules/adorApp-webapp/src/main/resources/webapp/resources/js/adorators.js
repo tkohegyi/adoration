@@ -60,7 +60,7 @@ function setupPersonTable() {
                     var z;
                     switch (data) {
                     case 0: z = 'Külsős/Alkalmi-Adoráló'; break;
-                    case 1: z = 'Jelentkező-Adoráló'; break;
+                    case 1: z = 'Újonnan regisztrált'; break;
                     case 2: z = 'Adoráló'; break;
                     case 3: z = 'Ex-Adoráló'; break;
                     case 4: z = 'Elhunyt'; break;
