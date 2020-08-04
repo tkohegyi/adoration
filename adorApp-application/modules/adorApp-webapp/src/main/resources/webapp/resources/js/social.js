@@ -22,6 +22,7 @@ function setupSocialTable() {
         "language": {
                     "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Hungarian.json"
              },
+        "lengthMenu": [[5, 50, 100, -1], [5, 50, 100, "All"]],
         "scrollX": true,
         "columns": [
             { "data": "id" },

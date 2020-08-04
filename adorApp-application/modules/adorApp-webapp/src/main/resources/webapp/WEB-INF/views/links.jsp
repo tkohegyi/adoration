@@ -71,19 +71,19 @@
     </div>
 
     <!-- Modal Time -->
-    <div class="modal fade" id="timeModal" tabindex="-1" role="dialog" aria-labelledby="timeCenterTitle" aria-hidden="true">
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editCenterTitle" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="timeCenterTitle">Órák</h5>
+            <h5 class="modal-title" id="editCenterTitle">Órák</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Cancel">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
-              <form id="newTimeTable">
-                <input id="editHourPersonId" type="hidden" value="">
-                <input id="editHourId" type="hidden" value="">
+              <form id="editTable">
+                <input id="editPersonId" type="hidden" value="">
+                <input id="editId" type="hidden" value="">
                 <table class="table table-hover table-bordered">
                       <thead>
                           <tr>
@@ -142,10 +142,10 @@
                       </tbody>
                 </table>
                 <table width="100%"><tr>
-                    <td align="left"><button id="deleteHourButton" type="button" class="btn btn-danger" onclick="deleteHour()">Óra törlése</button></td>
+                    <td align="left"><button id="deleteButton" type="button" class="btn btn-danger" onclick="delete()">Óra törlése</button></td>
                     <td align="right">
                         <button type="button" class="btn btn-info" onclick="cancelNewPartOfModal()">Mégsem</button>
-                        <button id="saveChangesButton" type="button" class="btn btn-success" onclick="saveNewHour()">Mentés</button>
+                        <button id="saveChangesButton" type="button" class="btn btn-success" onclick="saveNew()">Mentés</button>
                     </td>
                 </tr></table>
               </form>

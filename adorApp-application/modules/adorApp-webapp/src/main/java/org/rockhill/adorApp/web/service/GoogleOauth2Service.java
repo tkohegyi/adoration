@@ -31,7 +31,9 @@ import org.springframework.security.web.authentication.preauth.PreAuthenticatedA
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -145,6 +147,15 @@ public class GoogleOauth2Service {
     }
 
     private Social detectSocial(GoogleUserInfoJson googleUserInfoJson) {
+        if (googleUserInfoJson.email == null) {
+            googleUserInfoJson.email = "";
+        }
+        if (googleUserInfoJson.name == null) {
+            googleUserInfoJson.name = "";
+        }
+        if (googleUserInfoJson.picture == null) {
+            googleUserInfoJson.picture = "";
+        }
         Social social = businessWithSocial.getSocialByGUserId(googleUserInfoJson.id); //if there is no social this will cause exception that is unhandled !!!
         if (social == null) {
             social = new Social();
@@ -155,7 +166,7 @@ public class GoogleOauth2Service {
             social.setSocialStatus(SocialStatusTypes.WAIT_FOR_IDENTIFICATION.getTypeValue());
             Long id = businessWithNextGeneralKey.getNextGeneralId();
             social.setId(id);
-            AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(id, social.getGoogleUserName(), "Social:New:" + id.toString(), "New Google Social login created.", "");
+            AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(id, social.getGoogleUserName(), "Social:New:" + id.toString(), "New Google Social login created.", "Google");
             //this is a brand new login, try to identify - by using e-mail
             if ( (googleUserInfoJson.email != null) && (googleUserInfoJson.email.length() > 0) ) {
                 Person p = businessWithPerson.getPersonByEmail(googleUserInfoJson.email);
@@ -168,6 +179,33 @@ public class GoogleOauth2Service {
             emailSender.sendMail(subject, text);
             id = businessWithSocial.newSocial(social, auditTrail);
             social.setId(id); //Social object is ready
+        } else {
+            //detect social update and act
+            Collection<AuditTrail> auditTrailCollection = new ArrayList<>();
+            if (social.getGoogleUserName().compareToIgnoreCase(googleUserInfoJson.name) != 0) {
+                social.setGoogleUserName(googleUserInfoJson.name);
+                Long id = businessWithNextGeneralKey.getNextGeneralId();
+                AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(id, social.getGoogleUserName(), "Social:Update:" + social.getId().toString(),
+                        "Google Username updated to:" + googleUserInfoJson.name, "Google");
+                auditTrailCollection.add(auditTrail);
+            }
+            if (social.getGoogleEmail().compareToIgnoreCase(googleUserInfoJson.email) != 0) {
+                social.setGoogleEmail(googleUserInfoJson.email);
+                Long id = businessWithNextGeneralKey.getNextGeneralId();
+                AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(id, social.getGoogleUserName(), "Social:Update:" + social.getId().toString(),
+                        "Google Email updated to:" + googleUserInfoJson.email, "Google");
+                auditTrailCollection.add(auditTrail);
+            }
+            if (social.getGoogleUserPicture().compareToIgnoreCase(googleUserInfoJson.picture) != 0) {
+                social.setGoogleUserPicture(googleUserInfoJson.picture);
+                Long id = businessWithNextGeneralKey.getNextGeneralId();
+                AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(id, social.getGoogleUserName(), "Social:Update:" + social.getId().toString(),
+                        "Google Picture updated to:" + googleUserInfoJson.picture, "Google");
+                auditTrailCollection.add(auditTrail);
+            }
+            if (!auditTrailCollection.isEmpty()) {
+                businessWithSocial.updateSocial(social, auditTrailCollection);
+            }
         }
         return social;
     }

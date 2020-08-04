@@ -2,6 +2,7 @@ package org.rockhill.adorApp.web.provider;
 
 import org.rockhill.adorApp.database.business.*;
 import org.rockhill.adorApp.database.business.helper.enums.TranslatorDayNames;
+import org.rockhill.adorApp.database.tables.AuditTrail;
 import org.rockhill.adorApp.database.tables.Link;
 import org.rockhill.adorApp.database.tables.Person;
 import org.rockhill.adorApp.web.json.CurrentUserInformationJson;
@@ -30,11 +31,6 @@ public class LinkProvider {
     BusinessWithLink businessWithLink;
     @Autowired
     BusinessWithTranslator businessWithTranslator;
-
-    public Object getLinkListAsObject2(CurrentUserInformationJson currentUserInformationJson) {
-        List<Link> linkList = businessWithLink.getLinkList();
-        return linkList;
-    }
 
     public Object getLinkListAsObject(CurrentUserInformationJson currentUserInformationJson) {
         LinkJson linkJson = new LinkJson();
@@ -68,4 +64,25 @@ public class LinkProvider {
         return linkJson;
     }
 
+    public Object getLinkHistoryAsObject(Long id) {
+        List<AuditTrail> a = businessWithAuditTrail.getAuditTrailOfObject(id);
+        return a;
+    }
+
+    public Object getLinkAsObject(Long id, CurrentUserInformationJson currentUserInformationJson) {
+        LinkJson linkJson = new LinkJson();
+        Link link = businessWithLink.getLink(id);
+        List<Link> linkList = new LinkedList<>();
+        linkList.add(link);
+        linkJson.linkList = linkList;
+        List<PersonJson> relatedPersonList = new LinkedList<>();
+        Person p = businessWithPerson.getPersonById(link.getPersonId());
+        if (p != null) {
+            relatedPersonList.add(new PersonJson(p,currentUserInformationJson.isPrivilegedUser()));
+        } else {
+            logger.warn("Person ID usage found without real Person, id: " + id.toString());
+        }
+        linkJson.relatedPersonList = relatedPersonList;
+        return linkJson;
+    }
 }

@@ -31,6 +31,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * For Handling proper Facebook Oauth2 authorization tasks.
@@ -170,17 +172,22 @@ public class FacebookOauth2Service {
         if (email == null) {
             email = "?";
         }
+        String firstName = facebookUserInfoJson.getAsString("name");
+        if (firstName == null) {
+            firstName = "?";
+        }
         Social social = businessWithSocial.getSocialByFUserId(userId);
         if (social == null) {
             social = new Social();
             social.setFacebookUserId(userId);
             social.setFacebookEmail(email);
-            social.setFacebookFirstName(facebookUserInfoJson.getAsString("name"));
+            social.setFacebookFirstName(firstName);
             social.setFacebookUserName(social.getFacebookFirstName());  // this is what we can access by default...
             social.setSocialStatus(SocialStatusTypes.WAIT_FOR_IDENTIFICATION.getTypeValue());
             Long id = businessWithNextGeneralKey.getNextGeneralId();
             social.setId(id);
-            AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(id, social.getFacebookUserName(), "Social:New:" + id.toString(), "New Facebook Social login created.", "");
+            AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(id, social.getFacebookUserName(), "Social:New:" + id.toString(),
+                    "New Facebook Social login created.", "Facebook");
             //this is a brand new login, try to identify - by using e-mail
             if ( (email != null) && (email.length() > 0) ) {
                 Person p = businessWithPerson.getPersonByEmail(email);
@@ -193,6 +200,27 @@ public class FacebookOauth2Service {
             emailSender.sendMail(subject, text);
             id = businessWithSocial.newSocial(social, auditTrail);
             social.setId(id); //Social object is ready
+        } else {
+            //detect social update and act
+            Collection<AuditTrail> auditTrailCollection = new ArrayList<>();
+            if (social.getFacebookFirstName().compareToIgnoreCase(firstName) != 0) {
+                social.setFacebookFirstName(firstName);
+                social.setFacebookUserName(firstName);  // this is what we can access by default...
+                Long id = businessWithNextGeneralKey.getNextGeneralId();
+                AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(id, social.getFacebookUserName(), "Social:Update:" + social.getId().toString(),
+                        "Facebook FirstName/Name updated to:" + firstName, "Facebook");
+                auditTrailCollection.add(auditTrail);
+            }
+            if (social.getFacebookEmail().compareToIgnoreCase(email) != 0) {
+                social.setFacebookEmail(email);
+                Long id = businessWithNextGeneralKey.getNextGeneralId();
+                AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(id, social.getFacebookUserName(), "Social:Update:" + social.getId().toString(),
+                        "Facebook Email updated to:" + email, "Facebook");
+                auditTrailCollection.add(auditTrail);
+            }
+            if (!auditTrailCollection.isEmpty()) {
+                businessWithSocial.updateSocial(social, auditTrailCollection);
+            }
         }
         return social;
     }

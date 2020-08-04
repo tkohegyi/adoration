@@ -121,9 +121,9 @@ public class CurrentUserProvider {
         return loggedInUserName;
     }
 
-    public void registerLogin(HttpSession httpSession) {
+    public void registerLogin(HttpSession httpSession, final String oauth2ServiceName) {
         CurrentUserInformationJson currentUserInformationJson = getUserInformation(httpSession);
-        String data = "";
+        String data = oauth2ServiceName;
         long socialId = 0;
         if (currentUserInformationJson.socialId != null) {
             socialId = currentUserInformationJson.socialId;
@@ -132,7 +132,7 @@ public class CurrentUserProvider {
         }
         AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(socialId,
                 currentUserInformationJson.userName, "Login", "User logged in: " + currentUserInformationJson.userName, data);
-        businessWithAuditTrail.saveAuditTrainSafe(auditTrail);
+        businessWithAuditTrail.saveAuditTrailSafe(auditTrail);
     }
 
     public void registerLogout(HttpSession httpSession) {
@@ -146,6 +146,6 @@ public class CurrentUserProvider {
         }
         AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(socialId,
                 currentUserInformationJson.userName, "Logout", "User logged out: " + currentUserInformationJson.userName, data);
-        businessWithAuditTrail.saveAuditTrainSafe(auditTrail);
+        businessWithAuditTrail.saveAuditTrailSafe(auditTrail);
     }
 }

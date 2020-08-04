@@ -10,7 +10,7 @@ function setupMenu() {
         }
         if (loggedInUserInfo.isRegisteredAdorator) {
             $("#nav-information").show();
-            $("#nav-ador-list").show();
+            //$("#nav-ador-list").show();
         } else {
             $("#nav-ador-registration").show();
         }

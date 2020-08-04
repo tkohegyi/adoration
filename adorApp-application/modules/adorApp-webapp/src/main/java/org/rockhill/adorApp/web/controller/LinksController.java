@@ -70,4 +70,40 @@ public class LinksController extends ControllerBase {
         return content;
     }
 
+    /**
+     * Gets log history of a specific link
+     *
+     * @return with the link history as a JSON response
+     */
+    @ResponseBody
+    @RequestMapping(value = "/adorationSecure/getLinkHistory/{id:.+}", method = {RequestMethod.GET, RequestMethod.POST})
+    public TableDataInformationJson getLinkHistoryById(HttpSession httpSession, @PathVariable("id") final String requestedId) {
+        TableDataInformationJson content = null;
+        if (isAdoratorAdmin(currentUserProvider, httpSession)) {
+            //can get the history
+            Long id = Long.valueOf(requestedId);
+            Object history = linkProvider.getLinkHistoryAsObject(id);
+            content = new TableDataInformationJson(history);
+        }
+        return content;
+    }
+
+    /**
+     * Gets specific Link
+     *
+     * @return with the link as a JSON response
+     */
+    @ResponseBody
+    @RequestMapping(value = "/adorationSecure/getLink/{id:.+}", method = {RequestMethod.GET, RequestMethod.POST})
+    public TableDataInformationJson getLinkById(HttpSession httpSession, @PathVariable("id") final String requestedId) {
+        TableDataInformationJson content = null;
+        if (isAdoratorAdmin(currentUserProvider, httpSession)) {
+            //can get the link
+            Long id = Long.valueOf(requestedId);
+            Object person = linkProvider.getLinkAsObject(id, currentUserProvider.getUserInformation(httpSession));
+            content = new TableDataInformationJson(person);
+        }
+        return content;
+    }
+
 }

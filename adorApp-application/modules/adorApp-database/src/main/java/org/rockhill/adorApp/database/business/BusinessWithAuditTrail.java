@@ -36,7 +36,7 @@ public class BusinessWithAuditTrail {
         if (sessionFactory != null) {
             Session session = sessionFactory.openSession();
             session.beginTransaction();
-            String hql = "from AuditTrail as AT where AT.refId = " + id.toString() + " OR AT.activityType like '%:" + id.toString() + " 'order by AT.atWhen ASC";
+            String hql = "from AuditTrail as AT where AT.refId = " + id.toString() + " OR AT.activityType like '%:" + id.toString() + "' order by AT.atWhen ASC";
             Query query = session.createQuery(hql);
             result = (List<AuditTrail>) query.list();
             session.getTransaction().commit();
@@ -72,7 +72,7 @@ public class BusinessWithAuditTrail {
      *
      * @param auditTrail the record to be stored.
      */
-    public void saveAuditTrainSafe(AuditTrail auditTrail) {
+    public void saveAuditTrailSafe(AuditTrail auditTrail) {
         SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
         if (sessionFactory != null) {
             Session session = sessionFactory.openSession();

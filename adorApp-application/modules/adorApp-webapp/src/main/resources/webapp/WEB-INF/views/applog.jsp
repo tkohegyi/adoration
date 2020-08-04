@@ -31,21 +31,21 @@
   </div>
   <div class="container">
     <fieldset class="form-horizontal">
-    <legend class="message-legend">Please choose what you would like to Administer...</legend>
+    <legend class="message-legend">Válassz az alábbi lehetőségek közül...</legend>
     <div class="control-group">
     <a id="people-button" class="btn btn-primary" href="/adorationSecure/adorators">Adorálók</a>
     <a id="link-button" class="btn btn-primary" href="/adorationSecure/links">Órák</a>
     <a id="social-button" class="btn btn-primary" href="/adorationSecure/social">Azonosítások</a>
     <a id="coordinator-button" class="btn btn-primary" href="/adorationSecure/coordinators">Koordinátorok</a>
-    <a id="audit-button" class="btn btn-primary" href="/adorationSecure/audit">Audit Log</a>
-    <a id="translator-button" class="btn btn-primary" href="/adorationSecure/translator">Nyelvek</a>
+    <a id="audit-button" class="btn btn-outline-secondary" href="/adorationSecure/audit">Audit Log</a>
+    <a id="translator-button" class="btn btn-outline-secondary" href="/adorationSecure/translator">Nyelvek</a>
     </div>
     </fieldset>
 
     <fieldset class="form-horizontal">
-        <legend>Log Files</legend>
+        <legend>Logok</legend>
         <div class="control-group">
-            <span class="help-block">Click on a log file to download its contents.</span>
+            <span class="help-block">Válassz az alább elérhető log file-ok közül.</span>
         </div>
         <div class="control-group">
             <ol id="div-log-files"></ol>

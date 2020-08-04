@@ -110,7 +110,7 @@ public class LoginController {
             sc.setAuthentication(authentication);
             httpSession.setAttribute(SPRING_SECURITY_CONTEXT_KEY, sc);
             logger.info("User logged in with Google: " + currentUserProvider.getQuickUserName(authentication));
-            currentUserProvider.registerLogin(httpSession);
+            currentUserProvider.registerLogin(httpSession, "Google");
             try {
                 httpServletResponse.sendRedirect(webAppConfigurationAccess.getProperties().getGoogleRedirectUrl());
             } catch (IOException e) {
@@ -124,7 +124,7 @@ public class LoginController {
             sc.setAuthentication(authentication);
             httpSession.setAttribute(SPRING_SECURITY_CONTEXT_KEY, sc);
             logger.info("User logged in with Facebook: " + currentUserProvider.getQuickUserName(authentication));
-            currentUserProvider.registerLogin(httpSession);
+            currentUserProvider.registerLogin(httpSession, "Facebook");
             try {
                 httpServletResponse.sendRedirect(webAppConfigurationAccess.getProperties().getGoogleRedirectUrl());
             } catch (IOException e) {
