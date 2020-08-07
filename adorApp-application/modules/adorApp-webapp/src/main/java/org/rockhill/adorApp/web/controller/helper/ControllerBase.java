@@ -19,6 +19,11 @@ public class ControllerBase {
         return currentUserInformationJson.isAdoratorAdmin;
     }
 
+    public Boolean isPrivilegedAdorator(CurrentUserProvider currentUserProvider, HttpSession httpSession) {
+        CurrentUserInformationJson currentUserInformationJson = currentUserProvider.getUserInformation(httpSession);
+        return currentUserInformationJson.isPrivilegedAdorator;
+    }
+
     public Boolean isRegisteredAdorator(CurrentUserProvider currentUserProvider, HttpSession httpSession) {
         CurrentUserInformationJson currentUserInformationJson = currentUserProvider.getUserInformation(httpSession);
         return currentUserInformationJson.isRegisteredAdorator;

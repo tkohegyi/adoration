@@ -10,18 +10,13 @@ import org.rockhill.adorApp.database.tables.Link;
 import org.rockhill.adorApp.database.tables.Person;
 import org.rockhill.adorApp.database.tables.Social;
 import org.rockhill.adorApp.helper.EmailSender;
-import org.rockhill.adorApp.web.json.CurrentUserInformationJson;
-import org.rockhill.adorApp.web.json.DeleteEntityJson;
-import org.rockhill.adorApp.web.json.PersonInformationJson;
-import org.rockhill.adorApp.web.json.RegisterAdoratorJson;
+import org.rockhill.adorApp.web.json.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @Component
 public class PeopleProvider {
@@ -260,5 +255,17 @@ public class PeopleProvider {
                 "Person:New:" + person.getId(), "Új adoráló regisztrációja.", text);
         Long id = businessWithPerson.newPerson(person, auditTrail);
         return id;
+    }
+
+    public Object getAdoratorListAsObject(Boolean privilegedAdorator) {
+        List<Person> people = businessWithPerson.getPersonList();
+        List<PersonJson> personList = new LinkedList<>();
+        //filter out ppl and fields
+        for (Person p : people) {
+            if ( !AdoratorStatusTypes.isInactive(p.getAdorationStatus())) {
+                personList.add(new PersonJson(p, privilegedAdorator));
+            }
+        }
+        return personList;
     }
 }

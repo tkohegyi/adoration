@@ -1,7 +1,5 @@
 package org.rockhill.adorApp.web.json;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
-
 public class CurrentUserInformationJson {
     public boolean isLoggedIn;
     public boolean isAuthorized;
@@ -11,7 +9,7 @@ public class CurrentUserInformationJson {
     public String userName;
     public String languageCode;
     public boolean isRegisteredAdorator;
-    public boolean isAdoratorLeader;
+    public boolean isPrivilegedAdorator;
     public boolean isAdoratorAdmin;
 
     public CurrentUserInformationJson() {
@@ -29,11 +27,11 @@ public class CurrentUserInformationJson {
         userName = loggedInUserName;
         languageCode = "hu"; //default language of the site
         isRegisteredAdorator = false;
-        isAdoratorLeader = false;
+        isPrivilegedAdorator = false;
         isAdoratorAdmin = false;
     }
 
     public boolean isPrivilegedUser() {
-        return isAdoratorLeader || isAdoratorAdmin;
+        return isPrivilegedAdorator || isAdoratorAdmin;
     }
 }

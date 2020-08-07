@@ -56,7 +56,7 @@
 			</tr>
 			<tr>
 				<td valign="middle" align="right" class="onlineAdorator">Kék keret&nbsp;&nbsp;</td>
-				<td>-tel rendelkeznek azok az órák, amelyekben Online módon is biztosítva van az Örökimádás. Online adorálásra az ország bármely pontjáról lehet jelentkezni, illetve azon idősebb vagy beteg testvéreinknek is ezt a módot ajánljuk, akik személyesen nem tudják felkeresni a kápolnát.</td>
+				<td>-tel rendelkeznek azok az órák, amelyekben Online módon is biztosítva van az Örökimádás. Online adorálásra az ország azaz a világ bármely pontjáról lehet jelentkezni, illetve azon idősebb vagy beteg testvéreinknek is ezt a módot ajánljuk, akik személyesen nem tudják felkeresni a kápolnát.</td>
 			</tr>
 			<tr>
 				<td valign="middle" align="right" class="lowPriorityColumn">Szürke&nbsp;&nbsp;</td>

@@ -2,6 +2,9 @@ package org.rockhill.adorApp.database.business.helper.enums;
 
 import org.rockhill.adorApp.database.exception.DatabaseHandlingException;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public enum AdoratorStatusTypes {
     USER("External User/Adorator", 0),
     PRE_ADORATOR("Pre-Adorator", 1),
@@ -12,12 +15,21 @@ public enum AdoratorStatusTypes {
     ADORATOR_EMPHASIZED("Emphasized Adorator",6), //for Margit and all coordinators
     ADORATOR_ADMIN("Administrator", 7);
 
-    private String adoratorStatusText;
-    private Integer adoratorStatusValue;
+    private final String adoratorStatusText;
+    private final Integer adoratorStatusValue;
+    private static final Set<AdoratorStatusTypes> inactives;
 
     AdoratorStatusTypes(String adoratorStatusText, Integer adoratorStatusValue) {
         this.adoratorStatusText = adoratorStatusText;
         this.adoratorStatusValue = adoratorStatusValue;
+    }
+
+    static {
+        inactives = new HashSet<>();
+        inactives.add(AdoratorStatusTypes.REGISTERED_BY_MISTAKE);
+        inactives.add(AdoratorStatusTypes.PRE_ADORATOR);
+        inactives.add(AdoratorStatusTypes.POST_ADORATOR);
+        inactives.add(AdoratorStatusTypes.DIED_ADORATOR);
     }
 
     public Integer getAdoratorStatusValue() {
@@ -57,4 +69,8 @@ public enum AdoratorStatusTypes {
         throw new DatabaseHandlingException("Invalid AdoratorStatusTypes requested: " + id);
     }
 
+    public static Boolean isInactive(Integer typeId) {
+        AdoratorStatusTypes adoratorStatusTypes = getTypeFromId(typeId);
+        return inactives.contains(adoratorStatusTypes);
+    }
 }

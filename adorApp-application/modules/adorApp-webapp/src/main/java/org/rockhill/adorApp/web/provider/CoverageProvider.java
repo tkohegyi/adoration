@@ -41,7 +41,7 @@ public class CoverageProvider {
     public CoverageInformationJson getCoverageInfo(CurrentUserInformationJson currentUserInformationJson) {
         CoverageInformationJson coverageInformationJson = new CoverageInformationJson();
         //determine if adorator info is required
-        boolean canSeeAdorators = currentUserInformationJson.isLoggedIn && currentUserInformationJson.isAdoratorLeader;
+        boolean canSeeAdorators = currentUserInformationJson.isLoggedIn && currentUserInformationJson.isPrivilegedAdorator;
 
         //fill the day names first
         coverageInformationJson.dayNames = new HashMap<>();

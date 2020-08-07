@@ -8,6 +8,7 @@ public class PersonJson {
     public String name;
     public String email;
     public String mobile;
+    public String coordinatorComment;
     public String visibleComment;
 
     /**
@@ -17,6 +18,7 @@ public class PersonJson {
      * - Only ID is available in case DCH is not enabled.
      * - Name is "Anonymous" in case person would like to remain anonymous, and only id and mobile fields are filled.
      * - email/mobile is visible based on visibility flag.
+     * - coordinator comment requires privileged user
      * - visible comment is always available
      *
      * @param person
@@ -37,6 +39,11 @@ public class PersonJson {
             this.mobile = person.getMobile();
         } else {
             this.mobile = UNKNOWN_DATA;
+        }
+        if (isPrivilegedUser) {
+            this.coordinatorComment = person.getCoordinatorComment();
+        } else {
+            this.coordinatorComment = "";
         }
         this.visibleComment = person.getVisibleComment();
     }

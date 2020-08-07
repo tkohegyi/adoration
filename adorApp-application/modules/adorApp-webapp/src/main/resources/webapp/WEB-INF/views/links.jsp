@@ -64,8 +64,8 @@
                             <th>Publikus megjegyzés</th>
                         </tr>
                     </tfoot>
-                </table>
-            </div>
+            </table>
+        </div>
     </fieldset>
 
     </div>
