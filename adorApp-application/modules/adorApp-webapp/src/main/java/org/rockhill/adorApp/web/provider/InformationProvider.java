@@ -49,12 +49,11 @@ public class InformationProvider {
             informationJson.linkList = businessWithLink.getLinksOfPerson(person);
             informationJson.leadership = coordinatorProvider.getLeadership(currentUserInformationJson);
             Calendar cal = Calendar.getInstance();
-            cal.setFirstDayOfWeek(0); //ensure that Sunday is the first day of the week
-            int hourId = cal.get(Calendar.DAY_OF_WEEK) * 24 + cal.get(Calendar.HOUR_OF_DAY);
+            int hourId = (cal.get(Calendar.DAY_OF_WEEK)-1) * 24 + cal.get(Calendar.HOUR_OF_DAY);  // use sun as 0 day
             informationJson.hourInDayNow = hourId % 24;
             informationJson.hourInDayNext = (hourId + 1) % 24;
             informationJson.currentHourList = businessWithLink.getLinksOfHour(hourId);
-            informationJson.futureHourList = businessWithLink.getLinksOfHour(hourId + 1);
+            informationJson.futureHourList = businessWithLink.getLinksOfHour((hourId + 1) % 168);
             Set<Long> personIds = new HashSet<>();
             if (informationJson.linkList != null) {
                 for (Link l: informationJson.linkList) {
