@@ -37,7 +37,6 @@
     <div class="control-group">
         <button id="adorators-button" type="button" class="btn btn-primary" onclick="adoratorListClick()">Adorálók Listája</button>
         <button id="hours-button" type="button" class="btn btn-primary" onclick="hourListClick()">Vállalt Órák Listája</button>
-        <button id="refreshAll-button" type="button" class="btn btn-secondary" onclick="refreshEntity()">Frissítés</button>
     </div>
     </fieldset>
 
@@ -105,7 +104,6 @@
             <table id="link" class="table table-striped table-bordered table-hover compact cell-border" style="width:100%">
                     <thead>
                         <tr>
-                            <th>ID</th>
                             <th>Nap</th>
                             <th>Óra</th>
                             <th>Adoráló Név</th>
@@ -118,7 +116,6 @@
                     </thead>
                     <tfoot>
                         <tr>
-                            <th>ID</th>
                             <th>Nap</th>
                             <th>Óra</th>
                             <th>Adoráló Név</th>
