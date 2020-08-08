@@ -50,9 +50,9 @@
                             <th>Név</th>
                             <th>Telefonszám</th>
                             <th>e-mail</th>
+                            <th>Vállalt órák</th>
                             <th>Koordinátor megjegyzés</th>
                             <th>Közös/Látható megjegyzés</th>
-                            <th>Vállalt órák</th>
                         </tr>
                     </thead>
                     <tfoot>
@@ -61,9 +61,9 @@
                             <th>Név</th>
                             <th>Telefonszám</th>
                             <th>e-mail</th>
+                            <th>Vállalt órák</th>
                             <th>Koordinátor megjegyzés</th>
                             <th>Közös/Látható megjegyzés</th>
-                            <th>Vállalt órák</th>
                         </tr>
                     </tfoot>
             </table>
@@ -80,8 +80,8 @@
                             <th>Név</th>
                             <th>Telefonszám</th>
                             <th>e-mail</th>
-                            <th>Megjegyzés</th>
                             <th>Vállalt órák</th>
+                            <th>Megjegyzés</th>
                         </tr>
                     </thead>
                     <tfoot>
@@ -90,8 +90,8 @@
                             <th>Név</th>
                             <th>Telefonszám</th>
                             <th>e-mail</th>
-                            <th>Megjegyzés</th>
                             <th>Vállalt órák</th>
+                            <th>Megjegyzés</th>
                         </tr>
                     </tfoot>
             </table>
