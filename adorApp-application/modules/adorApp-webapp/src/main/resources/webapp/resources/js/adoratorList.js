@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    $("#nav-application-log").addClass("active");
+    $("#nav-ador-list").addClass("active");
     hidePeople();
     hideLinks();
     setupMenu();
