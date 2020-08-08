@@ -4,6 +4,7 @@ import org.rockhill.adorApp.database.business.*;
 import org.rockhill.adorApp.database.business.helper.Converter;
 import org.rockhill.adorApp.database.business.helper.enums.AdorationMethodTypes;
 import org.rockhill.adorApp.database.business.helper.enums.AdoratorStatusTypes;
+import org.rockhill.adorApp.database.business.helper.enums.TranslatorDayNames;
 import org.rockhill.adorApp.database.exception.DatabaseHandlingException;
 import org.rockhill.adorApp.database.tables.AuditTrail;
 import org.rockhill.adorApp.database.tables.Link;
@@ -34,6 +35,8 @@ public class PeopleProvider {
     BusinessWithLink businessWithLink;
     @Autowired
     BusinessWithSocial businessWithSocial;
+    @Autowired
+    BusinessWithTranslator businessWithTranslator;
     @Autowired
     EmailSender emailSender;
 
@@ -257,15 +260,36 @@ public class PeopleProvider {
         return id;
     }
 
-    public Object getAdoratorListAsObject(Boolean privilegedAdorator) {
+    public Object getAdoratorListAsObject(CurrentUserInformationJson currentUserInformationJson, Boolean privilegedAdorator) {
         List<Person> people = businessWithPerson.getPersonList();
         List<PersonJson> personList = new LinkedList<>();
+        List<Link> linkList = new LinkedList<>();
         //filter out ppl and fields
         for (Person p : people) {
             if ( !AdoratorStatusTypes.isInactive(p.getAdorationStatus())) {
                 personList.add(new PersonJson(p, privilegedAdorator));
+                List<Link> personLinkList = businessWithLink.getLinksOfPerson(p);
+                if (personLinkList != null) {
+                    for (Link l : personLinkList) {
+                        if (!linkList.contains(l)) {
+                            l.setAdminComment(""); //empty the admin comment part, since adorators shall not see this part
+                            linkList.add(l);
+                        }
+                    }
+                }
             }
         }
-        return personList;
+        //now fill the structure
+        LinkJson linkJson = new LinkJson();
+        linkJson.linkList = linkList;
+        linkJson.relatedPersonList = personList;
+        //fill the day names
+        linkJson.dayNames = new HashMap<>();
+        for (TranslatorDayNames dayName : TranslatorDayNames.values()) {
+            String textId = dayName.toString();
+            String value = businessWithTranslator.getTranslatorValue(currentUserInformationJson.languageCode, textId, textId);
+            linkJson.dayNames.put(dayName.getDayValue(), value);
+        }
+        return linkJson;
     }
 }

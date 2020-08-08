@@ -1,6 +1,5 @@
 package org.rockhill.adorApp.web.provider;
 
-import org.rockhill.adorApp.database.business.BusinessWithCoordinator;
 import org.rockhill.adorApp.database.business.BusinessWithLink;
 import org.rockhill.adorApp.database.business.BusinessWithPerson;
 import org.rockhill.adorApp.database.business.BusinessWithTranslator;
@@ -8,7 +7,6 @@ import org.rockhill.adorApp.database.business.helper.enums.AdoratorStatusTypes;
 import org.rockhill.adorApp.database.business.helper.enums.TranslatorDayNames;
 import org.rockhill.adorApp.database.tables.Link;
 import org.rockhill.adorApp.database.tables.Person;
-import org.rockhill.adorApp.web.json.CoordinatorJson;
 import org.rockhill.adorApp.web.json.CurrentUserInformationJson;
 import org.rockhill.adorApp.web.json.InformationJson;
 import org.rockhill.adorApp.web.json.PersonJson;

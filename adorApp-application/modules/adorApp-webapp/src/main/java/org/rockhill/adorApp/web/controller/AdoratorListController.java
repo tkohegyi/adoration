@@ -43,7 +43,7 @@ public class AdoratorListController extends ControllerBase {
     public TableDataInformationJson getPersonTable(HttpSession httpSession, @RequestParam("filter") Optional<String> filter) {
         TableDataInformationJson content = null;
         if (isRegisteredAdorator(currentUserProvider, httpSession)) {
-            Object people = peopleProvider.getAdoratorListAsObject(isPrivilegedAdorator(currentUserProvider, httpSession));
+            Object people = peopleProvider.getAdoratorListAsObject(currentUserProvider.getUserInformation(httpSession), isPrivilegedAdorator(currentUserProvider, httpSession));
             content = new TableDataInformationJson(people);
         }
         return content;

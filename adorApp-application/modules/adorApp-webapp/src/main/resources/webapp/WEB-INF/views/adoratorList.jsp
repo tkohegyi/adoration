@@ -53,6 +53,7 @@
                             <th>e-mail</th>
                             <th>Koordinátor megjegyzés</th>
                             <th>Közös/Látható megjegyzés</th>
+                            <th>Vállalt órák</th>
                         </tr>
                     </thead>
                     <tfoot>
@@ -63,6 +64,7 @@
                             <th>e-mail</th>
                             <th>Koordinátor megjegyzés</th>
                             <th>Közös/Látható megjegyzés</th>
+                            <th>Vállalt órák</th>
                         </tr>
                     </tfoot>
             </table>
@@ -80,6 +82,7 @@
                             <th>Telefonszám</th>
                             <th>e-mail</th>
                             <th>Megjegyzés</th>
+                            <th>Vállalt órák</th>
                         </tr>
                     </thead>
                     <tfoot>
@@ -89,6 +92,7 @@
                             <th>Telefonszám</th>
                             <th>e-mail</th>
                             <th>Megjegyzés</th>
+                            <th>Vállalt órák</th>
                         </tr>
                     </tfoot>
             </table>
