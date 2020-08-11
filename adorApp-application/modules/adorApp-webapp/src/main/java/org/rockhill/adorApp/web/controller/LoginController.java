@@ -67,6 +67,7 @@ public class LoginController {
         String loginUrl = googleOauth2Service.getLoginUrlInformation();
         try {
             httpServletResponse.sendRedirect(loginUrl);
+            return null;
         } catch (IOException e) {
             logger.warn("Redirect to Google authentication does not work.", e);
         }
@@ -83,6 +84,7 @@ public class LoginController {
         String loginUrl = facebookOauth2Service.getLoginUrlInformation();
         try {
             httpServletResponse.sendRedirect(loginUrl);
+            return null;
         } catch (IOException e) {
             logger.warn("Redirect to Facebook authentication does not work.", e);
         }
@@ -113,6 +115,7 @@ public class LoginController {
             currentUserProvider.registerLogin(httpSession, "Google");
             try {
                 httpServletResponse.sendRedirect(webAppConfigurationAccess.getProperties().getGoogleRedirectUrl());
+                return null;
             } catch (IOException e) {
                 logger.warn("Redirect after Google authentication does not work.", e);
                 return "login";
@@ -127,6 +130,7 @@ public class LoginController {
             currentUserProvider.registerLogin(httpSession, "Facebook");
             try {
                 httpServletResponse.sendRedirect(webAppConfigurationAccess.getProperties().getGoogleRedirectUrl());
+                return null;
             } catch (IOException e) {
                 logger.warn("Redirect after Facebook authentication does not work.", e);
                 return "login";
@@ -153,6 +157,7 @@ public class LoginController {
         }
         try {
             httpServletResponse.sendRedirect(webAppConfigurationAccess.getProperties().getBaseUrl());
+            return null;
         } catch (IOException e) {
             logger.warn("Redirect after logout does not work.", e);
         }
