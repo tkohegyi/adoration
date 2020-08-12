@@ -79,7 +79,7 @@ function setupSocialTable() {
                 "render": function ( data, type, row ) {
                     var z;
                     if ((data != null) && (data.startsWith("http"))) {
-                        z = "<img height=11% src=\"" + data + "\" alt=\"Google User Image\"/>";
+                        z = "<img height=\"60\" src=\"" + data + "\" alt=\"Google User Image\"/>";
                     } else {
                         z = "";
                     }

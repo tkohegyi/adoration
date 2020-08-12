@@ -38,14 +38,14 @@
       "helpText": "Az adorálóra leginkább jellemző állapotot kell választani.",
       "mandatory": true,
       "selection": [
-        { "id": 0, "value": "Külsős/Alkalmi-Adoráló" },
         { "id": 5, "value": "Céltalanul regisztrált" },
-        { "id": 1, "value": "Újonnan regisztrált" },
+        { "id": 0, "value": "Külsős/Alkalmi-Adoráló" },
         { "id": 2, "value": "Adoráló" },
         { "id": 3, "value": "Ex-Adoráló" },
         { "id": 4, "value": "Elhunyt" },
         { "id": 6, "value": "Kiemelt adoráló" },
-        { "id": 7, "value": "Adminisztrátor" }
+        { "id": 7, "value": "Adminisztrátor" },
+        { "id": 1, "value": "Újonnan regisztrált" }
       ],
       "edit": {
         "visible" : true
