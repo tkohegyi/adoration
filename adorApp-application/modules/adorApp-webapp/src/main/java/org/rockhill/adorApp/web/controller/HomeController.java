@@ -54,6 +54,16 @@ public class HomeController {
         return "home";
     }
 
+    @RequestMapping(value = "/favicon.ico", method = {RequestMethod.GET, RequestMethod.POST})
+    public String favicon() {
+        return "redirect:/resources/img/favicon.ico";
+    }
+
+    @RequestMapping(value = "/robots.txt", method = {RequestMethod.GET, RequestMethod.POST})
+    public String robots() {
+        return "redirect:/resources/robots.txt";
+    }
+
     @RequestMapping(value = "/adoration/e404", method = {RequestMethod.GET, RequestMethod.POST})
     public String e404(HttpServletRequest httpServletRequest) {
 /*        if (httpServletRequest != null && httpServletRequest.getRemoteAddr() != null) {
