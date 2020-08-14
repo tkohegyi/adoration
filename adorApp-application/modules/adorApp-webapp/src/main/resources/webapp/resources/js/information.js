@@ -73,7 +73,7 @@ function getInformation() {
             $("#yesLeadership").append(tr);
             for (var i = 0; i < information.leadership.length; i++) {
                 var coordinator = information.leadership[i];
-                if (parseInt(coordinator.coordinatorType) > 24) { //only for main coordinators
+                if (parseInt(coordinator.coordinatorType) > 23) { //only for main coordinators
                     tr = $("<tr/>");
                     if (i % 2 == 0) {
                         tr.addClass("evenInfo");

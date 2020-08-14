@@ -50,11 +50,15 @@
         <div id="noLeadership">Sajnos nincs megjeleníthető adat.</div>
 		<p><table id="yesLeadership"><tbody></tbody></table></p>
 	</div>
+
+	<!--
 	<div class="centerwidediv" align="center">
         <legend class="message-legend h4"d>Letöltések</legend>
         <div id="noDownloads">Sajnos nincs megjeleníthető adat.</div>
 		<p><table id="yesDownloads"><tbody></tbody></table></p>
 	</div>
+	-->
+
 <script src="./../resources/js/external/jquery-3.4.1.js"></script>
 <script src="./../resources/js/external/bootstrap-4.3.1.min.js"></script>
 <script src="./../resources/js/common.js"></script>
