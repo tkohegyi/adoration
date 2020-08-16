@@ -3,6 +3,7 @@ package org.rockhill.adorApp.web.controller;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.rockhill.adorApp.web.provider.CurrentUserProvider;
 import org.rockhill.adorApp.web.provider.LogFileProvider;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -29,6 +30,8 @@ public class AppLogControllerTest {
     private static final String ATTACHMENT_TEMPLATE = "attachment; filename=%s";
     @Mock
     private LogFileProvider logFileProvider;
+    @Mock
+    private CurrentUserProvider currentUserProvider;
 
     @InjectMocks
     private AppLogController underTest;
@@ -46,8 +49,9 @@ public class AppLogControllerTest {
         fileNames.add("a");
         expected.put(JSON_NAME, fileNames);
         given(logFileProvider.getLogFileNames()).willReturn(fileNames);
+        given(underTest.isAdoratorAdmin(currentUserProvider, null)).willReturn(true);
         //WHEN
-        Map<String, Collection<String>> result = underTest.getLogFiles();
+        Map<String, Collection<String>> result = underTest.getLogFiles(null);
         //THEN
         assertEquals(expected, result);
     }
@@ -58,8 +62,9 @@ public class AppLogControllerTest {
         String expectedBody = "content";
         String fileName = "something";
         given(logFileProvider.getLogContent(fileName)).willReturn(expectedBody);
+        given(underTest.isAdoratorAdmin(currentUserProvider, null)).willReturn(true);
         //WHEN
-        ResponseEntity<String> result = underTest.getLogFileContent(fileName, true, NOT_IMPORTANT);
+        ResponseEntity<String> result = underTest.getLogFileContent(null, fileName, true, NOT_IMPORTANT);
         //THEN
         assertEquals(MediaType.TEXT_PLAIN, result.getHeaders().getContentType());
         assertEquals(HttpStatus.OK, result.getStatusCode());
@@ -73,8 +78,9 @@ public class AppLogControllerTest {
         String expectedBody = "content";
         String fileName = "something";
         given(logFileProvider.getLogContent(fileName)).willReturn(expectedBody);
+        given(underTest.isAdoratorAdmin(currentUserProvider, null)).willReturn(true);
         //WHEN
-        ResponseEntity<String> result = underTest.getLogFileContent(fileName, false, NOT_IMPORTANT);
+        ResponseEntity<String> result = underTest.getLogFileContent(null, fileName, false, NOT_IMPORTANT);
         //THEN
         assertEquals(MediaType.TEXT_PLAIN, result.getHeaders().getContentType());
         assertEquals(HttpStatus.OK, result.getStatusCode());
@@ -90,8 +96,9 @@ public class AppLogControllerTest {
         String body = "content\n";
         String fileName = "something";
         given(logFileProvider.getLogContent(fileName)).willReturn(body);
+        given(underTest.isAdoratorAdmin(currentUserProvider, null)).willReturn(true);
         //WHEN
-        ResponseEntity<String> result = underTest.getLogFileContent(fileName, true, userAgentWindows);
+        ResponseEntity<String> result = underTest.getLogFileContent(null, fileName, true, userAgentWindows);
         //THEN
         assertEquals(expectedBody, result.getBody());
     }

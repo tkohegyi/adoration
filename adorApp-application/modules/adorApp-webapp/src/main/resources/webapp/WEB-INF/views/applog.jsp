@@ -39,7 +39,7 @@
     <a id="coordinator-button" class="btn btn-primary" href="/adorationSecure/coordinators">Koordinátorok</a>
     <a id="audit-button" class="btn btn-outline-secondary" href="/adorationSecure/audit">Audit Log</a>
     <a id="translator-button" class="btn btn-outline-secondary" href="/adorationSecure/translator">Nyelvek</a>
-    <a id="translator-button" class="btn btn-outline-secondary" href="/adorationSecure/getExcelFull">Nyelvek</a>
+    <a id="translator-button" class="btn btn-primary" href="/adorationSecure/getExcelFull">Export to Excel</a>
     </div>
     </fieldset>
 

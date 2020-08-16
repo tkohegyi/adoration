@@ -12,13 +12,15 @@ public class PropertyDto {
     private final String facebook_app_id;
     private final String facebook_app_secret;
     private final Integer sessionTimeout;
+    private final String excel_file_name;
 
     /**
      * Constructs a new property holding object with the given fields.
      *
      */
     public PropertyDto(final String google_client_id, final String google_client_secret, final String google_redirect_url,
-                       final String base_url, final String facebook_app_id, final String facebook_app_secret, final Integer sessionTimeout) {
+                       final String base_url, final String facebook_app_id, final String facebook_app_secret,
+                       final Integer sessionTimeout, final String excel_file_name) {
         super();
         this.google_client_id = google_client_id;
         this.google_client_secret = google_client_secret;
@@ -27,6 +29,7 @@ public class PropertyDto {
         this.facebook_app_id = facebook_app_id;
         this.facebook_app_secret = facebook_app_secret;
         this.sessionTimeout = sessionTimeout;
+        this.excel_file_name = excel_file_name;
     }
 
     public String getGoogleClientId() {
@@ -54,5 +57,7 @@ public class PropertyDto {
     public Integer getSessionTimeout() {
         return sessionTimeout;
     }
+
+    public String getExcelFileName() { return excel_file_name; }
 
 }

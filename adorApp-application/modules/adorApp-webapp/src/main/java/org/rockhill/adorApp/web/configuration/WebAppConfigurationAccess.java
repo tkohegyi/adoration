@@ -42,9 +42,11 @@ public class WebAppConfigurationAccess implements ConfigurationAccessBase {
         String google_client_secret = propertyHolder.get("google_client_secret");
         String google_redirect_url = propertyHolder.get("google_redirect_url");
         String base_url = propertyHolder.get("base_url");
-        String facebook_app_id = propertyHolder.get("facebook_app_id");;
+        String facebook_app_id = propertyHolder.get("facebook_app_id");
         String facebook_app_secret = propertyHolder.get("facebook_app_secret");
         Integer sessionTimeout = NumberUtils.toInt(propertyHolder.get("sessionTimeout"), SESSION_TIMEOUT_DEFAULT_VALUE);
-        properties = new PropertyDto(google_client_id, google_client_secret, google_redirect_url, base_url, facebook_app_id, facebook_app_secret, sessionTimeout);
+        String excel_file_name = propertyHolder.get("excel_file_name");
+        properties = new PropertyDto(google_client_id, google_client_secret, google_redirect_url, base_url,
+                facebook_app_id, facebook_app_secret, sessionTimeout, excel_file_name);
     }
 }
