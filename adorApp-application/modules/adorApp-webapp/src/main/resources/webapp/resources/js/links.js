@@ -168,11 +168,7 @@ function changeClick(e) {
     $("#editId").val(e);
     $("#deleteButton").show();
     $('#resetChangesButton').attr('onclick', 'reBuildModal()');
-    if ((typeof structureInfo != "undefined") && (typeof structureInfo.edit != "undefined") && (typeof structureInfo.edit.title != "undefined")) {
-       $('#editCenterTitle').text(structureInfo.edit.title);
-    } else {
-       $('#editCenterTitle').text('Módosítás');
-    }
+    $('#editCenterTitle').text('Módosítás');
     reBuildModal();
 }
 
@@ -183,12 +179,6 @@ function requestComplete() {
 
 function reBuildModal() {
     requestComplete(); //ensure availability of save button when the modal is refreshed
-    //reconstruct modal
-    var c = $('#editContent');
-    c.remove();
-    var t = $('#editTable');
-    var c = $("<tbody id=\"editContent\"/>");
-    t.append(c);
     //get and fill modal
     var retObj;
     var editId = $("#editId").val(); //filled by the button's onclick method
@@ -204,61 +194,125 @@ function reBuildModal() {
     if (typeof retObj == "undefined") return; //if link is not available, there is no point to rebuild
     var personObj = retObj.relatedPersonList[0];
     retObj = retObj.linkList[0];
-    if (typeof structureInfo != "undefined") {
-        //we have structureInfo
-        var info = structureInfo.info;
-        for (var i = 0; i < info.length; i++) { //iterate through columns
-            var row = info[i];
-            //first is about visibility - if not visible, skip
-            if ((typeof row.edit != "undefined") && (typeof row.edit.visible != "undefined") && (row.edit.visible == false)) continue;
-            var r = $("<tr/>");
-            //additional help text, based on behavior
-            let addMandatory = "";
-            let mandatoryFlag = row.mandatory;
-            if ((typeof row.mandatory != "undefined") && mandatoryFlag) {
-                addMandatory = "-m-";  // -m- is added
-            }
-            var td1 = $("<th>" + row.text + "</th>");
-            var text = "";
-            var idText = "field-" + row.id;
-            var nameText = idText + "-" + row.type + addMandatory;
-            let command = "retObj." + row.id;
-            var original = eval(command);
-            if (row.type == "fixText") {
-                text = original;
-            }
-            if (row.type.split("-")[0] == "input") { //input-100, input-1000 etc
-                text = "<input class=\"customField\" onchange=\"valueChanged(this,'" + row.type + "')\" type=\"text\" name=\"" + nameText + "\" id=\"" + idText + "\" value=\"" + original + "\" />";
-            }
-            if (row.type == "dateString-nullable") {
-                text =  "<input onchange=\"valueChanged(this,'" + row.type + "')\" type=\"date\" name=\"" + nameText + "\" id=\"" + idText + "\"  value=\"" + original + "\"/>";
-            }
-            if (row.type == "singleSelect") {
-                text = "";
-                for (var j = 0; j < row.selection.length; j++) {
-                    let selected = "";
-                    if (original == row.selection[j].id) {
-                        selected = " selected ";
-                    }
-                    text += "<option value=\"" + row.selection[j].id + "\"" + selected + ">" + row.selection[j].value + "</option>";
-                }
-                text = "<select id=\"" + idText + "\" class=\"custom-select\" onchange=\"valueChanged(this,'" + row.type + "')\">" + text + "</select>"
-            }
-            if (row.type == "i/n-boolean") {
-                let checked = "";
-                if (original == true) {
-                    checked = " checked ";
-                }
-                text =  "<input onchange=\"valueChanged(this,'" + row.type + "')\" type=\"checkbox\" " + checked + " name=\"" + nameText + "\" id=\"" + idText + "\" />";
-            }
-            //preserve original value too
-            var originalValue = "<input id=\"orig-" + idText + "\" type=\"hidden\" value=\"" + original + "\">";
-            var td2 = $("<td id=\"td-" + idText + "\">" + text + originalValue + "</td>");
-            //help text
-            var td3 = $("<td>" + row.helpText + "</td>");
-            r.append(td1);r.append(td2);r.append(td3);
-            c.append(r);
-        }
-    }
+    $("#adoratorName").text("Adoráló azonosítója (" + personObj.name + ")");
+    $("#newAdorator").val(retObj.personId);
+    $("#newDay").val((getDay(retObj.hourId) * 24).toString());
+    $("#newHour").val(getHourName(retObj.hourId).toString());
+    $("#newOnline").prop("checked", retObj.type == 1);
+    $("#newPriority").val(retObj.priority);
+    $("#newAdminComment").val(retObj.adminComment);
+    $("#newPublicComment").val(retObj.publicComment);
+}
 
+function deleteLink() {
+    if (!confirm('Are you sure you want to DELETE this Hour assignment - permanently?')) {
+      return;
+    }
+    var entityId = $("#editId").val(); //filled by the button's onclick method
+    var req = {
+        entityId : entityId,
+    };
+    var token = $("meta[name='_csrf']").attr("content");
+    var header = $("meta[name='_csrf_header']").attr("content");
+    $.ajax({
+        url : '/adorationSecure/deletePersonCommitment',
+        type : 'POST',
+        async: false,
+        contentType: 'application/json',
+        data: JSON.stringify(req),
+        dataType: 'json',
+        success : processEntityDeleted,
+        beforeSend : function(request) {
+            request.setRequestHeader(header, token);
+        },
+        complete : requestComplete,
+    }).fail( function(xhr, status) {
+        var obj = JSON.parse(xhr.responseText);
+        alert(obj.entityUpdate);
+    });
+}
+
+function processEntityDeleted() {
+    console.log("---=== Entity DELETED, going back to Entity list... ===---");
+    processEntityUpdated();
+}
+
+function processEntityUpdated() {
+    var table = $('#link').DataTable();
+    var filter = table.search(); //preserve filter
+    var path = "/adorationSecure/links";
+    if (typeof filter != "undefined" && filter.length > 0) {
+        path = path + "?filter=" + filter;
+    }
+    window.location = path;
+}
+
+function addClick() {
+    requestComplete(); //ensure availability of save button when the modal is refreshed
+    $("#editId").val(0);
+    $("#adoratorName").text("Adoráló azonosítója");
+    $("#newAdorator").val("");
+    $("#newDay").val("0");
+    $("#newHour").val("0");
+    $("#newOnline").prop("checked", false);
+    $("#newPriority").val("1");
+    $("#newAdminComment").val("");
+    $("#newPublicComment").val("");
+    $('#editCenterTitle').text('Új óra rögzítése');
+    $("#deleteButton").hide();
+}
+
+function saveNew() {
+    var b = {}; //empty object
+	//validations + prepare object
+	var eStr = "";
+    var bad = 0;
+    //let v;
+    b.id = $("#editId").val(); //filled by the button's onclick method, should be 0 in case of new, or the ID of the link in case of update
+    b.hourId = parseInt($("#newDay").find(":selected").val()) + parseInt($("#newHour").val());
+    b.personId = $("#newAdorator").val();
+    b.priority = $("#newPriority").val();
+    b.adminComment = $("#newAdminComment").val();
+    b.publicComment = $("#newPublicComment").val();
+    if ($("#newOnline").prop("checked").toString() == "true") {
+        b.type = 1;
+    } else {
+        b.type = 0;
+    }
+    // b is ready
+    //validation
+    if (b.personId <= 0) {
+        bad = 1;
+        eStr = "Adoráló megadása kötelező!";
+    }
+    if (b.priority == "") {
+        bad = 1;
+        eStr = "Prioritás megadása kötelező!";
+    }
+    //validation done (cannot validate more at client level)
+    if (bad == 1) {
+        alert(eStr);
+        console.log("---=== ALERT ===---")
+        return;
+    }
+    //save
+    var token = $("meta[name='_csrf']").attr("content");
+    var header = $("meta[name='_csrf_header']").attr("content");
+    //beforeRequest();
+    $.ajax({
+        url : '/adorationSecure/updatePersonCommitment',
+        type : 'POST',
+        async: false,
+        contentType: 'application/json',
+        data: JSON.stringify(b),
+        dataType: 'json',
+        success : processEntityUpdated,
+        beforeSend : function(request) {
+            request.setRequestHeader(header, token);
+        },
+        complete : requestComplete,
+    }).fail( function(xhr, status) {
+        var obj = JSON.parse(xhr.responseText);
+        alert(obj.entityUpdate);
+    });
 }

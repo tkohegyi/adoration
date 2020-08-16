@@ -443,7 +443,7 @@ function reBuildTimeModal(personId) {
     var hc = $("<tbody id=\"timeContent\"/>");
     $.get('/adorationSecure/getPersonCommitments/' + personId , function(data) {
         if ((typeof data != "undefined") && (typeof data.data != "undefined") && (typeof data.data.linkedHours != "undefined")) {
-            hourInfo = data.data.linkedHours;;
+            hourInfo = data.data.linkedHours;
             var info2 = data.data.others;
             var info3 = data.data.dayNames;
             for (var i = 0; i < hourInfo.length; i++) {

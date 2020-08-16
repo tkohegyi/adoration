@@ -23,7 +23,7 @@ public class BusinessWithNextGeneralKey {
             Session session = sessionFactory.openSession();
             session.beginTransaction();
             id = nextGeneralKey.getNextGeneralKay(session);
-            logger.info("New sequence arrived:" + id.toString());
+            logger.debug("New sequence arrived:" + id.toString());
             session.getTransaction().commit();
             session.close();
         }

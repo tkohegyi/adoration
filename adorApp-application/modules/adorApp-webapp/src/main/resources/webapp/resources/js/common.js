@@ -50,8 +50,13 @@ function findGetParameter(parameterName) {
 }
 
 function getDayName(hourId, dayNames) {
-    var x = Math.floor(hourId / 24);
+    var x = getDay(hourId);
     return dayNames[x];
+}
+
+function getDay(hourId) {
+    var x = Math.floor(hourId / 24);
+    return x;
 }
 
 function getHourName(hourId) {

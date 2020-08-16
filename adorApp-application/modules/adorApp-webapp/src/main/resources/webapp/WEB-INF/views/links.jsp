@@ -32,7 +32,7 @@
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
     <fieldset class="form-horizontal">
         <legend>Órák listája</legend>
-        <div class="container" style="padding:5px" align="right"><button id="add-button" type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal" onclick="addClick()">Új óra felvétele...</button></div>
+        <div class="container" style="padding:5px" align="right"><button id="add-button" type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal" onclick="addClick()">Új óra rögzítése...</button></div>
         <div class="container" style="padding:5px" align="right"><button id="refreshAll-button" type="button" class="btn btn-secondary" onclick="processEntityUpdated()">Frissítés</button></div>
         <div class="control-group">
             <table id="link" class="table table-striped table-bordered table-hover compact cell-border" style="width:100%">
@@ -82,7 +82,6 @@
           </div>
           <div class="modal-body">
               <form id="editTable">
-                <input id="editPersonId" type="hidden" value="">
                 <input id="editId" type="hidden" value="">
                 <table class="table table-hover table-bordered">
                       <thead>
@@ -92,6 +91,9 @@
                           </tr>
                       </thead>
                       <tbody id="newTimeContent">
+                          <tr><td id="adoratorName">Adoráló azonosítója</td><td>
+                            <input type="text" id="newAdorator">
+                          </td></tr>
                           <tr><td>Nap</td><td>
                             <select id="newDay">
                                 <option value="0">vasárnap</option>
@@ -141,18 +143,16 @@
                           </td></tr>
                       </tbody>
                 </table>
-                <table width="100%"><tr>
-                    <td align="left"><button id="deleteButton" type="button" class="btn btn-danger" onclick="delete()">Óra törlése</button></td>
-                    <td align="right">
-                        <button type="button" class="btn btn-info" onclick="cancelNewPartOfModal()">Mégsem</button>
-                        <button id="saveChangesButton" type="button" class="btn btn-success" onclick="saveNew()">Mentés</button>
-                    </td>
-                </tr></table>
               </form>
           </div>
           <div class="modal-footer">
-            <button id="newButton" type="button" class="btn btn-success" onclick="showNewPartOfModal()">Új óra hozzáadása</button>
-            <button id="cancelButton" type="button" class="btn btn-info" data-dismiss="modal">Mégsem</button>
+            <table width="100%"><tr>
+                <td align="left"><button id="deleteButton" type="button" class="btn btn-danger" onclick="deleteLink()">Óra törlése</button></td>
+                <td align="right">
+                    <button id="cancelButton" type="button" class="btn btn-info" data-dismiss="modal">Mégsem</button>
+                    <button id="saveChangesButton" type="button" class="btn btn-success" onclick="saveNew()">Mentés</button>
+                </td>
+            </tr></table>
           </div>
         </div>
       </div>
