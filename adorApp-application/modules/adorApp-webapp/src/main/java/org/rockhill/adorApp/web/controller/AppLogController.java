@@ -77,9 +77,11 @@ public class AppLogController extends ControllerBase {
      */
     @ResponseBody
     @RequestMapping(value = "/adorationSecure/logs", method = {RequestMethod.GET, RequestMethod.POST})
-    public Map<String, Collection<String>> getLogFiles() {
+    public Map<String, Collection<String>> getLogFiles(HttpSession httpSession) {
         Map<String, Collection<String>> jsonResponse = new HashMap<>();
-        jsonResponse.put(JSON_NAME, logFileProvider.getLogFileNames());
+        if (isAdoratorAdmin(currentUserProvider, httpSession)) {
+            jsonResponse.put(JSON_NAME, logFileProvider.getLogFileNames());
+        }
         return jsonResponse;
     }
 
@@ -92,11 +94,15 @@ public class AppLogController extends ControllerBase {
      * @return the content of the log file
      */
     @RequestMapping(value = "/adorationSecure/logs/{fileName:.+}", method = {RequestMethod.GET, RequestMethod.POST})
-    public ResponseEntity<String> getLogFileContent(@PathVariable("fileName") final String fileName,
+    public ResponseEntity<String> getLogFileContent(HttpSession httpSession,
+                                                    @PathVariable("fileName") final String fileName,
                                                     @RequestParam(value = "source", defaultValue = "false") final boolean source,
                                                     @RequestHeader(value = "User-Agent", defaultValue = "") final String userAgent) {
-        String body = logFileProvider.getLogContent(fileName);
-        body = convertLineBreaksIfOnWindows(body, userAgent);
+        String body = "unauthorized";
+        if (isAdoratorAdmin(currentUserProvider, httpSession)) {
+            body = logFileProvider.getLogContent(fileName);
+            body = convertLineBreaksIfOnWindows(body, userAgent);
+        }
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.TEXT_PLAIN);
         if (!source) {
