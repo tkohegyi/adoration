@@ -28,6 +28,7 @@ def releaseCopySpec = project.copySpec {
         include 'security/adorApp.cer'
         include 'security/adorApp.keystore'
         include 'security/little_register.xlsx'
+        include 'security/daily_info.xlsx'
     }
     from(rootProject.rootDir.absolutePath + '/adorApp-application/modules/adorApp-engine/build/libs/') {
      include "adorApp-$adorAppVersion.$buildNumber" + '.jar'

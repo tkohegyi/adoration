@@ -56,13 +56,18 @@ public class CoordinatorProvider {
     }
 
     public Object getCoordinatorListAsObject(CurrentUserInformationJson currentUserInformationJson) {
-        List<Coordinator> coordinatorList = businessWithCoordinator.getList();
+        List<Coordinator> coordinatorList = getCoordinatorList();
         List<CoordinatorJson> coordinatorJsonList = new LinkedList<>();
         for (Coordinator coordinator: coordinatorList) {
             CoordinatorJson coordinatorJson = getCoordinatorJsonFromCoordinator(currentUserInformationJson, coordinator);
             coordinatorJsonList.add(coordinatorJson);
         }
         return coordinatorJsonList;
+    }
+
+    public List<Coordinator> getCoordinatorList() {
+        List<Coordinator> coordinatorList = businessWithCoordinator.getList();
+        return coordinatorList;
     }
 
     public Object getCoordinatorAsObject(final Long id, CurrentUserInformationJson currentUserInformationJson) {
@@ -161,10 +166,6 @@ public class CoordinatorProvider {
         List<AuditTrail> auditTrailList = businessWithAuditTrail.getAuditTrailOfObject(id);
         Long result = businessWithCoordinator.deleteCoordinator(coordinator, auditTrailList);
         return result;
-    }
-
-    public Object getCoordinators(CurrentUserInformationJson userInformation, HttpSession httpSession) {
-        return null;
     }
 
     public List<CoordinatorJson> getLeadership(CurrentUserInformationJson currentUserInformationJson) {

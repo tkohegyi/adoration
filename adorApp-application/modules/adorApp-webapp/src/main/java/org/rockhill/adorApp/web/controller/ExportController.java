@@ -61,4 +61,31 @@ public class ExportController extends ControllerBase {
         }
     }
 
+    /**
+     * Serves request to get full export to Excel.
+     *
+     * @return the with the excel file
+     */
+    @RequestMapping(value = "/adorationSecure/getExcelDailyInfo", method = {RequestMethod.GET, RequestMethod.POST})
+    public void getExcelDailyInfo(HttpSession httpSession, HttpServletResponse httpServletResponse) {
+        httpServletResponse.addHeader(CONTENT_DISPOSITION, String.format(ATTACHMENT_TEMPLATE, "napszakFedettség.xlsx"));
+        httpServletResponse.addHeader(CONTENT_TYPE, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        if (isAdoratorAdmin(currentUserProvider, httpSession)) {
+            try {
+                httpServletResponse.setStatus(200);
+                excelProvider.getExcelDailyInfo(currentUserProvider.getUserInformation(httpSession), httpServletResponse.getOutputStream());
+                httpServletResponse.flushBuffer();
+            } catch (IOException e) {
+                logger.warn("Issue at daily info export.", e);
+            }
+        } else {
+            try {
+                httpServletResponse.setStatus(HttpStatus.SC_FORBIDDEN);
+                httpServletResponse.flushBuffer();
+            } catch (IOException e) {
+                logger.warn("Issue/b at daily info export.", e);
+            }
+        }
+    }
+
 }

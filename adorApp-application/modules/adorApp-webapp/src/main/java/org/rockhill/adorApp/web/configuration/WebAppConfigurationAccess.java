@@ -46,7 +46,8 @@ public class WebAppConfigurationAccess implements ConfigurationAccessBase {
         String facebook_app_secret = propertyHolder.get("facebook_app_secret");
         Integer sessionTimeout = NumberUtils.toInt(propertyHolder.get("sessionTimeout"), SESSION_TIMEOUT_DEFAULT_VALUE);
         String excel_file_name = propertyHolder.get("excel_file_name");
+        String daily_info_file_name = propertyHolder.get("daily_info_file_name");
         properties = new PropertyDto(google_client_id, google_client_secret, google_redirect_url, base_url,
-                facebook_app_id, facebook_app_secret, sessionTimeout, excel_file_name);
+                facebook_app_id, facebook_app_secret, sessionTimeout, excel_file_name, daily_info_file_name);
     }
 }

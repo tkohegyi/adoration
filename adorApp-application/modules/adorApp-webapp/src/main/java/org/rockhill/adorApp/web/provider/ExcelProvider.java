@@ -7,6 +7,7 @@ import org.rockhill.adorApp.database.business.BusinessWithLink;
 import org.rockhill.adorApp.database.business.BusinessWithPerson;
 import org.rockhill.adorApp.database.business.helper.enums.AdorationMethodTypes;
 import org.rockhill.adorApp.database.business.helper.enums.AdoratorStatusTypes;
+import org.rockhill.adorApp.database.tables.Coordinator;
 import org.rockhill.adorApp.database.tables.Link;
 import org.rockhill.adorApp.database.tables.Person;
 import org.rockhill.adorApp.web.configuration.PropertyDto;
@@ -20,8 +21,10 @@ import javax.servlet.ServletOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class ExcelProvider {
@@ -46,6 +49,8 @@ public class ExcelProvider {
     WebAppConfigurationAccess webAppConfigurationAccess;
     @Autowired
     CoverageProvider coverageProvider;
+    @Autowired
+    CoordinatorProvider coordinatorProvider;
 
     public void getExcelFull(CurrentUserInformationJson userInformation, ServletOutputStream outputStream) throws IOException {
         Workbook w = createInitialXls();
@@ -137,6 +142,71 @@ public class ExcelProvider {
                 Cell c = row.createCell(4 + h);
                 c.setCellValue(2 - noOfAdorators);
                 c.setCellType(CellType.NUMERIC);
+            }
+        }
+    }
+
+    public void getExcelDailyInfo(CurrentUserInformationJson userInformation, ServletOutputStream outputStream) throws IOException {
+        Workbook w = createInitialDailyInfoXls();
+        updateDailyInfo(userInformation, w);
+        XSSFFormulaEvaluator.evaluateAllFormulaCells(w);
+        w.write(outputStream);
+    }
+
+    private Workbook createInitialDailyInfoXls() throws IOException {
+        PropertyDto propertyDto = webAppConfigurationAccess.getProperties();
+        FileInputStream file = new FileInputStream(new File(propertyDto.getDailyInfoFileName()));
+        Workbook workbook = new XSSFWorkbook(file);
+        return workbook;
+    }
+
+    private void updateDailyInfo(CurrentUserInformationJson userInformation, Workbook w) {
+        //fill hour coordinators
+        Sheet sheet = w.getSheet("Adatok");
+        int rowPos = 3;
+        List<Coordinator> coordinators = coordinatorProvider.getCoordinatorList();
+        for (Coordinator coo: coordinators) {
+            if (coo.getCoordinatorType() < 24) { //if hourly coordinator
+                Long personId = coo.getPersonId();
+                if ( personId != null && personId.intValue() > 0) {
+                    Person p = businessWithPerson.getPersonById(coo.getPersonId());
+                    Row row = sheet.getRow(rowPos + coo.getCoordinatorType());
+                    if (row == null) {
+                        row = sheet.createRow(rowPos + coo.getCoordinatorType());
+                    }
+                    Cell c = row.createCell(2);
+                    c.setCellValue(p.getId().toString() + " - " + p.getName() + "\n" + p.getMobile());
+                }
+            }
+        }
+        //prepare data
+        Map<Integer,Integer> posRecord = new HashMap<>();
+        for (int i = 0; i<168; i++) { //this is about priority
+            posRecord.put(i,0);
+        }
+        //fill data
+        int colBase = 4;
+        int rowBase = 3;
+        for (int i = 0; i<168; i++) {
+            List<Link> links = businessWithLink.getLinksOfHour(i);
+            if (links != null && links.size() > 0) {
+                links.sort(Comparator.comparing(Link::getPriority));
+                for (Link l : links) {
+                    Row row = sheet.getRow(rowBase + posRecord.get(i));
+                    if (row == null) {
+                        row = sheet.createRow(rowBase + posRecord.get(i));
+                    }
+                    Cell cell = row.getCell(colBase + i);
+                    if (cell == null) {
+                        cell = row.createCell(colBase + i);
+                    }
+                    Long personId = l.getPersonId();
+                    if (personId != null) {
+                        Person p = businessWithPerson.getPersonById(personId);
+                        cell.setCellValue(p.getId().toString() + " - " + p.getName() + "\n" + p.getMobile());
+                        posRecord.put(i,posRecord.get(i) + 1);
+                    }
+                }
             }
         }
     }
