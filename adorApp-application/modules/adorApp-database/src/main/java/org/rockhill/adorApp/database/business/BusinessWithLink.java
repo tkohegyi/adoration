@@ -161,4 +161,19 @@ public class BusinessWithLink {
         }
         return result;
     }
+
+    public List<Link> getPhysicalLinksOfHour(Integer hourId) {
+        List<Link> result = null;
+        SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
+        if (sessionFactory != null) {
+            Session session = sessionFactory.openSession();
+            session.beginTransaction();
+            String hql = "from Link as L where L.hourId = " + String.valueOf(hourId) + " and L.type = 0";
+            Query query = session.createQuery(hql);
+            result = (List<Link>) query.list();
+            session.getTransaction().commit();
+            session.close();
+        }
+        return result;
+    }
 }

@@ -188,7 +188,7 @@ public class ExcelProvider {
         int colBase = 4;
         int rowBase = 3;
         for (int i = 0; i<168; i++) {
-            List<Link> links = businessWithLink.getLinksOfHour(i);
+            List<Link> links = businessWithLink.getPhysicalLinksOfHour(i);
             if (links != null && links.size() > 0) {
                 links.sort(Comparator.comparing(Link::getPriority));
                 for (Link l : links) {
