@@ -39,7 +39,7 @@ function adoratorListClick() {
         $("#adoratorCooList").show();
         $('#personCoo').DataTable().draw();
     } else {
-        $("#adoratorList").show().draw();
+        $("#adoratorList").show();
         $('#person').DataTable().draw();
     }
 }

@@ -24,7 +24,7 @@
 
     <div class="centerwidediv" style="text-align: center">
         <br />
-        <img alt="Örökimádás" src="./../resources/img/topimage3.jpg">
+        <img alt="Örökimádás" src="./../resources/img/topimage3.jpg" style="width:100%; max-width:635px">
     </div>
 
         <fieldset class="form-horizontal">

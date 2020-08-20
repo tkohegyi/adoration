@@ -170,11 +170,11 @@ public class FacebookOauth2Service {
         String userId = facebookUserInfoJson.getAsString("id");
         String email = facebookUserInfoJson.getAsString("email");
         if (email == null) {
-            email = "?";
+            email = "";
         }
         String firstName = facebookUserInfoJson.getAsString("name");
         if (firstName == null) {
-            firstName = "?";
+            firstName = "";
         }
         Social social = businessWithSocial.getSocialByFUserId(userId);
         if (social == null) {

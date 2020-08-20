@@ -1,8 +1,26 @@
 $(document).ready(function() {
     $("#nav-ador-registration").addClass("active");
+    $("#suggestLogin").hide();
+    jQuery.ajaxSetup({async:false});
     setupMenu();
+    jQuery.ajaxSetup({async:true});
     setupCoverage();
+    prepareInfo();
 });
+
+function prepareInfo() {
+    //if not logged in -> suggest to log in / if logged in -> prefill fields
+    if (typeof loggedInUserInfo != "undefined") {
+        if (loggedInUserInfo.isLoggedIn) {
+            $("#name").val(loggedInUserInfo.userName);
+            $("#email").val(loggedInUserInfo.socialEmail);
+        } else { //not logged in
+            $("#suggestLogin").show();
+        }
+    } else { //not logged in
+        $("#suggestLogin").show();
+    }
+}
 
 function notRegisterClick() {
     alert("Ön végül úgy döntött, hogy mégsem jelentkezik az Örökimádásra.");

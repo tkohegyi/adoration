@@ -26,12 +26,19 @@
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 	<div class="centerwidediv" align="center">
         <legend class="message-legend h4"d>Jelentkezés Örökimádásra</legend>
-		<p>
-			Igen, válaszolok a hívásra! <br /> Jézussal akarok lenni, aki
-			valóságosan jelen van a Legszentebb Oltáriszentségben, <br /> és
-			minden héten egy órán keresztül imádni akarom Őt<br /> a váci Szent Anna
-			Piarista Templomban.<br>
-		</p>
+        <fieldset id="suggestLogin" class="form-horizontal">
+            <div>
+                <legend class="message-legend" style="text-align:center; color:#E05050; padding: 0px; font-family: Oswald">Ön nincs bejelentkezve, kérjük a regisztrálás előtt lépjen be <a id="gLoginAnchor" class="login" href="/adoration/loginGoogle"><img src="./../resources/img/google_login.png" alt="Google"/></a> vagy <a id="fLoginAnchor" class="login" href="/adoration/loginFacebook"><img src="./../resources/img/facebook_login.png" alt="Facebook"/></a> azonosítójával.</legend>
+            </div>
+        </fieldset>
+        <fieldset>
+            <div>
+                Igen, válaszolok a hívásra! <br /> Jézussal akarok lenni, aki
+                valóságosan jelen van a Legszentebb Oltáriszentségben, <br /> és
+                minden héten egy órán keresztül imádni akarom Őt<br /> a váci Szent Anna
+                Piarista Templomban.<br>
+            </div>
+        </fieldset>
 	</div>
     <div class="centerwidediv" align="center">
         <p>

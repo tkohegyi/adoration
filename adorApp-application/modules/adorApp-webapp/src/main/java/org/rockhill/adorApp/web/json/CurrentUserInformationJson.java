@@ -5,6 +5,7 @@ public class CurrentUserInformationJson {
     public boolean isAuthorized;
     public Long personId;
     public Long socialId;
+    public String socialEmail;
     public String loggedInUserName;
     public String userName;
     public String languageCode;
@@ -21,6 +22,7 @@ public class CurrentUserInformationJson {
     public void reset() {
         personId = null;
         socialId = null;
+        socialEmail = "";
         isLoggedIn = false;
         isAuthorized = false;
         loggedInUserName = "Anonymous";

@@ -55,6 +55,7 @@ public class CurrentUserProvider {
         if (authentication != null) {
             Object principal = authentication.getPrincipal();
             String loggedInUserName;
+            String userName;
             Person person; // = null;
             Social social; // = null;
             if (principal instanceof AuthenticatedUser) {
@@ -65,20 +66,29 @@ public class CurrentUserProvider {
                     person = user.getPerson();
                     if (person != null) {
                         loggedInUserName = person.getName();
+                        userName = loggedInUserName;
                     } else {
-                        loggedInUserName = "Vend\u00e9g - Anonymous";
+                        userName = "Anonymous";
+                        loggedInUserName = "Vend\u00e9g - " + userName;
                         if (principal instanceof GoogleUser) {
-                            loggedInUserName = "Vend\u00e9g - " + user.getSocial().getGoogleUserName();
+                            userName = user.getSocial().getGoogleUserName();
+                            loggedInUserName = "Vend\u00e9g - " + userName;
                         }
                         if (principal instanceof FacebookUser) {
-                            loggedInUserName = "Vend\u00e9g - " + user.getSocial().getFacebookUserName();
+                            userName = user.getSocial().getFacebookUserName();
+                            loggedInUserName = "Vend\u00e9g - " + userName;
                         }
                     }
                     currentUserInformationJson.loggedInUserName = loggedInUserName; //user who logged in via social
-                    currentUserInformationJson.userName = loggedInUserName; //user who registered as adorator (his/her name may differ from the username used in Social)
+                    currentUserInformationJson.userName = userName; //user who registered as adorator (his/her name may differ from the username used in Social)
                     social = user.getSocial();
                     if (social != null) {
-                        currentUserInformationJson.socialId = user.getSocial().getId();
+                        currentUserInformationJson.socialId = social.getId();
+                        String email = social.getGoogleEmail();
+                        if (email.length() == 0) {
+                            email = social.getFacebookEmail();
+                        }
+                        currentUserInformationJson.socialEmail = email;
                     }
                     if (person != null) {
                         currentUserInformationJson.isAuthorized = true; //not just logged in, but since the person is known, authorized too
