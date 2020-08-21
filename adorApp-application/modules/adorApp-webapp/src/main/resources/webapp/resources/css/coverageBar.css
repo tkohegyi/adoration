@@ -26,12 +26,55 @@
     text-align: center;
 }
 
+.coverageQuarter-2 {
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+    border-left: 1px solid black;
+    text-align: center;
+}
+
 .coverageDay {
     border-top: 1px solid black;
     border-bottom: 1px solid black;
     border-left: 1px solid black;
     border-right: 1px solid black;
     text-align: center;
+}
+
+.coverageDay-2 {
+    border-bottom: 1px solid black;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    text-align: center;
+}
+
+.coverageDay-2-support {
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    text-align: center;
+}
+
+.rotated {
+    text-align:center;
+    white-space:nowrap;
+    transform: rotate(-90deg);
+}
+
+.rotated p {
+    margin:0 -100% ;
+    display:inline-block;
+    max-width:25px;
+}
+
+.rotated p:before{
+    content:'';
+    width:0;
+    padding-top:110%;/* takes width as reference, + 10% for faking some extra padding */
+    display:inline-block;
+    vertical-align:middle;
+}
+
+.dayName {
 }
 
 .coverageHour {

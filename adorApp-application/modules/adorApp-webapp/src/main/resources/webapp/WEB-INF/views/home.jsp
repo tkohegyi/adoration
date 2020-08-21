@@ -31,6 +31,7 @@
             <legend class="message-legend h4"d>Az órák aktuális fedettsége</legend>
             <div class="control-group">
                 <%@include file="../include/coverageBar.html" %>
+                <%@include file="../include/coverageBarVertical.html" %>
             </div>
         </fieldset>
 
