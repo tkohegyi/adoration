@@ -70,7 +70,7 @@ public class ExportController extends ControllerBase {
     public void getExcelDailyInfo(HttpSession httpSession, HttpServletResponse httpServletResponse) {
         httpServletResponse.addHeader(CONTENT_DISPOSITION, String.format(ATTACHMENT_TEMPLATE, "napszakFedettség.xlsx"));
         httpServletResponse.addHeader(CONTENT_TYPE, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        if (isAdoratorAdmin(currentUserProvider, httpSession)) {
+        if (isPrivilegedAdorator(currentUserProvider, httpSession)) {
             try {
                 httpServletResponse.setStatus(200);
                 excelProvider.getExcelDailyInfo(currentUserProvider.getUserInformation(httpSession), httpServletResponse.getOutputStream());

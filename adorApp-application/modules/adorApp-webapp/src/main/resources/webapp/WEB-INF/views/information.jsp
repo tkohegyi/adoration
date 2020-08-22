@@ -51,13 +51,14 @@
 		<p><table id="yesLeadership"><tbody></tbody></table></p>
 	</div>
 
-	<!--
+    <fieldset class="form-horizontal" id="downloads">
 	<div class="centerwidediv" align="center">
         <legend class="message-legend h4"d>Letöltések</legend>
-        <div id="noDownloads">Sajnos nincs megjeleníthető adat.</div>
-		<p><table id="yesDownloads"><tbody></tbody></table></p>
+        <div class="control-group">
+            <a id="translator-button" class="btn btn-primary" href="/adorationSecure/getExcelDailyInfo">Napszakok fedettségtáblázata</a>
+        </div>
 	</div>
-	-->
+    </fieldset>
 
 <script src="./../resources/js/external/jquery-3.4.1.js"></script>
 <script src="./../resources/js/external/bootstrap-4.3.1.min.js"></script>

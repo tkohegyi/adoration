@@ -1,10 +1,13 @@
 $(document).ready(function() {
     $("#nav-information").addClass("active");
+    jQuery.ajaxSetup({async:false});
     setupMenu();
+    jQuery.ajaxSetup({async:true});
     getInformation();
 });
 
 function getInformation() {
+    $("#downloads").hide();
     $.get('/adorationSecure/getInformation', function(data) {
         var information = data.data;
         if (information == null || information.error != null) {
@@ -167,4 +170,9 @@ function getInformation() {
             $("#yesAdoratorNext").append(tr);
         }
     });
+    //show downloads - if any
+    if (loggedInUserInfo.isPrivilegedAdorator) {
+            $("#downloads").show();
+    }
+
 }
