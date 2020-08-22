@@ -67,9 +67,9 @@ function getInformation() {
             //has leadership info
             $("#noLeadership").hide();
             $("#yesLeadership").show();
-            var tr = $("<tr class=\"tableHead\"><th class=\"infoTable\" colspan=\"5\">Napszak és Általános Koordinátorok:</th></tr>");
+            var tr = $("<tr class=\"tableHead\"><th class=\"infoTable\" colspan=\"4\">Napszak és Általános Koordinátorok:</th></tr>");
             $("#yesLeadership").append(tr);
-            tr = $("<tr class=\"tableHead\"><th class=\"infoTable\">Időszak:</th><th class=\"infoTable\">Név:</th><th class=\"infoTable\">Telefon:</th><th class=\"infoTable\">E-mail:</th><th class=\"infoTable\">Megjegyzés:</th></tr>");
+            tr = $("<tr class=\"tableHead\"><th class=\"infoTable\">Időszak:</th><th class=\"infoTable\">Név:</th><th class=\"infoTable\">Telefon:</th><th class=\"infoTable\">E-mail:</th></tr>");
             $("#yesLeadership").append(tr);
             for (var i = 0; i < information.leadership.length; i++) {
                 var coordinator = information.leadership[i];
@@ -83,8 +83,7 @@ function getInformation() {
                     tr.append($("<td class=\"infoTable\">" + coordinator.coordinatorTypeText
                         + "</td><td class=\"infoTable\">" + coordinator.personName
                         + "</td><td class=\"infoTable\">" + coordinator.phone
-                        + "</td><td class=\"infoTable\">" + coordinator.eMail
-                        + "</td><td class=\"infoTable\">" + coordinator.visibleComment));
+                        + "</td><td class=\"infoTable\">" + coordinator.eMail));
                     $("#yesLeadership").append(tr);
                 }
             }
@@ -95,17 +94,6 @@ function getInformation() {
         }
         //show actual hour
         $("#yesAdoratorNow").empty();
-        var c = getCoordinator(information.leadership, information.hourInDayNow);
-        if (c != null && c.personName.length > 0) {
-            tr = $("<tr class=\"tableHead\"><th class=\"infoTable\" colspan=\"3\">Órafelelős, "
-                + information.hourInDayNow + " óra:</th></tr>");
-            $("#yesAdoratorNow").append(tr);
-            tr = $("<td class=\"infoTable\">"
-                + c.personName + "</td><td class=\"infoTable\">"
-                + c.phone + "</td><td class=\"infoTable\">"
-                + c.eMail +"</td>");
-            $("#yesAdoratorNow").append(tr);
-        }
         if (information.currentHourList.length > 0) {
             //has offered hours
             $("#noAdoratorNow").hide();
@@ -130,19 +118,19 @@ function getInformation() {
             //has no adorator now
             $("#noAdoratorNow").show();
         }
-        //show future hour
-        $("#yesAdoratorNext").empty();
-        c = getCoordinator(information.leadership, information.hourInDayNext);
+        var c = getCoordinator(information.leadership, information.hourInDayNow);
         if (c != null && c.personName.length > 0) {
             tr = $("<tr class=\"tableHead\"><th class=\"infoTable\" colspan=\"3\">Órafelelős, "
-                + information.hourInDayNext + " óra:</th></tr>");
-            $("#yesAdoratorNext").append(tr);
+                + information.hourInDayNow + " óra:</th></tr>");
+            $("#yesAdoratorNow").append(tr);
             tr = $("<td class=\"infoTable\">"
                 + c.personName + "</td><td class=\"infoTable\">"
                 + c.phone + "</td><td class=\"infoTable\">"
                 + c.eMail +"</td>");
-            $("#yesAdoratorNext").append(tr);
+            $("#yesAdoratorNow").append(tr);
         }
+        //show future hour
+        $("#yesAdoratorNext").empty();
         if (information.futureHourList.length > 0) {
             //has offered hours
             $("#noAdoratorNext").hide();
@@ -166,6 +154,17 @@ function getInformation() {
         } else {
             //has no adorator now
             $("#noAdoratorNext").show();
+        }
+        c = getCoordinator(information.leadership, information.hourInDayNext);
+        if (c != null && c.personName.length > 0) {
+            tr = $("<tr class=\"tableHead\"><th class=\"infoTable\" colspan=\"3\">Órafelelős, "
+                + information.hourInDayNext + " óra:</th></tr>");
+            $("#yesAdoratorNext").append(tr);
+            tr = $("<td class=\"infoTable\">"
+                + c.personName + "</td><td class=\"infoTable\">"
+                + c.phone + "</td><td class=\"infoTable\">"
+                + c.eMail +"</td>");
+            $("#yesAdoratorNext").append(tr);
         }
     });
 }

@@ -20,7 +20,7 @@
     <div class="container">
         <%@include file="../include/navbar.html" %>
         <fieldset class="form-horizontal">
-            <legend class="message-legend" style="height: 50px; text-align:center; color:#E05050; padding: 0px; font-family: Oswald">Ön nincs bejelentkezve, kérjük lépjen be (vagy regisztráljon), hogy további oldalakhoz is hozzáférjen.</legend>
+            <legend class="message-legend" style="text-align:center; color:#E05050; padding: 0px; font-family: Oswald">Ön nincs bejelentkezve, kérjük lépjen be (vagy regisztráljon), hogy további oldalakhoz is hozzáférjen.</legend>
         </fieldset>
         <fieldset class="form-horizontal" style="height: 50px">
             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
