@@ -12,6 +12,9 @@ public class CurrentUserInformationJson {
     public boolean isRegisteredAdorator;
     public boolean isPrivilegedAdorator;
     public boolean isAdoratorAdmin;
+    public Integer coordinatorId;  // id of a coordinator or -1 otherwise
+    public boolean isDailyCoordinator;
+    public boolean isHourlyCoordinator;
 
     public CurrentUserInformationJson() {
         reset();

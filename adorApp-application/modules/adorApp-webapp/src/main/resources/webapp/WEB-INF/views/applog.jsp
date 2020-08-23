@@ -40,7 +40,6 @@
     <a id="audit-button" class="btn btn-outline-secondary" href="/adorationSecure/audit">Audit Log</a>
     <a id="translator-button" class="btn btn-outline-secondary" href="/adorationSecure/translator">Nyelvek</a>
     <a id="translator-button" class="btn btn-primary" href="/adorationSecure/getExcelFull">Export to Excel</a>
-    <a id="translator-button" class="btn btn-primary" href="/adorationSecure/getExcelDailyInfo">Export Daily Information</a>
     </div>
     </fieldset>
 

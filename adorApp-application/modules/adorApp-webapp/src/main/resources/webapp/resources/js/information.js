@@ -8,6 +8,9 @@ $(document).ready(function() {
 
 function getInformation() {
     $("#downloads").hide();
+    $("#forDc").hide();
+    $("#forHc").hide();
+    $("#forStdA").hide();
     $.get('/adorationSecure/getInformation', function(data) {
         var information = data.data;
         if (information == null || information.error != null) {
@@ -171,8 +174,14 @@ function getInformation() {
         }
     });
     //show downloads - if any
-    if (loggedInUserInfo.isPrivilegedAdorator) {
+    if (loggedInUserInfo.isRegisteredAdorator) {
             $("#downloads").show();
+            if (loggedInUserInfo.isDailyCoordinator) {
+                $("#forDc").show();
+            }
+            if (loggedInUserInfo.isHourlyCoordinator) {
+                $("#forHc").show();
+            }
+            $("#forStdA").show();
     }
-
 }

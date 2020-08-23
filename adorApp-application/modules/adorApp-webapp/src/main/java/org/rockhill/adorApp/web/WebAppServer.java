@@ -86,6 +86,7 @@ public class WebAppServer {
 
         ErrorPageErrorHandler errorHandler = new ErrorPageErrorHandler();
         errorHandler.addErrorPage(404, "/adoration/e404");
+        errorHandler.addErrorPage(500, "/adoration/e500");
         context.setErrorHandler(errorHandler);
         return context;
     }

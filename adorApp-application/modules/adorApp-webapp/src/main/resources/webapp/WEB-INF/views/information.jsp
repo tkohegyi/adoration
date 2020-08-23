@@ -53,9 +53,15 @@
 
     <fieldset class="form-horizontal" id="downloads">
 	<div class="centerwidediv" align="center">
-        <legend class="message-legend h4"d>Letöltések</legend>
-        <div class="control-group">
+        <legend class="message-legend h4">Letöltések</legend>
+        <div class="control-group" id="forDc">
             <a id="translator-button" class="btn btn-primary" href="/adorationSecure/getExcelDailyInfo">Napszakok fedettségtáblázata</a>
+        </div><p/>
+        <div class="control-group" id="forHc">
+            <a id="translator-button" class="btn btn-primary" href="/adorationSecure/getExcelHourlyInfo">Órakoordinátor információ letöltése</a>
+        </div><p/>
+        <div class="control-group" id="forStdA">
+            <a id="translator-button" class="btn btn-primary" href="/adorationSecure/getExcelAdoratorInfo">Saját adatok letöltése</a>
         </div>
 	</div>
     </fieldset>

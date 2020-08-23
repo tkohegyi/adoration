@@ -1,8 +1,10 @@
 package org.rockhill.adorApp.web.provider;
 
 import org.rockhill.adorApp.database.business.BusinessWithAuditTrail;
+import org.rockhill.adorApp.database.business.BusinessWithCoordinator;
 import org.rockhill.adorApp.database.business.helper.enums.AdoratorStatusTypes;
 import org.rockhill.adorApp.database.tables.AuditTrail;
+import org.rockhill.adorApp.database.tables.Coordinator;
 import org.rockhill.adorApp.database.tables.Person;
 import org.rockhill.adorApp.database.tables.Social;
 import org.rockhill.adorApp.web.json.CurrentUserInformationJson;
@@ -26,9 +28,12 @@ public class CurrentUserProvider {
     @Autowired
     BusinessWithAuditTrail businessWithAuditTrail;
 
-    private Set<AdoratorStatusTypes> registeredAdorator;
-    private Set<AdoratorStatusTypes> leaders;
-    private Set<AdoratorStatusTypes> admins;
+    @Autowired
+    BusinessWithCoordinator businessWithCoordinator;
+
+    private final Set<AdoratorStatusTypes> registeredAdorator;
+    private final Set<AdoratorStatusTypes> leaders;
+    private final Set<AdoratorStatusTypes> admins;
 
     CurrentUserProvider() {
         registeredAdorator = new HashSet<>();
@@ -63,8 +68,17 @@ public class CurrentUserProvider {
                 if (user.isSessionValid()) {
                     user.extendSessionTimeout();
                     currentUserInformationJson.isLoggedIn = true;  // if authentication is not null then the person is logged in
+                    currentUserInformationJson.coordinatorId = -1;
+                    currentUserInformationJson.isHourlyCoordinator = false;
+                    currentUserInformationJson.isDailyCoordinator = false;
                     person = user.getPerson();
                     if (person != null) {
+                        Coordinator coordinator = businessWithCoordinator.getCoordinatorFromPersonId(person.getId());
+                        if (coordinator != null) {
+                            currentUserInformationJson.coordinatorId = coordinator.getCoordinatorType();
+                            currentUserInformationJson.isHourlyCoordinator = currentUserInformationJson.coordinatorId < 24;
+                            currentUserInformationJson.isDailyCoordinator = !currentUserInformationJson.isHourlyCoordinator;
+                        }
                         loggedInUserName = person.getName();
                         userName = loggedInUserName;
                     } else {

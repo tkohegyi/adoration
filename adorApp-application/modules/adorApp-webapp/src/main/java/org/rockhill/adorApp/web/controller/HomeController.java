@@ -72,6 +72,14 @@ public class HomeController {
         return "E404";
     }
 
+    @RequestMapping(value = "/adoration/e500", method = {RequestMethod.GET, RequestMethod.POST})
+    public String e500(HttpServletRequest httpServletRequest) {
+/*        if (httpServletRequest != null && httpServletRequest.getRemoteAddr() != null) {
+            logger.info("Strange request arrived from: " + httpServletRequest.getRemoteAddr());
+        } */
+        return "E404";
+    }
+
     @RequestMapping(value = "/adorationSecure/myInfoMyAccounts", method = RequestMethod.GET)
     public String myInfoMyAccounts() {
         return "myInfoMyAccounts";

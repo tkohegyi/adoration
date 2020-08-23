@@ -138,4 +138,23 @@ public class BusinessWithCoordinator {
         }
         return result;
     }
+
+    public Coordinator getCoordinatorFromPersonId(Long id) {
+        List<Coordinator> result = null;
+        SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
+        if (sessionFactory != null) {
+            Session session = sessionFactory.openSession();
+            session.beginTransaction();
+            String hql = "from Coordinator as C where C.personId = :expectedId order by C.coordinatorType desc";
+            Query query = session.createQuery(hql);
+            query.setParameter("expectedId", id);
+            result = (List<Coordinator>) query.list();
+            session.getTransaction().commit();
+            session.close();
+        }
+        if (result.size() > 0) {
+            return result.get(0);
+        }
+        return null;
+    }
 }
