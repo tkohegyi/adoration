@@ -157,4 +157,29 @@ public class BusinessWithCoordinator {
         }
         return null;
     }
+
+    public Coordinator getDailyCooOfHour(Integer coordinatorType) {
+        if (coordinatorType > 23) return null;
+        int dayPart = coordinatorType / 6;
+        return getByCoordinatorType(24 + dayPart * 6);
+    }
+
+    private Coordinator getByCoordinatorType(Integer i) {
+        List<Coordinator> result = null;
+        SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
+        if (sessionFactory != null) {
+            Session session = sessionFactory.openSession();
+            session.beginTransaction();
+            String hql = "from Coordinator as C where C.coordinatorType = :expectedId";
+            Query query = session.createQuery(hql);
+            query.setParameter("expectedId", i);
+            result = (List<Coordinator>) query.list();
+            session.getTransaction().commit();
+            session.close();
+        }
+        if (result.size() > 0) {
+            return result.get(0);
+        }
+        return null;
+    }
 }

@@ -176,4 +176,33 @@ public class BusinessWithLink {
         }
         return result;
     }
+
+    /**
+     * Returns will the list of Links belong to the same hour of a week (so all links for same our of all days).
+     * Only physical hours listed.
+     *
+     * @param coordinatorType
+     * @return
+     */
+    public List<Link> getLinksOfWeek(Integer coordinatorType) {
+        String hours = coordinatorType.toString() + ","
+                + (24 + coordinatorType) + ","
+                + (48 + coordinatorType) + ","
+                + (72 + coordinatorType) + ","
+                + (96 + coordinatorType) + ","
+                + (120 + coordinatorType) + ","
+                + (144 + coordinatorType);
+        List<Link> result = null;
+        SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
+        if (sessionFactory != null) {
+            Session session = sessionFactory.openSession();
+            session.beginTransaction();
+            String hql = "from Link as L where L.hourId in (" + hours + " ) and L.type = 0 order by L.hourId asc";
+            Query query = session.createQuery(hql);
+            result = (List<Link>) query.list();
+            session.getTransaction().commit();
+            session.close();
+        }
+        return result;
+    }
 }

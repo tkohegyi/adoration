@@ -110,7 +110,7 @@ public class CurrentUserProvider {
                         currentUserInformationJson.userName = person.getName();
                         AdoratorStatusTypes status = AdoratorStatusTypes.getTypeFromId(person.getAdorationStatus());
                         currentUserInformationJson.isRegisteredAdorator = registeredAdorator.contains(status);
-                        currentUserInformationJson.isPrivilegedAdorator = leaders.contains(status);
+                        currentUserInformationJson.isPrivilegedAdorator = leaders.contains(status) || currentUserInformationJson.coordinatorId > -1;
                         currentUserInformationJson.isAdoratorAdmin = admins.contains(status);
                     }
                 } else {

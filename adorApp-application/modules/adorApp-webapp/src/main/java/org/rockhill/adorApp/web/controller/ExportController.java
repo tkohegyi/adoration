@@ -88,4 +88,58 @@ public class ExportController extends ControllerBase {
         }
     }
 
+    /**
+     * Serves request to get hourly coordinator info.
+     *
+     * @return the with the excel file
+     */
+    @RequestMapping(value = "/adorationSecure/getExcelHourlyInfo", method = {RequestMethod.GET, RequestMethod.POST})
+    public void getExcelHourlyInfo(HttpSession httpSession, HttpServletResponse httpServletResponse) {
+        httpServletResponse.addHeader(CONTENT_DISPOSITION, String.format(ATTACHMENT_TEMPLATE, "órainformáció.xlsx"));
+        httpServletResponse.addHeader(CONTENT_TYPE, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        if (isPrivilegedAdorator(currentUserProvider, httpSession)) {
+            try {
+                httpServletResponse.setStatus(200);
+                excelProvider.getExcelHourlyInfo(currentUserProvider.getUserInformation(httpSession), httpServletResponse.getOutputStream());
+                httpServletResponse.flushBuffer();
+            } catch (IOException e) {
+                logger.warn("Issue at hourly info export.", e);
+            }
+        } else {
+            try {
+                httpServletResponse.setStatus(HttpStatus.SC_FORBIDDEN);
+                httpServletResponse.flushBuffer();
+            } catch (IOException e) {
+                logger.warn("Issue/b at hourly info export.", e);
+            }
+        }
+    }
+
+    /**
+     * Serves request to get adorator info.
+     *
+     * @return the with the excel file
+     */
+    @RequestMapping(value = "/adorationSecure/getExcelAdoratorInfo", method = {RequestMethod.GET, RequestMethod.POST})
+    public void getExcelAdoratorInfo(HttpSession httpSession, HttpServletResponse httpServletResponse) {
+        httpServletResponse.addHeader(CONTENT_DISPOSITION, String.format(ATTACHMENT_TEMPLATE, "adoráló-adatok.xlsx"));
+        httpServletResponse.addHeader(CONTENT_TYPE, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        if (isRegisteredAdorator(currentUserProvider, httpSession)) {
+            try {
+                httpServletResponse.setStatus(200);
+                excelProvider.getExcelAdoratorInfo(currentUserProvider.getUserInformation(httpSession), httpServletResponse.getOutputStream());
+                httpServletResponse.flushBuffer();
+            } catch (IOException e) {
+                logger.warn("Issue at adorator info export.", e);
+            }
+        } else {
+            try {
+                httpServletResponse.setStatus(HttpStatus.SC_FORBIDDEN);
+                httpServletResponse.flushBuffer();
+            } catch (IOException e) {
+                logger.warn("Issue/b at adorator info export.", e);
+            }
+        }
+    }
+
 }
