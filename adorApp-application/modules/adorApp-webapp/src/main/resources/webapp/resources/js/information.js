@@ -182,6 +182,6 @@ function getInformation() {
             if (loggedInUserInfo.isHourlyCoordinator) {
                 $("#forHc").show();
             }
-            $("#forStdA").show();
+            //$("#forStdA").show();
     }
 }

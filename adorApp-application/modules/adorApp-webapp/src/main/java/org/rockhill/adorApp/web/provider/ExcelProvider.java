@@ -22,10 +22,7 @@ import javax.servlet.ServletOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class ExcelProvider {
@@ -328,6 +325,13 @@ public class ExcelProvider {
     }
 
     private void updateAdoratorInfo(CurrentUserInformationJson userInformation, Workbook w) {
+        if (userInformation.personId == null) return;
+        Sheet sheet = w.getSheet("Adoráló");
+        Person p = businessWithPerson.getPersonById(userInformation.personId);
+        List<Link> links = businessWithLink.getLinksOfPerson(p);
+        Set<Coordinator> hCoordinators = new HashSet<>();
+        Set<Coordinator> dCoordinators = new HashSet<>();
+
 
     }
 
