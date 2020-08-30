@@ -1,6 +1,7 @@
 var coverageAdoratorInfo;
 var coverageAllHourInfo;
 var coverageOnlineHourInfo;
+var coverageDayNames;
 
 window.addEventListener('resize', function(event){
     let intViewportWidth = window.innerWidth;
@@ -32,18 +33,18 @@ function setupCoverage() {
     handleSize(intViewportWidth);
     $.get('/adoration/getCoverageInformation', function(data) {
         var coverageInfo = JSON.parse(data.coverageInfo[0]);
-        var dayNames = coverageInfo.dayNames; // eg FRIDAY: "péntek"
         var hours = coverageInfo.visibleHours; // hour is 0-167,  eg: 75: 0
         coverageAllHourInfo = coverageInfo.allHours; // hour is 0-167,  eg: 75: [327, 34, 8]
         coverageOnlineHourInfo = coverageInfo.onlineHours; // hour is 0-167,  eg: 75: [327, 34, 8]
         coverageAdoratorInfo = coverageInfo.adorators; //id - info pairs
+        coverageDayNames = coverageInfo.dayNames; // eg FRIDAY: "péntek"
 
         var days = document.getElementsByClassName('dayName');
         for (var i = 0; i < days.length; ++i) {
             var item = days[i];
             var targetDayName = item.id;
             targetDayName = targetDayName.split("-")[0];
-            let command = "item.textContent = dayNames." + targetDayName;
+            let command = "item.textContent = coverageDayNames." + targetDayName;
             eval(command);
         }
 
@@ -124,6 +125,10 @@ function setupCoverage() {
 function coverageClick(h) {
     if (typeof coverageAdoratorInfo != "undefined" && coverageAdoratorInfo != null) {
         $("#coveragePopup").empty();
+        var rTime = $("<tr><td align=\"center\" colspan=\"2\">Időpont: " + getDayName(h) + "/" + getHourName(h) + " óra</td><tr/>");
+        $("#coveragePopup").append(rTime);
+        rTime = $("<tr><td align=\"center\" colspan=\"2\"> --------- </td><tr/>");
+        $("#coveragePopup").append(rTime);
         var personArray = []; //empty object;
         var users = coverageAllHourInfo[h];
         if ((users != null) && (users.length > 0)) {
@@ -140,11 +145,16 @@ function coverageClick(h) {
             for (var i=0; i<personArray.length; i++,counter++) {
                 var r = $("<tr/>");
                 var p = personArray[i];
+                var commentContent = "";
+                if (p.visibleComment.length > 0) {
+                    commentContent = "<tr><td>Megjegyzés: " + p.visibleComment + "</td></tr>";
+                }
                 var rContent = "<td><table><tbody><tr><td class=\"coverageDay goodCoverage\" align=\"center\" width=\"25px\">" + counter + "</td><td>" +
                     "<table><tbody><tr><td>ID: " + p.id + ", Név: " + p.name + "</td></tr>"
                         + "<tr><td>E-mail: " + p.email + "</td></tr>"
                         + "<tr><td>Telefon: " + p.mobile + "</td></tr>"
-                        + "<tr><td>Megjegyzés: " + p.visibleComment + "</td></tr></tbody></table>"
+                        + commentContent
+                    + "</tbody></table>"
                     + "</td></tr></tbody></table></td>";
                 r.append($(rContent));
                 $("#coveragePopup").append(r);
@@ -166,11 +176,16 @@ function coverageClick(h) {
             for (var i=0; i<personArray.length; i++,counter++) {
                 var r = $("<tr/>");
                 var p = personArray[i];
+                var commentContent = "";
+                if (p.visibleComment.length > 0) {
+                    commentContent = "<tr><td>Megjegyzés: " + p.visibleComment + "</td></tr>";
+                }
                 var rContent = "<td><table><tr><td class=\"coverageDay onlineAdorator\" align=\"center\" width=\"25px\">" + counter + "</td><td>" +
                     "<table><tbody><tr><td>ID: " + p.id + ", Név: " + p.name + "</td></tr>"
                         + "<tr><td>E-mail: " + p.email + "</td></tr>"
                         + "<tr><td>Telefon: " + p.mobile + "</td></tr>"
-                        + "<tr><td>Megjegyzés: " + p.visibleComment + "</td></tr></tbody></table>"
+                        + commentContent
+                    + "</tbody></table>"
                     + "</td></tr></tbody></table></td>";
                 r.append($(rContent));
                 $("#coveragePopup").append(r);

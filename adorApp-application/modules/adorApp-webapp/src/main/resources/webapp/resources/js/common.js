@@ -54,6 +54,12 @@ function getDayName(hourId, dayNames) {
     return dayNames[x];
 }
 
+function getDayName(hourId) {
+    var dayNames = ['vasárnap', 'hétfő', 'kedd', 'szerda', 'csütörtök', 'péntek', 'szombat']
+    var x = getDay(hourId);
+    return dayNames[x];
+}
+
 function getDay(hourId) {
     var x = Math.floor(hourId / 24);
     return x;
