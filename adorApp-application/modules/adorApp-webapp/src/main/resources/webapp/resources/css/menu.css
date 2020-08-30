@@ -42,23 +42,6 @@
   text-shadow: none;
 }
 
-.menu-item-text {
-  font-family: Oswald;
-  font-size: 20px;
-  font-weight: 200;
-  color: #373737;
-  background-color: #39C2D7;
-  text-transform: uppercase;
-}
-
-.menu-user-text {
-  font-family: Oswald;
-  font-size: 20px;
-  font-weight: 200;
-  color: #E05050;
-  background-color: #39C2D7;
-}
-
 .navbar .nav>.active>a,.navbar .nav>.active>a:hover,.navbar .nav>li>a:hover,.navbar .nav>.active>a:focus{
   color: #373737;
   background-color: #39C2D7;

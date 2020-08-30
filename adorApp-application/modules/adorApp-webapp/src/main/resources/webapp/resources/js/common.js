@@ -4,10 +4,10 @@ function setupMenu() {
     $.get('/adoration/getLoggedInUserInfo', function(data) {
         loggedInUserInfo = JSON.parse(data.loggedInUserInfo[0]);
         if (loggedInUserInfo.isLoggedIn) {
-            $("#loggedInUserLegend").text("Belépve: " + loggedInUserInfo.loggedInUserName);
+            $("#userProfile").text("Belépve: " + loggedInUserInfo.loggedInUserName);
+            $("#loggedInUserLegend").show();
             $("#nav-exit").show();
         } else {
-            $("#loggedInUserLegend").text("");
             $("#nav-login").show();
         }
         if (loggedInUserInfo.isRegisteredAdorator) {
