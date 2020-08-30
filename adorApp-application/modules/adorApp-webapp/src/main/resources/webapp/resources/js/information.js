@@ -89,7 +89,7 @@ function getInformation() {
                     tr.append($("<td class=\"infoTable\">" + coordinator.coordinatorTypeText
                         + "</td><td class=\"infoTable\">" + coordinator.personName
                         + "</td><td class=\"infoTable\">" + coordinator.phone
-                        + "</td><td class=\"infoTable\">" + coordinator.eMail));
+                        + "</td><td class=\"infoTable\">" + coordinator.eMail + "</td>"));
                     $("#yesLeadership").append(tr);
                 }
             }
@@ -169,7 +169,7 @@ function getInformation() {
             tr = $("<td class=\"infoTable\">"
                 + c.personName + "</td><td class=\"infoTable\">"
                 + c.phone + "</td><td class=\"infoTable\">"
-                + c.eMail +"</td>");
+                + c.eMail + "</td>");
             $("#yesAdoratorNext").append(tr);
         }
     });
