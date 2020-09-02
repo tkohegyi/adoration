@@ -9,7 +9,7 @@
 <META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
 <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0, user-scalable=yes" />
-<META http-equiv="refresh" content="2;URL=https://orok-imadas-vac-szent-anna-piarista-templom.click2stream.com/">
+<!-- <META http-equiv="refresh" content="2;URL=https://orok-imadas-vac-szent-anna-piarista-templom.click2stream.com/"> -->
 <meta name="HandheldFriendly" content="true" />
 <meta name="apple-mobile-web-app-capable" content="YES" />
 <meta name="author" content="Tamas Kohegyi" />
@@ -31,7 +31,14 @@
 
     <fieldset class="form-horizontal">
         <legend>Élő közvetítés:</legend>
-        <h3><a href="https://orok-imadas-vac-szent-anna-piarista-templom.click2stream.com/">Urgás az Örökimádás Webkamerájához</a></h3>
+        <legend class="message-legend" style="text-align:center; color:#E05050; padding: 0px; font-family: Oswald">Sajnos 2020 Szeptember elsején a vihar tönkre tette a közvetítő vonalat, így annak kijavításáig csak egy statikus képet tudunk mutatni:</legend>
+
+        <div class="centerwidediv" style="text-align: center">
+            <br />
+            <img alt="Örökimádás" src="./../resources/img/perperualAdoration-stillpicture-800.png" style="width:100%">
+        </div>
+
+        <!-- <h3><a href="https://orok-imadas-vac-szent-anna-piarista-templom.click2stream.com/">Urgás az Örökimádás Webkamerájához</a></h3> -->
         <!-- iframe width="560" height="315" src="https://www.youtube.com/embed/Iy5nd-jqIzs" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe -->
     </fieldset>
 
