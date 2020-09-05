@@ -183,6 +183,19 @@ public class SocialProvider {
             auditTrailCollection.add(prepareAuditTrail(refId, currentUserInformationJson.userName, "GoogleUserId",
                     oldString, newString));
         }
+        //comment
+        newString = newSocial.getComment();
+        oldString = social.getComment();
+        if ((oldString == null) || (newString == null)) {
+            logger.info("User:" + currentUserInformationJson.userName + " tried to create/update Social with empty string.");
+            return null;
+        }
+        businessWithAuditTrail.checkDangerousValue(newString, currentUserInformationJson.userName);
+        if (!oldString.contentEquals(newString)) {
+            social.setComment(newString);
+            auditTrailCollection.add(prepareAuditTrail(refId, currentUserInformationJson.userName, "Comment",
+                    oldString, newString));
+        }
         id = businessWithSocial.updateSocial(social, auditTrailCollection);
         return id;
     }

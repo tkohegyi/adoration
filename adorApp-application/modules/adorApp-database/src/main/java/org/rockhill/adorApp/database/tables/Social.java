@@ -22,6 +22,7 @@ public class Social {
     private String facebookUserName;
     private String facebookUserId;
     private String facebookFirstName;
+    private String comment;
 
     public Social() {
         // this form used by Hibernate
@@ -150,4 +151,16 @@ public class Social {
         this.facebookFirstName = facebookFirstName;
     }
 
+
+    @Column(name = "comment", nullable = true)
+    public String getComment() {
+        if (comment != null) {
+            return comment;
+        } else {
+            return "";
+        }
+    }
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
 }

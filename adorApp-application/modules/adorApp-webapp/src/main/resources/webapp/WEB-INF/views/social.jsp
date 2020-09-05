@@ -48,6 +48,7 @@
                             <th>Facebook - firstname</th>
                             <th>Facebook - e-mail</th>
                             <th>Facebook - UID</th>
+                            <th>Megjegyzés</th>
                         </tr>
                     </thead>
                     <tfoot>
@@ -63,6 +64,7 @@
                             <th>Facebook - firstname</th>
                             <th>Facebook - e-mail</th>
                             <th>Facebook - UID</th>
+                            <th>Megjegyzés</th>
                         </tr>
                     </tfoot>
                 </table>

@@ -107,6 +107,16 @@
       "name": "Google - UID",
       "type": "input-200",
       "helpText": "Felhasználó UID-je Google-ban."
+    },
+    {
+      "id": "comment",
+      "type": "input-1024",
+      "name": "Comment",
+      "text": "Comment:",
+      "helpText": "Adminisztrátor megjegyzése.",
+      "edit": {
+        "visible" : true
+      }
     }
   ]
 }
