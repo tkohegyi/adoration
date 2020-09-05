@@ -1,9 +1,25 @@
 $(document).ready(function() {
     $("#nav-ador-live").addClass("active");
+    $("#suggestLogin").hide();
+    jQuery.ajaxSetup({async:false});
     setupMenu();
+    jQuery.ajaxSetup({async:true});
+    prepareInfo();
     setupLiveCommunication();
     timer = window.setInterval("heartBeat()", 15000); //15 sec
 });
+
+function prepareInfo() {
+    //if not logged in -> suggest to log in / if logged in - be happy
+    if (typeof loggedInUserInfo != "undefined") {
+        if (loggedInUserInfo.isLoggedIn) {
+        } else { //not logged in
+            $("#suggestLogin").show();
+        }
+    } else { //not logged in
+        $("#suggestLogin").show();
+    }
+}
 
 var timer;
 var hashCode;
