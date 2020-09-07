@@ -118,7 +118,7 @@ public class FacebookOauth2Service {
         String graph = null;
         JSONObject json = null;
         try {
-            String g = "https://graph.facebook.com/me?access_token=" + accessToken;
+            String g = "https://graph.facebook.com/me?access_token=" + accessToken + "&fields=name,id,email";
             URL u = new URL(g);
             URLConnection c = u.openConnection();
             BufferedReader in = new BufferedReader(new InputStreamReader(
