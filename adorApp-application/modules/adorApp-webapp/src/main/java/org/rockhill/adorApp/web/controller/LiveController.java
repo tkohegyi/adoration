@@ -1,7 +1,5 @@
 package org.rockhill.adorApp.web.controller;
 
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.ObjectWriter;
 import org.rockhill.adorApp.web.controller.helper.ControllerBase;
 import org.rockhill.adorApp.web.json.CurrentUserInformationJson;
 import org.rockhill.adorApp.web.provider.CurrentUserProvider;
@@ -16,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -40,14 +37,13 @@ public class LiveController extends ControllerBase {
      * @return the name of the applog jsp file
      */
     @RequestMapping(value = "/adorationSecure/live", method = RequestMethod.GET)
-    public String live(HttpSession httpSession,
-                         HttpServletResponse httpServletResponse) {
+    public String live() {
         return "live";
     }
 
     @ResponseBody
     @RequestMapping(value = "/adoration/registerLiveAdorator", method = {RequestMethod.GET})
-    public Map<String, Collection<String>> registerLiveAdorator(HttpSession httpSession, HttpServletResponse httpServletResponse) throws IOException {
+    public Map<String, Collection<String>> registerLiveAdorator(HttpSession httpSession, HttpServletResponse httpServletResponse) {
 
         httpServletResponse.setHeader("Cache-Control", "no-cache, no-store, max-age=0, must-revalidate");
         httpServletResponse.setHeader("Pragma", "no-cache");
@@ -70,12 +66,13 @@ public class LiveController extends ControllerBase {
      * @return nothing
      */
     @RequestMapping(value = "/adoration/liveAdorator/{hash:.+}", method = {RequestMethod.GET})
-    public ResponseEntity<String> getLogFileContent(@PathVariable("hash") final String hashString) {
+    public ResponseEntity<String> getLogFileContent(HttpSession httpSession, @PathVariable("hash") final String hashString) {
+        currentUserProvider.getUserInformation(httpSession); //keep session alive even if user does nothing - after all the user is adorating
         liveAdoratorProvider.incomingTick(hashString);
         String jsonData = "{\"hash\":\"" + hashString + "\"}";
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.setContentType(MediaType.APPLICATION_JSON);
-        return new ResponseEntity<String>(jsonData, responseHeaders, HttpStatus.OK);
+        return new ResponseEntity<>(jsonData, responseHeaders, HttpStatus.OK);
     }
 
 }

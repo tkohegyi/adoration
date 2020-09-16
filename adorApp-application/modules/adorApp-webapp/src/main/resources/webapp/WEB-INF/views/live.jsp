@@ -30,7 +30,7 @@
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
     <fieldset id="suggestLogin" class="form-horizontal">
         <div>
-            <legend class="message-legend" style="text-align:center; color:#E05050; padding: 0px; font-family: Oswald">Ön nincs bejelentkezve, kérjük, amennyiben teheti, lépjen be <a id="gLoginAnchor" class="login" href="/adoration/loginGoogle"><img src="./../resources/img/google_login.png" alt="Google"/></a> vagy <a id="fLoginAnchor" class="login" href="/adoration/loginFacebook"><img src="./../resources/img/facebook_login.png" alt="Facebook"/></a> azonosítójával.</legend>
+            <legend class="message-legend" style="text-align:center; color:#E05050; padding: 0px; font-family: Oswald">Ön nincs bejelentkezve, kérjük, amennyiben teheti, lépjen be <a id="gLoginAnchor" class="login" href="/adoration/loginGoogle"><img src="/resources/img/google_login.png" alt="Google"/></a> vagy <a id="fLoginAnchor" class="login" href="/adoration/loginFacebook"><img src="/resources/img/facebook_login.png" alt="Facebook"/></a> azonosítójával.</legend>
         </div>
     </fieldset>
 
@@ -40,7 +40,7 @@
 
         <div class="centerwidediv" style="text-align: center">
             <br />
-            <img alt="Örökimádás" src="./../resources/img/perperualAdoration-stillpicture-800.png" style="width:100%">
+            <img alt="Örökimádás" src="/resources/img/perperualAdoration-stillpicture-800.png" style="width:100%">
         </div>
 
         <div>Megnézem, hátha működik már... <a href="https://orok-imadas-vac-szent-anna-piarista-templom.click2stream.com/">Urgás az Örökimádás Webkamerájához</a></div>
