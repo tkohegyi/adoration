@@ -7,6 +7,7 @@ $(document).ready(function() {
     prepareInfo();
     setupLiveCommunication();
     timer = window.setInterval("heartBeat()", 15000); //15 sec
+    redirectAsNecessary();
 });
 
 function prepareInfo() {
@@ -18,6 +19,16 @@ function prepareInfo() {
         }
     } else { //not logged in
         $("#suggestLogin").show();
+    }
+}
+
+function redirectAsNecessary() {
+    //if logged in - be happy and redirect
+    if (typeof loggedInUserInfo != "undefined") {
+        if (loggedInUserInfo.isLoggedIn) {
+            //user logged in so can redirect to live site
+            window.location.href = "https://orok-imadas-vac-szent-anna-piarista-templom.click2stream.com/";
+        }
     }
 }
 

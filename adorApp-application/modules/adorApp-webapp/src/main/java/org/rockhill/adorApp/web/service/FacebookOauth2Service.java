@@ -197,7 +197,17 @@ public class FacebookOauth2Service {
                 }
             }
             String text = "New Social id: " + id.toString() + "\nFacebook Type,\n Name: " + social.getFacebookUserName() + ",\nEmail: " + social.getFacebookEmail();
-            emailSender.sendMail(subject, text);
+            emailSender.sendMail(subject, text); //send mail to administrator
+            text = "Kedves " + social.getFacebookUserName() + "!\n\nKöszönettel vettük első bejelentkezésedet a Váci Örökimádás (https://orokimadas.info:9092/) weboldalán.\n\nA következő adatokat ismertük meg rólad:"
+                    + "\nNév: " + social.getFacebookUserName()
+                    + "\nE-mail: " + social.getFacebookEmail()
+                    + "\nFacebook azonosító: " + social.getFacebookUserId()
+                    + "\n\nAdatkezelési tájékoztatónkat megtalálhatod itt: https://orokimadas.info:9092/resources/img/AdatkezelesiSzabalyzat.pdf"
+                    + "\nAdataidról információt illetve azok törlését pedig erre az e-mail címre írva kérheted: kohegyi.tamas (kukac) vac-deakvar.vaciegyhazmegye.hu."
+                    + "\nUgyanezen a címen várjuk leveledet akkor is, ha kérdésed, észrevételed vagy javaslatod van a weboldallal kapcsolatban. "
+                    + "\n\nAmennyiben már regisztrált adoráló vagy, erre a levélre válaszolva kérlek írd meg, hogy mikor szoktál az Örökimádásban részt venni, vagy a telefonszámodat, hogy felvehessük veled a kapcsolatot."
+                    + "\n\nÜdvözlettel:\nKőhegyi Tamás\naz örökimádás világi koordinátora\n+36-70-375-4140\n";
+            emailSender.sendMailSpecial(social.getGoogleEmail(), "Belépés az Örökimádás weboldalán Facebook azonosítóval", text); //send feedback mail to the registered user
             id = businessWithSocial.newSocial(social, auditTrail);
             social.setId(id); //Social object is ready
         } else {

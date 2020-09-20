@@ -44,7 +44,7 @@ public class EmailSender {
             // subject
             msg.setSubject(subject);
             // content
-            msg.setText(text);
+            msg.setContent(text, "text/plain; charset=UTF-8");
             msg.setSentDate(new Date());
             // Get SMTPTransport
             SMTPTransport t = (SMTPTransport) session.getTransport("smtp");
@@ -57,6 +57,43 @@ public class EmailSender {
             t.close();
         } catch (MessagingException e) {
             logger.warn("Send Email Failed - Response: " + response, e);
+        }
+    }
+
+    public void sendMailSpecial(String googleEmail, String subject, String text) {
+        PropertyDto propertyDto = emailConfigurationAccess.getProperties();
+        Properties prop = new Properties();
+        prop.put("mail.smtp.host", propertyDto.getSmtpServer()); //optional, defined in SMTPTransport
+        prop.put("mail.smtp.auth", "true");
+        prop.put("mail.smtp.port", propertyDto.getSmtpPort()); // default port 25
+
+        Session session = Session.getInstance(prop, null);
+        Message msg = new MimeMessage(session);
+
+        String response = "failed";
+        try {
+            // from
+            msg.setFrom(new InternetAddress(propertyDto.getEmailFrom()));
+            // to
+            msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(googleEmail, false));
+            // cc
+            msg.setRecipients(Message.RecipientType.CC, InternetAddress.parse(propertyDto.getEmailTo(), false));
+            // subject
+            msg.setSubject(subject);
+            // content
+            msg.setContent(text, "text/plain; charset=UTF-8");
+            msg.setSentDate(new Date());
+            // Get SMTPTransport
+            SMTPTransport t = (SMTPTransport) session.getTransport("smtp");
+            // connect
+            t.connect(propertyDto.getSmtpServer(), propertyDto.getSmtpUserName(), propertyDto.getSmtpPassword());
+            // send
+            t.sendMessage(msg, msg.getAllRecipients());
+            response = t.getLastServerResponse();
+            logger.info("Send Special Email Response: " + response);
+            t.close();
+        } catch (MessagingException e) {
+            logger.warn("Send Special Email Failed - Response: " + response, e);
         }
     }
 }
