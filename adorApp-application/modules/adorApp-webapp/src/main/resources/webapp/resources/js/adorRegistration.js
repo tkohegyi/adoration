@@ -51,7 +51,7 @@ function doRegisterClick() {
         eStr = "Név megadása szükséges!";
         $("#nameError").removeAttr('style');
     } else {
-        var patt = /^[0-9a-zA-ZöüóőúéáűíÖÜÓŐÚÉÁŰÍ\.\,\- ]*$/
+        var patt = /^[0-9a-zA-ZöüóőúéáűíÖÜÓŐÚÉÁŰÍ\.\,\-\n ]*$/
         if (!patt.test(b.name)) {
             bad = 1;
             eStr = "A megadott Névben el nem fogadható karakterek is vannak, kérjük a név javítását!";

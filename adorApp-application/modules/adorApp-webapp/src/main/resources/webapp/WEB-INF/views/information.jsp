@@ -14,6 +14,11 @@
 <meta name="author" content="Tamas Kohegyi" />
 <meta name="Description" content="Perpetual adoration in Hungary, Vác / Örökimádás a váci Szent Anna Piarista Templomban" />
 <meta name="Keywords" content="örökimádás,vác,perpetual,adoration" />
+<script src="/resources/js/external/jquery-3.4.1.js"></script>
+<script src="/resources/js/external/bootstrap-4.3.1.min.js"></script>
+<script src="/resources/js/common.js"></script>
+<script src="/resources/js/sendMessage.js"></script>
+<script src="/resources/js/information.js"></script>
 <title>Örökimádás - Vác - Információk</title>
 <link href="./../resources/css/bootstrap-4.3.1.min.css" rel="stylesheet" media="screen" charset="utf-8">
 <link href="./../resources/css/menu.css" rel="stylesheet" media="screen" charset="utf-8">
@@ -47,6 +52,11 @@
 	</div>
 	<div class="centerwidediv" align="center">
         <legend class="message-legend h4"d>Napszak koordinátorok elérhetősége</legend>
+            <div class="centerwidediv" align="center">
+                <div class="container" style="padding:5px" align="center"><button id="message-button" type="button" class="btn btn-primary" data-toggle="modal" data-target="#sendMessageModal" onclick="msgClick()">Üzenet küldése az általános koordinátornak...</button></div>
+            </div>
+            <%@include file="../include/sendMessage.html" %>
+
         <div id="noLeadership">Sajnos nincs megjeleníthető adat.</div>
 		<p><table id="yesLeadership"><tbody></tbody></table></p>
 	</div>
@@ -66,9 +76,5 @@
 	</div>
     </fieldset>
 
-<script src="./../resources/js/external/jquery-3.4.1.js"></script>
-<script src="./../resources/js/external/bootstrap-4.3.1.min.js"></script>
-<script src="./../resources/js/common.js"></script>
-<script src="./../resources/js/information.js"></script>
 </body>
 </html>

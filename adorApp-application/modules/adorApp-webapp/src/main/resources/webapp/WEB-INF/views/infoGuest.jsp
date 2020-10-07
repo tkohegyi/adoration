@@ -17,6 +17,7 @@
 <script src="/resources/js/external/jquery-3.4.1.js"></script>
 <script src="/resources/js/external/bootstrap-4.3.1.min.js"></script>
 <script src="/resources/js/common.js"></script>
+<script src="/resources/js/sendMessage.js"></script>
 <script src="/resources/js/infoGuest.js"></script>
 <title>Örökimádás - Vác - Személyes Információk</title>
 <link href="/resources/css/bootstrap-4.3.1.min.css" rel="stylesheet" media="screen" charset="utf-8">
@@ -54,42 +55,10 @@
 	</div>
 
 	<div class="centerwidediv" align="center">
-        <div class="container" style="padding:5px" align="center"><button id="message-button" type="button" class="btn btn-primary" data-toggle="modal" data-target="#sendMessageModal" onclick="msgClick()">Üzenet küldése a koordinátornak...</button></div>
+        <div class="container" style="padding:5px" align="center"><button id="message-button" type="button" class="btn btn-primary" data-toggle="modal" data-target="#sendMessageModal" onclick="msgClick()">Üzenet küldése az általános koordinátornak...</button></div>
 	</div>
 
-    <!-- Modal Send Message -->
-    <div class="modal fade" id="sendMessageModal" tabindex="-1" role="dialog" aria-labelledby="sendMessageCenterTitle" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="sendMessageCenterTitle">Üzenetküldés</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Cancel">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-                <form>
-                    <input type="hidden" id="socialId" value=""/>
-                    <table style="width:100%">
-                        <tr class="infoTable"><td class="evenInfo" valign="top" align="right" style="width:20%">Az Ön elérhetősége (telefonszám vagy e-mail): </td><td class="oddInfo"><input type="text" id="emailOrPhone" name="emailOrPhone" style="width:100%" value=""></td></tr>
-                        <tr class="infoTable"><td class="evenInfo" valign="top" align="right">Üzenet:</td><td class="oddInfo"><textarea id="messageContent" cols="55" rows="15" style="width:100%"></textarea></td></tr>
-                    </table>
-                </form>
-          </div>
-          <div class="modal-footer">
-            <table width="100%"><tr>
-                <td align="left">
-                    <button id="cancelButton" type="button" class="btn btn-info" data-dismiss="modal">Mégsem</button>
-                </td>
-                <td align="right">
-                    <button id="sendButton" type="button" class="btn btn-success" onclick="sendMessage()">Üzenet küldése</button>
-                </td>
-            </tr></table>
-          </div>
-        </div>
-      </div>
-    </div>
-
+    <%@include file="../include/sendMessage.html" %>
 
     <fieldset class="form-horizontal" id="downloads">
 	<div class="centerwidediv" align="center">
