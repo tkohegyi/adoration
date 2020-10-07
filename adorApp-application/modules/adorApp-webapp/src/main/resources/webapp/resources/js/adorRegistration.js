@@ -48,40 +48,40 @@ function doRegisterClick() {
     var bad = 0;
     if (b.name.length == 0) {
         bad = 1;
-        str = "Név megadása szükséges!";
+        eStr = "Név megadása szükséges!";
         $("#nameError").removeAttr('style');
     } else {
-        var patt = /^[a-zA-ZöüóőúéáűíÖÜÓŐÚÉÁŰÍ\.\, ]*$/
+        var patt = /^[0-9a-zA-ZöüóőúéáűíÖÜÓŐÚÉÁŰÍ\.\,\- ]*$/
         if (!patt.test(b.name)) {
             bad = 1;
-            str = "A megadott Névben el nem fogadható karakterek is vannak, kérjük a név javítását!";
+            eStr = "A megadott Névben el nem fogadható karakterek is vannak, kérjük a név javítását!";
             $("#nameError").removeAttr('style');
         }
     }
     if ((b.email.length > 0) && (!validateEmail(b.email))) {
         bad = 1;
-        str = "A megadott e-mail cím nem helyes!";
+        eStr = "A megadott e-mail cím nem helyes!";
         $("#emailError").removeAttr('style');
     }
     var patt = /^[0-9\+\- ]*$/;
     if ((b.mobile.length > 0) && (!patt.test(b.mobile))) {
         bad = 1;
-        str = "A megadott telefonszám nem helyes!";
+        eStr = "A megadott telefonszám nem helyes!";
         $("#mobileError").removeAttr('style');
     }
     if (b.email.length + b.mobile.length == 0) {
         bad = 1;
-        str = "Telefonszám és e-mail cím közül legalább az egyik megadása kötelező!";
+        eStr = "Telefonszám és e-mail cím közül legalább az egyik megadása kötelező!";
         $("#emailError").removeAttr('style');
         $("#mobileError").removeAttr('style');
     }
     if (b.dhc.indexOf("yes") <= 0) {
         bad = 1;
-        str = "Adatkezelési hozzájárulás nélkül a jelentkezést nem tudjuk elfogadni!";
+        eStr = "Adatkezelési hozzájárulás nélkül a jelentkezést nem tudjuk elfogadni!";
         $("#dhcError").removeAttr('style');
     }
     if (bad > 0) {
-        alert("Hiba az adatokban!\n" + str);
+        alert("Hiba az adatokban!\n" + eStr);
         window.scrollTo(0, 0);
         return;
     }

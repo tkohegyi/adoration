@@ -15,6 +15,7 @@ public class CurrentUserInformationJson {
     public Integer coordinatorId;  // id of a coordinator or -1 otherwise
     public boolean isDailyCoordinator;
     public boolean isHourlyCoordinator;
+    public String socialServiceUsed;
 
     public CurrentUserInformationJson() {
         reset();
@@ -34,6 +35,7 @@ public class CurrentUserInformationJson {
         isRegisteredAdorator = false;
         isPrivilegedAdorator = false;
         isAdoratorAdmin = false;
+        socialServiceUsed = "Undetermined";
     }
 
     public boolean isPrivilegedUser() {

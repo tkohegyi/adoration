@@ -2,11 +2,14 @@ package org.rockhill.adorApp.web.provider;
 
 import org.rockhill.adorApp.database.business.BusinessWithLink;
 import org.rockhill.adorApp.database.business.BusinessWithPerson;
+import org.rockhill.adorApp.database.business.BusinessWithSocial;
 import org.rockhill.adorApp.database.business.BusinessWithTranslator;
 import org.rockhill.adorApp.database.business.helper.enums.AdoratorStatusTypes;
 import org.rockhill.adorApp.database.business.helper.enums.TranslatorDayNames;
 import org.rockhill.adorApp.database.tables.Link;
 import org.rockhill.adorApp.database.tables.Person;
+import org.rockhill.adorApp.database.tables.Social;
+import org.rockhill.adorApp.web.json.CoordinatorJson;
 import org.rockhill.adorApp.web.json.CurrentUserInformationJson;
 import org.rockhill.adorApp.web.json.InformationJson;
 import org.rockhill.adorApp.web.json.PersonJson;
@@ -25,6 +28,8 @@ public class InformationProvider {
 
     @Autowired
     BusinessWithPerson businessWithPerson;
+    @Autowired
+    BusinessWithSocial businessWithSocial;
     @Autowired
     BusinessWithLink businessWithLink;
     @Autowired
@@ -93,4 +98,61 @@ public class InformationProvider {
         }
         return informationJson;
     }
+
+    public Object getGuestInformation(CurrentUserInformationJson currentUserInformationJson, HttpSession httpSession) {
+        GuestInformationJson guestInformationJson = new GuestInformationJson();
+        //get name and status
+        Long socialId = currentUserInformationJson.socialId;
+        Social social = businessWithSocial.getSocialById(socialId);
+        if (social == null) {
+            //wow, we should not be here
+            logger.warn("Guest User got access to prohibited area: " + currentUserInformationJson.loggedInUserName);
+            guestInformationJson.error = "access denied";
+        } else {
+            //we have social info
+            if (social.getFacebookUserId().length() > 0) {
+                guestInformationJson.isFacebook = true;
+                guestInformationJson.emailFacebook = social.getFacebookEmail();
+                guestInformationJson.nameFacebook = social.getFacebookUserName();
+            } else {
+                guestInformationJson.isFacebook = false;
+            }
+            if (social.getGoogleUserId().length() > 0) {
+                guestInformationJson.isGoogle = true;
+                guestInformationJson.emailGoogle = social.getGoogleEmail();
+                guestInformationJson.nameGoogle = social.getGoogleUserName();
+            } else {
+                guestInformationJson.isGoogle = false;
+            }
+            switch (social.getSocialStatus()) {
+                default:
+                case 1: //waiting for identification
+                    guestInformationJson.status = "Nem azonosított felhasználó, kérjük írja meg elérhetőségét a koordinátoroknak, a lentebb található Üzenetküldés segítségével, hogy az azonosítás megtörténhessen.";
+                    break;
+                case 2: //adoráló - we should be be here
+                    guestInformationJson.status = "Regisztrált adoráló.";
+                    break;
+                case 3: //guest
+                    guestInformationJson.status = "Vendég felhasználó.";
+                    break;
+            }
+            guestInformationJson.leadership = coordinatorProvider.getLeadership(currentUserInformationJson);
+            guestInformationJson.socialServiceUsed = currentUserInformationJson.socialServiceUsed;
+        }
+        return guestInformationJson;
+    }
+}
+
+class GuestInformationJson {
+    public String error; // filled only in case of error
+    public String socialServiceUsed;
+    public Boolean isGoogle;
+    public String nameGoogle;
+    public String emailGoogle;
+    public Boolean isFacebook;
+    public String nameFacebook;
+    public String emailFacebook;
+    public String status;   //status of the adorator
+    public String id;   //id of the social record
+    public List<CoordinatorJson> leadership; //main coordinators
 }

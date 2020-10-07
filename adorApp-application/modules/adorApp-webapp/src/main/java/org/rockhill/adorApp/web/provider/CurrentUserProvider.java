@@ -87,10 +87,12 @@ public class CurrentUserProvider {
                         if (principal instanceof GoogleUser) {
                             userName = user.getSocial().getGoogleUserName();
                             loggedInUserName = "Vend\u00e9g - " + userName;
+                            currentUserInformationJson.socialServiceUsed = "Google";
                         }
                         if (principal instanceof FacebookUser) {
                             userName = user.getSocial().getFacebookUserName();
                             loggedInUserName = "Vend\u00e9g - " + userName;
+                            currentUserInformationJson.socialServiceUsed = "Facebook";
                         }
                     }
                     currentUserInformationJson.loggedInUserName = loggedInUserName; //user who logged in via social

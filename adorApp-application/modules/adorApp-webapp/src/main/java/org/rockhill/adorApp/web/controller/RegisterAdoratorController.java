@@ -71,7 +71,7 @@ public class RegisterAdoratorController extends ControllerBase {
                 resultString = "OK-" + updateInformation.toString();
                 result = new ResponseEntity<String>(getJsonString(JSON_RESPONSE_UPDATE, resultString), responseHeaders, HttpStatus.CREATED);
             } else {
-                resultString = "Cannot register new Adorator, please check the values and retry.";
+                resultString = "A regisztrálás sikertelen, kérjük ellenőrizze a megadott adatokat és próbálkozzon újra.";
                 logger.info("Cannot register Adorator:" + p.name);
                 result = new ResponseEntity<String>(getJsonString(JSON_RESPONSE_UPDATE, resultString), responseHeaders, HttpStatus.BAD_REQUEST);
             }

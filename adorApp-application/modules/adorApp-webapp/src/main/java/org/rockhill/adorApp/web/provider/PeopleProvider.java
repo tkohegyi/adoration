@@ -2,7 +2,6 @@ package org.rockhill.adorApp.web.provider;
 
 import org.rockhill.adorApp.database.business.*;
 import org.rockhill.adorApp.database.business.helper.Converter;
-import org.rockhill.adorApp.database.business.helper.enums.AdorationMethodTypes;
 import org.rockhill.adorApp.database.business.helper.enums.AdoratorStatusTypes;
 import org.rockhill.adorApp.database.business.helper.enums.TranslatorDayNames;
 import org.rockhill.adorApp.database.exception.DatabaseHandlingException;
@@ -23,7 +22,8 @@ import java.util.*;
 public class PeopleProvider {
 
     private final Logger logger = LoggerFactory.getLogger(PeopleProvider.class);
-    private final String subject = "[AdoratorApp] - Új adoráló";
+    private final String subjectNewAdorator = "[AdoratorApp] - Új adoráló";
+    private final String subjectNewMessage = "[AdoratorApp] - Üzenet egy felhasználótól";
 
     @Autowired
     BusinessWithPerson businessWithPerson;
@@ -237,7 +237,7 @@ public class PeopleProvider {
         p.dhcSignedDate = dhcSignedDate;
         //send mail about the person
         String text = "New id: " + newId + "\nDHC Signed Date: " + dhcSignedDate + "\nAdatok:\n" + p.toString();
-        emailSender.sendMail(subject, text);
+        emailSender.sendMail(subjectNewAdorator, text);
         //new Person
         Person person = new Person();
         person.setId(newId);
@@ -291,5 +291,19 @@ public class PeopleProvider {
             linkJson.dayNames.put(dayName.getDayValue(), value);
         }
         return linkJson;
+    }
+
+    public void messageToCoordinator(MessageToCoordinatorJson p, CurrentUserInformationJson currentUserInformationJson) {
+        String socialText = currentUserInformationJson.socialServiceUsed == null ? "[ Unknown ]" : currentUserInformationJson.socialServiceUsed;
+        String socialId = currentUserInformationJson.socialId == null ? "[ Unknown ]" : currentUserInformationJson.socialId.toString();
+        String personId = currentUserInformationJson.personId == null ? "[ Unknown ]" : currentUserInformationJson.personId.toString();
+        String info = p.info == null ? "[ Nincs adat ]" : p.info;
+        String message = p.text == null ? "[ Nincs üzenet ]" : p.text;
+        //send mail from the person
+        String text = "Felhasználó neve: " + currentUserInformationJson.loggedInUserName
+                + "\n  Egyéb azonosító: \n   Bejelentkezés: " + socialText + "\n   Social ID: " + socialId + "\n   Person ID: " + personId
+                + "\n\n  Kapcsolat üzenet: \n" + info
+                + "\n\n  Üzenet:\n" + message;
+        emailSender.sendMail(subjectNewMessage, text);
     }
 }
