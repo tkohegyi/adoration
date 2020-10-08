@@ -87,13 +87,17 @@ public class CurrentUserProvider {
                         if (principal instanceof GoogleUser) {
                             userName = user.getSocial().getGoogleUserName();
                             loggedInUserName = "Vend\u00e9g - " + userName;
-                            currentUserInformationJson.socialServiceUsed = "Google";
                         }
                         if (principal instanceof FacebookUser) {
                             userName = user.getSocial().getFacebookUserName();
                             loggedInUserName = "Vend\u00e9g - " + userName;
-                            currentUserInformationJson.socialServiceUsed = "Facebook";
                         }
+                    }
+                    if (principal instanceof GoogleUser) {
+                        currentUserInformationJson.socialServiceUsed = "Google";
+                    }
+                    if (principal instanceof FacebookUser) {
+                        currentUserInformationJson.socialServiceUsed = "Facebook";
                     }
                     currentUserInformationJson.loggedInUserName = loggedInUserName; //user who logged in via social
                     currentUserInformationJson.userName = userName; //user who registered as adorator (his/her name may differ from the username used in Social)

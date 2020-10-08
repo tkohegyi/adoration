@@ -49,8 +49,9 @@ public class WebAppConfigurationAccess implements ConfigurationAccessBase {
         String daily_info_file_name = propertyHolder.get("daily_info_file_name");
         String hourly_info_file_name = propertyHolder.get("hourly_info_file_name");
         String adorator_info_file_name = propertyHolder.get("adorator_info_file_name");
+        String captcha_site_secret = propertyHolder.get("captcha_site_secret");
         properties = new PropertyDto(google_client_id, google_client_secret, google_redirect_url, base_url,
                 facebook_app_id, facebook_app_secret, sessionTimeout,
-                excel_file_name, daily_info_file_name, hourly_info_file_name, adorator_info_file_name);
+                excel_file_name, daily_info_file_name, hourly_info_file_name, adorator_info_file_name, captcha_site_secret);
     }
 }

@@ -3,16 +3,18 @@ function msgClick() {
     $("#emailOrPhone").val("");
     $("#messageContent").val("");
     enableButtons();
+    grecaptcha.reset();
 }
 
 function sendMessage() {
     var b = {}; //empty object
     b.info = $("#emailOrPhone").val();
     b.text = $("#messageContent").val();
+    b.captcha = grecaptcha.getResponse();
     //verification
     var eStr = "";
     var bad = 0;
-    var patt = /^[0-9a-zA-ZöüóőúéáűíÖÜÓŐÚÉÁŰÍ\.\,\-\n ]*$/
+    var patt = /^[0-9a-zA-ZöüóőúéáűíÖÜÓŐÚÉÁŰÍ\.\!\?\,\-\n ]*$/
     if (!patt.test(b.info)) {
         bad = 1;
         eStr = "A megadott elérhetőségben el nem fogadható karakterek is vannak, kérjük javítását!";
@@ -20,6 +22,10 @@ function sendMessage() {
     if (!patt.test(b.text)) {
         bad = 1;
         eStr = "Az Üzenetben el nem fogadható karakterek is vannak, kérjük fogalmazza át az üzenetet!";
+    }
+    if (b.captcha.length == 0 ) {
+        alert("Kérem jelölje be a \"Nem vagyok robot\" négyzetet!");
+        return;
     }
     if (bad > 0) {
         alert("Hiba az üzenetben!\n" + eStr);
@@ -46,12 +52,10 @@ function sendMessage() {
         },
         complete : enableButtons,
     }).fail( function(xhr, status) {
-        if (status != 400) {
+        alert("Az üzenet leküldése sikertelen, próbálkozzon ismét.");
             window.location.pathname = "/adorationSecure/information"
-        }
-        alert(xhr.responseText);
+            return;
     });
-
 }
 
 function enableButtons() {

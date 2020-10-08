@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!-- Modal Send Message -->
+
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
 <div class="modal fade" id="sendMessageModal" tabindex="-1" role="dialog" aria-labelledby="sendMessageCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
         <div class="modal-content">
@@ -19,7 +22,12 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <table width="100%"><tr>
+                <table width="100%">
+                    <tr><td align="center" colspan="2">
+                        <div class="g-recaptcha" data-sitekey="6Ler49QZAAAAAJB7iCx2EaHJ3REmm_D8qCyDUugw"></div>
+                    </td>
+                    </tr>
+                    <tr>
                     <td align="left">
                         <button id="cancelButton" type="button" class="btn btn-info" data-dismiss="modal">Mégsem</button>
                     </td>
@@ -31,3 +39,4 @@
         </div>
     </div>
 </div>
+
