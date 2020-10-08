@@ -14,7 +14,7 @@ function sendMessage() {
     //verification
     var eStr = "";
     var bad = 0;
-    var patt = /^[0-9a-zA-ZöüóőúéáűíÖÜÓŐÚÉÁŰÍ\.\!\?\,\-\n ]*$/
+    var patt = /^[0-9a-zA-ZöüóőúéáűíÖÜÓŐÚÉÁŰÍ\.\!\?\,\-\n\: ]*$/
     if (!patt.test(b.info)) {
         bad = 1;
         eStr = "A megadott elérhetőségben el nem fogadható karakterek is vannak, kérjük javítását!";
