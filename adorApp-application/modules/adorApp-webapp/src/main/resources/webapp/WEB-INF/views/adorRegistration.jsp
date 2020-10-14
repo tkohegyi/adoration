@@ -30,7 +30,7 @@
             <div>
                 <legend class="message-legend" style="text-align:center; color:#E05050; padding: 0px; font-family: Oswald">Ön nincs bejelentkezve, kérjük a regisztrálás előtt lépjen be <a id="gLoginAnchor" class="login" href="/adoration/loginGoogle"><img src="./../resources/img/google_login.png" alt="Google"/></a> vagy <a id="fLoginAnchor" class="login" href="/adoration/loginFacebook"><img src="./../resources/img/facebook_login.png" alt="Facebook"/></a> azonosítójával.</legend>
             </div>
-            <div><legend style="visibility: hidden">Válaszolok a hívásra</legend>
+            <div>
                 Igen, válaszolok a hívásra! <br /> Jézussal akarok lenni, aki
                 valóságosan jelen van a Legszentebb Oltáriszentségben, <br /> és
                 minden héten egy órán keresztül imádni akarom Őt<br /> a váci Szent Anna
@@ -42,17 +42,17 @@
         <p>
         <table class="jelentkezes" role="presentation">
             <tr>
-                <td class="right">Név:&nbsp;<font color="red">*</font></td>
+                <td class="right">Név:&nbsp;<span style="color:red">*</span></td>
                 <td class="left"><input type="text" id="name" value="">
                 <span id="nameError" class="error" style="display:none">Név megadása szükséges!</span></td>
             </tr>
             <tr>
-                <td class="right">E-mail:&nbsp;<font color="red">*</font></td>
+                <td class="right">E-mail:&nbsp;<span style="color:red">*</span></td>
                 <td class="left"><input type="text" id="email" value="">
                 <span id="emailError" class="error" style="display:none">A megadott e-mail cím nem helyes!</span></td>
             </tr>
             <tr>
-                <td class="right">Telefonszám:&nbsp;<font color="red">*</font></td>
+                <td class="right">Telefonszám:&nbsp;<span style="color:red">*</span></td>
                 <td class="left"><input type="text" id="mobile" value="">
                 <span id="mobileError" class="error" style="display:none">A megadott telefonszám nem helyes!</span></td>
             </tr>
@@ -67,15 +67,15 @@
         </div>
 
         <br /> A zöld színnel jelölt órákat már legalább ketten vállalták, ezért amennyiben lehetséges,
-        elsősorban a <font style="background-color:#fd726f">&nbsp;2 - Pirossal&nbsp;</font> jelölt órák közül,
-        vagy az <font style="background-color:#fdf467">&nbsp;1 - Sárgával&nbsp;</font> jelölt órák közül válasszon,
+        elsősorban a <span style="background-color:#fd726f">&nbsp;2 - Pirossal&nbsp;</span> jelölt órák közül,
+        vagy az <span style="background-color:#fdf467">&nbsp;1 - Sárgával&nbsp;</span> jelölt órák közül válasszon,
         mert ezekre az időpontokra keresünk elsősorban szentségimádókat.<br />
         Természetesen - ha a fenti pirossal vagy sárgával jelölt órák közül egyik sem felel meg, örömmel várjuk a zölddel jelöltekben is. <br />
-		A <font style="background-color:lightskyblue">&nbsp;kék&nbsp;</font> négyzetek azokat az órákat jelölik, amikor távolról, online adoráló van jelen.<br />
+		A <span style="background-color:lightskyblue">&nbsp;kék&nbsp;</span> négyzetek azokat az órákat jelölik, amikor távolról, online adoráló van jelen.<br />
         <p/>
         <table class="jelentkezes" role="presentation">
             <tr>
-                <td class="right">Választott nap:&nbsp;<font color="red">*</font></td>
+                <td class="right">Választott nap:&nbsp;<span style="color:red">*</span></td>
                 <td class="left"><select id="daySelect">
                         <option id="daySelect-1" value="1">Hétfő</option>
                         <option id="daySelect-2" value="2">Kedd</option>
@@ -87,7 +87,7 @@
                 </select></td>
             </tr>
             <tr>
-                <td class="right">Választott óra:&nbsp;<font color="red">*</font></td>
+                <td class="right">Választott óra:&nbsp;<span style="color:red">*</span></td>
                 <td class="left"><select id="hourSelect">
                         <option id="hourSelect-0" value="0">0</option>
                         <option id="hourSelect-1" value="1">1</option>
@@ -116,7 +116,7 @@
                 </select></td>
             </tr>
             <tr>
-                <td class="right">Adorálás módja:&nbsp;<font color="red">*</font></td>
+                <td class="right">Adorálás módja:&nbsp;<span style="color:red">*</span></td>
                 <td class="left"><select id="method">
                         <option id="method-1" value="1">Heti rendszerességgel, az Vácott, az Örökimádás kápolnából</option>
                         <option id="method-2" value="2">Heti rendszerességgel, távolról, online módon</option>
@@ -128,7 +128,7 @@
                 <td class="left"><textarea id="comment" rows="5" cols="55"></textarea></td>
             </tr>
             <tr>
-                <td class="right">Szervezőként is részt szeretne venni?&nbsp;<font color="red">*</font></td>
+                <td class="right">Szervezőként is részt szeretne venni?&nbsp;<span style="color:red">*</span></td>
                 <td class="left"><select id="coordinate">
                         <option id="coordinate-yes" value="szervezo">Igen</option>
                         <option id="coordinate-no" value="nemszervezo" selected>Nem</option>
@@ -136,7 +136,7 @@
             </tr
             <p height=5px />
             <tr>
-                <td class="right">Hozzájárulás személyes adatok kezeléséhez:&nbsp;<font color="red">*</font></td>
+                <td class="right">Hozzájárulás személyes adatok kezeléséhez:&nbsp;<span style="color:red">*</span></td>
                 <td class="left">
                         <span id="dhcError" class="error" style="display:none">Adatkezelési hozzájárulás nélkül a jelentkezést nem tudjuk elfogadni!</span>
                         <br/>

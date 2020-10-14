@@ -127,3 +127,7 @@ div.dataTables_wrapper {
     background-color: #f8a33e;
     color: black;
 }
+
+.centerDiv {
+    text-align: -webkit-center;
+}
