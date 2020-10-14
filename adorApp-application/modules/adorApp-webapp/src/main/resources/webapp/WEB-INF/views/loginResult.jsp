@@ -1,6 +1,6 @@
 <%@ page session="true" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html>
+<html lang="hu">
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
@@ -12,9 +12,9 @@
 <meta name="Description" content="Perpetual adoration in Hungary, Vác / Örökimádás a váci Szent Anna Piarista Templomban" />
 <meta name="Keywords" content="örökimádás,vác,perpetual,adoration" />
 <title>Örökimádás - Vác - Belépés</title>
-<link href="./../resources/css/bootstrap-4.3.1.min.css" rel="stylesheet" media="screen" charset="utf-8">
-<link href="./../resources/css/menu.css" rel="stylesheet" media="screen" charset="utf-8">
-<link id="favicon" rel="shortcut icon" type="image/png" href="./../resources/img/favicon.png" />
+<link href="/resources/css/bootstrap-4.3.1.min.css" rel="stylesheet" media="screen" charset="utf-8">
+<link href="/resources/css/menu.css" rel="stylesheet" media="screen" charset="utf-8">
+<link id="favicon" rel="shortcut icon" type="image/png" href="/resources/img/favicon.png" />
 </head>
 <body class="body">
   <div class="container">
@@ -30,9 +30,9 @@
 
     </fieldset>
   </div>
-  <script src="./../resources/js/external/jquery-3.4.1.js"></script>
-  <script src="./../resources/js/external/bootstrap-4.3.1.min.js"></script>
-  <script src="./../resources/js/common.js"></script>
-  <script src="./../resources/js/loginResult.js"></script>
+  <script src="/resources/js/external/jquery-3.4.1.js"></script>
+  <script src="/resources/js/external/bootstrap-4.3.1.min.js"></script>
+  <script src="/resources/js/common.js"></script>
+  <script src="/resources/js/loginResult.js"></script>
 </body>
 </html>

@@ -1,6 +1,6 @@
 ﻿<%@ page session="true" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html>
+<html lang="hu">
 <head>
 <meta charset="UTF-8">
 <meta name="_csrf" content="${_csrf.token}"/>
@@ -15,10 +15,10 @@
 <meta name="Description" content="Perpetual adoration in Hungary, Vác / Örökimádás a váci Szent Anna Piarista Templomban" />
 <meta name="Keywords" content="örökimádás,vác,perpetual,adoration" />
 <title>Örökimádás - Vác - Jelentkezés Örökimádásra</title>
-<link href="./../resources/css/bootstrap-4.3.1.min.css" rel="stylesheet" media="screen" charset="utf-8">
-<link href="./../resources/css/menu.css" rel="stylesheet" media="screen" charset="utf-8">
-<link href="./../resources/css/coverageBar.css" rel="stylesheet" media="screen" charset="utf-8">
-<link id="favicon" rel="shortcut icon" type="image/png" href="./../resources/img/favicon.png" />
+<link href="/resources/css/bootstrap-4.3.1.min.css" rel="stylesheet" media="screen" charset="utf-8">
+<link href="/resources/css/menu.css" rel="stylesheet" media="screen" charset="utf-8">
+<link href="/resources/css/coverageBar.css" rel="stylesheet" media="screen" charset="utf-8">
+<link id="favicon" rel="shortcut icon" type="image/png" href="/resources/img/favicon.png" />
 </head>
 <body class="body">
 <div class="container">
@@ -30,9 +30,7 @@
             <div>
                 <legend class="message-legend" style="text-align:center; color:#E05050; padding: 0px; font-family: Oswald">Ön nincs bejelentkezve, kérjük a regisztrálás előtt lépjen be <a id="gLoginAnchor" class="login" href="/adoration/loginGoogle"><img src="./../resources/img/google_login.png" alt="Google"/></a> vagy <a id="fLoginAnchor" class="login" href="/adoration/loginFacebook"><img src="./../resources/img/facebook_login.png" alt="Facebook"/></a> azonosítójával.</legend>
             </div>
-        </fieldset>
-        <fieldset>
-            <div>
+            <div><legend style="visibility: hidden">Válaszolok a hívásra</legend>
                 Igen, válaszolok a hívásra! <br /> Jézussal akarok lenni, aki
                 valóságosan jelen van a Legszentebb Oltáriszentségben, <br /> és
                 minden héten egy órán keresztül imádni akarom Őt<br /> a váci Szent Anna
@@ -42,7 +40,7 @@
 	</div>
     <div class="centerwidediv" align="center">
         <p>
-        <table class="jelentkezes">
+        <table class="jelentkezes" role="presentation">
             <tr>
                 <td class="right">Név:&nbsp;<font color="red">*</font></td>
                 <td class="left"><input type="text" id="name" value="">
@@ -63,12 +61,10 @@
 
         <b>Válassza ki a napot és az órát!</b> Segítségül megmutatjuk az aktuális órafedettséget az egész hétre:
         <p/>
-        <fieldset class="form-horizontal">
-            <div class="control-group">
-                <%@include file="../include/coverageBar.html" %>
-                <%@include file="../include/coverageBarVertical.html" %>
-            </div>
-        </fieldset>
+        <div class="control-group form-horizontal">
+            <%@include file="../include/coverageBar.html" %>
+            <%@include file="../include/coverageBarVertical.html" %>
+        </div>
 
         <br /> A zöld színnel jelölt órákat már legalább ketten vállalták, ezért amennyiben lehetséges,
         elsősorban a <font style="background-color:#fd726f">&nbsp;2 - Pirossal&nbsp;</font> jelölt órák közül,
@@ -77,7 +73,7 @@
         Természetesen - ha a fenti pirossal vagy sárgával jelölt órák közül egyik sem felel meg, örömmel várjuk a zölddel jelöltekben is. <br />
 		A <font style="background-color:lightskyblue">&nbsp;kék&nbsp;</font> négyzetek azokat az órákat jelölik, amikor távolról, online adoráló van jelen.<br />
         <p/>
-        <table class="jelentkezes">
+        <table class="jelentkezes" role="presentation">
             <tr>
                 <td class="right">Választott nap:&nbsp;<font color="red">*</font></td>
                 <td class="left"><select id="daySelect">
@@ -160,10 +156,10 @@
         <br />
         <p/>
 </div>
-<script src="./../resources/js/external/jquery-3.4.1.js"></script>
-<script src="./../resources/js/external/bootstrap-4.3.1.min.js"></script>
-<script src="./../resources/js/common.js"></script>
-<script src="./../resources/js/coverage.js"></script>
-<script src="./../resources/js/adorRegistration.js"></script>
+<script src="/resources/js/external/jquery-3.4.1.js"></script>
+<script src="/resources/js/external/bootstrap-4.3.1.min.js"></script>
+<script src="/resources/js/common.js"></script>
+<script src="/resources/js/coverage.js"></script>
+<script src="/resources/js/adorRegistration.js"></script>
 </body>
 </html>

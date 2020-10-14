@@ -1,6 +1,6 @@
 ﻿<%@ page session="true" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html>
+<html lang="hu">
 <head>
 <meta charset="UTF-8">
 <meta name="_csrf" content="${_csrf.token}"/>
@@ -20,9 +20,9 @@
 <script src="/resources/js/sendMessage.js"></script>
 <script src="/resources/js/information.js"></script>
 <title>Örökimádás - Vác - Információk</title>
-<link href="./../resources/css/bootstrap-4.3.1.min.css" rel="stylesheet" media="screen" charset="utf-8">
-<link href="./../resources/css/menu.css" rel="stylesheet" media="screen" charset="utf-8">
-<link id="favicon" rel="shortcut icon" type="image/png" href="./../resources/img/favicon.png" />
+<link href="/resources/css/bootstrap-4.3.1.min.css" rel="stylesheet" media="screen" charset="utf-8">
+<link href="/resources/css/menu.css" rel="stylesheet" media="screen" charset="utf-8">
+<link id="favicon" rel="shortcut icon" type="image/png" href="/resources/img/favicon.png" />
 </head>
 <body class="body">
 <div class="container">
