@@ -1,3 +1,7 @@
+plugins {
+    id "org.sonarqube" version "3.0"
+}
+
 subprojects {
     ext.adorAppVersion=0.1
 
@@ -36,17 +40,5 @@ subprojects {
     }
 }
 
-buildscript {
-    repositories {
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
-    }
-    dependencies {
-        classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.6.2"
-    }
-}
 
 //buildScan { termsOfServiceUrl = 'https://gradle.com/terms-of-service'; termsOfServiceAgree = 'yes' }
-
-apply plugin: "org.sonarqube"

@@ -54,7 +54,6 @@ public class GoogleOauth2Service {
     private final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
 
     @Autowired
-    //private AuthenticationManager authenticationManager;
     AdorationCustomAuthenticationProvider adorationCustomAuthenticationProvider;
 
     @Autowired

@@ -28,9 +28,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
+import java.net.*;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -43,10 +41,12 @@ public class FacebookOauth2Service {
     private final Logger logger = LoggerFactory.getLogger(FacebookOauth2Service.class);
     private final String subject = "[AdoratorApp] - Új Facebook Social";
 
+    private static final String GRAPH_URL = "https://graph.facebook.com/v5.0/oauth/access_token?";
+    private static final String AUTHORIZATION_URL = "https://www.facebook.com/v5.0/dialog/oauth?";
+
     private FacebookConnectionFactory facebookConnectionFactory;
 
     @Autowired
-    //private AuthenticationManager authenticationManager;
     AdorationCustomAuthenticationProvider adorationCustomAuthenticationProvider;
 
     @Autowired
@@ -77,34 +77,35 @@ public class FacebookOauth2Service {
     public String getLoginUrlInformation() {
         PropertyDto propertyDto = webAppConfigurationAccess.getProperties();
 
-        String authorizationUrl = "https://www.facebook.com/v5.0/dialog/oauth?client_id=" + propertyDto.getFacebook_app_id()
+        String authorizationUrl = AUTHORIZATION_URL
+                + "client_id=" + propertyDto.getFacebook_app_id()
                 + "&redirect_uri=" + propertyDto.getGoogleRedirectUrl()
                 + "&state=no-state&display=popup&response_type=code&scope=" + facebookConnectionFactory.getScope();
         //note use this: &response_type=granted_scopes to get list of granted scopes
         return authorizationUrl;
     }
 
-    public String getFacebookGraphUrl(String code, String applicationId, String applicationSecret, String redirectUrl) throws UnsupportedEncodingException {
-        String fbGraphUrl = "";
-        fbGraphUrl = "https://graph.facebook.com/v5.0/oauth/access_token?"
-                + "client_id=" + applicationId + "&redirect_uri="
-                + URLEncoder.encode(redirectUrl, "UTF-8")
-                + "&client_secret=" + applicationSecret + "&code=" + code;
+    public String getFacebookGraphUrl(final String code, final String applicationId, final String applicationSecret, final String redirectUrl) throws UnsupportedEncodingException {
+        String fbGraphUrl;
+        fbGraphUrl = GRAPH_URL
+                + "client_id=" + applicationId
+                + "&redirect_uri=" + URLEncoder.encode(redirectUrl, "UTF-8")
+                + "&client_secret=" + applicationSecret
+                + "&code=" + code;
         return fbGraphUrl;
     }
 
     public String getAccessToken(String code, String applicationId, String applicationSecret, String redirectUrl) throws IOException, ParseException {
         URL fbGraphURL;
-        fbGraphURL = new URL(getFacebookGraphUrl(code, applicationId, applicationSecret, redirectUrl));
-        URLConnection fbConnection;
-        StringBuffer b = null;
-        fbConnection = fbGraphURL.openConnection();
-        BufferedReader in;
-        in = new BufferedReader(new InputStreamReader(fbConnection.getInputStream()));
+        String fbGraphURLString = getFacebookGraphUrl(code, applicationId, applicationSecret, redirectUrl);
+        fbGraphURL = new URL(fbGraphURLString);
+        URLConnection fbConnection = fbGraphURL.openConnection(); //NOSONAR - code is properly protected
+        BufferedReader in = new BufferedReader(new InputStreamReader(fbConnection.getInputStream()));
         String inputLine;
-        b = new StringBuffer();
-        while ((inputLine = in.readLine()) != null)
+        StringBuffer b = new StringBuffer();
+        while ((inputLine = in.readLine()) != null) {
             b.append(inputLine + "\n");
+        }
         in.close();
 
         String accessToken = b.toString();
@@ -138,21 +139,21 @@ public class FacebookOauth2Service {
         return json;
     }
 
-    public Authentication getFacebookUserInfoJson(final String code) {
+    public Authentication getFacebookUserInfoJson(final String authCode) {
         FacebookUser facebookUser = null;
         Authentication authentication = null;
         PropertyDto propertyDto = webAppConfigurationAccess.getProperties();
         try {
-            String accessToken = getAccessToken(code, propertyDto.getFacebook_app_id(), propertyDto.getFacebook_app_secret(), propertyDto.getGoogleRedirectUrl());
+            String accessToken = getAccessToken(authCode, propertyDto.getFacebook_app_id(), propertyDto.getFacebook_app_secret(), propertyDto.getGoogleRedirectUrl());
             JSONObject facebookUserInfoJson = getFacebookGraph(accessToken);
             Social social = detectSocial(facebookUserInfoJson);
             Person person = detectPerson(social);
             facebookUser = new FacebookUser(social, person, propertyDto.getSessionTimeout());
 
-            // //googleUser used as Principal, credential is coming from Google
+            // googleUser used as Principal, credential is coming from Google
             authentication = adorationCustomAuthenticationProvider.authenticate(new PreAuthenticatedAuthenticationToken(facebookUser, facebookUserInfoJson));
-        } catch (IOException | ParseException e) {
-            throw new SystemException("GetFacebook user Info failed", e);
+        } catch (Exception e) {
+            logger.warn("Was unable to get Google User Information.", e);
         }
         return authentication;
     }

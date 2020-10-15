@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Arrays;
 
 import static org.springframework.security.web.context.HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY;
 
@@ -29,6 +31,7 @@ import static org.springframework.security.web.context.HttpSessionSecurityContex
 @Controller
 public class LoginController {
     private final Logger logger = LoggerFactory.getLogger(LoginController.class);
+    private final String[] VALID_HOSTS = { "127.0.0.1", "orokimadas.info" };
 
     @Autowired
     GoogleOauth2Service googleOauth2Service;
@@ -100,9 +103,16 @@ public class LoginController {
             @RequestParam(value = "state", defaultValue = "") final String state,  //facebook uses this
             @RequestParam(value = "access_token", defaultValue = "") final String access_token,
             HttpSession httpSession,
-            HttpServletResponse httpServletResponse
+            HttpServletResponse httpServletResponse,
+            HttpServletRequest httpServletRequest
     ) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        logger.info("URI: " + httpServletRequest.getRequestURI());
+        String host = httpServletRequest.getRemoteHost();
+        if (!Arrays.asList(VALID_HOSTS).contains(host)) {
+            logger.warn("SSRF trial detected from: " + host);
+            return "home";
+        }
         if ((code.length() > 0) && (state.length() == 0) && (auth == null)) {  //if GOOGLE login can be performed and it is not yet authenticated for Ador App
             Authentication authentication = googleOauth2Service.getGoogleUserInfoJson(code);
             if (authentication == null) { //was unable to get user info properly
