@@ -29,7 +29,6 @@
   <div class="container">
     <%@include file="../include/navbar.html" %>
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-
   </div>
   <div class="container">
     <fieldset class="form-horizontal">
@@ -43,27 +42,27 @@
     <fieldset id="adoratorCooList" class="form-horizontal">
         <legend>Adorálók listája</legend>
         <div class="control-group">
-            <table id="personCoo" class="table table-striped table-bordered table-hover compact cell-border" style="width:100%">
+            <table id="personCoo" class="table table-striped table-bordered table-hover compact cell-border" style="width:100%" aria-describedby="adoratorCooList">
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Név</th>
-                            <th>Telefonszám</th>
-                            <th>e-mail</th>
-                            <th>Vállalt órák</th>
-                            <th>Koordinátor megjegyzés</th>
-                            <th>Közös/Látható megjegyzés</th>
+                            <th scope="col">ID</th>
+                            <th scope="col">Név</th>
+                            <th scope="col">Telefonszám</th>
+                            <th scope="col">e-mail</th>
+                            <th scope="col">Vállalt órák</th>
+                            <th scope="col">Koordinátor megjegyzés</th>
+                            <th scope="col">Közös/Látható megjegyzés</th>
                         </tr>
                     </thead>
                     <tfoot>
                         <tr>
-                            <th>ID</th>
-                            <th>Név</th>
-                            <th>Telefonszám</th>
-                            <th>e-mail</th>
-                            <th>Vállalt órák</th>
-                            <th>Koordinátor megjegyzés</th>
-                            <th>Közös/Látható megjegyzés</th>
+                            <th scope="col">ID</th>
+                            <th scope="col">Név</th>
+                            <th scope="col">Telefonszám</th>
+                            <th scope="col">e-mail</th>
+                            <th scope="col">Vállalt órák</th>
+                            <th scope="col">Koordinátor megjegyzés</th>
+                            <th scope="col">Közös/Látható megjegyzés</th>
                         </tr>
                     </tfoot>
             </table>
@@ -73,57 +72,57 @@
     <fieldset id="adoratorList" class="form-horizontal">
         <legend>Adorálók listája</legend>
         <div class="control-group">
-            <table id="person" class="table table-striped table-bordered table-hover compact cell-border" style="width:100%">
+            <table id="person" class="table table-striped table-bordered table-hover compact cell-border" style="width:100%" aria-describedby="adoratorList">
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Név</th>
-                            <th>Telefonszám</th>
-                            <th>e-mail</th>
-                            <th>Vállalt órák</th>
-                            <th>Megjegyzés</th>
+                            <th scope="col">ID</th>
+                            <th scope="col">Név</th>
+                            <th scope="col">Telefonszám</th>
+                            <th scope="col">e-mail</th>
+                            <th scope="col">Vállalt órák</th>
+                            <th scope="col">Megjegyzés</th>
                         </tr>
                     </thead>
                     <tfoot>
                         <tr>
-                            <th>ID</th>
-                            <th>Név</th>
-                            <th>Telefonszám</th>
-                            <th>e-mail</th>
-                            <th>Vállalt órák</th>
-                            <th>Megjegyzés</th>
+                            <th scope="col">ID</th>
+                            <th scope="col">Név</th>
+                            <th scope="col">Telefonszám</th>
+                            <th scope="col">e-mail</th>
+                            <th scope="col">Vállalt órák</th>
+                            <th scope="col">Megjegyzés</th>
                         </tr>
                     </tfoot>
             </table>
          </div>
     </fieldset>
 
-    <fieldset  id="linkList" class="form-horizontal">
+    <fieldset id="linkList" class="form-horizontal">
         <legend>Vállalt Órák Listája</legend>
         <div class="control-group">
-            <table id="link" class="table table-striped table-bordered table-hover compact cell-border" style="width:100%">
+            <table id="link" class="table table-striped table-bordered table-hover compact cell-border" style="width:100%" aria-describedby="linkList">
                     <thead>
                         <tr>
-                            <th>Nap</th>
-                            <th>Óra</th>
-                            <th>Adoráló Név</th>
-                            <th>Adoráló Telefonszám</th>
-                            <th>Adoráló E-mail</th>
-                            <th>Prioritás</th>
-                            <th>Hely</th>
-                            <th>Megjegyzés</th>
+                            <th scope="col">Nap</th>
+                            <th scope="col">Óra</th>
+                            <th scope="col">Adoráló Név</th>
+                            <th scope="col">Adoráló Telefonszám</th>
+                            <th scope="col">Adoráló E-mail</th>
+                            <th scope="col">Prioritás</th>
+                            <th scope="col">Hely</th>
+                            <th scope="col">Megjegyzés</th>
                         </tr>
                     </thead>
                     <tfoot>
                         <tr>
-                            <th>Nap</th>
-                            <th>Óra</th>
-                            <th>Adoráló Név</th>
-                            <th>Adoráló Telefonszám</th>
-                            <th>Adoráló E-mail</th>
-                            <th>Prioritás</th>
-                            <th>Hely</th>
-                            <th>Megjegyzés</th>
+                            <th scope="col">Nap</th>
+                            <th scope="col">Óra</th>
+                            <th scope="col">Adoráló Név</th>
+                            <th scope="col">Adoráló Telefonszám</th>
+                            <th scope="col">Adoráló E-mail</th>
+                            <th scope="col">Prioritás</th>
+                            <th scope="col">Hely</th>
+                            <th scope="col">Megjegyzés</th>
                         </tr>
                     </tfoot>
             </table>

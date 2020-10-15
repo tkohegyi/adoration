@@ -59,7 +59,7 @@
         </table>
         </p>
 
-        <b>Válassza ki a napot és az órát!</b> Segítségül megmutatjuk az aktuális órafedettséget az egész hétre:
+        <span style="font-weight:bold">Válassza ki a napot és az órát!</span> Segítségül megmutatjuk az aktuális órafedettséget az egész hétre:
         <p/>
         <div class="control-group form-horizontal">
             <%@include file="../include/coverageBar.html" %>

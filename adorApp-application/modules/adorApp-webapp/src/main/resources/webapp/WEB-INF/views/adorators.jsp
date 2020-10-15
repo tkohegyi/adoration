@@ -38,38 +38,38 @@
             <table id="person" class="table table-striped table-bordered table-hover compact cell-border" style="width:100%">
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Név</th>
-                            <th>Adoráló Státusz</th>
-                            <th>Telefonszám</th>
-                            <th>Telefonszám látható?</th>
-                            <th>e-mail</th>
-                            <th>e-mail látható?</th>
-                            <th>Adminisztrátor megjegyzés</th>
-                            <th>Adatkezelési Hozzájárulás</th>
-                            <th>Adatk. hozzájárulás dátuma</th>
-                            <th>Koordinátor megjegyzés</th>
-                            <th>Közös/Látható megjegyzés</th>
-                            <th>Anoním?</th>
-                            <th>Nyelvkód</th>
+                            <th scope="col">ID</th>
+                            <th scope="col">Név</th>
+                            <th scope="col">Adoráló Státusz</th>
+                            <th scope="col">Telefonszám</th>
+                            <th scope="col">Telefonszám látható?</th>
+                            <th scope="col">e-mail</th>
+                            <th scope="col">e-mail látható?</th>
+                            <th scope="col">Adminisztrátor megjegyzés</th>
+                            <th scope="col">Adatkezelési Hozzájárulás</th>
+                            <th scope="col">Adatk. hozzájárulás dátuma</th>
+                            <th scope="col">Koordinátor megjegyzés</th>
+                            <th scope="col">Közös/Látható megjegyzés</th>
+                            <th scope="col">Anoním?</th>
+                            <th scope="col">Nyelvkód</th>
                         </tr>
                     </thead>
                     <tfoot>
                         <tr>
-                            <th>ID</th>
-                            <th>Név</th>
-                            <th>Adoráló Státusz</th>
-                            <th>Telefonszám</th>
-                            <th>Telefonszám látható?</th>
-                            <th>e-mail</th>
-                            <th>e-mail látható?</th>
-                            <th>Adminisztrátor megjegyzés</th>
-                            <th>Adatkezelési Hozzájárulás</th>
-                            <th>Adatk. hozzájárulás dátuma</th>
-                            <th>Koordinátor megjegyzés</th>
-                            <th>Közös/Látható megjegyzés</th>
-                            <th>Anoním?</th>
-                            <th>Nyelvkód</th>
+                            <th scope="col">ID</th>
+                            <th scope="col">Név</th>
+                            <th scope="col">Adoráló Státusz</th>
+                            <th scope="col">Telefonszám</th>
+                            <th scope="col">Telefonszám látható?</th>
+                            <th scope="col">e-mail</th>
+                            <th scope="col">e-mail látható?</th>
+                            <th scope="col">Adminisztrátor megjegyzés</th>
+                            <th scope="col">Adatkezelési Hozzájárulás</th>
+                            <th scope="col">Adatk. hozzájárulás dátuma</th>
+                            <th scope="col">Koordinátor megjegyzés</th>
+                            <th scope="col">Közös/Látható megjegyzés</th>
+                            <th scope="col">Anoním?</th>
+                            <th scope="col">Nyelvkód</th>
                         </tr>
                     </tfoot>
                 </table>
@@ -90,12 +90,12 @@
           </div>
           <div class="modal-body">
               <form>
-                  <table id="editTable" class="table table-hover table-bordered">
+                  <table id="editTable" class="table table-hover table-bordered" role="presentation">
                       <thead>
                           <tr>
-                              <th>Oszlop név</th>
-                              <th style="width:40%">Tartalom</th>
-                              <th>Segítség</th>
+                              <th scope="col">Oszlop név</th>
+                              <th style="width:40%" scope="col">Tartalom</th>
+                              <th scope="col">Segítség</th>
                           </tr>
                       </thead>
                       <tbody id="editContent"/>
@@ -104,7 +104,7 @@
                </form>
           </div>
           <div class="modal-footer">
-            <table width="100%"><tr>
+            <table width="100%" role="presentation"><tr>
                 <td align="left"><button id="deleteButton" type="button" class="btn btn-danger" onclick="deletePerson()">Adoráló törlése</button></td>
                 <td align="right">
                     <button id="resetChangesButton" type="button" class="btn btn-secondary" onclick="reBuildModal()">Eredeti adatok visszanyerése</button>
@@ -129,7 +129,7 @@
           </div>
           <div class="modal-body">
               <form>
-                  <table id="historyTable" class="table table-hover table-bordered">
+                  <table id="historyTable" class="table table-hover table-bordered" role="presentation">
                       <thead>
                           <tr>
                               <th>Típus</th>
@@ -162,7 +162,7 @@
           </div>
           <div class="modal-body">
               <form>
-                  <table id="timeTable" class="table table-hover table-bordered">
+                  <table id="timeTable" class="table table-hover table-bordered" role="presentation">
                       <thead>
                           <tr>
                               <th>Nap</th>
@@ -181,7 +181,7 @@
               <form id="newTimeTable">
                 <input id="editHourPersonId" type="hidden" value="">
                 <input id="editHourId" type="hidden" value="">
-                <table class="table table-hover table-bordered">
+                <table class="table table-hover table-bordered" role="presentation">
                       <thead>
                           <tr>
                               <th>Mező</th>
@@ -238,7 +238,7 @@
                           </td></tr>
                       </tbody>
                 </table>
-                <table width="100%"><tr>
+                <table width="100%" role="presentation"><tr>
                     <td align="left"><button id="deleteHourButton" type="button" class="btn btn-danger" onclick="deleteHour()">Óra törlése</button></td>
                     <td align="right">
                         <button type="button" class="btn btn-info" onclick="cancelNewPartOfModal()">Mégsem</button>
