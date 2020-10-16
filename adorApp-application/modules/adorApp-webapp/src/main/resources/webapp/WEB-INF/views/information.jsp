@@ -30,35 +30,35 @@
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 	<div class="centerwidediv" align="center">
 	    <br/>
-        <legend class="message-legend h4"d>Információk</legend>
+        <legend class="message-legend h4">Információk</legend>
 			<div id="name">...</div>
 			<div id="status">...</div>
 			<div id="adoratorId">...</div><br/>
 	</div>
 	<div class="centerwidediv" align="center">
-        <legend class="message-legend h4"d>Vállalt órák</legend>
+        <legend class="message-legend h4" id="allocatedHours">Vállalt órák</legend>
         <div id="noOfferedHours">Önnek nincs vállalt órája.</div>
-		<p><table id="yesOfferedHours"><tbody></tbody></table></p>
+		<p><table id="yesOfferedHours" aria-describedby="allocatedHours"><tbody></tbody></table></p>
 	</div>
 	<div class="centerwidediv" align="center">
-        <legend class="message-legend h4"d>Szentségimádók most</legend>
+        <legend class="message-legend h4" id="allocatedHours">Szentségimádók most</legend>
         <div id="noAdoratorNow">Sajnos nincs megjeleníthető adat.</div>
-		<p><table id="yesAdoratorNow"><tbody></tbody></table></p>
+		<p><table id="yesAdoratorNow" aria-describedby="allocatedHours"><tbody></tbody></table></p>
 	</div>
 	<div class="centerwidediv" align="center">
-        <legend class="message-legend h4"d>Szentségimádók a következő órában</legend>
+        <legend class="message-legend h4" id="adoratorsNextHour">Szentségimádók a következő órában</legend>
         <div id="noAdoratorNext">Sajnos nincs megjeleníthető adat.</div>
-		<p><table id="yesAdoratorNext"><tbody></tbody></table></p>
+		<p><table id="yesAdoratorNext" aria-describedby="adoratorsNextHour"><tbody></tbody></table></p>
 	</div>
 	<div class="centerwidediv" align="center">
-        <legend class="message-legend h4"d>Napszak koordinátorok elérhetősége</legend>
+        <legend class="message-legend h4" id="dailyCoordinators">Napszak koordinátorok elérhetősége</legend>
             <div class="centerwidediv" align="center">
                 <div class="container" style="padding:5px" align="center"><button id="message-button" type="button" class="btn btn-primary" data-toggle="modal" data-target="#sendMessageModal" onclick="msgClick()">Üzenet küldése az általános koordinátornak...</button></div>
             </div>
             <%@include file="../include/sendMessage.html" %>
 
         <div id="noLeadership">Sajnos nincs megjeleníthető adat.</div>
-		<p><table id="yesLeadership"><tbody></tbody></table></p>
+		<p><table id="yesLeadership" aria-describedby="dailyCoordinators"><tbody></tbody></table></p>
 	</div>
 
     <fieldset class="form-horizontal" id="downloads">

@@ -108,7 +108,7 @@ public class WebAppServer {
             SslContextFactory sslContextFactory = new SslContextFactory.Server();
             sslContextFactory.setKeyStorePath(keyStoreFile);
             sslContextFactory.setKeyStorePassword(keyStorePassword);
-            ServerConnector httpsConnector = new ServerConnector(server,
+            ServerConnector httpsConnector = new ServerConnector(server,  //NOSONAR - java:S2095 / Resources should be closed - well, this one should not
                     new SslConnectionFactory(sslContextFactory, "http/1.1"),
                     new HttpConnectionFactory(https_config));
             httpsConnector.setPort(port);

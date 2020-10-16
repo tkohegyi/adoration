@@ -29,26 +29,26 @@
   <div class="container">
     <%@include file="../include/navbar.html" %>
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-    <fieldset class="form-horizontal">
+    <fieldset class="form-horizontal" id="coordinatorList">
         <legend>Koordinátorok listája</legend>
         <div class="container" style="padding:5px" align="right"><button id="add-button" type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal" onclick="addClick()">Új koordinátor felvétele...</button></div>
         <div class="container" style="padding:5px" align="right"><button id="refreshAll-button" type="button" class="btn btn-secondary" onclick="processEntityUpdated()">Frissítés</button></div>
         <div class="control-group">
-            <table id="coordinator" class="table table-striped table-bordered table-hover compact cell-border" style="width:100%">
+            <table id="coordinator" class="table table-striped table-bordered table-hover compact cell-border" style="width:100%" aria-describedby="coordinatorList">
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Név</th>
-                            <th>Adoráló ID</th>
-                            <th>Adoráló Neve</th>
+                            <th scope="col">ID</th>
+                            <th scope="col">Név</th>
+                            <th scope="col">Adoráló ID</th>
+                            <th scope="col">Adoráló Neve</th>
                         </tr>
                     </thead>
                     <tfoot>
                         <tr>
-                            <th>ID</th>
-                            <th>Név</th>
-                            <th>Adoráló ID</th>
-                            <th>Adoráló Neve</th>
+                            <th scope="col">ID</th>
+                            <th scope="col">Név</th>
+                            <th scope="col">Adoráló ID</th>
+                            <th scope="col">Adoráló Neve</th>
                         </tr>
                     </tfoot>
                 </table>
@@ -69,12 +69,12 @@
           </div>
           <div class="modal-body">
               <form>
-                  <table id="editTable" class="table table-hover table-bordered">
+                  <table id="editTable" class="table table-hover table-bordered" aria-describedby="editCenterTitle">
                       <thead>
                           <tr>
-                              <th>Oszlop név</th>
-                              <th style="width:40%">Tartalom</th>
-                              <th>Segítség</th>
+                              <th scope="col">Oszlop név</th>
+                              <th style="width:40%" scope="col">Tartalom</th>
+                              <th scope="col">Segítség</th>
                           </tr>
                       </thead>
                       <tbody id="editContent"/>
@@ -83,7 +83,7 @@
                </form>
           </div>
           <div class="modal-footer">
-            <table width="100%"><tr>
+            <table width="100%" role="presentation"><tr>
                 <td align="left"><button id="deleteButton" type="button" class="btn btn-danger" onclick="deleteEntity()">Koordinátor törlése</button></td>
                 <td align="right">
                     <button id="resetChangesButton" type="button" class="btn btn-secondary" onclick="reBuildModal()">Eredeti adatok visszanyerése</button>
@@ -108,14 +108,14 @@
           </div>
           <div class="modal-body">
               <form>
-                  <table id="historyTable" class="table table-hover table-bordered">
+                  <table id="historyTable" class="table table-hover table-bordered" aria-describedby="historyCenterTitle">
                       <thead>
                           <tr>
-                              <th>Típus</th>
-                              <th>Időpont</th>
-                              <th>Végrehajtó</th>
-                              <th style="width:40%">Leírás</th>
-                              <th>Egyéb</th>
+                              <th scope="col">Típus</th>
+                              <th scope="col">Időpont</th>
+                              <th scope="col">Végrehajtó</th>
+                              <th style="width:40%" scope="col">Leírás</th>
+                              <th scope="col">Egyéb</th>
                           </tr>
                       </thead>
                       <tbody id="historyContent"/>

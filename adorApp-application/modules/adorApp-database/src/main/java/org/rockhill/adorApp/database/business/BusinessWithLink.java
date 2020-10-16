@@ -19,6 +19,8 @@ import java.util.List;
 @Component
 public class BusinessWithLink {
     private final Logger logger = LoggerFactory.getLogger(BusinessWithLink.class);
+    private static final Integer MIN_HOUR = 0;
+    private static final Integer MAX_HOUR = 167;
 
     public List<Link> getLinkList() {
         List<Link> result = null;
@@ -34,18 +36,17 @@ public class BusinessWithLink {
     }
 
     public Link getLink(Long id) {
-        List<Link> result = null;
         SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
         if (sessionFactory != null) {
             Session session = sessionFactory.openSession();
             session.beginTransaction();
             String hql = "from Link as L where L.id = " + id.toString();
-            result = (List<Link>) session.createQuery(hql).list();
+            List<Link> result = (List<Link>) session.createQuery(hql).list();
             session.getTransaction().commit();
             session.close();
-        }
-        if (result.size() > 0) {
-            return result.get(0);
+            if (result != null && result.size() > 0) {
+                return result.get(0);
+            }
         }
         throw new DatabaseHandlingException("Search for Link failed with id:" + id.toString());
     }
@@ -130,19 +131,18 @@ public class BusinessWithLink {
     }
 
     public List<Link> getLinksOfPerson(Person person) {
-        List<Link> result = null;
         SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
         if (sessionFactory != null) {
             Session session = sessionFactory.openSession();
             session.beginTransaction();
             String hql = "from Link as L where L.personId = " + person.getId().toString();
             Query query = session.createQuery(hql);
-            result = (List<Link>) query.list();
+            List<Link> result = (List<Link>) query.list();
             session.getTransaction().commit();
             session.close();
-        }
-        if (result.size() > 0) {
-            return result;
+            if (result != null && result.size() > 0) {
+                return result;
+            }
         }
         return null;
     }
@@ -153,7 +153,8 @@ public class BusinessWithLink {
         if (sessionFactory != null) {
             Session session = sessionFactory.openSession();
             session.beginTransaction();
-            String hql = "from Link as L where L.hourId = " + String.valueOf(hourId);
+            //get physical adorators ahead
+            String hql = "from Link as L where L.hourId = " + String.valueOf(hourId) + " order by L.type asc";
             Query query = session.createQuery(hql);
             result = (List<Link>) query.list();
             session.getTransaction().commit();
@@ -205,4 +206,25 @@ public class BusinessWithLink {
         }
         return result;
     }
+
+    public Integer getPreviousHour(Integer hourId) {
+        Integer previousHour;
+        if (hourId > MIN_HOUR) {
+            previousHour = hourId - 1;
+        } else {
+            previousHour = MAX_HOUR;
+        }
+        return previousHour;
+    }
+
+    public Integer getNextHour(Integer hourId) {
+        Integer nextHour;
+        if (hourId < MAX_HOUR) {
+            nextHour = hourId + 1;
+        } else {
+            nextHour = MIN_HOUR;
+        }
+        return nextHour;
+    }
+
 }

@@ -75,7 +75,7 @@ function getInformation() {
             $("#yesLeadership").show();
             var tr = $("<tr class=\"tableHead\"><th class=\"infoTable\" colspan=\"4\">Napszak és Általános Koordinátorok:</th></tr>");
             $("#yesLeadership").append(tr);
-            tr = $("<tr class=\"tableHead\"><th class=\"infoTable\">Időszak:</th><th class=\"infoTable\">Név:</th><th class=\"infoTable\">Telefon:</th><th class=\"infoTable\">E-mail:</th></tr>");
+            tr = $("<tr class=\"tableHead\"><th class=\"infoTable\">Szolgálat:</th><th class=\"infoTable\">Név:</th><th class=\"infoTable\">Telefon:</th><th class=\"infoTable\">E-mail:</th></tr>");
             $("#yesLeadership").append(tr);
             for (var i = 0; i < information.leadership.length; i++) {
                 var coordinator = information.leadership[i];
@@ -182,6 +182,6 @@ function getInformation() {
             if (loggedInUserInfo.isHourlyCoordinator) {
                 $("#forHc").show();
             }
-            //$("#forStdA").show();
+            $("#forStdA").show();
     }
 }

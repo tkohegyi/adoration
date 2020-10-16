@@ -52,7 +52,6 @@ public class BusinessWithCoordinator {
     }
 
     public Coordinator getById(Long id) {
-        List<Coordinator> result = null;
         SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
         if (sessionFactory != null) {
             Session session = sessionFactory.openSession();
@@ -60,12 +59,12 @@ public class BusinessWithCoordinator {
             String hql = "from Coordinator as C where C.id = :expectedId";
             Query query = session.createQuery(hql);
             query.setParameter("expectedId", id);
-            result = (List<Coordinator>) query.list();
+            List<Coordinator> result = (List<Coordinator>) query.list();
             session.getTransaction().commit();
             session.close();
-        }
-        if (result.size() > 0) {
-            return result.get(0);
+            if (result != null && result.size() > 0) {
+                return result.get(0);
+            }
         }
         return null;
     }
@@ -132,7 +131,7 @@ public class BusinessWithCoordinator {
         if (sessionFactory != null) {
             Session session = sessionFactory.openSession();
             session.beginTransaction();
-            result = (List<Coordinator>) session.createQuery("from Coordinator as C where C.coordinatorType > 23").list();
+            result = (List<Coordinator>) session.createQuery("from Coordinator as C where C.coordinatorType > 23 order by C.coordinatorType asc").list();
             session.getTransaction().commit();
             session.close();
         }
@@ -140,7 +139,6 @@ public class BusinessWithCoordinator {
     }
 
     public Coordinator getCoordinatorFromPersonId(Long id) {
-        List<Coordinator> result = null;
         SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
         if (sessionFactory != null) {
             Session session = sessionFactory.openSession();
@@ -148,12 +146,30 @@ public class BusinessWithCoordinator {
             String hql = "from Coordinator as C where C.personId = :expectedId order by C.coordinatorType desc";
             Query query = session.createQuery(hql);
             query.setParameter("expectedId", id);
-            result = (List<Coordinator>) query.list();
+            List<Coordinator> result = (List<Coordinator>) query.list();
             session.getTransaction().commit();
             session.close();
+            if (result != null && result.size() > 0) {
+                return result.get(0);
+            }
         }
-        if (result.size() > 0) {
-            return result.get(0);
+        return null;
+    }
+
+    private Coordinator getByCoordinatorType(Integer i) {
+        SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
+        if (sessionFactory != null) {
+            Session session = sessionFactory.openSession();
+            session.beginTransaction();
+            String hql = "from Coordinator as C where C.coordinatorType = :expectedId";
+            Query query = session.createQuery(hql);
+            query.setParameter("expectedId", i);
+            List<Coordinator> result = (List<Coordinator>) query.list();
+            session.getTransaction().commit();
+            session.close();
+            if (result != null && result.size() > 0) {
+                return result.get(0);
+            }
         }
         return null;
     }
@@ -164,22 +180,7 @@ public class BusinessWithCoordinator {
         return getByCoordinatorType(24 + dayPart * 6);
     }
 
-    private Coordinator getByCoordinatorType(Integer i) {
-        List<Coordinator> result = null;
-        SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
-        if (sessionFactory != null) {
-            Session session = sessionFactory.openSession();
-            session.beginTransaction();
-            String hql = "from Coordinator as C where C.coordinatorType = :expectedId";
-            Query query = session.createQuery(hql);
-            query.setParameter("expectedId", i);
-            result = (List<Coordinator>) query.list();
-            session.getTransaction().commit();
-            session.close();
-        }
-        if (result.size() > 0) {
-            return result.get(0);
-        }
-        return null;
+    public Coordinator getHourlyCooOfHour(Integer hour) {
+        return getByCoordinatorType(hour);
     }
 }

@@ -27,8 +27,8 @@
         <img alt="Örökimádás" src="./../resources/img/topimage3.jpg" style="width:100%; max-width:635px">
     </div>
 
-        <fieldset class="form-horizontal">
-            <legend class="message-legend h4"d>Az órák aktuális fedettsége</legend>
+        <fieldset class="form-horizontal" id="actualCoverage">
+            <legend class="message-legend h4">Az órák aktuális fedettsége</legend>
             <div class="control-group">
                 <%@include file="../include/coverageBar.html" %>
                 <%@include file="../include/coverageBarVertical.html" %>
@@ -37,10 +37,10 @@
 
 <div class="centerwidediv">
 		<br />
-		<table>
+		<table aria-describedby="actualCoverage">
 			<tr>
-				<th>Jelmagyarázat:</th>
-				<th></th>
+				<th scope="col">Jelmagyarázat:</th>
+				<th scope="col"></th>
 			</tr>
 			<tr>
 				<td valign="top" align="right" class="veryBadCoverage">2 - Piros&nbsp;</td>
@@ -72,10 +72,10 @@
 	</div>
 
     <div class="centerwidediv">
-    		<table>
+    		<table aria-describedby="actualCoverage">
     			<tr>
-    				<th>Jelentkezni lehet:</th>
-    				<th></th>
+    				<th scope="col">Jelentkezni lehet:</th>
+    				<th scope="col"></th>
     			</tr>
     			<tr>
     				<td />
@@ -98,10 +98,10 @@
     	</div>
     	<div class="centerwidediv">
     		<br />
-    		<table>
+    		<table aria-describedby="actualCoverage">
     			<tr>
-    				<th>Letölthető dokumentumok:</th>
-    				<th></th>
+    				<th scope="col">Letölthető dokumentumok:</th>
+    				<th scope="col"></th>
     			</tr>
     			<tr>
     				<td />

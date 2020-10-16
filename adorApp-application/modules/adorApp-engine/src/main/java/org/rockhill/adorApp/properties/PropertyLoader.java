@@ -43,13 +43,22 @@ public class PropertyLoader {
      */
     public Properties loadProperties(final String configFile) {
         Properties properties = new Properties();
+        InputStream inputStream = null;
         try {
             checkPropertyFileArgument(configFile);
-            InputStream inputStream = new FileInputStream(configFile);
+            inputStream = new FileInputStream(configFile);
             properties.load(inputStream);
             logger.debug("Properties loaded from external configuration.");
         } catch (IOException e) {
             throw new PropertiesNotAvailableException("Configuration file " + configFile + " cannot be loaded", e);
+        } finally {
+            try {
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+            } catch (IOException e) {
+                logger.warn("Was unable to close stream of external configuration.", e);
+            }
         }
         return properties;
     }

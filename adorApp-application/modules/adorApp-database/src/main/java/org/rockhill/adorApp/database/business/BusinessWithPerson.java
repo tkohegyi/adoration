@@ -49,7 +49,6 @@ public class BusinessWithPerson {
     }
 
     public Person getPersonByName(final String name) {
-        List<Person> result = null;
         SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
         if (sessionFactory != null) {
             Session session = sessionFactory.openSession();
@@ -57,12 +56,12 @@ public class BusinessWithPerson {
             String hql = "from Person as P where P.name = :expectedName";
             Query query = session.createQuery(hql);
             query.setParameter("expectedName", name);
-            result = (List<Person>) query.list();
+            List<Person> result = (List<Person>) query.list();
             session.getTransaction().commit();
             session.close();
-        }
-        if (result.size() > 0) {
-            return result.get(0);
+            if (result != null && result.size() > 0) {
+                return result.get(0);
+            }
         }
         return null;
     }
@@ -90,7 +89,6 @@ public class BusinessWithPerson {
     }
 
     public Person getPersonById(final Long id) {
-        List<Person> result = null;
         SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
         if (sessionFactory != null) {
             Session session = sessionFactory.openSession();
@@ -98,12 +96,12 @@ public class BusinessWithPerson {
             String hql = "from Person as P where P.id = :expectedId";
             Query query = session.createQuery(hql);
             query.setParameter("expectedId", id);
-            result = (List<Person>) query.list();
+            List<Person> result = (List<Person>) query.list();
             session.getTransaction().commit();
             session.close();
-        }
-        if (result.size() > 0) {
-            return result.get(0);
+            if (result != null && result.size() > 0) {
+                return result.get(0);
+            }
         }
         return null;
     }
@@ -126,7 +124,6 @@ public class BusinessWithPerson {
     }
 
     public Person getPersonByEmail(final String email) {
-        List<Person> result = null;
         SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
         if (sessionFactory != null) {
             Session session = sessionFactory.openSession();
@@ -134,12 +131,12 @@ public class BusinessWithPerson {
             String hql = "from Person as P where P.email like :email";
             Query query = session.createQuery(hql);
             query.setParameter("email", email);
-            result = (List<Person>) query.list();
+            List<Person> result = (List<Person>) query.list();
             session.getTransaction().commit();
             session.close();
-        }
-        if (result.size() > 0) {
-            return result.get(0);
+            if (result != null && result.size() > 0) {
+                return result.get(0);
+            }
         }
         return null;
     }

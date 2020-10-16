@@ -107,7 +107,6 @@ public class LoginController {
             HttpServletRequest httpServletRequest
     ) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        logger.info("URI: " + httpServletRequest.getRequestURI());
         String host = httpServletRequest.getRemoteHost();
         if (!Arrays.asList(VALID_HOSTS).contains(host)) {
             logger.warn("SSRF trial detected from: " + host);

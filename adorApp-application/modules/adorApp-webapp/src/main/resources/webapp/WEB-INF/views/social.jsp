@@ -37,34 +37,34 @@
             <table id="social" class="table table-striped table-bordered table-hover compact cell-border" style="width:100%">
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Adoráló regisztrált neve</th>
-                            <th>Státusz</th>
-                            <th>Google - username</th>
-                            <th>Google - picture</th>
-                            <th>Google - e-mail</th>
-                            <th>Google - UID</th>
-                            <th>Facebook - username</th>
-                            <th>Facebook - firstname</th>
-                            <th>Facebook - e-mail</th>
-                            <th>Facebook - UID</th>
-                            <th>Megjegyzés</th>
+                            <th scope="col">ID</th>
+                            <th scope="col">Adoráló regisztrált neve</th>
+                            <th scope="col">Státusz</th>
+                            <th scope="col">Google - username</th>
+                            <th scope="col">Google - picture</th>
+                            <th scope="col">Google - e-mail</th>
+                            <th scope="col">Google - UID</th>
+                            <th scope="col">Facebook - username</th>
+                            <th scope="col">Facebook - firstname</th>
+                            <th scope="col">Facebook - e-mail</th>
+                            <th scope="col">Facebook - UID</th>
+                            <th scope="col">Megjegyzés</th>
                         </tr>
                     </thead>
                     <tfoot>
                         <tr>
-                            <th>ID</th>
-                            <th>Adoráló regisztrált neve</th>
-                            <th>Státusz</th>
-                            <th>Google - username</th>
-                            <th>Google - picture</th>
-                            <th>Google - e-mail</th>
-                            <th>Google - UID</th>
-                            <th>Facebook - username</th>
-                            <th>Facebook - firstname</th>
-                            <th>Facebook - e-mail</th>
-                            <th>Facebook - UID</th>
-                            <th>Megjegyzés</th>
+                            <th scope="col">ID</th>
+                            <th scope="col">Adoráló regisztrált neve</th>
+                            <th scope="col">Státusz</th>
+                            <th scope="col">Google - username</th>
+                            <th scope="col">Google - picture</th>
+                            <th scope="col">Google - e-mail</th>
+                            <th scope="col">Google - UID</th>
+                            <th scope="col">Facebook - username</th>
+                            <th scope="col">Facebook - firstname</th>
+                            <th scope="col">Facebook - e-mail</th>
+                            <th scope="col">Facebook - UID</th>
+                            <th scope="col">Megjegyzés</th>
                         </tr>
                     </tfoot>
                 </table>
@@ -88,9 +88,9 @@
                   <table id="editTable" class="table table-hover table-bordered">
                       <thead>
                           <tr>
-                              <th>Oszlop név</th>
-                              <th style="width:40%">Tartalom</th>
-                              <th>Segítség</th>
+                              <th scope="col">Oszlop név</th>
+                              <th style="width:40%" scope="col">Tartalom</th>
+                              <th scope="col">Segítség</th>
                           </tr>
                       </thead>
                       <tbody id="editContent"/>
@@ -127,11 +127,11 @@
                   <table id="historyTable" class="table table-hover table-bordered">
                       <thead>
                           <tr>
-                              <th>Típus</th>
-                              <th>Időpont</th>
-                              <th>Végrehajtó</th>
-                              <th style="width:40%">Leírás</th>
-                              <th>Egyéb</th>
+                              <th scope="col">Típus</th>
+                              <th scope="col">Időpont</th>
+                              <th scope="col">Végrehajtó</th>
+                              <th style="width:40%" scope="col">Leírás</th>
+                              <th scope="col">Egyéb</th>
                           </tr>
                       </thead>
                       <tbody id="historyContent"/>

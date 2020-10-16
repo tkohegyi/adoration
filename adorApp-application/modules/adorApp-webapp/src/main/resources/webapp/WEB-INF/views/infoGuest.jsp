@@ -33,14 +33,14 @@
         <legend class="message-legend h4"d>Információk</legend>
         	<div class="centerwidediv" align="center">
                 <div id="noGoogle"></div>
-                <div id="yesGoogle"><b>Az Önhöz rendelt Google fiók adatai:</b>
+                <div id="yesGoogle"><span style="font-weight:bold">Az Önhöz rendelt Google fiók adatai:</span>
                 			<div id="nameGoogle">...</div>
                 			<div id="emailGoogle">...</div>
                 </div>
         	</div>
             <div class="centerwidediv" align="center">
                 <div id="noFacebook"></div>
-                <div id="yesFacebook"><b>Az Önhöz rendelt Facebook fiók adatai:</b>
+                <div id="yesFacebook"><span style="font-weight:bold">Az Önhöz rendelt Facebook fiók adatai:</span>
                 			<div id="nameFacebook">...</div>
                 			<div id="emailFacebook">...</div>
                 </div>

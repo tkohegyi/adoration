@@ -30,12 +30,12 @@
   <div class="container">
     <%@include file="../include/navbar.html" %>
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-    <fieldset class="form-horizontal">
+    <fieldset class="form-horizontal" id="adoratorList">
         <legend>Adorálók listája</legend>
         <div class="container" style="padding:5px" align="right"><button id="add-button" type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal" onclick="addClick()">Új adoráló felvétele...</button></div>
         <div class="container" style="padding:5px" align="right"><button id="refreshAll-button" type="button" class="btn btn-secondary" onclick="processEntityUpdated()">Frissítés</button></div>
         <div class="control-group">
-            <table id="person" class="table table-striped table-bordered table-hover compact cell-border" style="width:100%">
+            <table id="person" class="table table-striped table-bordered table-hover compact cell-border" style="width:100%" aria-describedby="adoratorList">
                     <thead>
                         <tr>
                             <th scope="col">ID</th>
@@ -90,7 +90,7 @@
           </div>
           <div class="modal-body">
               <form>
-                  <table id="editTable" class="table table-hover table-bordered" role="presentation">
+                  <table id="editTable" class="table table-hover table-bordered" aria-describedby="editCenterTitle">
                       <thead>
                           <tr>
                               <th scope="col">Oszlop név</th>
@@ -129,14 +129,14 @@
           </div>
           <div class="modal-body">
               <form>
-                  <table id="historyTable" class="table table-hover table-bordered" role="presentation">
+                  <table id="historyTable" class="table table-hover table-bordered" aria-describedby="historyCenterTitle">
                       <thead>
                           <tr>
-                              <th>Típus</th>
-                              <th>Időpont</th>
-                              <th>Végrehajtó</th>
-                              <th style="width:40%">Leírás</th>
-                              <th>Egyéb</th>
+                              <th scope="col">Típus</th>
+                              <th scope="col">Időpont</th>
+                              <th scope="col">Végrehajtó</th>
+                              <th style="width:40%" scope="col">Leírás</th>
+                              <th scope="col">Egyéb</th>
                           </tr>
                       </thead>
                       <tbody id="historyContent"/>
@@ -162,16 +162,16 @@
           </div>
           <div class="modal-body">
               <form>
-                  <table id="timeTable" class="table table-hover table-bordered" role="presentation">
+                  <table id="timeTable" class="table table-hover table-bordered" aria-describedby="timeCenterTitle">
                       <thead>
                           <tr>
-                              <th>Nap</th>
-                              <th>Óra</th>
-                              <th>Prioritás</th>
-                              <th>Online</th>
-                              <th>Más adorálók</th>
-                              <th>Admin megjegyzés</th>
-                              <th>Publikus megjegyzés</th>
+                              <th scope="col">Nap</th>
+                              <th scope="col">Óra</th>
+                              <th scope="col">Prioritás</th>
+                              <th scope="col">Online</th>
+                              <th scope="col">Más adorálók</th>
+                              <th scope="col">Admin megjegyzés</th>
+                              <th scope="col">Publikus megjegyzés</th>
                           </tr>
                       </thead>
                       <tbody id="timeContent"/>
@@ -181,11 +181,11 @@
               <form id="newTimeTable">
                 <input id="editHourPersonId" type="hidden" value="">
                 <input id="editHourId" type="hidden" value="">
-                <table class="table table-hover table-bordered" role="presentation">
+                <table class="table table-hover table-bordered" aria-describedby="newButton">
                       <thead>
                           <tr>
-                              <th>Mező</th>
-                              <th>Érték</th>
+                              <th scope="col">Mező</th>
+                              <th scope="col">Érték</th>
                           </tr>
                       </thead>
                       <tbody id="newTimeContent">
