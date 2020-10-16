@@ -109,7 +109,7 @@ public class PeopleProvider {
         Boolean oldBoolean = person.getIsAnonymous();
         Boolean newBoolean = p.isAnonymous.contains("true");
         person.setIsAnonymous(newBoolean);
-        if (oldBoolean != newBoolean) {
+        if (!oldBoolean.equals(newBoolean)) {
             auditTrailCollection.add(prepareAuditTrail(person.getId(), currentUserInformationJson.userName, "isAnonymous", oldBoolean.toString(), newBoolean.toString()));
         }
 
@@ -124,7 +124,7 @@ public class PeopleProvider {
         oldBoolean = person.getMobileVisible();
         newBoolean = p.mobileVisible.contains("true");
         person.setMobileVisible(newBoolean);
-        if (oldBoolean != newBoolean) {
+        if (!oldBoolean.equals(newBoolean)) {
             auditTrailCollection.add(prepareAuditTrail(person.getId(), currentUserInformationJson.userName, "MobileVisible", oldBoolean.toString(), newBoolean.toString()));
         }
 
@@ -139,7 +139,7 @@ public class PeopleProvider {
         oldBoolean = person.getEmailVisible();
         newBoolean = p.emailVisible.contains("true");
         person.setEmailVisible(newBoolean);
-        if (oldBoolean != newBoolean) {
+        if (!oldBoolean.equals(newBoolean)) {
             auditTrailCollection.add(prepareAuditTrail(person.getId(), currentUserInformationJson.userName, "EmailVisible", oldBoolean.toString(), newBoolean.toString()));
         }
 
@@ -154,7 +154,7 @@ public class PeopleProvider {
         oldBoolean = person.getDhcSigned();
         newBoolean = p.dhcSigned.contains("true");
         person.setDhcSigned(newBoolean);
-        if (oldBoolean != newBoolean) {
+        if (!oldBoolean.equals(newBoolean)) {
             auditTrailCollection.add(prepareAuditTrail(person.getId(), currentUserInformationJson.userName, "DhcSigned", oldBoolean.toString(), newBoolean.toString()));
         }
 
@@ -218,7 +218,7 @@ public class PeopleProvider {
         businessWithAuditTrail.checkDangerousValue(p.dhc, currentUserInformationJson.userName);
         businessWithAuditTrail.checkDangerousValue(p.mobile, currentUserInformationJson.userName);
         if (p.dayId == null || p.hourId == null || p.dayId < 0 || p.dayId > 6 || p.hourId < 0 || p.hourId > 23
-        || p.method < 1 || p.method > 3) {
+                || p.method < 1 || p.method > 3) {
             logger.warn("User:" + currentUserInformationJson.userName + "/" + p.name + " tried to use dangerous value for a new Adorator.");
             throw new DatabaseHandlingException("Field content (Integer) is not allowed.");
         }
@@ -243,7 +243,7 @@ public class PeopleProvider {
         person.setId(newId);
         person.setName(p.name);
         person.setAdorationStatus(AdoratorStatusTypes.PRE_ADORATOR.getAdoratorStatusValue());
-        person.setAdminComment("Adorálás módja: " + p.method + ", Segítség:" + p.coordinate + ", DHC:" + p.dhc + ", SelfComment: " + p.comment );
+        person.setAdminComment("Adorálás módja: " + p.method + ", Segítség:" + p.coordinate + ", DHC:" + p.dhc + ", SelfComment: " + p.comment);
         person.setDhcSigned(true);
         person.setDhcSignedDate(dhcSignedDate);
         person.setEmail(p.email);
@@ -266,7 +266,7 @@ public class PeopleProvider {
         List<Link> linkList = new LinkedList<>();
         //filter out ppl and fields
         for (Person p : people) {
-            if ( !AdoratorStatusTypes.isInactive(p.getAdorationStatus())) {
+            if (!AdoratorStatusTypes.isInactive(p.getAdorationStatus())) {
                 personList.add(new PersonJson(p, privilegedAdorator));
                 List<Link> personLinkList = businessWithLink.getLinksOfPerson(p);
                 if (personLinkList != null) {

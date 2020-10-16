@@ -21,7 +21,7 @@
 <script src="/resources/js/common.js"></script>
 <script src="/resources/js/adorators.js" nonce></script>
 <title>Örökimádás - Vác - Adminisztráció - Adorálók</title>
-<link href="/resources/css/bootstrap-4.3.1.min.css" rel="stylesheet" media="screen">
+<link href="/resources/css/external/bootstrap-4.3.1.min.css" rel="stylesheet" media="screen">
 <link href="/resources/js/external/dataTables/datatables.min.css" rel="stylesheet" type="text/css"/>
 <link href="/resources/css/menu.css" rel="stylesheet" media="screen">
 <link id="favicon" rel="shortcut icon" type="image/png" href="/resources/img/favicon.png" />

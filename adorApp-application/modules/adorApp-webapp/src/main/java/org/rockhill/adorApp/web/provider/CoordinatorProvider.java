@@ -118,7 +118,7 @@ public class CoordinatorProvider {
         //coordinatorType
         Integer newIntValue = newCoordinator.getCoordinatorType();
         Integer oldIntValue = coordinator.getCoordinatorType();
-        if (newIntValue != oldIntValue) {
+        if (!newIntValue.equals(oldIntValue)) {
             CoordinatorTypes.getTypeFromId(newIntValue); //validation of value
             auditTrailCollection.add(prepareAuditTrail(refId, currentUserInformationJson.userName, "CoordinatorType",
                     CoordinatorTypes.getTypeFromId(oldIntValue).toString(),

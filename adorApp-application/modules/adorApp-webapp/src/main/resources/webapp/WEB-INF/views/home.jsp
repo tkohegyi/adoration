@@ -12,7 +12,7 @@
 <meta name="Description" content="Perpetual adoration in Hungary, Vác / Örökimádás a váci Szent Anna Piarista Templomban" />
 <meta name="Keywords" content="örökimádás,vác,perpetual,adoration" />
 <title>Örökimádás - Vác</title>
-<link href="/resources/css/bootstrap-4.3.1.min.css" rel="stylesheet" media="screen" charset="utf-8">
+<link href="/resources/css/external/bootstrap-4.3.1.min.css" rel="stylesheet" media="screen" charset="utf-8">
 <link href="/resources/css/menu.css" rel="stylesheet" media="screen" charset="utf-8">
 <link href="/resources/css/coverageBar.css" rel="stylesheet" media="screen" charset="utf-8">
 <link id="favicon" rel="shortcut icon" type="image/png" href="/resources/img/favicon.png" />
@@ -24,7 +24,7 @@
 
     <div class="centerwidediv" style="text-align: center">
         <br />
-        <img alt="Örökimádás" src="./../resources/img/topimage3.jpg" style="width:100%; max-width:635px">
+        <img alt="Örökimádás" src="/resources/img/topimage3.jpg" style="width:100%; max-width:635px">
     </div>
 
         <fieldset class="form-horizontal" id="actualCoverage">
@@ -92,7 +92,7 @@
     			</tr>
     			<tr>
     				<td />
-    				<td>- A következő telefonszámok egyikén: <i>30-524-8291, 70-375-4140</i>.</td>
+    				<td>- A következő telefonszámok egyikén: <em>30-524-8291, 70-375-4140</em>.</td>
     			</tr>
     		</table>
     	</div>

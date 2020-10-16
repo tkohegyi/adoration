@@ -7,13 +7,13 @@ public class AuthenticatedUser {
 
     private Social social;
     private Person person;
-    private long sessionTimeoutExtender;
+    private final long sessionTimeoutExtender;
     private long sessionTimeout;
 
     public AuthenticatedUser(Social social, Person person, Integer sessionTimeoutInSec) {
         this.social = social;
         this.person = person;
-        this.sessionTimeoutExtender = sessionTimeoutInSec *1000;
+        this.sessionTimeoutExtender = (long)sessionTimeoutInSec * 1000;
         extendSessionTimeout();
     }
 

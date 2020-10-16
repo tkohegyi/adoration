@@ -20,7 +20,7 @@
 <script src="/resources/js/sendMessage.js"></script>
 <script src="/resources/js/information.js"></script>
 <title>Örökimádás - Vác - Információk</title>
-<link href="/resources/css/bootstrap-4.3.1.min.css" rel="stylesheet" media="screen" charset="utf-8">
+<link href="/resources/css/external/bootstrap-4.3.1.min.css" rel="stylesheet" media="screen" charset="utf-8">
 <link href="/resources/css/menu.css" rel="stylesheet" media="screen" charset="utf-8">
 <link id="favicon" rel="shortcut icon" type="image/png" href="/resources/img/favicon.png" />
 </head>
@@ -38,17 +38,17 @@
 	<div class="centerwidediv" align="center">
         <legend class="message-legend h4" id="allocatedHours">Vállalt órák</legend>
         <div id="noOfferedHours">Önnek nincs vállalt órája.</div>
-		<p><table id="yesOfferedHours" aria-describedby="allocatedHours"><tbody></tbody></table></p>
+		<p><table id="yesOfferedHours" role="presentation"><tbody></tbody></table></p>
 	</div>
 	<div class="centerwidediv" align="center">
         <legend class="message-legend h4" id="allocatedHours">Szentségimádók most</legend>
         <div id="noAdoratorNow">Sajnos nincs megjeleníthető adat.</div>
-		<p><table id="yesAdoratorNow" aria-describedby="allocatedHours"><tbody></tbody></table></p>
+		<p><table id="yesAdoratorNow" role="presentation"><tbody></tbody></table></p>
 	</div>
 	<div class="centerwidediv" align="center">
         <legend class="message-legend h4" id="adoratorsNextHour">Szentségimádók a következő órában</legend>
         <div id="noAdoratorNext">Sajnos nincs megjeleníthető adat.</div>
-		<p><table id="yesAdoratorNext" aria-describedby="adoratorsNextHour"><tbody></tbody></table></p>
+		<p><table id="yesAdoratorNext" role="presentation"><tbody></tbody></table></p>
 	</div>
 	<div class="centerwidediv" align="center">
         <legend class="message-legend h4" id="dailyCoordinators">Napszak koordinátorok elérhetősége</legend>
@@ -58,23 +58,23 @@
             <%@include file="../include/sendMessage.html" %>
 
         <div id="noLeadership">Sajnos nincs megjeleníthető adat.</div>
-		<p><table id="yesLeadership" aria-describedby="dailyCoordinators"><tbody></tbody></table></p>
+		<p><table id="yesLeadership" role="presentation"><tbody></tbody></table></p>
 	</div>
 
-    <fieldset class="form-horizontal" id="downloads">
-	<div class="centerwidediv" align="center">
-        <legend class="message-legend h4">Letöltések</legend>
-        <div class="control-group" id="forDc">
-            <a id="translator-button" class="btn btn-primary" href="/adorationSecure/getExcelDailyInfo">Napszakok fedettségtáblázata</a>
-        </div><p/>
-        <div class="control-group" id="forHc">
-            <a id="translator-button" class="btn btn-primary" href="/adorationSecure/getExcelHourlyInfo">Órakoordinátor információ letöltése</a>
-        </div><p/>
-        <div class="control-group" id="forStdA">
-            <a id="translator-button" class="btn btn-primary" href="/adorationSecure/getExcelAdoratorInfo">Saját adatok letöltése</a>
+    <div class="form-horizontal" id="downloads">
+        <div class="centerwidediv" align="center">
+            <legend class="message-legend h4">Letöltések</legend>
+            <div class="control-group" id="forDc">
+                <a id="translator-button" class="btn btn-primary" href="/adorationSecure/getExcelDailyInfo">Napszakok fedettségtáblázata</a>
+            </div><p/>
+            <div class="control-group" id="forHc">
+                <a id="translator-button" class="btn btn-primary" href="/adorationSecure/getExcelHourlyInfo">Órakoordinátor információ letöltése</a>
+            </div><p/>
+            <div class="control-group" id="forStdA">
+                <a id="translator-button" class="btn btn-primary" href="/adorationSecure/getExcelAdoratorInfo">Saját adatok letöltése</a>
+            </div>
         </div>
-	</div>
-    </fieldset>
+    </div>
 
 </body>
 </html>

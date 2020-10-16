@@ -287,7 +287,6 @@ function reBuildAddModal() {
             c.append(r);
         }
     }
-
 }
 
 function valueChanged(theObject, type) {
@@ -429,6 +428,7 @@ function reBuildHistoryModal(personId) {
         } else { //logged out or other error at server side
             alert( "User Logged out, please login again." );
             window.location.pathname = "/adoration/"
+            return;
         }
     });
     $('#historyContent').replaceWith(hc);

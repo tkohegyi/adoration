@@ -20,7 +20,7 @@
 <script src="/resources/js/sendMessage.js"></script>
 <script src="/resources/js/infoGuest.js"></script>
 <title>Örökimádás - Vác - Személyes Információk</title>
-<link href="/resources/css/bootstrap-4.3.1.min.css" rel="stylesheet" media="screen" charset="utf-8">
+<link href="/resources/css/external/bootstrap-4.3.1.min.css" rel="stylesheet" media="screen" charset="utf-8">
 <link href="/resources/css/menu.css" rel="stylesheet" media="screen" charset="utf-8">
 <link id="favicon" rel="shortcut icon" type="image/png" href="/resources/img/favicon.png" />
 </head>
@@ -51,7 +51,7 @@
 	<div class="centerwidediv" align="center">
         <legend class="message-legend h4"d>Fő koordinátorok elérhetősége</legend>
         <div id="noLeadership">Sajnos nincs megjeleníthető adat.</div>
-		<p><table id="yesLeadership"><tbody></tbody></table></p>
+		<p><table id="yesLeadership" role="presentation"><tbody></tbody></table></p>
 	</div>
 
 	<div class="centerwidediv" align="center">
@@ -60,10 +60,10 @@
 
     <%@include file="../include/sendMessage.html" %>
 
-    <fieldset class="form-horizontal" id="downloads">
-	<div class="centerwidediv" align="center">
-	</div>
-    </fieldset>
+    <div class="form-horizontal" id="downloads">
+        <div class="centerwidediv" align="center">
+        </div>
+    </div>
 
     <hr />
 

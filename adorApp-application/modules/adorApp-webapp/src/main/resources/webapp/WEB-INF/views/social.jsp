@@ -21,7 +21,7 @@
 <script src="/resources/js/common.js"></script>
 <script src="/resources/js/social.js" nonce></script>
 <title>Örökimádás - Vác - Adminisztráció - Azonosítás</title>
-<link href="/resources/css/bootstrap-4.3.1.min.css" rel="stylesheet" media="screen">
+<link href="/resources/css/external/bootstrap-4.3.1.min.css" rel="stylesheet" media="screen">
 <link href="/resources/js/external/dataTables/datatables.min.css" rel="stylesheet" type="text/css"/>
 <link href="/resources/css/menu.css" rel="stylesheet" media="screen">
 <link id="favicon" rel="shortcut icon" type="image/png" href="/resources/img/favicon.png" />
@@ -30,11 +30,11 @@
   <div class="container">
     <%@include file="../include/navbar.html" %>
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-    <fieldset class="form-horizontal">
+    <fieldset class="form-horizontal" id="socialList">
         <legend>Közösségi portálokon bejelentkezettek listája</legend>
         <div class="container" style="padding:5px" align="right"><button id="refreshAll-button" type="button" class="btn btn-secondary" onclick="processEntityUpdated()">Frissítés</button></div>
         <div class="control-group">
-            <table id="social" class="table table-striped table-bordered table-hover compact cell-border" style="width:100%">
+            <table id="social" class="table table-striped table-bordered table-hover compact cell-border" style="width:100%" aria-describedby="socialList">
                     <thead>
                         <tr>
                             <th scope="col">ID</th>
@@ -85,7 +85,7 @@
           </div>
           <div class="modal-body">
               <form>
-                  <table id="editTable" class="table table-hover table-bordered">
+                  <table id="editTable" class="table table-hover table-bordered" aria-describedby="editCenterTitle">
                       <thead>
                           <tr>
                               <th scope="col">Oszlop név</th>
@@ -99,7 +99,7 @@
                </form>
           </div>
           <div class="modal-footer">
-            <table width="100%"><tr>
+            <table width="100%" role="presentation"><tr>
                 <td align="left"><button id="deleteButton" type="button" class="btn btn-danger" onclick="deleteSocial()">Social törlése</button></td>
                 <td align="right">
                     <button id="resetChangesButton" type="button" class="btn btn-secondary" onclick="reBuildModal()">Eredeti adatok visszanyerése</button>
@@ -124,7 +124,7 @@
           </div>
           <div class="modal-body">
               <form>
-                  <table id="historyTable" class="table table-hover table-bordered">
+                  <table id="historyTable" class="table table-hover table-bordered" aria-describedby="historyCenterTitle">
                       <thead>
                           <tr>
                               <th scope="col">Típus</th>

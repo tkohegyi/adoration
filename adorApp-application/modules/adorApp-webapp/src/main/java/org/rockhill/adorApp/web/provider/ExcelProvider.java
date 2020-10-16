@@ -14,7 +14,6 @@ import org.rockhill.adorApp.database.tables.Link;
 import org.rockhill.adorApp.database.tables.Person;
 import org.rockhill.adorApp.web.configuration.PropertyDto;
 import org.rockhill.adorApp.web.configuration.WebAppConfigurationAccess;
-import org.rockhill.adorApp.web.json.CoordinatorJson;
 import org.rockhill.adorApp.web.json.CoverageInformationJson;
 import org.rockhill.adorApp.web.json.CurrentUserInformationJson;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,13 +25,18 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Component
 public class ExcelProvider {
 
+    private static final String THERE_IS_NO_INFORMATION = "-";
     public static HashMap<Integer, String> hourCodes;
     public static HashMap<Integer, String> dayCodes;
+
     static {
         hourCodes = new HashMap<>();
         hourCodes.put(0, "V;");
@@ -51,8 +55,6 @@ public class ExcelProvider {
         dayCodes.put(5, "péntek");
         dayCodes.put(6, "szombat");
     }
-
-    private static final String THERE_IS_NO_INFORMATION = "-";
 
     @Autowired
     BusinessWithPerson businessWithPerson;
@@ -86,8 +88,10 @@ public class ExcelProvider {
     }
 
     private Cell getSheetCell(Sheet sheet, int rowNo, int colNo) {
-        Row row = getRow(sheet, rowNo);
-        Cell cell = getCell(row, colNo);
+        Row row;
+        Cell cell;
+        row = getRow(sheet, rowNo);
+        cell = getCell(row, colNo);
         return cell;
     }
 
@@ -114,7 +118,7 @@ public class ExcelProvider {
         Sheet sheet = w.getSheet("Adorálók");
         int rowCount = 1;
         List<Person> people = businessWithPerson.getPersonList();
-        for (Person p: people) {
+        for (Person p : people) {
             Row row = getRow(sheet, rowCount);
             Cell c = getCell(row, 0);
             c.setCellValue(p.getId().toString());
@@ -137,30 +141,30 @@ public class ExcelProvider {
                 row.createCell(14).setCellValue("");
                 row.createCell(15).setCellValue("");
             } else {
-                String physical = "";
-                String online = "";
+                StringBuilder physical = new StringBuilder();
+                StringBuilder online = new StringBuilder();
                 boolean wasP = false;
                 boolean wasO = false;
-                for (Link l: links) {
+                for (Link l : links) {
                     String hString = getHourString(l.getHourId()) + l.getPriority().toString();
                     if (l.getType().equals(AdorationMethodTypes.PHYSICAL.getAdorationMethodValue())) {
                         //physical
                         if (wasP) {
-                            physical += " ";
+                            physical.append(" ");
                         }
                         wasP = true;
-                        physical += hString;
+                        physical.append(hString);
                     } else {
                         //online
                         if (wasO) {
-                            online += " ";
+                            online.append(" ");
                         }
                         wasO = true;
-                        online += hString;
+                        online.append(hString);
                     }
                 }
-                row.createCell(14).setCellValue(physical);
-                row.createCell(15).setCellValue(online);
+                row.createCell(14).setCellValue(physical.toString());
+                row.createCell(15).setCellValue(online.toString());
             }
             rowCount++;
         }
@@ -178,12 +182,16 @@ public class ExcelProvider {
         Sheet sheet = w.getSheet("Fedettség");
         //public Map<Integer,Integer> visibleHours; //hourId - number of adorators, only prio 1,2
         int rowCount = 39;
-        for (int d = 0; d < 7 ;d++) {
+        for (int d = 0; d < 7; d++) {
             Row row = sheet.createRow(rowCount + d);
             for (int h = 0; h < 24; h++) {
-                Integer noOfAdorators = coverageInformationJson.visibleHours.get(d*24 + h);
-                Cell c = getCell(row,4 + h);
-                c.setCellValue(2 - noOfAdorators);
+                Integer noOfAdorators = coverageInformationJson.visibleHours.get(d * 24 + h);
+                Cell c = getCell(row, 4 + h);
+                long cellValue = 2 - noOfAdorators.longValue();
+                if (cellValue < 0) {
+                    cellValue = 0;
+                }
+                c.setCellValue(cellValue);
                 c.setCellType(CellType.NUMERIC);
             }
         }
@@ -212,10 +220,10 @@ public class ExcelProvider {
         Sheet sheet = w.getSheet("Adatok");
         int rowPos = 3;
         List<Coordinator> coordinators = coordinatorProvider.getCoordinatorList();
-        for (Coordinator coo: coordinators) {
+        for (Coordinator coo : coordinators) {
             if (coo.getCoordinatorType() < 24) { //if hourly coordinator
                 Long personId = coo.getPersonId();
-                if ( personId != null && personId.intValue() > 0) {
+                if (personId != null && personId.intValue() > 0) {
                     Person p = businessWithPerson.getPersonById(coo.getPersonId());
                     Cell c = getSheetCell(sheet, rowPos + coo.getCoordinatorType(), 2);
                     c.setCellValue(p.getId().toString() + " - " + p.getName() + "\n" + p.getMobile());
@@ -223,14 +231,14 @@ public class ExcelProvider {
             }
         }
         //prepare data
-        Map<Integer,Integer> posRecord = new HashMap<>();
-        for (int i = 0; i<168; i++) { //this is about priority
-            posRecord.put(i,0);
+        Map<Integer, Integer> posRecord = new HashMap<>();
+        for (int i = 0; i < 168; i++) { //this is about priority
+            posRecord.put(i, 0);
         }
         //fill data
         int colBase = 4;
         int rowBase = 3;
-        for (int i = 0; i<168; i++) {
+        for (int i = 0; i < 168; i++) {
             List<Link> links = businessWithLink.getPhysicalLinksOfHour(i);
             if (links != null && links.size() > 0) {
                 links.sort(Comparator.comparing(Link::getPriority));
@@ -240,7 +248,7 @@ public class ExcelProvider {
                     if (personId != null) {
                         Person p = businessWithPerson.getPersonById(personId);
                         cell.setCellValue(p.getId().toString() + " - " + p.getName() + "\n" + p.getMobile());
-                        posRecord.put(i,posRecord.get(i) + 1);
+                        posRecord.put(i, posRecord.get(i) + 1);
                     }
                 }
             }
@@ -267,9 +275,13 @@ public class ExcelProvider {
 
     private void updateHourlyInfo(CurrentUserInformationJson userInformation, Workbook w) {
         Sheet sheet = w.getSheet("Órakoordinátor");
-        if (userInformation.personId == null) { return; } // the person is not identified
+        if (userInformation.personId == null) {
+            return;
+        } // the person is not identified
         Coordinator coordinator = businessWithCoordinator.getCoordinatorFromPersonId(userInformation.personId);
-        if (coordinator == null) { return; } //the coordinator is not identified
+        if (coordinator == null) {
+            return;
+        } //the coordinator is not identified
         //coordinator has been identified
         Integer coordinatorType = coordinator.getCoordinatorType();
         if (coordinatorType > 23) {
@@ -306,7 +318,7 @@ public class ExcelProvider {
         //iterate through the adorators
         List<Link> links = businessWithLink.getLinksOfWeek(coordinatorType);
         int baseRow = 14;
-        for (Link l: links) {
+        for (Link l : links) {
             Integer hourId = l.getHourId();
             Integer day = hourId / 24;
             String dayString = dayCodes.get(day);

@@ -21,7 +21,7 @@
 <script src="/resources/js/common.js"></script>
 <script src="/resources/js/links.js" nonce></script>
 <title>Örökimádás - Vác - Adminisztráció - Órák</title>
-<link href="/resources/css/bootstrap-4.3.1.min.css" rel="stylesheet" media="screen">
+<link href="/resources/css/external/bootstrap-4.3.1.min.css" rel="stylesheet" media="screen">
 <link href="/resources/js/external/dataTables/datatables.min.css" rel="stylesheet" type="text/css"/>
 <link href="/resources/css/menu.css" rel="stylesheet" media="screen">
 <link id="favicon" rel="shortcut icon" type="image/png" href="/resources/img/favicon.png" />
@@ -30,38 +30,38 @@
   <div class="container">
     <%@include file="../include/navbar.html" %>
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-    <fieldset class="form-horizontal">
+    <fieldset class="form-horizontal" id="hourList">
         <legend>Órák listája</legend>
         <div class="container" style="padding:5px" align="right"><button id="add-button" type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal" onclick="addClick()">Új óra rögzítése...</button></div>
         <div class="container" style="padding:5px" align="right"><button id="refreshAll-button" type="button" class="btn btn-secondary" onclick="processEntityUpdated()">Frissítés</button></div>
         <div class="control-group">
-            <table id="link" class="table table-striped table-bordered table-hover compact cell-border" style="width:100%">
+            <table id="link" class="table table-striped table-bordered table-hover compact cell-border" style="width:100%" aria-describedby="hourList">
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Nap</th>
-                            <th>Óra</th>
-                            <th>Adoráló Név</th>
-                            <th>Adoráló Telefonszám</th>
-                            <th>Adoráló E-mail</th>
-                            <th>Prioritás</th>
-                            <th>Hely</th>
-                            <th>Admin megjegyzés</th>
-                            <th>Publikus megjegyzés</th>
+                            <th scope="col">ID</th>
+                            <th scope="col">Nap</th>
+                            <th scope="col">Óra</th>
+                            <th scope="col">Adoráló Név</th>
+                            <th scope="col">Adoráló Telefonszám</th>
+                            <th scope="col">Adoráló E-mail</th>
+                            <th scope="col">Prioritás</th>
+                            <th scope="col">Hely</th>
+                            <th scope="col">Admin megjegyzés</th>
+                            <th scope="col">Publikus megjegyzés</th>
                         </tr>
                     </thead>
                     <tfoot>
                         <tr>
-                            <th>ID</th>
-                            <th>Nap</th>
-                            <th>Óra</th>
-                            <th>Adoráló Név</th>
-                            <th>Adoráló Telefonszám</th>
-                            <th>Adoráló E-mail</th>
-                            <th>Prioritás</th>
-                            <th>Hely</th>
-                            <th>Admin megjegyzés</th>
-                            <th>Publikus megjegyzés</th>
+                            <th scope="col">ID</th>
+                            <th scope="col">Nap</th>
+                            <th scope="col">Óra</th>
+                            <th scope="col">Adoráló Név</th>
+                            <th scope="col">Adoráló Telefonszám</th>
+                            <th scope="col">Adoráló E-mail</th>
+                            <th scope="col">Prioritás</th>
+                            <th scope="col">Hely</th>
+                            <th scope="col">Admin megjegyzés</th>
+                            <th scope="col">Publikus megjegyzés</th>
                         </tr>
                     </tfoot>
             </table>
@@ -83,11 +83,11 @@
           <div class="modal-body">
               <form id="editTable">
                 <input id="editId" type="hidden" value="">
-                <table class="table table-hover table-bordered">
+                <table class="table table-hover table-bordered" aria-describedby="editCenterTitle">
                       <thead>
                           <tr>
-                              <th>Mező</th>
-                              <th>Érték</th>
+                              <th scope="col">Mező</th>
+                              <th scope="col">Érték</th>
                           </tr>
                       </thead>
                       <tbody id="newTimeContent">
@@ -146,7 +146,7 @@
               </form>
           </div>
           <div class="modal-footer">
-            <table width="100%"><tr>
+            <table width="100%" role="presentation"><tr>
                 <td align="left"><button id="deleteButton" type="button" class="btn btn-danger" onclick="deleteLink()">Óra törlése</button></td>
                 <td align="right">
                     <button id="cancelButton" type="button" class="btn btn-info" data-dismiss="modal">Mégsem</button>
@@ -170,14 +170,14 @@
           </div>
           <div class="modal-body">
               <form>
-                  <table id="historyTable" class="table table-hover table-bordered">
+                  <table id="historyTable" class="table table-hover table-bordered" aria-describedby="historyCenterTitle">
                       <thead>
                           <tr>
-                              <th>Típus</th>
-                              <th>Időpont</th>
-                              <th>Végrehajtó</th>
-                              <th style="width:40%">Leírás</th>
-                              <th>Egyéb</th>
+                              <th scope="col">Típus</th>
+                              <th scope="col">Időpont</th>
+                              <th scope="col">Végrehajtó</th>
+                              <th style="width:40%" scope="col">Leírás</th>
+                              <th scope="col">Egyéb</th>
                           </tr>
                       </thead>
                       <tbody id="historyContent"/>

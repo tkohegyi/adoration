@@ -159,6 +159,7 @@ function reBuildHistoryModal(id) {
         } else { //logged out or other error at server side
             alert( "User Logged out, please login again." );
             window.location.pathname = "/adoration/"
+            return;
         }
     });
     $('#historyContent').replaceWith(hc);
