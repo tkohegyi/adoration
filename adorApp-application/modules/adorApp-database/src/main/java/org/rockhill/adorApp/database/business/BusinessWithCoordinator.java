@@ -1,5 +1,6 @@
 package org.rockhill.adorApp.database.business;
 
+import com.sun.istack.NotNull;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -17,7 +18,7 @@ import java.util.List;
 public class BusinessWithCoordinator {
     private final Logger logger = LoggerFactory.getLogger(BusinessWithCoordinator.class);
 
-    public Long newCoordinator(Coordinator newC, AuditTrail auditTrail) {
+    public Long newCoordinator(@NotNull Coordinator newC, @NotNull AuditTrail auditTrail) {
         Long id = null;
         SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
         if (sessionFactory != null) {
@@ -51,7 +52,7 @@ public class BusinessWithCoordinator {
         return result;
     }
 
-    public Coordinator getById(Long id) {
+    public Coordinator getById(@NotNull Long id) {
         SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
         if (sessionFactory != null) {
             Session session = sessionFactory.openSession();
@@ -69,7 +70,7 @@ public class BusinessWithCoordinator {
         return null;
     }
 
-    public Long deleteCoordinator(Coordinator coordinator, List<AuditTrail> auditTrailList) {
+    public Long deleteCoordinator(@NotNull Coordinator coordinator, List<AuditTrail> auditTrailList) {
         SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
         if (sessionFactory != null) {
             Session session = sessionFactory.openSession();
@@ -94,7 +95,7 @@ public class BusinessWithCoordinator {
         return coordinator.getId();
     }
 
-    public Long updateCoordinator(Coordinator coordinator, Collection<AuditTrail> auditTrailCollection) {
+    public Long updateCoordinator(@NotNull Coordinator coordinator, @NotNull Collection<AuditTrail> auditTrailCollection) {
         SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
         if (sessionFactory != null) {
             Session session = sessionFactory.openSession();
@@ -138,7 +139,7 @@ public class BusinessWithCoordinator {
         return result;
     }
 
-    public Coordinator getCoordinatorFromPersonId(Long id) {
+    public Coordinator getCoordinatorFromPersonId(@NotNull Long id) {
         SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
         if (sessionFactory != null) {
             Session session = sessionFactory.openSession();
@@ -156,7 +157,7 @@ public class BusinessWithCoordinator {
         return null;
     }
 
-    private Coordinator getByCoordinatorType(Integer i) {
+    private Coordinator getByCoordinatorType(@NotNull Integer i) {
         SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
         if (sessionFactory != null) {
             Session session = sessionFactory.openSession();
@@ -174,13 +175,13 @@ public class BusinessWithCoordinator {
         return null;
     }
 
-    public Coordinator getDailyCooOfHour(Integer coordinatorType) {
+    public Coordinator getDailyCooOfHour(@NotNull Integer coordinatorType) {
         if (coordinatorType > 23) return null;
         int dayPart = coordinatorType / 6;
         return getByCoordinatorType(24 + dayPart * 6);
     }
 
-    public Coordinator getHourlyCooOfHour(Integer hour) {
+    public Coordinator getHourlyCooOfHour(@NotNull Integer hour) {
         return getByCoordinatorType(hour);
     }
 }

@@ -39,7 +39,7 @@ public class ExportController extends ControllerBase {
      *
      * @return the with the excel file
      */
-    @RequestMapping(value = "/adorationSecure/getExcelFull", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/adorationSecure/getExcelFull", method = {RequestMethod.GET})
     public void getExcelContent(HttpSession httpSession, HttpServletResponse httpServletResponse) {
         httpServletResponse.addHeader(CONTENT_DISPOSITION, String.format(ATTACHMENT_TEMPLATE, "nagyRegiszter.xlsx"));
         httpServletResponse.addHeader(CONTENT_TYPE, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
@@ -66,7 +66,7 @@ public class ExportController extends ControllerBase {
      *
      * @return the with the excel file
      */
-    @RequestMapping(value = "/adorationSecure/getExcelDailyInfo", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/adorationSecure/getExcelDailyInfo", method = {RequestMethod.GET})
     public void getExcelDailyInfo(HttpSession httpSession, HttpServletResponse httpServletResponse) {
         httpServletResponse.addHeader(CONTENT_DISPOSITION, String.format(ATTACHMENT_TEMPLATE, "napszakFedettség.xlsx"));
         httpServletResponse.addHeader(CONTENT_TYPE, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
@@ -93,7 +93,7 @@ public class ExportController extends ControllerBase {
      *
      * @return the with the excel file
      */
-    @RequestMapping(value = "/adorationSecure/getExcelHourlyInfo", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/adorationSecure/getExcelHourlyInfo", method = {RequestMethod.GET})
     public void getExcelHourlyInfo(HttpSession httpSession, HttpServletResponse httpServletResponse) {
         httpServletResponse.addHeader(CONTENT_DISPOSITION, String.format(ATTACHMENT_TEMPLATE, "órainformáció.xlsx"));
         httpServletResponse.addHeader(CONTENT_TYPE, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
@@ -120,7 +120,7 @@ public class ExportController extends ControllerBase {
      *
      * @return the with the excel file
      */
-    @RequestMapping(value = "/adorationSecure/getExcelAdoratorInfo", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/adorationSecure/getExcelAdoratorInfo", method = {RequestMethod.GET})
     public void getExcelAdoratorInfo(HttpSession httpSession, HttpServletResponse httpServletResponse) {
         httpServletResponse.addHeader(CONTENT_DISPOSITION, String.format(ATTACHMENT_TEMPLATE, "adoráló-adatok.xlsx"));
         httpServletResponse.addHeader(CONTENT_TYPE, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");

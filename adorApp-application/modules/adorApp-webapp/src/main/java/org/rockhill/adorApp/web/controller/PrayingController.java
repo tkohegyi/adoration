@@ -20,7 +20,7 @@ public class PrayingController {
      *
      * @return the name of the jsp to display as result
      */
-    @RequestMapping(value = "/adoration/prayingDay", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/adoration/prayingDay", method = {RequestMethod.GET})
     public String prayingDayPage() {
         return "prayingDay";
     }

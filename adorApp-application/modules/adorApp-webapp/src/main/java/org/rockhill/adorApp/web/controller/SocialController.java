@@ -56,7 +56,7 @@ public class SocialController extends ControllerBase {
      * @return with the list of socials as a JSON response
      */
     @ResponseBody
-    @RequestMapping(value = "/adorationSecure/getSocialTable", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/adorationSecure/getSocialTable", method = {RequestMethod.GET})
     public TableDataInformationJson getSocialTable(HttpSession httpSession) {
         TableDataInformationJson content = null;
         if (isAdoratorAdmin(currentUserProvider, httpSession)) {
@@ -73,7 +73,7 @@ public class SocialController extends ControllerBase {
      * @return with the social as a JSON response
      */
     @ResponseBody
-    @RequestMapping(value = "/adorationSecure/getSocial/{id:.+}", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/adorationSecure/getSocial/{id:.+}", method = {RequestMethod.GET})
     public TableDataInformationJson getSocialById(HttpSession httpSession, @PathVariable("id") final String requestedId) {
         TableDataInformationJson content = null;
         if (isAdoratorAdmin(currentUserProvider, httpSession)) {
@@ -134,7 +134,7 @@ public class SocialController extends ControllerBase {
      * @return with the social history as a JSON response
      */
     @ResponseBody
-    @RequestMapping(value = "/adorationSecure/getSocialHistory/{id:.+}", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/adorationSecure/getSocialHistory/{id:.+}", method = {RequestMethod.GET})
     public TableDataInformationJson getSocialHistoryById(HttpSession httpSession, @PathVariable("id") final String requestedId) {
         TableDataInformationJson content = null;
         if (isAdoratorAdmin(currentUserProvider, httpSession)) {

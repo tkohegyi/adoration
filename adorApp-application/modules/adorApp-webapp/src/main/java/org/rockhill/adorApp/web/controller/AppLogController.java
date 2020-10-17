@@ -76,7 +76,7 @@ public class AppLogController extends ControllerBase {
      * @return with the list of log files as a JSON response
      */
     @ResponseBody
-    @RequestMapping(value = "/adorationSecure/logs", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/adorationSecure/logs", method = {RequestMethod.GET})
     public Map<String, Collection<String>> getLogFiles(HttpSession httpSession) {
         Map<String, Collection<String>> jsonResponse = new HashMap<>();
         if (isAdoratorAdmin(currentUserProvider, httpSession)) {
@@ -93,7 +93,7 @@ public class AppLogController extends ControllerBase {
      * @param userAgent the User-Agent of the request header
      * @return the content of the log file
      */
-    @RequestMapping(value = "/adorationSecure/logs/{fileName:.+}", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/adorationSecure/logs/{fileName:.+}", method = {RequestMethod.GET})
     public ResponseEntity<String> getLogFileContent(HttpSession httpSession,
                                                     @PathVariable("fileName") final String fileName,
                                                     @RequestParam(value = "source", defaultValue = "false") final boolean source,

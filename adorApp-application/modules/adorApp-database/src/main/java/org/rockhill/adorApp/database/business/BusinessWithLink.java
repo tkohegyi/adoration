@@ -1,5 +1,6 @@
 package org.rockhill.adorApp.database.business;
 
+import com.sun.istack.NotNull;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -35,13 +36,18 @@ public class BusinessWithLink {
         return result;
     }
 
-    public Link getLink(Long id) {
+    public Link getLink(@NotNull Long id) {
+        if (id == null) {
+            throw new DatabaseHandlingException("Search for Link called with null id - contact to maintainers");
+        }
         SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
         if (sessionFactory != null) {
             Session session = sessionFactory.openSession();
             session.beginTransaction();
-            String hql = "from Link as L where L.id = " + id.toString();
-            List<Link> result = (List<Link>) session.createQuery(hql).list();
+            String hql = "from Link as L where L.id = :expectedId";
+            Query query = session.createQuery(hql);
+            query.setParameter("expectedId", id);
+            List<Link> result = (List<Link>) query.list();
             session.getTransaction().commit();
             session.close();
             if (result != null && result.size() > 0) {
@@ -51,18 +57,18 @@ public class BusinessWithLink {
         throw new DatabaseHandlingException("Search for Link failed with id:" + id.toString());
     }
 
-    public String getDayNameFromHourId(Integer hourId) {
+    public String getDayNameFromHourId(@NotNull Integer hourId) {
         Integer day = Math.floorDiv(hourId.intValue(),24);
         String dayString = TranslatorDayNames.getTranslatedString(day);
         return dayString;
     }
 
-    public String getHourFromHourId(Integer hourId) {
+    public String getHourFromHourId(@NotNull Integer hourId) {
         Integer hour = Math.floorMod(hourId.intValue(),24);
         return hour.toString();
     }
 
-    public Long newLink(Link l, Collection<AuditTrail> auditTrailCollection) {
+    public Long newLink(@NotNull Link l, @NotNull Collection<AuditTrail> auditTrailCollection) {
         Long id = null;
         SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
         if (sessionFactory != null) {
@@ -86,7 +92,7 @@ public class BusinessWithLink {
         return id;
     }
 
-    public Long updateLink(Link l, Collection<AuditTrail> auditTrailCollection) {
+    public Long updateLink(@NotNull Link l, Collection<AuditTrail> auditTrailCollection) {
         Long id = null;
         SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
         if (sessionFactory != null) {
@@ -110,7 +116,7 @@ public class BusinessWithLink {
         return id;
     }
 
-    public Long deleteLink(Link l, AuditTrail auditTrail) {
+    public Long deleteLink(@NotNull Link l, @NotNull AuditTrail auditTrail) {
         SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
         if (sessionFactory != null) {
             Session session = sessionFactory.openSession();
@@ -130,13 +136,17 @@ public class BusinessWithLink {
         return l.getId();
     }
 
-    public List<Link> getLinksOfPerson(Person person) {
+    public List<Link> getLinksOfPerson(@NotNull Person person) {
+        if (person == null) {
+            throw new DatabaseHandlingException("getLinksOfPerson called with null parameter - contact to maintainers");
+        }
         SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
         if (sessionFactory != null) {
             Session session = sessionFactory.openSession();
             session.beginTransaction();
-            String hql = "from Link as L where L.personId = " + person.getId().toString();
+            String hql = "from Link as L where L.personId = :expectedId";
             Query query = session.createQuery(hql);
+            query.setParameter("expectedId", person.getId());
             List<Link> result = (List<Link>) query.list();
             session.getTransaction().commit();
             session.close();
@@ -154,8 +164,9 @@ public class BusinessWithLink {
             Session session = sessionFactory.openSession();
             session.beginTransaction();
             //get physical adorators ahead
-            String hql = "from Link as L where L.hourId = " + String.valueOf(hourId) + " order by L.type asc";
+            String hql = "from Link as L where L.hourId = :expectedId order by L.type asc";
             Query query = session.createQuery(hql);
+            query.setParameter("expectedId", hourId);
             result = (List<Link>) query.list();
             session.getTransaction().commit();
             session.close();
@@ -163,14 +174,15 @@ public class BusinessWithLink {
         return result;
     }
 
-    public List<Link> getPhysicalLinksOfHour(Integer hourId) {
+    public List<Link> getPhysicalLinksOfHour(@NotNull Integer hourId) {
         List<Link> result = null;
         SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
         if (sessionFactory != null) {
             Session session = sessionFactory.openSession();
             session.beginTransaction();
-            String hql = "from Link as L where L.hourId = " + String.valueOf(hourId) + " and L.type = 0";
+            String hql = "from Link as L where L.hourId = :expectedId and L.type = 0";
             Query query = session.createQuery(hql);
+            query.setParameter("expectedId", hourId);
             result = (List<Link>) query.list();
             session.getTransaction().commit();
             session.close();
@@ -185,7 +197,7 @@ public class BusinessWithLink {
      * @param coordinatorType
      * @return
      */
-    public List<Link> getLinksOfWeek(Integer coordinatorType) {
+    public List<Link> getLinksOfWeek(@NotNull Integer coordinatorType) {
         String hours = coordinatorType.toString() + ","
                 + (24 + coordinatorType) + ","
                 + (48 + coordinatorType) + ","
@@ -198,8 +210,9 @@ public class BusinessWithLink {
         if (sessionFactory != null) {
             Session session = sessionFactory.openSession();
             session.beginTransaction();
-            String hql = "from Link as L where L.hourId in (" + hours + " ) and L.type = 0 order by L.hourId asc";
+            String hql = "from Link as L where L.hourId in :expectedHours and L.type = 0 order by L.hourId asc";
             Query query = session.createQuery(hql);
+            query.setParameter("expectedHours", "( " + hours + " )");
             result = (List<Link>) query.list();
             session.getTransaction().commit();
             session.close();
@@ -207,7 +220,7 @@ public class BusinessWithLink {
         return result;
     }
 
-    public Integer getPreviousHour(Integer hourId) {
+    public Integer getPreviousHour(@NotNull Integer hourId) {
         Integer previousHour;
         if (hourId > MIN_HOUR) {
             previousHour = hourId - 1;
@@ -217,7 +230,7 @@ public class BusinessWithLink {
         return previousHour;
     }
 
-    public Integer getNextHour(Integer hourId) {
+    public Integer getNextHour(@NotNull Integer hourId) {
         Integer nextHour;
         if (hourId < MAX_HOUR) {
             nextHour = hourId + 1;

@@ -59,7 +59,7 @@ public class LinksController extends ControllerBase {
      * @return with the list of people as a JSON response
      */
     @ResponseBody
-    @RequestMapping(value = "/adorationSecure/getLinkTable", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/adorationSecure/getLinkTable", method = {RequestMethod.GET})
     public TableDataInformationJson getLinkTable(HttpSession httpSession, @RequestParam("filter") Optional<String> filter) {
         TableDataInformationJson content = null;
         if (isAdoratorAdmin(currentUserProvider, httpSession)) {
@@ -76,7 +76,7 @@ public class LinksController extends ControllerBase {
      * @return with the link history as a JSON response
      */
     @ResponseBody
-    @RequestMapping(value = "/adorationSecure/getLinkHistory/{id:.+}", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/adorationSecure/getLinkHistory/{id:.+}", method = {RequestMethod.GET})
     public TableDataInformationJson getLinkHistoryById(HttpSession httpSession, @PathVariable("id") final String requestedId) {
         TableDataInformationJson content = null;
         if (isAdoratorAdmin(currentUserProvider, httpSession)) {
@@ -94,7 +94,7 @@ public class LinksController extends ControllerBase {
      * @return with the link as a JSON response
      */
     @ResponseBody
-    @RequestMapping(value = "/adorationSecure/getLink/{id:.+}", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/adorationSecure/getLink/{id:.+}", method = {RequestMethod.GET})
     public TableDataInformationJson getLinkById(HttpSession httpSession, @PathVariable("id") final String requestedId) {
         TableDataInformationJson content = null;
         if (isAdoratorAdmin(currentUserProvider, httpSession)) {

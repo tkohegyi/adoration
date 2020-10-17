@@ -39,7 +39,7 @@ public class AdoratorListController extends ControllerBase {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/adorationSecure/getAdoratorList", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/adorationSecure/getAdoratorList", method = {RequestMethod.GET})
     public TableDataInformationJson getPersonTable(HttpSession httpSession, @RequestParam("filter") Optional<String> filter) {
         TableDataInformationJson content = null;
         if (isRegisteredAdorator(currentUserProvider, httpSession)) {

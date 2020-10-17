@@ -1,5 +1,6 @@
 package org.rockhill.adorApp.database.business;
 
+import com.sun.istack.NotNull;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -18,7 +19,7 @@ import java.util.List;
 public class BusinessWithSocial {
     private final Logger logger = LoggerFactory.getLogger(BusinessWithSocial.class);
 
-    public Long newSocial(Social newS, AuditTrail auditTrail) {
+    public Long newSocial(@NotNull Social newS, @NotNull AuditTrail auditTrail) {
         Long id = null;
         SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
         if (sessionFactory != null) {
@@ -40,31 +41,14 @@ public class BusinessWithSocial {
     }
 
     //GOOGLE METHODS ===================================================================================================
-    public Social getSocialByGUserId(final String googleUserId) {
+    public Social getSocialByGUserId(@NotNull final String googleUserId) {
         SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
         if (sessionFactory != null) {
             Session session = sessionFactory.openSession();
             session.beginTransaction();
-            String hql = "from Social as S where S.googleUserId like '" + googleUserId + "'";
+            String hql = "from Social as S where S.googleUserId like :likeValue";
             Query query = session.createQuery(hql);
-            List<Social> result = (List<Social>) query.list();
-            session.getTransaction().commit();
-            session.close();
-            if (result != null && result.size() > 0) {
-                return result.get(0);
-            }
-        }
-        return null;
-    }
-
-    public Social getSocialByGEmail(final String gEmail) {
-        SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
-        if (sessionFactory != null) {
-            Session session = sessionFactory.openSession();
-            session.beginTransaction();
-            String hql = "from Social as S where S.gEmail like :expectedGEmail";
-            Query query = session.createQuery(hql);
-            query.setParameter("expectedGEmail", gEmail);
+            query.setParameter("likeValue", googleUserId);
             List<Social> result = (List<Social>) query.list();
             session.getTransaction().commit();
             session.close();
@@ -76,13 +60,14 @@ public class BusinessWithSocial {
     }
 
     //FACEBOOK METHODS =================================================================================================
-    public Social getSocialByFUserId(final String facebookUserId) {
+    public Social getSocialByFUserId(@NotNull final String facebookUserId) {
         SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
         if (sessionFactory != null) {
             Session session = sessionFactory.openSession();
             session.beginTransaction();
-            String hql = "from Social as S where S.facebookUserId like '" + facebookUserId + "'";
+            String hql = "from Social as S where S.facebookUserId like :likeValue";
             Query query = session.createQuery(hql);
+            query.setParameter("likeValue", facebookUserId);
             List<Social> result = (List<Social>) query.list();
             session.getTransaction().commit();
             session.close();
@@ -93,13 +78,14 @@ public class BusinessWithSocial {
         return null;
     }
 
-    public List<Social> getSocialsOfPerson(Person person) {
+    public List<Social> getSocialsOfPerson(@NotNull Person person) {
         SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
         if (sessionFactory != null) {
             Session session = sessionFactory.openSession();
             session.beginTransaction();
-            String hql = "from Social as S where S.personId = " + person.getId().toString();
+            String hql = "from Social as S where S.personId = :expectedId";
             Query query = session.createQuery(hql);
+            query.setParameter("expectedId", person.getId());
             List<Social> result = (List<Social>) query.list();
             session.getTransaction().commit();
             session.close();
@@ -123,7 +109,7 @@ public class BusinessWithSocial {
         return result;
     }
 
-    public Social getSocialById(Long id) {
+    public Social getSocialById(@NotNull Long id) {
         SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
         if (sessionFactory != null) {
             Session session = sessionFactory.openSession();
@@ -141,7 +127,7 @@ public class BusinessWithSocial {
         return null;
     }
 
-    public Long deleteSocial(Social social, List<AuditTrail> auditTrailList) {
+    public Long deleteSocial(@NotNull Social social, List<AuditTrail> auditTrailList) {
         SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
         if (sessionFactory != null) {
             Session session = sessionFactory.openSession();
@@ -166,7 +152,7 @@ public class BusinessWithSocial {
         return social.getId();
     }
 
-    public Long updateSocial(Social social, Collection<AuditTrail> auditTrailCollection) {
+    public Long updateSocial(@NotNull Social social, Collection<AuditTrail> auditTrailCollection) {
         SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
         if (sessionFactory != null) {
             Session session = sessionFactory.openSession();

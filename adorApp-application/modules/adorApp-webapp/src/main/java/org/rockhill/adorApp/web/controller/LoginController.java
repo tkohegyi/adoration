@@ -48,7 +48,7 @@ public class LoginController {
      *
      * @return the name of the jsp to display as result
      */
-    @RequestMapping(value = "/adoration/login", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/adoration/login", method = {RequestMethod.GET})
     public String showLoginPage(
             @RequestParam(value = "result", defaultValue = "") final String result
     ) {
@@ -65,7 +65,7 @@ public class LoginController {
      *
      * @return the name of the jsp to display as result
      */
-    @RequestMapping(value = "/adoration/loginGoogle", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/adoration/loginGoogle", method = {RequestMethod.GET})
     public String showGoogleLoginPage(HttpServletResponse httpServletResponse) {
         String loginUrl = googleOauth2Service.getLoginUrlInformation();
         try {
@@ -82,7 +82,7 @@ public class LoginController {
      *
      * @return the name of the jsp to display as result
      */
-    @RequestMapping(value = "/adoration/loginFacebook", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/adoration/loginFacebook", method = {RequestMethod.GET})
     public String showFacebookLoginPage(HttpServletResponse httpServletResponse) {
         String loginUrl = facebookOauth2Service.getLoginUrlInformation();
         try {
@@ -148,7 +148,7 @@ public class LoginController {
         return "home";
     }
 
-    @RequestMapping(value = "/adorationSecure/exit", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/adorationSecure/exit", method = {RequestMethod.GET})
     public String showExitPage(
             HttpSession httpSession,
             HttpServletResponse httpServletResponse

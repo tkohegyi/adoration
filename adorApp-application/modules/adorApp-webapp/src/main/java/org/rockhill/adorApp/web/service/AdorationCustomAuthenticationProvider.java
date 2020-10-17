@@ -24,9 +24,9 @@ public class AdorationCustomAuthenticationProvider implements AuthenticationProv
             if (social != null) {
                 //authenticated !
                 List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-                grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+                //grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER")); //we don't need it
                 Authentication auth = new PreAuthenticatedAuthenticationToken(googleUser, authentication.getCredentials(), grantedAuthorities);
-                return auth; //login success
+                return auth; //google login success
             }
         }
         if ((authentication != null) && (authentication.getPrincipal() instanceof FacebookUser)) {
@@ -35,9 +35,9 @@ public class AdorationCustomAuthenticationProvider implements AuthenticationProv
             if (social != null) {
                 //authenticated !
                 List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-                grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+                //grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER")); //we don't need it
                 Authentication auth = new PreAuthenticatedAuthenticationToken(facebookUser, authentication.getCredentials(), grantedAuthorities);
-                return auth; //login success
+                return auth; //facebook login success
             }
         }
         return null; //login failed

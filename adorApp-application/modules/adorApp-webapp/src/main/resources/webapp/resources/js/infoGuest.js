@@ -9,7 +9,7 @@ $(document).ready(function() {
 function getInformation() {
     $.get('/adorationSecure/getGuestInformation', function(data) {
         var information = data.data;
-        if (information typeof "undefined" || information == null || information.error != null) {
+        if (typeof information == "undefined" || information == null || information.error != null) {
             //something was wrong with either the server or with the request, let's go back
             window.location.pathname = "/adoration/";
             return;

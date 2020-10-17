@@ -38,13 +38,13 @@ public class CoordinatorController extends ControllerBase {
      *
      * @return the name of the jsp to display as result
      */
-    @RequestMapping(value = "/adorationSecure/coordinators", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/adorationSecure/coordinators", method = {RequestMethod.GET})
     public String coordinators() {
         return "coordinators";
     }
 
     @ResponseBody
-    @RequestMapping(value = "/adorationSecure/getCoordinators", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/adorationSecure/getCoordinators", method = {RequestMethod.GET})
     public TableDataInformationJson getCoordinators(HttpSession httpSession, HttpServletResponse httpServletResponse) {
         httpServletResponse.setHeader("Cache-Control", "no-cache, no-store, max-age=0, must-revalidate");
         httpServletResponse.setHeader("Pragma", "no-cache");
@@ -63,7 +63,7 @@ public class CoordinatorController extends ControllerBase {
      * @return with the coordinator as a JSON response
      */
     @ResponseBody
-    @RequestMapping(value = "/adorationSecure/getCoordinator/{id:.+}", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/adorationSecure/getCoordinator/{id:.+}", method = {RequestMethod.GET})
     public TableDataInformationJson getCoordinatorById(HttpSession httpSession, @PathVariable("id") final String requestedId) {
         TableDataInformationJson content = null;
         if (isAdoratorAdmin(currentUserProvider, httpSession)) {

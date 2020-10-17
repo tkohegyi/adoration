@@ -62,7 +62,7 @@ public class AdoratorsController extends ControllerBase {
      * @return with the list of people as a JSON response
      */
     @ResponseBody
-    @RequestMapping(value = "/adorationSecure/getPersonTable", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/adorationSecure/getPersonTable", method = {RequestMethod.GET})
     public TableDataInformationJson getPersonTable(HttpSession httpSession, @RequestParam("filter") Optional<String> filter) {
         TableDataInformationJson content = null;
         if (isAdoratorAdmin(currentUserProvider, httpSession)) {
@@ -79,7 +79,7 @@ public class AdoratorsController extends ControllerBase {
      * @return with the person as a JSON response
      */
     @ResponseBody
-    @RequestMapping(value = "/adorationSecure/getPerson/{id:.+}", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/adorationSecure/getPerson/{id:.+}", method = {RequestMethod.GET})
     public TableDataInformationJson getPersonById(HttpSession httpSession, @PathVariable("id") final String requestedId) {
         TableDataInformationJson content = null;
         if (isAdoratorAdmin(currentUserProvider, httpSession)) {
@@ -140,7 +140,7 @@ public class AdoratorsController extends ControllerBase {
      * @return with the person history as a JSON response
      */
     @ResponseBody
-    @RequestMapping(value = "/adorationSecure/getPersonHistory/{id:.+}", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/adorationSecure/getPersonHistory/{id:.+}", method = {RequestMethod.GET})
     public TableDataInformationJson getPersonHistoryById(HttpSession httpSession, @PathVariable("id") final String requestedId) {
         TableDataInformationJson content = null;
         if (isAdoratorAdmin(currentUserProvider, httpSession)) {
@@ -158,7 +158,7 @@ public class AdoratorsController extends ControllerBase {
      * @return with the hour assignments of a person as a JSON response
      */
     @ResponseBody
-    @RequestMapping(value = "/adorationSecure/getPersonCommitments/{id:.+}", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/adorationSecure/getPersonCommitments/{id:.+}", method = {RequestMethod.GET})
     public TableDataInformationJson getPersonCommitmentsById(HttpSession httpSession, @PathVariable("id") final String requestedId) {
         TableDataInformationJson content = null;
         if (isAdoratorAdmin(currentUserProvider, httpSession)) {

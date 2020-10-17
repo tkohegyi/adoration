@@ -53,7 +53,7 @@ public class InformationController extends ControllerBase {
      *
      * @return the name of the jsp to display as result
      */
-    @RequestMapping(value = "/adorationSecure/information", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/adorationSecure/information", method = {RequestMethod.GET})
     public String informationPage(HttpSession httpSession) {
         CurrentUserInformationJson currentUserInformationJson = currentUserProvider.getUserInformation(httpSession);
         if (currentUserInformationJson.isRegisteredAdorator) { //registered adorator
@@ -66,7 +66,7 @@ public class InformationController extends ControllerBase {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/adorationSecure/getInformation", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/adorationSecure/getInformation", method = {RequestMethod.GET})
     public TableDataInformationJson getInformation(HttpSession httpSession, HttpServletResponse httpServletResponse) {
         httpServletResponse.setHeader("Cache-Control", "no-cache, no-store, max-age=0, must-revalidate");
         httpServletResponse.setHeader("Pragma", "no-cache");
@@ -80,7 +80,7 @@ public class InformationController extends ControllerBase {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/adorationSecure/getGuestInformation", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/adorationSecure/getGuestInformation", method = {RequestMethod.GET})
     public TableDataInformationJson getProfileInformation(HttpSession httpSession, HttpServletResponse httpServletResponse) {
         httpServletResponse.setHeader("Cache-Control", "no-cache, no-store, max-age=0, must-revalidate");
         httpServletResponse.setHeader("Pragma", "no-cache");

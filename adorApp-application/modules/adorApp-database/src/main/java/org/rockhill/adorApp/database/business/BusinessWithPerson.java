@@ -1,5 +1,6 @@
 package org.rockhill.adorApp.database.business;
 
+import com.sun.istack.NotNull;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -23,18 +24,6 @@ import java.util.Map;
 public class BusinessWithPerson {
     private final Logger logger = LoggerFactory.getLogger(BusinessWithPerson.class);
 
-    @Autowired
-    NextGeneralKey nextGeneralKey;
-
-    public Map<Long, Person> getPersonMap() {
-        Map<Long, Person> personMap = new HashMap<>();
-        for (Person person : getPersonList()) {
-            personMap.put(person.getId(), person);
-        }
-        return personMap;
-    }
-
-
     public List<Person> getPersonList() {
         List<Person> result = null;
         SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
@@ -48,7 +37,7 @@ public class BusinessWithPerson {
         return result;
     }
 
-    public Person getPersonByName(final String name) {
+    public Person getPersonByName(@NotNull final String name) {
         SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
         if (sessionFactory != null) {
             Session session = sessionFactory.openSession();
@@ -66,7 +55,7 @@ public class BusinessWithPerson {
         return null;
     }
 
-    public Long newPerson(Person newP, AuditTrail auditTrail) {
+    public Long newPerson(@NotNull Person newP, @NotNull AuditTrail auditTrail) {
         Long id = null;
         SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
         if (sessionFactory != null) {
@@ -88,7 +77,7 @@ public class BusinessWithPerson {
         return id;
     }
 
-    public Person getPersonById(final Long id) {
+    public Person getPersonById(@NotNull final Long id) {
         SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
         if (sessionFactory != null) {
             Session session = sessionFactory.openSession();
@@ -106,24 +95,7 @@ public class BusinessWithPerson {
         return null;
     }
 
-    /**
-     * Tries to identify the person by the google or facebook email, whichever is available. First tries with google.
-     * @param gEmail is the google email or null
-     * @param fEmail is the facebook email or null
-     * @return with the person is identified
-     */
-    public Person getPersonByGOrFEmail(final String gEmail, final String fEmail) {
-        Person p = null;
-        if (gEmail != null) {
-            p = getPersonByEmail(gEmail);
-        }
-        if ( (p == null) && (fEmail != null) ) {
-            p = getPersonByEmail(fEmail);
-        }
-        return p;
-    }
-
-    public Person getPersonByEmail(final String email) {
+    public Person getPersonByEmail(@NotNull final String email) {
         SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
         if (sessionFactory != null) {
             Session session = sessionFactory.openSession();
@@ -141,7 +113,7 @@ public class BusinessWithPerson {
         return null;
     }
 
-    public Long updatePerson(Person person, Collection<AuditTrail> auditTrailCollection) {
+    public Long updatePerson(@NotNull Person person, @NotNull Collection<AuditTrail> auditTrailCollection) {
         SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
         if (sessionFactory != null) {
             Session session = sessionFactory.openSession();
@@ -163,7 +135,7 @@ public class BusinessWithPerson {
         return person.getId();
     }
 
-    public Long deletePerson(Person person, List<Social> socialList, List<Link> linkList, List<AuditTrail> auditTrailList) {
+    public Long deletePerson(@NotNull Person person, List<Social> socialList, List<Link> linkList, List<AuditTrail> auditTrailList) {
         //the huge method of deleting an activity from DB.
         SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
         if (sessionFactory != null) {

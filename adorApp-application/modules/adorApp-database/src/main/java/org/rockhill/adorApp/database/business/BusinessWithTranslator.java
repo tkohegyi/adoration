@@ -1,5 +1,6 @@
 package org.rockhill.adorApp.database.business;
 
+import com.sun.istack.NotNull;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -22,7 +23,7 @@ public class BusinessWithTranslator {
      *
      * @return with the list.
      */
-    public List<Translator> getTranslatorList(String languageCode) {
+    public List<Translator> getTranslatorList(@NotNull String languageCode) {
         List<Translator> result = null;
         SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
         if (sessionFactory != null) {
@@ -46,7 +47,7 @@ public class BusinessWithTranslator {
      * @param defaultValue is the default return value in case the specific languageCode + textId cannot be found
      * @return
      */
-    public String getTranslatorValue(String languageCode, String textId, String defaultValue) {
+    public String getTranslatorValue(@NotNull String languageCode, @NotNull String textId, @NotNull String defaultValue) {
         String result = defaultValue;
         List<Translator> qResult = null;
         SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();

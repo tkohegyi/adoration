@@ -44,27 +44,27 @@ public class HomeController {
      *
      * @return the name of the jsp to display as result
      */
-    @RequestMapping(value = "/", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/", method = {RequestMethod.GET})
     public String pseudoHome() {
         return "redirect:/adoration/";
     }
 
-    @RequestMapping(value = "/adoration/", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/adoration/", method = {RequestMethod.GET})
     public String realHome() {
         return "home";
     }
 
-    @RequestMapping(value = "/favicon.ico", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/favicon.ico", method = {RequestMethod.GET})
     public String favicon() {
         return "redirect:/resources/img/favicon.ico";
     }
 
-    @RequestMapping(value = "/robots.txt", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/robots.txt", method = {RequestMethod.GET})
     public String robots() {
         return "redirect:/resources/robots.txt";
     }
 
-    @RequestMapping(value = "/adoration/e404", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/adoration/e404", method = {RequestMethod.GET})
     public String e404(HttpServletRequest httpServletRequest) {
 /*        if (httpServletRequest != null && httpServletRequest.getRemoteAddr() != null) {
             logger.info("Strange request arrived from: " + httpServletRequest.getRemoteAddr());
@@ -72,7 +72,7 @@ public class HomeController {
         return "E404";
     }
 
-    @RequestMapping(value = "/adoration/e500", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/adoration/e500", method = {RequestMethod.GET})
     public String e500(HttpServletRequest httpServletRequest) {
 /*        if (httpServletRequest != null && httpServletRequest.getRemoteAddr() != null) {
             logger.info("Strange request arrived from: " + httpServletRequest.getRemoteAddr());
