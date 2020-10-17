@@ -75,6 +75,6 @@
             </div>
         </div>
     </div>
-
+    <%@include file="../include/commonAlert.html" %>
 </body>
 </html>

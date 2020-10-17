@@ -23,8 +23,8 @@ function prepareInfo() {
 }
 
 function notRegisterClick() {
-    alert("Ön végül úgy döntött, hogy mégsem jelentkezik az Örökimádásra.");
-    window.location.pathname = "/adoration/"
+    showAlert("Figyelem!", "Ön végül úgy döntött, hogy mégsem jelentkezik az Örökimádásra.",
+        function () {window.location.pathname = "/adoration/"});
 }
 
 function doRegisterClick() {
@@ -63,7 +63,7 @@ function doRegisterClick() {
         eStr = "A megadott e-mail cím nem helyes!";
         $("#emailError").removeAttr('style');
     }
-    var patt = /^[0-9\+\- ]*$/;
+    var patt = /^[0-9\+\- ]*$/; //NOSONAR
     if ((b.mobile.length > 0) && (!patt.test(b.mobile))) {
         bad = 1;
         eStr = "A megadott telefonszám nem helyes!";
@@ -81,8 +81,7 @@ function doRegisterClick() {
         $("#dhcError").removeAttr('style');
     }
     if (bad > 0) {
-        alert("Hiba az adatokban!\n" + eStr);
-        window.scrollTo(0, 0);
+        showAlert("Hiba az adatokban!", eStr, function () {window.scrollTo(0, 0)});
         return;
     }
     //everything is ok, send registration request
@@ -104,7 +103,7 @@ function doRegisterClick() {
         },
         complete : afterRequest,
     }).fail( function(xhr, status) {
-        alert(xhr.responseText);
+        showAlert("Hiba történt!", xhr.responseText);
     });
 }
 

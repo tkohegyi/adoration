@@ -66,6 +66,7 @@
     </div>
 
     <hr />
+    <%@include file="../include/commonAlert.html" %>
 
 </body>
 </html>

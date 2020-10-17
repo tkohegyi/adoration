@@ -24,12 +24,11 @@ function sendMessage() {
         eStr = "Az Üzenetben el nem fogadható karakterek is vannak, kérjük fogalmazza át az üzenetet!";
     }
     if (b.captcha.length == 0 ) {
-        alert("Kérem jelölje be a \"Nem vagyok robot\" négyzetet!");
+        showAlert("Figyelem!", "Kérem jelölje be a \"Nem vagyok robot\" négyzetet!");
         return;
     }
     if (bad > 0) {
-        alert("Hiba az üzenetben!\n" + eStr);
-        window.scrollTo(0, 0);
+        showAlert("Hiba az üzenetben!", eStr, function () {window.scrollTo(0, 0)});
         return;
     }
     //everything is ok, send registration request
@@ -52,9 +51,9 @@ function sendMessage() {
         },
         complete : enableButtons,
     }).fail( function(xhr, status) {
-        alert("Az üzenet leküldése sikertelen, próbálkozzon ismét.");
-            window.location.pathname = "/adorationSecure/information"
-            return;
+        showAlert("Figyelem!", "Az üzenet elküldése sikertelen volt, próbálkozzon ismét.",
+            function () {window.location.pathname = "/adorationSecure/information"});
+        return;
     });
 }
 
@@ -64,6 +63,7 @@ function enableButtons() {
 }
 
 function dismissModal() {
-    alert("Üzenet sikeresen elküldve!");
-    window.location.pathname = "/adorationSecure/information"
+    showAlert("Elküldve", "Az üzenet elküldése sikeres volt.",
+        function () {window.location.pathname = "/adorationSecure/information"});
+    return;
 }

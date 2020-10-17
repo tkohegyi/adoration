@@ -178,7 +178,7 @@ function reBuildModal() {
             var idText = "field-" + row.id;
             var nameText = idText + "-" + row.type + addMandatory;
             let command = "retObj." + row.id;
-            var original = eval(command);
+            var original = eval(command); //NOSONAR
             if (row.type == "fixText") {
                 text = original;
             }
@@ -323,7 +323,8 @@ function saveChanges() {
 	var eStr = "";
     var bad = 0;
     if (typeof structureInfo == "undefined") {
-        alert("Cannot Save Person.");
+        showAlert("Hiba történt!", "Sajnos a mentés most nem lehetséges, olvassa újra be az oldalt.");
+        return;
     }
     //we have structureInfo
     var info = structureInfo.info;
@@ -362,13 +363,12 @@ function saveChanges() {
                 break;
         } //value in v
         let command = "b." + row.id + "=\"" + v.toString() + "\"";
-        eval(command); //add object to b structure
+        eval(command); //NOSONAR - add object to b structure
     }
     // b is ready
     //validation done (cannot validate more at client level
     if (bad == 1) {
-        alert(eStr);
-        console.log("---=== ALERT ===---")
+        showAlert("Hiba történt!", eStr);
         return;
     }
     //save
@@ -389,7 +389,7 @@ function saveChanges() {
         complete : requestComplete,
     }).fail( function(xhr, status) {
         var obj = JSON.parse(xhr.responseText);
-        alert(obj.entityUpdate);
+        showAlert("Hiba történt!", obj.entityUpdate);
     });
 }
 
@@ -426,8 +426,8 @@ function reBuildHistoryModal(personId) {
               hc.append(r);
             }
         } else { //logged out or other error at server side
-            alert( "User Logged out, please login again." );
-            window.location.pathname = "/adoration/"
+            showAlert("Figyelem!", "A művelet előtt be kell lépnie.",
+                function () {window.location.pathname = "/adoration/"});
             return;
         }
     });
@@ -481,8 +481,8 @@ function reBuildTimeModal(personId) {
                 cancelNewPartOfModal();
             }
         } else { //logged out or other error at server side
-            alert( "User Logged out, please login again." );
-            window.location.pathname = "/adoration/"
+            showAlert("Figyelem!", "A művelet előtt be kell lépnie.",
+                function () {window.location.pathname = "/adoration/"});
             return;
         }
     });
@@ -527,8 +527,7 @@ function saveNewHour() {
     }
     //validation done (cannot validate more at client level)
     if (bad == 1) {
-        alert(eStr);
-        console.log("---=== ALERT ===---")
+        showAlert("Figyelem!", eStr);
         return;
     }
     //save
@@ -549,7 +548,7 @@ function saveNewHour() {
         complete : requestLinkComplete,
     }).fail( function(xhr, status) {
         var obj = JSON.parse(xhr.responseText);
-        alert(obj.entityUpdate);
+        showAlert("Hiba történt!", obj.entityUpdate);
     });
 }
 
@@ -588,17 +587,17 @@ function clickHourEdit(hourId) {
     } else {
         $('#deleteHourButton').hide();
         cancelNewPartOfModal();
-        alert( "Data consistency error, reload is necessary." );
-        window.location.pathname = "/adorationSecure/adorators"
+        showAlert("Figyelem!", "Változás történt az adatokban, frissítés szükséges.",
+            function () {window.location.pathname = "/adorationSecure/adorators"});
+        return;
     }
 }
 
 function deleteHour() {
-    if (!confirm('Are you sure you want to DELETE this Committed Hour?')) {
-      console.log('Thing was deleted from the database.');
-      return;
+    showConfirm("Megerősítés kérés", "Biztosan törölni akarja ezt a regisztrált órát?", function () { deleteHourConfirmOk() });
     }
-	console.log("---=== Delete Link Entity Clicked ===---");
+
+function deleteHourConfirmOk() {
     var entityId = $("#editHourId").val(); //filled during the original on-load page
     var req = {
         entityId : entityId,
@@ -619,7 +618,7 @@ function deleteHour() {
         complete : requestComplete,
     }).fail( function(xhr, status) {
         var obj = JSON.parse(xhr.responseText);
-        alert(obj.entityUpdate);
+        showAlert("Hiba történt!", obj.entityUpdate);
     });
 }
 
@@ -629,10 +628,10 @@ function processHourDeleted() {
 }
 
 function deletePerson() {
-    if (!confirm('Are you sure you want to DELETE this Adorator - permanently?')) {
-      return;
+    showConfirm("Megerősítés kérdés", "Biztosan törölni akarja ezt az Adorálót - végleg?", function () { deletePersonConfirmOk() });
     }
-	console.log("---=== Delete Person Entity Clicked ===---");
+
+function deletePersonConfirmOk() {
     var entityId = $("#editId").val(); //filled by the button's onclick method
     var req = {
         entityId : entityId,
@@ -646,18 +645,13 @@ function deletePerson() {
         contentType: 'application/json',
         data: JSON.stringify(req),
         dataType: 'json',
-        success : processPersonDeleted,
+        success : processEntityUpdated,
         beforeSend : function(request) {
             request.setRequestHeader(header, token);
         },
         complete : requestComplete,
     }).fail( function(xhr, status) {
         var obj = JSON.parse(xhr.responseText);
-        alert(obj.entityUpdate);
+        showAlert("Hiba történt!", obj.entityUpdate);
     });
-}
-
-function processPersonDeleted() {
-    console.log("---=== Entity DELETED, going back to Entity list... ===---");
-    processEntityUpdated();
 }

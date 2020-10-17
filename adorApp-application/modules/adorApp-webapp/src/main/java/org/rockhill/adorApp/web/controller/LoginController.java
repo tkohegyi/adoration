@@ -95,7 +95,7 @@ public class LoginController {
     }
 
     //https://fuf.me/adoration/loginResult?code=4%2FrgG8fzvTngq_gf3YiQgi5x8vGrZis4JD4SXyLxyVhHD97o-k13uxXJHmSqnBa5o-7y-QmjtgMZnyHryn4u_heR8&scope=email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+openid&authuser=0&session_state=8ca7cab3c0dd23415b112fae84f84b1cb9957590..dd73&prompt=consent#
-    @RequestMapping(value = "/adoration/loginResult", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/adoration/loginResult", method = {RequestMethod.GET})
     public String showLoginResultPage(
             @RequestParam(value = "code", defaultValue = "") final String code,  //google uses this
             @RequestParam(value = "scope", defaultValue = "") final String scope,

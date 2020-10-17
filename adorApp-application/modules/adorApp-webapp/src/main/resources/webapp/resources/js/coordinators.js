@@ -180,7 +180,7 @@ function reBuildModal() {
             var idText = "field-" + row.id;
             var nameText = idText + "-" + row.type + addMandatory;
             let command = "retObj." + row.id;
-            var original = eval(command);
+            var original = eval(command); //NOSONAR
             if (row.type == "fixText") {
                 text = original;
             }
@@ -323,7 +323,8 @@ function saveChanges() {
 	var eStr = "";
     var bad = 0;
     if (typeof structureInfo == "undefined") {
-        alert("Cannot Save Coordinator.");
+        showAlert("Hiba történt!", "Sajnos a mentés most nem lehetséges, olvassa be újra az oldalt.");
+        return;
     }
     //we have structureInfo
     var info = structureInfo.info;
@@ -362,13 +363,12 @@ function saveChanges() {
                 break;
         } //value in v
         let command = "b." + row.id + "=\"" + v.toString() + "\"";
-        eval(command); //add object to b structure
+        eval(command); //NOSONAR - add object to b structure
     }
     // b is ready
     //validation done (cannot validate more at client level
     if (bad == 1) {
-        alert(eStr);
-        console.log("---=== ALERT ===---")
+        showAlert("Figyelem!", eStr);
         return;
     }
     //save
@@ -389,7 +389,7 @@ function saveChanges() {
         complete : requestComplete,
     }).fail( function(xhr, status) {
         var obj = JSON.parse(xhr.responseText);
-        alert(obj.entityUpdate);
+        showAlert("Hiba történt!", obj.entityUpdate);
     });
 }
 
@@ -426,8 +426,8 @@ function reBuildHistoryModal(personId) {
               hc.append(r);
             }
         } else { //logged out or other error at server side
-            alert( "User Logged out, please login again." );
-            window.location.pathname = "/adoration/"
+            showAlert("Figyelem!", "Önnek ismét be kell jelentkeznie.",
+                function () {window.location.pathname = "/adoration/"});
             return;
         }
     });
@@ -447,10 +447,10 @@ function showNewPartOfModal() {
 }
 
 function deleteEntity() {
-    if (!confirm('Are you sure you want to DELETE this Coordinator assignment - permanently?')) {
-      return;
+    showConfirm("Megerősítés kérdés", "Biztosan törölni akarja ezt a Koordinátor hozzárendelést - végleg?", function () { deleteEntityConfirmOk() });
     }
-	console.log("---=== Delete Entity Clicked ===---");
+
+function deleteEntityConfirmOk() {
     var entityId = $("#editId").val(); //filled by the button's onclick method
     var req = {
         entityId : entityId,
@@ -464,18 +464,13 @@ function deleteEntity() {
         contentType: 'application/json',
         data: JSON.stringify(req),
         dataType: 'json',
-        success : processDeleted,
+        success : processEntityUpdated,
         beforeSend : function(request) {
             request.setRequestHeader(header, token);
         },
         complete : requestComplete,
     }).fail( function(xhr, status) {
         var obj = JSON.parse(xhr.responseText);
-        alert(obj.entityUpdate);
+        showAlert("Hiba történt!", obj.entityUpdate);
     });
-}
-
-function processDeleted() {
-    console.log("---=== Entity DELETED, going back to Entity list... ===---");
-    processEntityUpdated();
 }

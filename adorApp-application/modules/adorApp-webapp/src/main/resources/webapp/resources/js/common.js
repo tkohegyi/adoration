@@ -26,15 +26,18 @@ function getReadableLanguageCode(code) {
     var z;
     switch (code) {
         case "hu": z = 'magyar'; break;
-        case "ge": z = 'német'; break;
         case "en": z = 'angol'; break;
+        case "it": z = 'olasz'; break;
+        case "es": z = 'spanyol'; break;
+        case "fr": z = 'francia'; break;
+        case "ge": z = 'német'; break;
         default: z = '???';
     }
     return z;
 }
 
 function validateEmail(email) {
-    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/; //NOSONAR
     return re.test(String(email).toLowerCase());
 }
 
@@ -85,4 +88,67 @@ function getCoordinator(list, hourInDayId) {
         }
     }
     return null;
+}
+
+//replacing alert
+var alertModal;
+var alertSpan;
+var alertAfterCloseFunction;
+
+function showAlert(title, message, afterCloseFunction) {
+    $("#commonAlertTitle").text(title);
+    $("#commonAlertBody").text(message);
+    alertModal = document.getElementById("commonAlertModal");
+    alertSpan = document.getElementsByClassName("commonAlertClose")[0];
+    alertAfterCloseFunction = afterCloseFunction;
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+      if (event.target == alertModal) {
+        hideAlert();
+      }
+    }
+    alertModal.style.display="block";
+}
+
+function hideAlert() {
+    alertModal.style.display="none";
+    if (typeof alertAfterCloseFunction != "undefined") {
+        alertAfterCloseFunction();
+    }
+}
+
+//replacing confirm
+var confirmModal;
+var confirmSpan;
+var confirmAfterCloseFunctionOk;
+var confirmAfterCloseFunctionCancel;
+
+function showConfirm(title, message, afterCloseFunctionOk, afterCloseFunctionCancel) {
+    $("#commonConfirmTitle").text(title);
+    $("#commonConfirmBody").text(message);
+    confirmModal = document.getElementById("commonConfirmModal");
+    confirmSpan = document.getElementsByClassName("commonConfirmClose")[0];
+    confirmAfterCloseFunctionOk = afterCloseFunctionOk;
+    confirmAfterCloseFunctionCancel = afterCloseFunctionCancel;
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+      if (event.target == confirmModal) {
+        hideConfirmCancel();
+      }
+    }
+    confirmModal.style.display="block";
+}
+
+function hideConfirmCancel() {
+    confirmModal.style.display="none";
+    if (typeof confirmAfterCloseFunctionCancel != "undefined") {
+        confirmAfterCloseFunctionCancel();
+    }
+}
+
+function hideConfirmOk() {
+    confirmModal.style.display="none";
+    if (typeof confirmAfterCloseFunctionOk != "undefined") {
+        confirmAfterCloseFunctionOk();
+    }
 }

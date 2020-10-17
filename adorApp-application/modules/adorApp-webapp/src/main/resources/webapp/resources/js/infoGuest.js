@@ -46,7 +46,7 @@ function getInformation() {
         g = $("<div><b>Belépéshez használva: </b>" + information.socialServiceUsed + "</div>");
         $("#socialServiceUsed").append(g);
         $("#status").empty();
-        g = $("<div><b>Státusz: </b>" + information.status + "</div>");
+        g = $("<div><strong>Státusz: </strong>" + information.status + "</div>");
         $("#status").append(g);
         $("#socialId").val(information.id);
         //show leadership

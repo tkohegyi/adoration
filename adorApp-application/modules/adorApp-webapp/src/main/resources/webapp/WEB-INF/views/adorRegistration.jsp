@@ -27,8 +27,8 @@
 	<div class="centerwidediv" align="center">
         <legend class="message-legend h4"d>Jelentkezés Örökimádásra</legend>
         <fieldset id="suggestLogin" class="form-horizontal">
-            <div>
-                <legend class="message-legend" style="text-align:center; color:#E05050; padding: 0px; font-family: Oswald">Ön nincs bejelentkezve, kérjük a regisztrálás előtt lépjen be <a id="gLoginAnchor" class="login" href="/adoration/loginGoogle"><img src="./../resources/img/google_login.png" alt="Google"/></a> vagy <a id="fLoginAnchor" class="login" href="/adoration/loginFacebook"><img src="./../resources/img/facebook_login.png" alt="Facebook"/></a> azonosítójával.</legend>
+            <div class="alert alert-danger" role="alert">
+                <legend class="message-legend" style="text-align:center; color:#E05050; font-family: Oswald">Ön nincs bejelentkezve, kérjük a regisztrálás előtt lépjen be <a id="gLoginAnchor" class="login" href="/adoration/loginGoogle"><img src="./../resources/img/google_login.png" alt="Google"/></a> vagy <a id="fLoginAnchor" class="login" href="/adoration/loginFacebook"><img src="./../resources/img/facebook_login.png" alt="Facebook"/></a> azonosítójával.</legend>
             </div>
             <div>
                 Igen, válaszolok a hívásra! <br /> Jézussal akarok lenni, aki
@@ -155,6 +155,7 @@
         <button id="registerButton" type="button" class="btn btn-success btn-sm" onclick="doRegisterClick()">Jelentkezés elküldése</button>
         <br />
         <p/>
+    <%@include file="../include/commonAlert.html" %>
 </div>
 <script src="/resources/js/external/jquery-3.4.1.js"></script>
 <script src="/resources/js/external/bootstrap-4.3.1.min.js"></script>

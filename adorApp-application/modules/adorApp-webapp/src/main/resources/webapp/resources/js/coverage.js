@@ -45,7 +45,7 @@ function setupCoverage() {
             var targetDayName = item.id;
             targetDayName = targetDayName.split("-")[0];
             let command = "item.textContent = coverageDayNames." + targetDayName;
-            eval(command);
+            eval(command); //NOSONAR
         }
 
         for (var i = 0; i < 168; i++) { //since we have 168 hours altogether
@@ -192,7 +192,7 @@ function coverageClick(h) {
             }
         }
         if (counter > 1) { //this means we have something to show
-            modal.style.display="block";
+            coverageModal.style.display="block";
         } else {
             $(".pop").hide(500);
             $("#coveragePopup").empty();
@@ -200,17 +200,17 @@ function coverageClick(h) {
     }
 }
 
-var modal = document.getElementById("coverageModal");
-var span = document.getElementsByClassName("close")[0];
+var coverageModal = document.getElementById("coverageModal");
+var coverageSpan = document.getElementsByClassName("coverageClose")[0];
 
 // When the user clicks on <span> (x), close the modal
-span.onclick = function() {
-  modal.style.display = "none";
+coverageSpan.onclick = function() {
+  coverageModal.style.display = "none";
 }
 
 // When the user clicks anywhere outside of the modal, close it
 window.onclick = function(event) {
-  if (event.target == modal) {
-    modal.style.display = "none";
+  if (event.target == coverageModal) {
+    coverageModal.style.display = "none";
   }
 }
