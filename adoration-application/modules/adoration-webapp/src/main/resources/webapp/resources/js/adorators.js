@@ -338,7 +338,7 @@ function saveChanges() {
         }
         if (row.type == "fixText") continue; //don't bother us with such a value
         let v;
-        type = row.type.split("-")[0]; // dateString , input etc
+        var type = row.type.split("-")[0]; // dateString , input etc
         var idText = "field-" + row.id;
         var o = $("#" + idText);
         switch (type) {

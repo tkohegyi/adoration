@@ -261,7 +261,7 @@ function saveChanges() {
         if ((typeof row.edit != "undefined") && (typeof row.edit.visible != "undefined") && (row.edit.visible == false)) continue;
         if (row.type == "fixText") continue; //don't bother us with such a value
         let v;
-        type = row.type.split("-")[0]; // dateString , input etc
+        var type = row.type.split("-")[0]; // dateString , input etc
         var idText = "field-" + row.id;
         var o = $("#" + idText);
         var isNull = false;

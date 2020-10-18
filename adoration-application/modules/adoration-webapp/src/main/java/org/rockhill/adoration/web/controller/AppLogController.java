@@ -3,10 +3,8 @@ package org.rockhill.adoration.web.controller;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.rockhill.adoration.web.controller.helper.ControllerBase;
-import org.rockhill.adoration.web.provider.CoverageProvider;
 import org.rockhill.adoration.web.provider.CurrentUserProvider;
 import org.rockhill.adoration.web.provider.LogFileProvider;
-import org.rockhill.adoration.web.provider.PeopleProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,10 +44,6 @@ public class AppLogController extends ControllerBase {
     private LogFileProvider logFileProvider;
     @Autowired
     private CurrentUserProvider currentUserProvider;
-    @Autowired
-    private PeopleProvider peopleProvider;
-    @Autowired
-    private CoverageProvider coverageProvider;
 
     @Autowired
     public AppLogController(RequestMappingHandlerMapping handlerMapping) {
@@ -98,6 +92,7 @@ public class AppLogController extends ControllerBase {
                                                     @PathVariable("fileName") final String fileName,
                                                     @RequestParam(value = "source", defaultValue = "false") final boolean source,
                                                     @RequestHeader(value = "User-Agent", defaultValue = "") final String userAgent) {
+        ResponseEntity<String> responseEntity;
         String body = "unauthorized";
         if (isAdoratorAdmin(currentUserProvider, httpSession)) {
             body = logFileProvider.getLogContent(fileName);
@@ -108,7 +103,7 @@ public class AppLogController extends ControllerBase {
         if (!source) {
             headers.set(CONTENT_DISPOSITION, String.format(ATTACHMENT_TEMPLATE, fileName));
         }
-        ResponseEntity<String> responseEntity = new ResponseEntity<String>(body, headers, HttpStatus.OK);
+        responseEntity = new ResponseEntity<>(body, headers, HttpStatus.OK);
         return responseEntity;
     }
 
