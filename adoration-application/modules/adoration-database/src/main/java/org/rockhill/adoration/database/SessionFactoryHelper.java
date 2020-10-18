@@ -15,6 +15,10 @@ public class SessionFactoryHelper {
     private static final Logger SESSION_FACTORY_HELPER_LOGGER = LoggerFactory.getLogger(SessionFactoryHelper.class);
     private static SessionFactory sessionFactory = null;
 
+    private synchronized static void createSessionFactory(final StandardServiceRegistry registry) {
+        sessionFactory = new MetadataSources(registry).buildMetadata().buildSessionFactory();
+    }
+
     public void initiateHibernateSessionFactory(final String connectionUrl, final String userName, final String password) {
         SESSION_FACTORY_HELPER_LOGGER.info("Connecting to database...");
         if ((connectionUrl == null) || (userName == null) || (password == null)) {
@@ -28,7 +32,7 @@ public class SessionFactoryHelper {
                 .applySetting("hibernate.connection.password", password)
                 .build();
         try {
-            sessionFactory = new MetadataSources(registry).buildMetadata().buildSessionFactory();
+            createSessionFactory(registry);
             SESSION_FACTORY_HELPER_LOGGER.info("Connection to database established correctly.");
         } catch (Throwable e) {
             SESSION_FACTORY_HELPER_LOGGER.error("Error in creating SessionFactory object.", e);
