@@ -9,6 +9,7 @@ import org.rockhill.adoration.web.WebAppServer;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.BeanCreationException;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 import java.util.Properties;
 
@@ -18,11 +19,11 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 
 /**
- * Unit tests for the class {@link AdorAppBootstrap}.
+ * Unit tests for the class {@link AdorationBootstrap}.
  */
-public class UooBootstrapTest {
+public class AdorationBootstrapTest {
 
-    private static final String[] ARGS = {"uoo.conf.properties"};
+    private static final String[] ARGS = {"conf.properties"};
     private Properties properties;
     @Mock
     private SystemExceptionSelector systemExceptionSelector;
@@ -38,11 +39,11 @@ public class UooBootstrapTest {
     private PropertyLoader propertyLoader;
 
     @InjectMocks
-    private AdorAppBootstrap underTest;
+    private AdorationBootstrap underTest;
 
     @BeforeMethod
     public void setUp() {
-        underTest = Mockito.spy(new AdorAppBootstrap());
+        underTest = Mockito.spy(new AdorationBootstrap());
         MockitoAnnotations.initMocks(this);
         Whitebox.setInternalState(underTest, "systemExceptionSelector", systemExceptionSelector);
         Whitebox.setInternalState(underTest, "propertyLoader", propertyLoader);
@@ -51,7 +52,7 @@ public class UooBootstrapTest {
         given(propertyLoader.loadProperties(ARGS[0])).willReturn(properties);
     }
 
-    //@Test
+    @Test
     public void testBootstrapShouldCallStart() {
         //GIVEN
         properties.setProperty("webapp.port", "8080");

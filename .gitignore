@@ -16,3 +16,4 @@ out
 secure*.properties
 *.sh
 ~*.*
+log

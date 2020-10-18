@@ -10,6 +10,18 @@ subprojects {
     apply plugin: 'checkstyle'
     apply plugin: 'java'
     apply plugin: 'maven'
+    apply plugin: 'jacoco'
+
+    jacoco {
+        toolVersion = "0.8.2"
+    }
+    jacocoTestReport {
+        reports {
+            xml.enabled true
+        }
+    }
+    test.finalizedBy jacocoTestReport
+
     compileJava {options.encoding = "UTF-8"}
 
     version = "$adorationVersion"+'.'+"$buildNumber"
@@ -41,4 +53,9 @@ subprojects {
 }
 
 
-//buildScan { termsOfServiceUrl = 'https://gradle.com/terms-of-service'; termsOfServiceAgree = 'yes' }
+if (hasProperty('buildScan')) {
+    buildScan {
+        termsOfServiceUrl = 'https://gradle.com/terms-of-service'
+        termsOfServiceAgree = 'yes'
+    }
+}

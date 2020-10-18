@@ -17,9 +17,9 @@ import java.util.Properties;
 /**
  * Bootstrap class that starts the application engine.
  */
-public class AdorAppBootstrap {
+public class AdorationBootstrap {
 
-    private final Logger logger = LoggerFactory.getLogger(AdorAppBootstrap.class);
+    private final Logger logger = LoggerFactory.getLogger(AdorationBootstrap.class);
     private final SystemExceptionSelector systemExceptionSelector = new SystemExceptionSelector();
     private final PropertyLoader propertyLoader = new PropertyLoader();
 
@@ -29,6 +29,7 @@ public class AdorAppBootstrap {
 
     /**
      * Starts the application.
+     *
      * @param args command line arguments
      */
     public void bootstrap(final String[] args) {
@@ -64,16 +65,18 @@ public class AdorAppBootstrap {
     }
 
     private String getStringInfo(String[] args, String propertyName) {
+        String info;
         checkPropertyFileArgument(args);
         Properties properties = propertyLoader.loadProperties(args[0]);
-        String info = properties.getProperty(propertyName);
+        info = properties.getProperty(propertyName);
         return info;
     }
 
     private Integer getPort(final String[] args) {
+        Integer port;
+        port = null;
         checkPropertyFileArgument(args);
         Properties properties = propertyLoader.loadProperties(args[0]);
-        Integer port = null;
         try {
             port = Integer.valueOf(properties.getProperty("webapp.port"));
         } catch (NumberFormatException e) {

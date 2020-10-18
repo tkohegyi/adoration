@@ -1,6 +1,6 @@
 package org.rockhill.adoration.engine;
 
-import org.rockhill.adoration.bootstrap.AdorAppBootstrap;
+import org.rockhill.adoration.bootstrap.AdorationBootstrap;
 
 /**
  * Starts the application.
@@ -19,6 +19,6 @@ public final class AdorationApplication {
      */
     public static void main(final String[] args) {
         arguments = args; //NOSONAR
-        new AdorAppBootstrap().bootstrap(args);
+        new AdorationBootstrap().bootstrap(args);
     }
 }
