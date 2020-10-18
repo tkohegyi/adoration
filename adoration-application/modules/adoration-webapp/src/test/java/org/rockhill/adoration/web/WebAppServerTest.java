@@ -4,13 +4,13 @@ import org.eclipse.jetty.server.Server;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.mockito.internal.util.reflection.Whitebox;
 import org.rockhill.adoration.web.service.ServerException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
+import static org.powermock.reflect.Whitebox.setInternalState;
 
 /**
  * Unit tests for the class {@link WebAppServer}.
@@ -52,7 +52,7 @@ public class WebAppServerTest {
     @Test(expectedExceptions = ServerException.class)
     public void testStopShouldThrowExceptionWhenWebAppCanNotBeStopped() throws Exception {
         //GIVEN
-        Whitebox.setInternalState(underTest, "server", server);
+        setInternalState(underTest, "server", server);
         given(server.isStarted()).willReturn(true);
         Exception e = new Exception(EXCEPTION_MESSAGE);
         doThrow(e).when(underTest).stopJettyServer();
@@ -64,7 +64,7 @@ public class WebAppServerTest {
     @Test
     public void testStopShouldCallStopJettyServer() throws Exception {
         //GIVEN
-        Whitebox.setInternalState(underTest, "server", server);
+        setInternalState(underTest, "server", server);
         given(server.isStarted()).willReturn(true);
         doNothing().when(underTest).stopJettyServer();
         //WHEN
@@ -76,7 +76,7 @@ public class WebAppServerTest {
     @Test
     public void testStopShouldDoNothingWhenServerIsNull() throws Exception {
         //GIVEN
-        Whitebox.setInternalState(underTest, "server", null);
+        setInternalState(underTest, "server", (Object[])null);
         //WHEN
         underTest.stop();
         //THEN
@@ -86,7 +86,7 @@ public class WebAppServerTest {
     @Test
     public void testStopShouldDoNothingWhenServerIsNotStarted() throws Exception {
         //GIVEN
-        Whitebox.setInternalState(underTest, "server", server);
+        setInternalState(underTest, "server", server);
         given(server.isStarted()).willReturn(false);
         //WHEN
         underTest.stop();

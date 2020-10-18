@@ -16,16 +16,14 @@ public class SystemExceptionSelector {
      */
     public SystemException getSystemException(final BeanCreationException e) {
         SystemException result = null;
-        if (e.getMostSpecificCause() != null) {
-            Throwable ex = e;
-            boolean found = false;
-            while (ex.getCause() != null && !found) {
-                if (ex.getCause() instanceof SystemException) {
-                    found = true;
-                    result = (SystemException) ex.getCause();
-                }
-                ex = ex.getCause();
+        Throwable ex = e;
+        boolean found = false;
+        while (ex.getCause() != null && !found) {
+            if (ex.getCause() instanceof SystemException) {
+                found = true;
+                result = (SystemException) ex.getCause();
             }
+            ex = ex.getCause();
         }
         return result;
     }

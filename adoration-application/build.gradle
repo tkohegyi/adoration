@@ -62,10 +62,12 @@ subprojects {
 	    compile group: 'org.springframework', name: 'spring-webmvc', version:'5.0.12.RELEASE'
 	    compile group: 'org.aspectj', name: 'aspectjrt', version:'1.6.9'
         compile group: 'org.postgresql', name: 'postgresql', version:'42.2.12.jre7'
-	    testCompile group: 'org.mockito', name: 'mockito-all', version:'1.9.5'
-	    testCompile(group: 'org.testng', name: 'testng', version:'6.8.5') {
+	    testCompile group: 'org.mockito', name: 'mockito-core', version:'3.3.3'
+	    testCompile(group: 'org.testng', name: 'testng', version:'6.14.3') {
             exclude(module: 'junit')
         }
+        testCompile group: 'org.powermock', name: 'powermock-module-testng', version: '2.0.7'
+        testCompile group: 'org.powermock', name: 'powermock-api-mockito2', version: '2.0.7'
     }
     
     test.useTestNG()

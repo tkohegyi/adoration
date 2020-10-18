@@ -11,15 +11,6 @@ public class ServerException extends SystemException {
      * Contstructs a new exception with a given <tt>message</tt>.
      *
      * @param message cause of the error
-     */
-    public ServerException(final String message) {
-        super(message);
-    }
-
-    /**
-     * Contstructs a new exception with a given <tt>message</tt>.
-     *
-     * @param message cause of the error
      * @param e       causing error
      */
     public ServerException(final String message, final Throwable e) {

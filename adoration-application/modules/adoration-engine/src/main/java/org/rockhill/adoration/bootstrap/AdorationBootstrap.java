@@ -2,7 +2,6 @@ package org.rockhill.adoration.bootstrap;
 
 import org.rockhill.adoration.bootstrap.helper.SystemExceptionSelector;
 import org.rockhill.adoration.database.SessionFactoryHelper;
-import org.rockhill.adoration.database.property.HibernateConfig;
 import org.rockhill.adoration.exception.InvalidPropertyException;
 import org.rockhill.adoration.exception.SystemException;
 import org.rockhill.adoration.properties.PropertyLoader;
@@ -27,32 +26,29 @@ public class AdorationBootstrap {
         return new WebAppServer();
     }
 
+    SessionFactoryHelper createSessionFactoryHelper() {
+        return new SessionFactoryHelper();
+    }
     /**
      * Starts the application.
      *
      * @param args command line arguments
      */
     public void bootstrap(final String[] args) {
-
-        HibernateConfig.HIBERNATE_CONNECTION_PASSWORD = null;
-        HibernateConfig.HIBERNATE_CONNECTION_URL = null;
-        HibernateConfig.HIBERNATE_CONNECTION_USERNAME = null;
-
         WebAppServer webAppServer = createWebAppServer();
+        SessionFactoryHelper sessionFactoryHelper = createSessionFactoryHelper();
         try {
             //prepare hibernate
             String hibernateUsername = getStringInfo(args, "hibernate.connection.username");
             String hibernatePassword = getStringInfo(args, "hibernate.connection.password");
             String hibernateUrl = getStringInfo(args, "hibernate.connection.url");
-            HibernateConfig.HIBERNATE_CONNECTION_USERNAME = hibernateUsername;
-            HibernateConfig.HIBERNATE_CONNECTION_PASSWORD = hibernatePassword;
-            HibernateConfig.HIBERNATE_CONNECTION_URL = hibernateUrl;
+            sessionFactoryHelper.initiateHibernateSessionFactory(hibernateUrl, hibernateUsername, hibernatePassword);
             //prepare web server
             String serverKeyStoreFile = getStringInfo(args, "keyStoreFile");
             String serverKeyStorePassword = getStringInfo(args, "keyStorePassword");
             Integer port = getPort(args);
             Boolean isHttpsInUse = getIsHttpsInUse(args);
-            webAppServer.createServer(port, isHttpsInUse.booleanValue(), serverKeyStoreFile, serverKeyStorePassword);
+            webAppServer.createServer(port, isHttpsInUse, serverKeyStoreFile, serverKeyStorePassword);
             webAppServer.start();
         } catch (BeanCreationException e) {
             handleException(webAppServer, e);
@@ -73,12 +69,11 @@ public class AdorationBootstrap {
     }
 
     private Integer getPort(final String[] args) {
-        Integer port;
-        port = null;
+        int port;
         checkPropertyFileArgument(args);
         Properties properties = propertyLoader.loadProperties(args[0]);
         try {
-            port = Integer.valueOf(properties.getProperty("webapp.port"));
+            port = Integer.parseInt(properties.getProperty("webapp.port"));
         } catch (NumberFormatException e) {
             throw new InvalidPropertyException("Invalid port value!");
         }
@@ -88,12 +83,8 @@ public class AdorationBootstrap {
     private Boolean getIsHttpsInUse(final String[] args) {
         checkPropertyFileArgument(args);
         Properties properties = propertyLoader.loadProperties(args[0]);
-        Boolean isHttpsInUse;
-        try {
-            isHttpsInUse = Boolean.valueOf(properties.getProperty("isHttpsInUse"));
-        } catch (NumberFormatException e) {
-            throw new InvalidPropertyException("Invalid isHttpsInUse value!");
-        }
+        boolean isHttpsInUse;
+        isHttpsInUse = Boolean.parseBoolean(properties.getProperty("isHttpsInUse"));
         return isHttpsInUse;
     }
 
@@ -117,6 +108,6 @@ public class AdorationBootstrap {
     }
 
     private void logError(final Exception e) {
-        logger.error("Application cannot be started: " + e.getMessage());
+        logger.error(String.format("Application cannot be started: %s", e.getMessage()));
     }
 }

@@ -5,7 +5,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.mockito.internal.util.reflection.Whitebox;
 import org.rockhill.adoration.configuration.PropertyReader;
 import org.rockhill.adoration.properties.PropertyLoader;
 import org.rockhill.adoration.properties.helper.FileInputStreamFactory;
@@ -22,6 +21,7 @@ import java.util.Properties;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.verify;
+import static org.powermock.reflect.internal.WhiteboxImpl.setInternalState;
 import static org.testng.Assert.assertEquals;
 
 /**
@@ -52,13 +52,13 @@ public class PropertyLoaderTest {
         MockitoAnnotations.initMocks(this);
         given(inputStreamFactory.createFileInputStream(configFile)).willReturn(inputStream);
         given(propertiesFactory.createProperties()).willReturn(properties);
-        Whitebox.setInternalState(underTest, "configFile", configFile);
+        setInternalState(underTest, "configFile", configFile);
     }
 
     @Test(expectedExceptions = PropertiesNotAvailableException.class)
     public void testLoadPropertiesWhenProgramArgumentEmptyShouldThrowException() {
         //GIVEN
-        Whitebox.setInternalState(underTest, "configFile", "");
+        setInternalState(underTest, "configFile", "");
         //WHEN
         underTest.loadProperties();
         //THEN excpetion should be thrown
@@ -67,7 +67,7 @@ public class PropertyLoaderTest {
     @Test(expectedExceptions = PropertiesNotAvailableException.class)
     public void testLoadPropertiesWhenProgramArgumentInvalidShouldThrowException() {
         //GIVEN
-        Whitebox.setInternalState(underTest, "configFile", "adorator.conf.prop");
+        setInternalState(underTest, "configFile", "adorator.conf.prop");
         //WHEN
         underTest.loadProperties();
         //THEN exception should be thrown

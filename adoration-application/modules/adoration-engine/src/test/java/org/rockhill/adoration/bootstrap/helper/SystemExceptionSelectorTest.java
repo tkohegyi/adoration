@@ -37,16 +37,6 @@ public class SystemExceptionSelectorTest {
     }
 
     @Test
-    public void testGetSystemExceptionShouldReturnWithNullWhenExceptionMostSpecificCauseIsNull() {
-        //GIVEN
-        given(beanCreationException.getMostSpecificCause()).willReturn(null);
-        //WHEN
-        SystemException actual = underTest.getSystemException(beanCreationException);
-        //THEN
-        assertNull(actual);
-    }
-
-    @Test
     public void testGetSystemExceptionShouldReturnWithNullWhenExceptionCauseIsNull() {
         //GIVEN
         given(beanCreationException.getMostSpecificCause()).willReturn(invalidPropertyException);
