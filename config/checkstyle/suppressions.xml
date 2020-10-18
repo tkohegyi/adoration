@@ -5,5 +5,5 @@
   <suppress checks="JavadocMethod|IllegalInstantiation|IllegalThrows|MagicNumber|ClassFanOutComplexity|ClassDataAbstractionCoupling" files=".*Mock.*java|.*Test.java|.*TestDataProvider.java" />
   <!-- relax rules in package info files, they are not real classes -->
   <suppress checks="RegexpHeader" files=".*package-info.java|.*.properties" />
-  <suppress checks="VisibilityModifier" files="org.rockhill.adorApp.engine.AdorApplication.java"/>
+  <suppress checks="VisibilityModifier" files="org.rockhill.adoration.engine.AdorApplication.java"/>
 </suppressions>

@@ -4,7 +4,7 @@
 .project
 .classpath
 .checkstyle
-adorApp-application/modules/adorApp-engine/log
+adoration-application/modules/adoration-engine/log
 *.iml
 *.ipr
 *.iws
