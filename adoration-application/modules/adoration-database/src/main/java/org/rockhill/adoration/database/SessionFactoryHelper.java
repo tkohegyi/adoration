@@ -1,9 +1,12 @@
 package org.rockhill.adoration.database;
 
+import com.sun.istack.NotNull;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.rockhill.adoration.database.exception.DatabaseHandlingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,5 +56,13 @@ public class SessionFactoryHelper {
 
     public static SessionFactory getSessionFactory() {
         return sessionFactory;
+    }
+
+    @NotNull
+    public static Session getOpenedSession() {
+        if (sessionFactory == null) {
+            throw new DatabaseHandlingException("Database connection issue (SessionFactory) - pls contact to maintainers.");
+        }
+        return sessionFactory.openSession();
     }
 }

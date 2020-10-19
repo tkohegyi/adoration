@@ -42,7 +42,7 @@ public class ExportController extends ControllerBase {
     @RequestMapping(value = "/adorationSecure/getExcelFull", method = {RequestMethod.GET})
     public void getExcelContent(HttpSession httpSession, HttpServletResponse httpServletResponse) {
         httpServletResponse.addHeader(CONTENT_DISPOSITION, String.format(ATTACHMENT_TEMPLATE, "nagyRegiszter.xlsx"));
-        httpServletResponse.addHeader(CONTENT_TYPE, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        httpServletResponse.addHeader(CONTENT_TYPE, CONTENT_TYPE_XLSX);
         if (isAdoratorAdmin(currentUserProvider, httpSession)) {
             try {
                 httpServletResponse.setStatus(200);
@@ -69,7 +69,7 @@ public class ExportController extends ControllerBase {
     @RequestMapping(value = "/adorationSecure/getExcelDailyInfo", method = {RequestMethod.GET})
     public void getExcelDailyInfo(HttpSession httpSession, HttpServletResponse httpServletResponse) {
         httpServletResponse.addHeader(CONTENT_DISPOSITION, String.format(ATTACHMENT_TEMPLATE, "napszakFedettség.xlsx"));
-        httpServletResponse.addHeader(CONTENT_TYPE, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        httpServletResponse.addHeader(CONTENT_TYPE, CONTENT_TYPE_XLSX);
         if (isPrivilegedAdorator(currentUserProvider, httpSession)) {
             try {
                 httpServletResponse.setStatus(200);
@@ -96,7 +96,7 @@ public class ExportController extends ControllerBase {
     @RequestMapping(value = "/adorationSecure/getExcelHourlyInfo", method = {RequestMethod.GET})
     public void getExcelHourlyInfo(HttpSession httpSession, HttpServletResponse httpServletResponse) {
         httpServletResponse.addHeader(CONTENT_DISPOSITION, String.format(ATTACHMENT_TEMPLATE, "órainformáció.xlsx"));
-        httpServletResponse.addHeader(CONTENT_TYPE, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        httpServletResponse.addHeader(CONTENT_TYPE, CONTENT_TYPE_XLSX);
         if (isPrivilegedAdorator(currentUserProvider, httpSession)) {
             try {
                 httpServletResponse.setStatus(200);
@@ -123,7 +123,7 @@ public class ExportController extends ControllerBase {
     @RequestMapping(value = "/adorationSecure/getExcelAdoratorInfo", method = {RequestMethod.GET})
     public void getExcelAdoratorInfo(HttpSession httpSession, HttpServletResponse httpServletResponse) {
         httpServletResponse.addHeader(CONTENT_DISPOSITION, String.format(ATTACHMENT_TEMPLATE, "adoráló-adatok.xlsx"));
-        httpServletResponse.addHeader(CONTENT_TYPE, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        httpServletResponse.addHeader(CONTENT_TYPE, CONTENT_TYPE_XLSX);
         if (isRegisteredAdorator(currentUserProvider, httpSession)) {
             try {
                 httpServletResponse.setStatus(200);

@@ -93,7 +93,7 @@ public class AppLogController extends ControllerBase {
                                                     @RequestParam(value = "source", defaultValue = "false") final boolean source,
                                                     @RequestHeader(value = "User-Agent", defaultValue = "") final String userAgent) {
         ResponseEntity<String> responseEntity;
-        String body = "unauthorized";
+        String body = UNAUTHORIZED_ACTION;
         if (isAdoratorAdmin(currentUserProvider, httpSession)) {
             body = logFileProvider.getLogContent(fileName);
             body = convertLineBreaksIfOnWindows(body, userAgent);

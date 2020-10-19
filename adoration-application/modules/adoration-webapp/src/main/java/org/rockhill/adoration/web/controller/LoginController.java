@@ -32,6 +32,8 @@ import static org.springframework.security.web.context.HttpSessionSecurityContex
 public class LoginController {
     private final Logger logger = LoggerFactory.getLogger(LoginController.class);
     private final String[] VALID_HOSTS = { "127.0.0.1", "orokimadas.info" };
+    private static final String LOGIN_PAGE = "login";
+    private static final String HOME_PAGE = "home";
 
     @Autowired
     GoogleOauth2Service googleOauth2Service;
@@ -53,11 +55,11 @@ public class LoginController {
             @RequestParam(value = "result", defaultValue = "") final String result
     ) {
         if (result.length() == 0) {
-            return "login";
+            return LOGIN_PAGE;
         }
         //else make simple login page default
         logger.warn("Unhandled login page request, falling back to provide basic login page.");
-        return "login";
+        return LOGIN_PAGE;
     }
 
     /**
@@ -74,7 +76,7 @@ public class LoginController {
         } catch (IOException e) {
             logger.warn("Redirect to Google authentication does not work.", e);
         }
-        return "login";
+        return LOGIN_PAGE;
     }
 
     /**
@@ -91,7 +93,7 @@ public class LoginController {
         } catch (IOException e) {
             logger.warn("Redirect to Facebook authentication does not work.", e);
         }
-        return "login";
+        return LOGIN_PAGE;
     }
 
     //https://fuf.me/adoration/loginResult?code=4%2FrgG8fzvTngq_gf3YiQgi5x8vGrZis4JD4SXyLxyVhHD97o-k13uxXJHmSqnBa5o-7y-QmjtgMZnyHryn4u_heR8&scope=email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+openid&authuser=0&session_state=8ca7cab3c0dd23415b112fae84f84b1cb9957590..dd73&prompt=consent#
@@ -110,12 +112,12 @@ public class LoginController {
         String host = httpServletRequest.getRemoteHost();
         if (!Arrays.asList(VALID_HOSTS).contains(host)) {
             logger.warn("SSRF trial detected from: " + host);
-            return "home";
+            return HOME_PAGE;
         }
         if ((code.length() > 0) && (state.length() == 0) && (auth == null)) {  //if GOOGLE login can be performed and it is not yet authenticated for Ador App
             Authentication authentication = googleOauth2Service.getGoogleUserInfoJson(code);
             if (authentication == null) { //was unable to get user info properly
-                return "login";
+                return LOGIN_PAGE;
             }
             SecurityContext sc = SecurityContextHolder.getContext();
             sc.setAuthentication(authentication);
@@ -127,7 +129,7 @@ public class LoginController {
                 return null;
             } catch (IOException e) {
                 logger.warn("Redirect after Google authentication does not work.", e);
-                return "login";
+                return LOGIN_PAGE;
             }
         }
         if ((code.length() > 0) && (state.length() > 0) && (auth == null)) {  //if FACEBOOK login can be performed and it is not yet authenticated for Ador App
@@ -142,10 +144,10 @@ public class LoginController {
                 return null;
             } catch (IOException e) {
                 logger.warn("Redirect after Facebook authentication does not work.", e);
-                return "login";
+                return LOGIN_PAGE;
             }
         }
-        return "home";
+        return HOME_PAGE;
     }
 
     @RequestMapping(value = "/adorationSecure/exit", method = {RequestMethod.GET})
@@ -170,7 +172,7 @@ public class LoginController {
         } catch (IOException e) {
             logger.warn("Redirect after logout does not work.", e);
         }
-        return "home";
+        return HOME_PAGE;
     }
 
 }

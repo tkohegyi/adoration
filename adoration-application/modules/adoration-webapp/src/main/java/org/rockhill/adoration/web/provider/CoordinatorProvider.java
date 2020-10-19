@@ -81,6 +81,29 @@ public class CoordinatorProvider {
         return auditTrail;
     }
 
+    private Long createCoordinator(Coordinator newCoordinator, CurrentUserInformationJson currentUserInformationJson) {
+        Long id;
+        Coordinator coordinator = new Coordinator();
+        coordinator.setId(businessWithNextGeneralKey.getNextGeneralId());
+        coordinator.setCoordinatorType(newCoordinator.getCoordinatorType());
+        Long personId = newCoordinator.getPersonId();
+        String personString = "N/A";
+        if (personId != null) {
+            Person person = businessWithPerson.getPersonById(personId);
+            if (person == null) {
+                logger.info("User:" + currentUserInformationJson.userName + " tried to create Coordinator with non-existing person.");
+                return null;
+            }
+            personString = "ID: " + person.getId().toString() + ", Name: " + person.getName();
+        }
+        coordinator.setPersonId(personId);
+        AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(coordinator.getId(), currentUserInformationJson.userName,
+                "Coordinator:New:" + coordinator.getId(),
+                "CoordinatorType: " + CoordinatorTypes.getTypeFromId(coordinator.getCoordinatorType()).toString() + ", Person: " + personString, "");
+        id = businessWithCoordinator.newCoordinator(coordinator, auditTrail);
+        return id;
+    }
+
     public Long updateCoordinator(CoordinatorJson coordinatorJson, CurrentUserInformationJson currentUserInformationJson) {
         Coordinator newCoordinator = new Coordinator();
         newCoordinator.setId(Long.parseLong(coordinatorJson.id));
@@ -93,26 +116,8 @@ public class CoordinatorProvider {
         Collection<AuditTrail> auditTrailCollection = new ArrayList<>();
         Long id = newCoordinator.getId();
         Coordinator coordinator = businessWithCoordinator.getById(id);
-        if (coordinator == null) {
-            coordinator = new Coordinator();
-            coordinator.setId(businessWithNextGeneralKey.getNextGeneralId());
-            coordinator.setCoordinatorType(newCoordinator.getCoordinatorType());
-            Long personId = newCoordinator.getPersonId();
-            String personString = "N/A";
-            if (personId != null) {
-                Person person = businessWithPerson.getPersonById(personId);
-                if (person == null) {
-                    logger.info("User:" + currentUserInformationJson.userName + " tried to create Coordinator with non-existing person.");
-                    return null;
-                }
-                personString = "ID: " + person.getId().toString() + ", Name: " + person.getName();
-            }
-            coordinator.setPersonId(personId);
-            AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(coordinator.getId(), currentUserInformationJson.userName,
-                    "Coordinator:New:" + coordinator.getId(),
-                    "CoordinatorType: " + CoordinatorTypes.getTypeFromId(coordinator.getCoordinatorType()).toString() + ", Person: " + personString, "");
-            id = businessWithCoordinator.newCoordinator(coordinator, auditTrail);
-            return id;
+        if (coordinator == null) { //need to create a new one
+            return createCoordinator(newCoordinator, currentUserInformationJson);
         }
         Long refId = coordinator.getId();
         //coordinatorType
@@ -127,30 +132,38 @@ public class CoordinatorProvider {
         //personId
         Long newLongValue = newCoordinator.getPersonId();
         Long oldLongValue = coordinator.getPersonId();
-        if (!((oldLongValue == null) && (newLongValue == null))) { //if both null, it was not changed
-            if ( ((oldLongValue == null) && (newLongValue != null)) //at least one of them is not null
-                    || ((oldLongValue != null) && (newLongValue == null))
-                    || (!oldLongValue.equals(newLongValue)) ) { //here both of them is not null
-                String oldValue = "N/A";
-                if (oldLongValue != null) {
-                    oldValue = oldLongValue.toString();
-                }
-                String newValue = "N/A";
-                if (newLongValue != null) {
-                    newValue = newLongValue.toString();
-                }
-                if (newLongValue != null) {
-                    Person person = businessWithPerson.getPersonById(newLongValue);
-                    if (person == null) {
-                        logger.info("User:" + currentUserInformationJson.userName + " tried to update Coordinator with non-existing person.");
-                        return null;
-                    }
-                }
-                auditTrailCollection.add(prepareAuditTrail(refId, currentUserInformationJson.userName, "PersonId", oldValue, newValue));
+        if (newLongValue != null) {
+            Person person = businessWithPerson.getPersonById(newLongValue);
+            if (person == null) {
+                logger.info("User:" + currentUserInformationJson.userName + " tried to update Coordinator with non-existing person.");
+                return null;
             }
+        }
+        if (isLongChanged(oldLongValue, newLongValue)) {
+            String oldValue = "N/A";
+            if (oldLongValue != null) {
+                oldValue = oldLongValue.toString();
+            }
+            String newValue = "N/A";
+            if (newLongValue != null) {
+                newValue = newLongValue.toString();
+            }
+            auditTrailCollection.add(prepareAuditTrail(refId, currentUserInformationJson.userName, "PersonId", oldValue, newValue));
         }
         id = businessWithCoordinator.updateCoordinator(newCoordinator, auditTrailCollection);
         return id;
+    }
+
+    private boolean isLongChanged(final Long oldLongValue, final Long newLongValue) {
+        boolean changed = false;
+        if (!((oldLongValue == null) && (newLongValue == null))) { //if both null, it was not changed
+            if (((oldLongValue == null) && (newLongValue != null)) //at least one of them is not null
+                    || ((oldLongValue != null) && (newLongValue == null))
+                    || (!oldLongValue.equals(newLongValue))) { //here both of them is not null
+                changed = true;
+            }
+        }
+        return changed;
     }
 
     public Object getCoordinatorHistoryAsObject(Long id) {

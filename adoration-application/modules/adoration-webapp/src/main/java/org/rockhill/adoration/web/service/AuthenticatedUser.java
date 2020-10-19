@@ -9,8 +9,10 @@ public class AuthenticatedUser {
     private Person person;
     private final long sessionTimeoutExtender;
     private long sessionTimeout;
+    private String serviceName;
 
-    public AuthenticatedUser(Social social, Person person, Integer sessionTimeoutInSec) {
+    public AuthenticatedUser(String serviceName, Social social, Person person, Integer sessionTimeoutInSec) {
+        this.serviceName = serviceName;
         this.social = social;
         this.person = person;
         this.sessionTimeoutExtender = (long)sessionTimeoutInSec * 1000;
@@ -39,5 +41,9 @@ public class AuthenticatedUser {
 
     public Boolean isSessionValid() {
         return this.sessionTimeout > System.currentTimeMillis();
+    }
+
+    public String getServiceName() {
+        return serviceName;
     }
 }

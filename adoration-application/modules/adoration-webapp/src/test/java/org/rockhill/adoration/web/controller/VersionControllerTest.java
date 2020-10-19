@@ -37,7 +37,7 @@ public class VersionControllerTest {
         ResponseEntity<String> result = underTest.getVersion();
         //THEN
         assertEquals(result.getStatusCode(), HttpStatus.OK);
-        assertEquals("{\"adorAppVersion\":\"version\"}", result.getBody());
+        assertEquals("{\"adorationApplicationVersion\":\"version\"}", result.getBody());
         assertEquals(MediaType.APPLICATION_JSON, result.getHeaders().getContentType());
     }
 

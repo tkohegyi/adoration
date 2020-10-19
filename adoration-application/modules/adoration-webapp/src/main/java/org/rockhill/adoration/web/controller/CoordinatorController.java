@@ -92,7 +92,7 @@ public class CoordinatorController extends ControllerBase {
             CoordinatorJson p = g.fromJson(body, CoordinatorJson.class);
             //check authorization: user must have right user type
             if (!currentUserInformationJson.isAdoratorAdmin) {
-                resultString = "Unauthorized action.";
+                resultString = UNAUTHORIZED_ACTION;
                 result = new ResponseEntity<String>(getJsonString(JSON_RESPONSE_UPDATE, resultString), responseHeaders, HttpStatus.FORBIDDEN);
             } else {
                 //authorization checked, ok
@@ -135,7 +135,7 @@ public class CoordinatorController extends ControllerBase {
             DeleteEntityJson p = g.fromJson(body, DeleteEntityJson.class);
             //check authorization
             if (!currentUserInformationJson.isAdoratorAdmin) {
-                resultString = "Unauthorized action.";
+                resultString = UNAUTHORIZED_ACTION;
                 result = new ResponseEntity<String>(getJsonString(JSON_RESPONSE_DELETE, resultString), responseHeaders, HttpStatus.FORBIDDEN);
             } else {
                 //authorization checked, ok

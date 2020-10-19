@@ -6,8 +6,8 @@ public enum AdorationMethodTypes {
     PHYSICAL("Physical", 0),
     ONLINE("Online", 1);
 
-    private String adorationMethodText;
-    private Integer adorationMethodValue;
+    private final String adorationMethodText;
+    private final Integer adorationMethodValue;
 
     AdorationMethodTypes(String adorationMethodText, Integer adorationMethodValue) {
         this.adorationMethodText = adorationMethodText;
@@ -16,18 +16,20 @@ public enum AdorationMethodTypes {
 
     // helper functions
     public static String getTranslatedString(Integer adorationMethodValue) {
-        String adorationMethodText = null;
-        if (PHYSICAL.getAdorationMethodValue().equals(adorationMethodValue)) { adorationMethodText = PHYSICAL.getAdorationMethodText(); }
-        if (ONLINE.getAdorationMethodValue().equals(adorationMethodValue)) { adorationMethodText = ONLINE.getAdorationMethodText(); }
-        if (adorationMethodText == null) {
-            throw new DatabaseHandlingException("Incorrect usage of data -> AdorationMethodType number:" + adorationMethodValue.toString() + " was requested.");
+        for (AdorationMethodTypes adorationMethodTypes : AdorationMethodTypes.values()) {
+            if (adorationMethodTypes.getAdorationMethodValue().equals(adorationMethodValue)) {
+                return adorationMethodTypes.getAdorationMethodText();
+            }
         }
-        return adorationMethodText;
+        throw new DatabaseHandlingException("Incorrect usage of data -> AdorationMethodType number:" + adorationMethodValue.toString() + " was requested.");
     }
 
     public static AdorationMethodTypes getTypeFromId(Integer id) {
-        if (PHYSICAL.getAdorationMethodValue().equals(id)) return PHYSICAL;
-        if (ONLINE.getAdorationMethodValue().equals(id)) return ONLINE;
+        for (AdorationMethodTypes adorationMethodTypes : AdorationMethodTypes.values()) {
+            if (adorationMethodTypes.getAdorationMethodValue().equals(id)) {
+                return adorationMethodTypes;
+            }
+        }
         throw new DatabaseHandlingException("Invalid AdorationMethodType requested: " + id);
     }
 

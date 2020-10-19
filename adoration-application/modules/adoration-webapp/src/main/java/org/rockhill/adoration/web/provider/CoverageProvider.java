@@ -26,6 +26,7 @@ import java.util.*;
 public class CoverageProvider {
 
     private final Logger logger = LoggerFactory.getLogger(CoverageProvider.class);
+    private static final String USER = "User:";
 
     @Autowired
     BusinessWithTranslator businessWithTranslator;
@@ -40,8 +41,6 @@ public class CoverageProvider {
 
     public CoverageInformationJson getCoverageInfo(CurrentUserInformationJson currentUserInformationJson) {
         CoverageInformationJson coverageInformationJson = new CoverageInformationJson();
-        //determine if adorator info is required
-        boolean canSeeAdorators = currentUserInformationJson.isLoggedIn && currentUserInformationJson.isPrivilegedAdorator;
 
         //fill the day names first
         coverageInformationJson.dayNames = new HashMap<>();
@@ -52,7 +51,6 @@ public class CoverageProvider {
         }
 
         //fill the hour coverage information
-        List<Link> linkList = businessWithLink.getLinkList();
         coverageInformationJson.visibleHours = new HashMap<>();
         coverageInformationJson.allHours = new HashMap<>();
         coverageInformationJson.onlineHours = new HashMap<>();
@@ -63,52 +61,72 @@ public class CoverageProvider {
             coverageInformationJson.allHours.put(i, new HashSet<>());
             coverageInformationJson.onlineHours.put(i, new HashSet<>());
         }
+        fillCoverage(currentUserInformationJson, coverageInformationJson);
+        return coverageInformationJson;
+    }
+
+    private void fillCoverage(CurrentUserInformationJson currentUserInformationJson, CoverageInformationJson coverageInformationJson) {
+        //determine if adorator info is required
+        boolean canSeeAdorators = currentUserInformationJson.isLoggedIn && currentUserInformationJson.isPrivilegedAdorator;
+        List<Link> linkList = businessWithLink.getLinkList();
         for (Link link : linkList) {
-            Integer hourId = link.getHourId();
-            if (AdorationMethodTypes.getTypeFromId(link.getType()) == AdorationMethodTypes.PHYSICAL) {
-                //fill all hours first, if that is necessary
-                if (coverageInformationJson.allHours.containsKey(hourId)) {
-                    //we already have this in the map
-                    if (canSeeAdorators) {
-                        Set<Long> idSet = coverageInformationJson.allHours.get(hourId);
-                        idSet.add(link.getPersonId());
-                    }
-                } else {
-                    //we don't have this in our map, data error !
-                    logger.warn("Unexpected row in Link table, with Id:" + link.getId());
-                }
-                //fill visible hours
-                if (link.getPriority() < 3) { //for physical we ask priority 1,2 too
-                    if (coverageInformationJson.visibleHours.containsKey(hourId)) {
-                        //we already have this in the map
-                        coverageInformationJson.visibleHours.put(hourId, coverageInformationJson.visibleHours.get(hourId) + 1);
-                    } //else part already handled at allHours
-                }
-            }
-            if (AdorationMethodTypes.getTypeFromId(link.getType()) == AdorationMethodTypes.ONLINE) {
-                if (coverageInformationJson.onlineHours.containsKey(hourId)) {
-                    //we already have this in the map
-                    Set<Long> idSet = coverageInformationJson.onlineHours.get(hourId);
-                    if (canSeeAdorators) {
-                        idSet.add(link.getPersonId()); //we add real ids only if user can see them
-                    } else { //otherwise we use a fake id
-                        idSet.add(Long.valueOf(0));
-                    }
-                } else {
-                    //we don't have this in our map, data error !
-                    logger.warn("Unexpected row in Link table, with Id:" + link.getId());
-                }
-            }
-            //fill adorator info, now only for leaders (for the rest it is problematic, who can see what)
-            if (canSeeAdorators) {
-                Person p = businessWithPerson.getPersonById(link.getPersonId());
-                if (p != null && !coverageInformationJson.adorators.containsKey(p.getId())) {
-                    PersonJson personJson = new PersonJson(p, currentUserInformationJson.isPrivilegedUser());
-                    coverageInformationJson.adorators.put(p.getId(), personJson);
-                }
+            handleLinkWithPhysicalAdorator(link, coverageInformationJson, canSeeAdorators);
+            handleLinkWithOnlineAdorator(link, coverageInformationJson, canSeeAdorators);
+            handleAdoratorOfLink(link, coverageInformationJson, canSeeAdorators, currentUserInformationJson.isPrivilegedUser());
+        }
+    }
+
+    private void handleAdoratorOfLink(Link link, CoverageInformationJson coverageInformationJson, boolean canSeeAdorators, boolean isPrivilegedUser) {
+        //fill adorator info, now only for leaders (for the rest it is problematic, who can see what)
+        if (canSeeAdorators) {
+            Person p = businessWithPerson.getPersonById(link.getPersonId());
+            if (p != null && !coverageInformationJson.adorators.containsKey(p.getId())) {
+                PersonJson personJson = new PersonJson(p, isPrivilegedUser);
+                coverageInformationJson.adorators.put(p.getId(), personJson);
             }
         }
-        return coverageInformationJson;
+    }
+
+    private void handleLinkWithPhysicalAdorator(Link link, CoverageInformationJson coverageInformationJson, boolean canSeeAdorators) {
+        Integer hourId = link.getHourId();
+        if (AdorationMethodTypes.getTypeFromId(link.getType()) == AdorationMethodTypes.PHYSICAL) {
+            //fill all hours first, if that is necessary
+            if (coverageInformationJson.allHours.containsKey(hourId)) {
+                //we already have this in the map
+                if (canSeeAdorators) {
+                    Set<Long> idSet = coverageInformationJson.allHours.get(hourId);
+                    idSet.add(link.getPersonId());
+                }
+            } else {
+                //we don't have this in our map, data error !
+                logger.warn("Unexpected row in Link table, with Id:" + link.getId());
+            }
+            //fill visible hours
+            if (link.getPriority() < 3) { //for physical we ask priority 1,2 too
+                if (coverageInformationJson.visibleHours.containsKey(hourId)) {
+                    //we already have this in the map
+                    coverageInformationJson.visibleHours.put(hourId, coverageInformationJson.visibleHours.get(hourId) + 1);
+                } //else part already handled at allHours
+            }
+        }
+    }
+
+    private void handleLinkWithOnlineAdorator(Link link, CoverageInformationJson coverageInformationJson, boolean canSeeAdorators) {
+        Integer hourId = link.getHourId();
+        if (AdorationMethodTypes.getTypeFromId(link.getType()) == AdorationMethodTypes.ONLINE) {
+            if (coverageInformationJson.onlineHours.containsKey(hourId)) {
+                //we already have this in the map
+                Set<Long> idSet = coverageInformationJson.onlineHours.get(hourId);
+                if (canSeeAdorators) {
+                    idSet.add(link.getPersonId()); //we add real ids only if user can see them
+                } else { //otherwise we use a fake id
+                    idSet.add(0L);
+                }
+            } else {
+                //we don't have this in our map, data error !
+                logger.warn("Unexpected row in Link table, with Id:" + link.getId());
+            }
+        }
     }
 
     public Object getPersonCommitmentAsObject(Long id, String languageCode) {
@@ -141,34 +159,56 @@ public class CoverageProvider {
         return auditTrail;
     }
 
+    private Long createPersonCommitment(CurrentUserInformationJson currentUserInformationJson, Link newLink) {
+        Long id;
+        Collection<AuditTrail> auditTrailCollection = new ArrayList<>();
+        newLink.setId(businessWithNextGeneralKey.getNextGeneralId());
+        AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(newLink.getPersonId(), currentUserInformationJson.userName,
+                "Link:New:" + newLink.getId().toString(), "Day: " + businessWithLink.getDayNameFromHourId(newLink.getHourId())
+                        + ", Hour: " + businessWithLink.getHourFromHourId(newLink.getHourId()),
+                "Type: " + AdorationMethodTypes.getTranslatedString(newLink.getType())
+                        + ", Priority: " + newLink.getPriority().toString());
+        auditTrailCollection.add(auditTrail);
+        id = businessWithLink.newLink(newLink, auditTrailCollection);
+        return id;
+    }
+
+    private boolean isNewPersonValid(CurrentUserInformationJson currentUserInformationJson, Link oldLink, Link newLink) {
+        boolean result = true;
+        Person p = businessWithPerson.getPersonById(newLink.getPersonId());
+        if (p == null) {
+            logger.info(USER + currentUserInformationJson.userName + " tried to create/update Link for a non-existing Person.");
+            result = false;
+        }
+        if (!newLink.getPersonId().equals(oldLink.getPersonId())) {
+            //changing person is not supported so this request must be rouge
+            logger.info(USER + currentUserInformationJson.userName + " tried to change Person for Link:" + newLink.getId());
+            result = false;
+        }
+        return result;
+    }
+
     public Long updatePersonCommitment(Link l, CurrentUserInformationJson currentUserInformationJson) {
         Collection<AuditTrail> auditTrailCollection = new ArrayList<>();
-        Link oldLink = l;
+        Long id;
+        Link oldLink;
         l.setAdminComment(l.getAdminComment().trim());
         l.setPublicComment(l.getPublicComment().trim());
         if (l.getId() == 0) {
             //new Link
-            l.setId(businessWithNextGeneralKey.getNextGeneralId());
-            AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(l.getPersonId(), currentUserInformationJson.userName,
-                    "Link:New:" + l.getId().toString(), "Day: " + businessWithLink.getDayNameFromHourId(l.getHourId())
-                            + ", Hour: " + businessWithLink.getHourFromHourId(l.getHourId()),
-                    "Type: " + AdorationMethodTypes.getTranslatedString(l.getType())
-                            + ", Priority: " + l.getPriority().toString());
-            auditTrailCollection.add(auditTrail);
-            Long id = businessWithLink.newLink(l, auditTrailCollection);
-            return id;
-        } else {
+            return createPersonCommitment(currentUserInformationJson, l);
+        } else { //fill old link
             oldLink = businessWithLink.getLink(l.getId());
             if (oldLink == null) {
-                logger.info("User:" + currentUserInformationJson.userName + " tried to update a not existing Person Commitment/Link");
+                logger.info(USER + currentUserInformationJson.userName + " tried to update a not existing Person Commitment/Link");
                 return null;
             }
         }
         //hourid
         Integer newInt = l.getHourId();
         Integer oldInt = oldLink.getHourId();
-        if ((newInt < 0) || (newInt > 167)) {
-            logger.info("User:" + currentUserInformationJson.userName + " tried to create/update Link with bad hour id:\""
+        if (!businessWithLink.isValidHour(newInt)) {
+            logger.info(USER + currentUserInformationJson.userName + " tried to create/update Link with bad hour id:\""
                     + newInt.toString() + "\".");
             return null;
         }
@@ -178,21 +218,14 @@ public class CoverageProvider {
                     businessWithLink.getDayNameFromHourId(l.getHourId()) + "/" + businessWithLink.getHourFromHourId(l.getHourId())));
         }
         //personId
-        Person p = businessWithPerson.getPersonById(l.getPersonId());
-        if (p == null) {
-            logger.info("User:" + currentUserInformationJson.userName + " tried to create/update Link for a non-existing Person.");
-            return null;
-        }
-        if (!l.getPersonId().equals(oldLink.getPersonId())) {
-            //changing person is not supported so this request must be rouge
-            logger.info("User:" + currentUserInformationJson.userName + " tried to change Person for Link:" + l.getId());
-            return null;
+        if (!isNewPersonValid(currentUserInformationJson, oldLink, l)) {
+            return null; //something is wrong with the person settings
         }
         //priority
         newInt = l.getPriority();
         oldInt = oldLink.getPriority();
         if ((newInt < 0) || (newInt > 25)) { //need to synch with applog.jsp
-            logger.info("User:" + currentUserInformationJson.userName + " tried to create/update Link with bad priority.");
+            logger.info(USER + currentUserInformationJson.userName + " tried to create/update Link with bad priority.");
             return null;
         }
         if (!newInt.equals(oldInt)) {
@@ -216,7 +249,7 @@ public class CoverageProvider {
         newInt = l.getType();
         oldInt = oldLink.getType();
         if ((newInt < 0) || (newInt > 1)) {
-            logger.info("User:" + currentUserInformationJson.userName + " tried to create/update Link with bad type.");
+            logger.info(USER + currentUserInformationJson.userName + " tried to create/update Link with bad type.");
             return null;
         }
         if (!newInt.equals(oldInt)) {
@@ -224,7 +257,7 @@ public class CoverageProvider {
                     AdorationMethodTypes.getTranslatedString(oldInt), AdorationMethodTypes.getTranslatedString(newInt)));
         }
 
-        Long id = businessWithLink.updateLink(l, auditTrailCollection);
+        id = businessWithLink.updateLink(l, auditTrailCollection);
         return id;
     }
 

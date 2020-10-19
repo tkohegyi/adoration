@@ -2,9 +2,8 @@ package org.rockhill.adoration.web.controller;
 
 import org.rockhill.adoration.web.controller.helper.ControllerBase;
 import org.rockhill.adoration.web.json.TableDataInformationJson;
-import org.rockhill.adoration.web.provider.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.rockhill.adoration.web.provider.CurrentUserProvider;
+import org.rockhill.adoration.web.provider.LinkProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -18,16 +17,10 @@ import java.util.Optional;
 @Controller
 public class LinksController extends ControllerBase {
 
-    private final Logger logger = LoggerFactory.getLogger(LinksController.class);
-
-    @Autowired
-    private LogFileProvider logFileProvider;
     @Autowired
     private CurrentUserProvider currentUserProvider;
     @Autowired
     private LinkProvider linkProvider;
-    @Autowired
-    private CoverageProvider coverageProvider;
 
     /**
      * Serves the links page.

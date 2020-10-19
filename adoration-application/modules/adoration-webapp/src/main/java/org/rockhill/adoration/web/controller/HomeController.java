@@ -6,8 +6,6 @@ import org.rockhill.adoration.web.json.CoverageInformationJson;
 import org.rockhill.adoration.web.json.CurrentUserInformationJson;
 import org.rockhill.adoration.web.provider.CoverageProvider;
 import org.rockhill.adoration.web.provider.CurrentUserProvider;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,7 +30,6 @@ import java.util.Map;
 public class HomeController {
     private static final String JSON_LOGGED_IN_USER_INFO = "loggedInUserInfo";
     private static final String JSON_COVERAGE_INFO = "coverageInfo";
-    private final Logger logger = LoggerFactory.getLogger(HomeController.class);
 
     @Autowired
     CurrentUserProvider currentUserProvider;

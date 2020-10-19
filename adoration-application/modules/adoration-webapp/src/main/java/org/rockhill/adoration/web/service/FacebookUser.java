@@ -6,7 +6,7 @@ import org.rockhill.adoration.database.tables.Social;
 public class FacebookUser extends AuthenticatedUser {
 
     public FacebookUser(Social social, Person person, Integer sessionTimeoutInSec) {
-        super(social, person, sessionTimeoutInSec);
+        super("Facebook", social, person, sessionTimeoutInSec);
     }
 
 }

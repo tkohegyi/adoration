@@ -13,6 +13,8 @@ public class ControllerBase {
 
     public static final String JSON_RESPONSE_UPDATE = "entityUpdate";
     public static final String JSON_RESPONSE_DELETE = "entityDelete";
+    protected static final String UNAUTHORIZED_ACTION = "Unauthorized action.";
+    protected static final String CONTENT_TYPE_XLSX = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
     public Boolean isAdoratorAdmin(CurrentUserProvider currentUserProvider, HttpSession httpSession) {
         CurrentUserInformationJson currentUserInformationJson = currentUserProvider.getUserInformation(httpSession);

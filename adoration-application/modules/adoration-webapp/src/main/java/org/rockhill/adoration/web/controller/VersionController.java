@@ -29,7 +29,7 @@ public class VersionController {
     @RequestMapping(value = "/version", method = RequestMethod.GET)
     public ResponseEntity<String> getVersion() {
         String adorAppVersion = titleProvider.getVersionTitle();
-        String jsonData = "{\"adorAppVersion\":\"" + adorAppVersion + "\"}";
+        String jsonData = "{\"adorationApplicationVersion\":\"" + adorAppVersion + "\"}";
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.setContentType(MediaType.APPLICATION_JSON);
         return new ResponseEntity<String>(jsonData, responseHeaders, HttpStatus.OK);

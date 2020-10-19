@@ -7,8 +7,8 @@ public enum SocialStatusTypes {
     IDENTIFIED_USER("Identified User", 2),
     SOCIAL_USER("Social-only User", 3);
 
-    private String translatedText;
-    private Integer typeValue;
+    private final String translatedText;
+    private final Integer typeValue;
 
     SocialStatusTypes(String translatedText, Integer typeValue) {
         this.translatedText = translatedText;
@@ -25,20 +25,20 @@ public enum SocialStatusTypes {
 
     // helper functions
     public static String getTranslatedString(Integer typeValue) {
-        String webStatusType = null;
-        if (WAIT_FOR_IDENTIFICATION.getTypeValue().equals(typeValue)) { webStatusType = WAIT_FOR_IDENTIFICATION.getTranslatedText(); }
-        if (IDENTIFIED_USER.getTypeValue().equals(typeValue)) { webStatusType = IDENTIFIED_USER.getTranslatedText(); }
-        if (SOCIAL_USER.getTypeValue().equals(typeValue)) { webStatusType = SOCIAL_USER.getTranslatedText(); }
-        if (webStatusType == null) {
-            throw new DatabaseHandlingException("Incorrect usage of data -> SocialStatusTypes type:" + typeValue.toString() + " was requested.");
+        for (SocialStatusTypes socialStatusTypes : SocialStatusTypes.values()) {
+            if (socialStatusTypes.typeValue.equals(typeValue)) {
+                return socialStatusTypes.getTranslatedText();
+            }
         }
-        return webStatusType;
+        throw new DatabaseHandlingException("Incorrect usage of data -> SocialStatusTypes type:" + typeValue.toString() + " was requested.");
     }
 
     public static SocialStatusTypes getTypeFromId(Integer id) {
-        if (WAIT_FOR_IDENTIFICATION.getTypeValue().equals(id)) return WAIT_FOR_IDENTIFICATION;
-        if (IDENTIFIED_USER.getTypeValue().equals(id)) return IDENTIFIED_USER;
-        if (SOCIAL_USER.getTypeValue().equals(id)) return SOCIAL_USER;
+        for (SocialStatusTypes socialStatusTypes : SocialStatusTypes.values()) {
+            if (socialStatusTypes.typeValue.equals(id)) {
+                return socialStatusTypes;
+            }
+        }
         throw new DatabaseHandlingException("Incorrect usage of data -> SocialStatusTypes id:" + id.toString() + " was requested.");
     }
 

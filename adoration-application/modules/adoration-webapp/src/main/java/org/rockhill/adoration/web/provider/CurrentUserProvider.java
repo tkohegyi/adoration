@@ -24,6 +24,7 @@ import static org.springframework.security.web.context.HttpSessionSecurityContex
 
 @Component
 public class CurrentUserProvider {
+    private static final String GUEST_NAME_INTRO = "Vend\u00e9g - ";
 
     @Autowired
     BusinessWithAuditTrail businessWithAuditTrail;
@@ -50,7 +51,7 @@ public class CurrentUserProvider {
     }
 
     public CurrentUserInformationJson getUserInformation(HttpSession httpSession) {
-        CurrentUserInformationJson currentUserInformationJson = new CurrentUserInformationJson();
+        CurrentUserInformationJson currentUserInformationJson = new CurrentUserInformationJson(); //default info - user not logged in
 
         Authentication authentication = null;
         SecurityContext securityContext = (SecurityContext) httpSession.getAttribute(SPRING_SECURITY_CONTEXT_KEY);
@@ -59,72 +60,72 @@ public class CurrentUserProvider {
         }
         if (authentication != null) {
             Object principal = authentication.getPrincipal();
-            String loggedInUserName;
-            String userName;
-            Person person; // = null;
-            Social social; // = null;
             if (principal instanceof AuthenticatedUser) {
                 AuthenticatedUser user = (AuthenticatedUser) principal;
                 if (user.isSessionValid()) {
                     user.extendSessionTimeout();
-                    currentUserInformationJson.isLoggedIn = true;  // if authentication is not null then the person is logged in
-                    currentUserInformationJson.coordinatorId = -1;
-                    currentUserInformationJson.isHourlyCoordinator = false;
-                    currentUserInformationJson.isDailyCoordinator = false;
-                    person = user.getPerson();
-                    if (person != null) {
-                        Coordinator coordinator = businessWithCoordinator.getCoordinatorFromPersonId(person.getId());
-                        if (coordinator != null) {
-                            currentUserInformationJson.coordinatorId = coordinator.getCoordinatorType();
-                            currentUserInformationJson.isHourlyCoordinator = currentUserInformationJson.coordinatorId < 24;
-                            currentUserInformationJson.isDailyCoordinator = !currentUserInformationJson.isHourlyCoordinator;
-                        }
-                        loggedInUserName = person.getName();
-                        userName = loggedInUserName;
-                    } else {
-                        userName = "Anonymous";
-                        loggedInUserName = "Vend\u00e9g - " + userName;
-                        if (principal instanceof GoogleUser) {
-                            userName = user.getSocial().getGoogleUserName();
-                            loggedInUserName = "Vend\u00e9g - " + userName;
-                        }
-                        if (principal instanceof FacebookUser) {
-                            userName = user.getSocial().getFacebookUserName();
-                            loggedInUserName = "Vend\u00e9g - " + userName;
-                        }
-                    }
-                    if (principal instanceof GoogleUser) {
-                        currentUserInformationJson.socialServiceUsed = "Google";
-                    }
-                    if (principal instanceof FacebookUser) {
-                        currentUserInformationJson.socialServiceUsed = "Facebook";
-                    }
-                    currentUserInformationJson.loggedInUserName = loggedInUserName; //user who logged in via social
-                    currentUserInformationJson.userName = userName; //user who registered as adorator (his/her name may differ from the username used in Social)
-                    social = user.getSocial();
-                    if (social != null) {
-                        currentUserInformationJson.socialId = social.getId();
-                        String email = social.getGoogleEmail();
-                        if (email.length() == 0) {
-                            email = social.getFacebookEmail();
-                        }
-                        currentUserInformationJson.socialEmail = email;
-                    }
-                    if (person != null) {
-                        currentUserInformationJson.isAuthorized = true; //not just logged in, but since the person is known, authorized too
-                        currentUserInformationJson.personId = person.getId();
-                        currentUserInformationJson.userName = person.getName();
-                        AdoratorStatusTypes status = AdoratorStatusTypes.getTypeFromId(person.getAdorationStatus());
-                        currentUserInformationJson.isRegisteredAdorator = registeredAdorator.contains(status);
-                        currentUserInformationJson.isPrivilegedAdorator = leaders.contains(status) || currentUserInformationJson.coordinatorId > -1;
-                        currentUserInformationJson.isAdoratorAdmin = admins.contains(status);
-                    }
-                } else {
-                    //session expired!
+                    currentUserInformationJson = getCurrentUserInformation(user);
+                } else { //session expired!
                     securityContext.setAuthentication(null); // this cleans up the authentication data technically
                     httpSession.removeAttribute(SPRING_SECURITY_CONTEXT_KEY); // this clean up the session itself
                 }
             }
+        }
+        return currentUserInformationJson;
+    }
+
+    private CurrentUserInformationJson getCurrentUserInformation(AuthenticatedUser user) {
+        String loggedInUserName;
+        String userName;
+        Person person; // = null;
+        Social social; // = null;
+        CurrentUserInformationJson currentUserInformationJson = new CurrentUserInformationJson();
+        currentUserInformationJson.isLoggedIn = true;  // if authentication is not null then the person is logged in
+        currentUserInformationJson.coordinatorId = -1;
+        currentUserInformationJson.isHourlyCoordinator = false;
+        currentUserInformationJson.isDailyCoordinator = false;
+        person = user.getPerson();
+        if (person != null) {
+            Coordinator coordinator = businessWithCoordinator.getCoordinatorFromPersonId(person.getId());
+            if (coordinator != null) {
+                currentUserInformationJson.coordinatorId = coordinator.getCoordinatorType();
+                currentUserInformationJson.isHourlyCoordinator = currentUserInformationJson.coordinatorId < 24;
+                currentUserInformationJson.isDailyCoordinator = !currentUserInformationJson.isHourlyCoordinator;
+            }
+            loggedInUserName = person.getName();
+            userName = loggedInUserName;
+        } else {
+            userName = "Anonymous";
+            loggedInUserName = GUEST_NAME_INTRO + userName;
+            if (user instanceof GoogleUser) {
+                userName = user.getSocial().getGoogleUserName();
+                loggedInUserName = GUEST_NAME_INTRO + userName;
+            }
+            if (user instanceof FacebookUser) {
+                userName = user.getSocial().getFacebookUserName();
+                loggedInUserName = GUEST_NAME_INTRO + userName;
+            }
+        }
+        currentUserInformationJson.socialServiceUsed = user.getServiceName();
+        currentUserInformationJson.loggedInUserName = loggedInUserName; //user who logged in via social
+        currentUserInformationJson.userName = userName; //user who registered as adorator (his/her name may differ from the username used in Social)
+        social = user.getSocial();
+        if (social != null) {
+            currentUserInformationJson.socialId = social.getId();
+            String email = social.getGoogleEmail();
+            if (email.length() == 0) {
+                email = social.getFacebookEmail();
+            }
+            currentUserInformationJson.socialEmail = email;
+        }
+        if (person != null) {
+            currentUserInformationJson.isAuthorized = true; //not just logged in, but since the person is known, authorized too
+            currentUserInformationJson.personId = person.getId();
+            currentUserInformationJson.userName = person.getName();
+            AdoratorStatusTypes status = AdoratorStatusTypes.getTypeFromId(person.getAdorationStatus());
+            currentUserInformationJson.isRegisteredAdorator = registeredAdorator.contains(status);
+            currentUserInformationJson.isPrivilegedAdorator = leaders.contains(status) || currentUserInformationJson.coordinatorId > -1;
+            currentUserInformationJson.isAdoratorAdmin = admins.contains(status);
         }
         return currentUserInformationJson;
     }

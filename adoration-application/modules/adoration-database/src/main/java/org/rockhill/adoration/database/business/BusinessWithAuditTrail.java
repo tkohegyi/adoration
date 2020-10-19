@@ -2,13 +2,13 @@ package org.rockhill.adoration.database.business;
 
 import com.sun.istack.NotNull;
 import com.sun.istack.Nullable;
+import org.hibernate.Session;
+import org.hibernate.query.Query;
 import org.rockhill.adoration.database.SessionFactoryHelper;
+import org.rockhill.adoration.database.business.helper.BusinessBase;
 import org.rockhill.adoration.database.business.helper.Converter;
 import org.rockhill.adoration.database.exception.DatabaseHandlingException;
 import org.rockhill.adoration.database.tables.AuditTrail;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Component
-public class BusinessWithAuditTrail {
+public class BusinessWithAuditTrail extends BusinessBase {
 
     private final Logger logger = LoggerFactory.getLogger(BusinessWithAuditTrail.class);
 
@@ -30,19 +30,16 @@ public class BusinessWithAuditTrail {
         if (id == null) {
             throw new DatabaseHandlingException("Tried to get audit trail for a null id, pls contact to maintainers");
         }
-        List<AuditTrail> result = null;
-        SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
-        if (sessionFactory != null) {
-            Session session = sessionFactory.openSession();
-            session.beginTransaction();
-            String hql = "from AuditTrail as AT where AT.refId = :expectedId OR AT.activityType like :likeValue order by AT.atWhen ASC";
-            Query query = session.createQuery(hql);
-            query.setParameter("expectedId", id);
-            query.setParameter("likeValue", "'%:" + id.toString() + "'");
-            result = (List<AuditTrail>) query.list();
-            session.getTransaction().commit();
-            session.close();
-        }
+        List<AuditTrail> result;
+        Session session = SessionFactoryHelper.getOpenedSession();
+        session.beginTransaction();
+        String hql = "from AuditTrail as AT where AT.refId = :" + EXPECTED_ID + " OR AT.activityType like :likeValue order by AT.atWhen ASC";
+        Query query = session.createQuery(hql);
+        query.setParameter(EXPECTED_ID, id);
+        query.setParameter("likeValue", "'%:" + id.toString() + "'");
+        result = (List<AuditTrail>) query.list();
+        session.getTransaction().commit();
+        session.close();
         return result;
     }
 
@@ -74,19 +71,16 @@ public class BusinessWithAuditTrail {
      * @param auditTrail the record to be stored.
      */
     public void saveAuditTrailSafe(@NotNull AuditTrail auditTrail) {
-        SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
-        if (sessionFactory != null) {
-            Session session = sessionFactory.openSession();
-            try {
-                session.beginTransaction();
-                session.save(auditTrail);
-                session.getTransaction().commit();
-                session.close();
-            } catch (Exception e) {
-                session.getTransaction().rollback();
-                session.close();
-                logger.warn("Cannot save Audit record, issue: " + e.getLocalizedMessage());
-            }
+        Session session = SessionFactoryHelper.getOpenedSession();
+        try {
+            session.beginTransaction();
+            session.save(auditTrail);
+            session.getTransaction().commit();
+            session.close();
+        } catch (Exception e) {
+            session.getTransaction().rollback();
+            session.close();
+            logger.warn("Cannot save Audit record, issue: " + e.getLocalizedMessage());
         }
     }
 

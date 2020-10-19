@@ -6,7 +6,7 @@ import org.rockhill.adoration.database.tables.Social;
 public class GoogleUser extends AuthenticatedUser {
 
     public GoogleUser(Social social, Person person, Integer sessionTimeoutInSec) {
-        super(social, person, sessionTimeoutInSec);
+        super("Google", social, person, sessionTimeoutInSec);
     }
 
 }

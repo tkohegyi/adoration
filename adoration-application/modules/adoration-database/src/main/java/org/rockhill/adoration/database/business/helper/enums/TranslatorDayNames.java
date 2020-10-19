@@ -28,18 +28,12 @@ public enum TranslatorDayNames {
     }
 
     public static String getTranslatedString(Integer value) {
-        String text = null;
-        if (SUNDAY.dayValue.equals(value)) { text = SUNDAY.dayText; }
-        if (MONDAY.dayValue.equals(value)) { text = MONDAY.dayText; }
-        if (TUESDAY.dayValue.equals(value)) { text = TUESDAY.dayText; }
-        if (WEDNESDAY.dayValue.equals(value)) { text = WEDNESDAY.dayText; }
-        if (THURSDAY.dayValue.equals(value)) { text = THURSDAY.dayText; }
-        if (FRIDAY.dayValue.equals(value)) { text = FRIDAY.dayText; }
-        if (SATURDAY.dayValue.equals(value)) { text = SATURDAY.dayText; }
-        if (text == null) {
-            throw new DatabaseHandlingException("Incorrect usage of data -> TranslatorDayNames number:" + value.toString() + " was requested.");
+        for (TranslatorDayNames translatorDayNames : TranslatorDayNames.values()) {
+            if (translatorDayNames.dayValue.equals(value)) {
+                return translatorDayNames.dayText;
+            }
         }
-        return text;
+        throw new DatabaseHandlingException("Incorrect usage of data -> TranslatorDayNames number:" + value.toString() + " was requested.");
     }
 
 

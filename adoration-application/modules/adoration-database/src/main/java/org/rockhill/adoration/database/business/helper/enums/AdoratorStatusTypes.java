@@ -42,30 +42,20 @@ public enum AdoratorStatusTypes {
 
     // helper functions
     public static String getTranslatedString(Integer adoratorStatusValue) {
-        String adoratorStatusText = null;
-        if (USER.getAdoratorStatusValue().equals(adoratorStatusValue)) { adoratorStatusText = USER.getAdoratorStatusText(); }
-        if (PRE_ADORATOR.getAdoratorStatusValue().equals(adoratorStatusValue)) { adoratorStatusText = PRE_ADORATOR.getAdoratorStatusText(); }
-        if (ADORATOR.getAdoratorStatusValue().equals(adoratorStatusValue)) { adoratorStatusText = ADORATOR.getAdoratorStatusText(); }
-        if (ADORATOR_ADMIN.getAdoratorStatusValue().equals(adoratorStatusValue)) { adoratorStatusText = ADORATOR_ADMIN.getAdoratorStatusText(); }
-        if (POST_ADORATOR.getAdoratorStatusValue().equals(adoratorStatusValue)) { adoratorStatusText = POST_ADORATOR.getAdoratorStatusText(); }
-        if (DIED_ADORATOR.getAdoratorStatusValue().equals(adoratorStatusValue)) { adoratorStatusText = DIED_ADORATOR.getAdoratorStatusText(); }
-        if (REGISTERED_BY_MISTAKE.getAdoratorStatusValue().equals(adoratorStatusValue)) { adoratorStatusText = REGISTERED_BY_MISTAKE.getAdoratorStatusText(); }
-        if (ADORATOR_EMPHASIZED.getAdoratorStatusValue().equals(adoratorStatusValue)) { adoratorStatusText = ADORATOR_EMPHASIZED.getAdoratorStatusText(); }
-        if (adoratorStatusText == null) {
-            throw new DatabaseHandlingException("Incorrect usage of data -> AdoratorStatusTypes number:" + adoratorStatusValue.toString() + " was requested.");
+        for (AdoratorStatusTypes adoratorStatusTypes : AdoratorStatusTypes.values()) {
+            if (adoratorStatusTypes.getAdoratorStatusValue().equals(adoratorStatusValue)) {
+                return adoratorStatusTypes.getAdoratorStatusText();
+            }
         }
-        return adoratorStatusText;
+        throw new DatabaseHandlingException("Incorrect usage of data -> AdoratorStatusTypes number:" + adoratorStatusValue.toString() + " was requested.");
     }
 
     public static AdoratorStatusTypes getTypeFromId(Integer id) {
-        if (USER.adoratorStatusValue.equals(id)) return USER;
-        if (PRE_ADORATOR.adoratorStatusValue.equals(id)) return PRE_ADORATOR;
-        if (ADORATOR.adoratorStatusValue.equals(id)) return ADORATOR;
-        if (ADORATOR_ADMIN.adoratorStatusValue.equals(id)) return ADORATOR_ADMIN;
-        if (POST_ADORATOR.adoratorStatusValue.equals(id)) return POST_ADORATOR;
-        if (DIED_ADORATOR.adoratorStatusValue.equals(id)) return DIED_ADORATOR;
-        if (REGISTERED_BY_MISTAKE.adoratorStatusValue.equals(id)) return REGISTERED_BY_MISTAKE;
-        if (ADORATOR_EMPHASIZED.adoratorStatusValue.equals(id)) return ADORATOR_EMPHASIZED;
+        for (AdoratorStatusTypes adoratorStatusTypes : AdoratorStatusTypes.values()) {
+            if (adoratorStatusTypes.adoratorStatusValue.equals(id)) {
+                return adoratorStatusTypes;
+            }
+        }
         throw new DatabaseHandlingException("Invalid AdoratorStatusTypes requested: " + id);
     }
 

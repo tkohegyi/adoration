@@ -1,9 +1,8 @@
 package org.rockhill.adoration.database.business;
 
+import org.hibernate.Session;
 import org.rockhill.adoration.database.SessionFactoryHelper;
 import org.rockhill.adoration.database.business.helper.NextGeneralKey;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,16 +16,13 @@ public class BusinessWithNextGeneralKey {
     NextGeneralKey nextGeneralKey;
 
     public Long getNextGeneralId() {
-        Long id = null;
-        SessionFactory sessionFactory = SessionFactoryHelper.getSessionFactory();
-        if (sessionFactory != null) {
-            Session session = sessionFactory.openSession();
-            session.beginTransaction();
-            id = nextGeneralKey.getNextGeneralKay(session);
-            logger.debug("New sequence arrived:" + id.toString());
-            session.getTransaction().commit();
-            session.close();
-        }
+        Long id;
+        Session session = SessionFactoryHelper.getOpenedSession();
+        session.beginTransaction();
+        id = nextGeneralKey.getNextGeneralKay(session);
+        logger.debug("New sequence arrived:" + id.toString());
+        session.getTransaction().commit();
+        session.close();
         return id;
     }
 

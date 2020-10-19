@@ -10,7 +10,6 @@ import org.rockhill.adoration.web.json.PersonInformationJson;
 import org.rockhill.adoration.web.json.TableDataInformationJson;
 import org.rockhill.adoration.web.provider.CoverageProvider;
 import org.rockhill.adoration.web.provider.CurrentUserProvider;
-import org.rockhill.adoration.web.provider.LogFileProvider;
 import org.rockhill.adoration.web.provider.PeopleProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,8 +31,6 @@ public class AdoratorsController extends ControllerBase {
 
     private final Logger logger = LoggerFactory.getLogger(AdoratorsController.class);
 
-    @Autowired
-    private LogFileProvider logFileProvider;
     @Autowired
     private CurrentUserProvider currentUserProvider;
     @Autowired
@@ -108,7 +105,7 @@ public class AdoratorsController extends ControllerBase {
             PersonInformationJson p = g.fromJson(body, PersonInformationJson.class);
             //check authorization: user must have right user type
             if (!currentUserInformationJson.isAdoratorAdmin) {
-                resultString = "Unauthorized action.";
+                resultString = UNAUTHORIZED_ACTION;
                 result = new ResponseEntity<String>(getJsonString(JSON_RESPONSE_UPDATE, resultString), responseHeaders, HttpStatus.FORBIDDEN);
             } else {
                 //authorization checked, ok
@@ -187,7 +184,7 @@ public class AdoratorsController extends ControllerBase {
             Link p = g.fromJson(body, Link.class);
             //check authorization: user must have right user type
             if (!currentUserInformationJson.isAdoratorAdmin) {
-                resultString = "Unauthorized action.";
+                resultString = UNAUTHORIZED_ACTION;
                 result = new ResponseEntity<String>(getJsonString(JSON_RESPONSE_UPDATE, resultString), responseHeaders, HttpStatus.FORBIDDEN);
             } else {
                 //authorization checked, ok
@@ -230,7 +227,7 @@ public class AdoratorsController extends ControllerBase {
             DeleteEntityJson p = g.fromJson(body, DeleteEntityJson.class);
             //check authorization
             if (!currentUserInformationJson.isAdoratorAdmin) {
-                resultString = "Unauthorized action.";
+                resultString = UNAUTHORIZED_ACTION;
                 result = new ResponseEntity<String>(getJsonString(JSON_RESPONSE_DELETE, resultString), responseHeaders, HttpStatus.FORBIDDEN);
             } else {
                 //authorization checked, ok
@@ -273,7 +270,7 @@ public class AdoratorsController extends ControllerBase {
             DeleteEntityJson p = g.fromJson(body, DeleteEntityJson.class);
             //check authorization
             if (!currentUserInformationJson.isAdoratorAdmin) {
-                resultString = "Unauthorized action.";
+                resultString = UNAUTHORIZED_ACTION;
                 result = new ResponseEntity<String>(getJsonString(JSON_RESPONSE_DELETE, resultString), responseHeaders, HttpStatus.FORBIDDEN);
             } else {
                 //authorization checked, ok
