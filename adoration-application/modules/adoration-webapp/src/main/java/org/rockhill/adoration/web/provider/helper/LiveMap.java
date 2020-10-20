@@ -12,9 +12,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 public class LiveMap {
-    private static final Logger logger = LoggerFactory.getLogger(LiveMap.class);
-    private final Object o = new Object();
-    private Map<String, LiveMapElement> liveMap = new ConcurrentHashMap<>();
+    private final Logger logger = LoggerFactory.getLogger(LiveMap.class);
+    private static final Object o = new Object();
+    private final Map<String, LiveMapElement> liveMap = new ConcurrentHashMap<>();
     private static Timer liveMapCheckerTimer;
     private static Boolean isLogActive = true;
 
@@ -82,18 +82,19 @@ public class LiveMap {
             long now = System.currentTimeMillis();
             synchronized (o) {
                 String[] keySet = liveMap.keySet().toArray(new String[liveMap.size()]);
-                for (int i = 0; i < keySet.length; i++) {
-                    String entryKey = keySet[i];
+                for (String entryKey : keySet) {
                     LiveMapElement liveMapElement = liveMap.get(entryKey);
                     if (liveMapElement.getDeadline() < now) { //if expired
                         liveMap.remove(entryKey); //remove the entry
-                        logger.info("Live Adorator left - " + liveMapElement.getCurrentUserInformationJson().userName +" - " + entryKey);
+                        logger.info("Live Adorator left - " + liveMapElement.getCurrentUserInformationJson().userName + " - " + entryKey);
                     }
                 }
             }
         } else {
             //no online adorator
-            isLogActive = false;
+            synchronized (o) {
+                isLogActive = false;
+            }
         }
     }
 }

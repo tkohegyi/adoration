@@ -21,8 +21,6 @@
 		<beans:property name="suffix" value=".jsp" />
 	</beans:bean>
 
-	<context:component-scan base-package="org.rockhill.adoration.web" />
-
-
+	<context:component-scan base-package="org.rockhill.adoration.web.controller" />
 
 </beans:beans>

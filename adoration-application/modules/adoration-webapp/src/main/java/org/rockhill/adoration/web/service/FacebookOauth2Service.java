@@ -15,6 +15,7 @@ import org.rockhill.adoration.exception.SystemException;
 import org.rockhill.adoration.helper.EmailSender;
 import org.rockhill.adoration.web.configuration.PropertyDto;
 import org.rockhill.adoration.web.configuration.WebAppConfigurationAccess;
+import org.rockhill.adoration.web.service.helper.Oauth2ServiceBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,13 +37,14 @@ import java.util.Collection;
  * For Handling proper Facebook Oauth2 authorization tasks.
  */
 @Component
-public class FacebookOauth2Service {
-
-    private final Logger logger = LoggerFactory.getLogger(FacebookOauth2Service.class);
-    private final String subject = "[AdoratorApp] - Új Facebook Social";
+public class FacebookOauth2Service extends Oauth2ServiceBase {
 
     private static final String GRAPH_URL = "https://graph.facebook.com/v5.0/oauth/access_token?";
     private static final String AUTHORIZATION_URL = "https://www.facebook.com/v5.0/dialog/oauth?";
+    private static final String FACEBOOK_TEXT = "Facebook";
+
+    private final Logger logger = LoggerFactory.getLogger(FacebookOauth2Service.class);
+    private final String subject = "[AdoratorApp] - Új Facebook Social";
 
     private FacebookConnectionFactory facebookConnectionFactory;
 
@@ -170,13 +172,9 @@ public class FacebookOauth2Service {
     private Social detectSocial(JSONObject facebookUserInfoJson) {
         String userId = facebookUserInfoJson.getAsString("id");
         String email = facebookUserInfoJson.getAsString("email");
-        if (email == null) {
-            email = "";
-        }
+        email = makeEmptyStringFromNull(email);
         String firstName = facebookUserInfoJson.getAsString("name");
-        if (firstName == null) {
-            firstName = "";
-        }
+        firstName = makeEmptyStringFromNull(firstName);
         Social social = businessWithSocial.getSocialByFUserId(userId);
         if (social == null) {
             social = new Social();
@@ -188,7 +186,7 @@ public class FacebookOauth2Service {
             Long id = businessWithNextGeneralKey.getNextGeneralId();
             social.setId(id);
             AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(id, social.getFacebookUserName(), "Social:New:" + id.toString(),
-                    "New Facebook Social login created.", "Facebook");
+                    "New Facebook Social login created.", FACEBOOK_TEXT);
             //this is a brand new login, try to identify - by using e-mail
             if ( (email != null) && (email.length() > 0) ) {
                 Person p = businessWithPerson.getPersonByEmail(email);
@@ -213,27 +211,31 @@ public class FacebookOauth2Service {
             social.setId(id); //Social object is ready
         } else {
             //detect social update and act
-            Collection<AuditTrail> auditTrailCollection = new ArrayList<>();
-            if (social.getFacebookFirstName().compareToIgnoreCase(firstName) != 0) {
-                social.setFacebookFirstName(firstName);
-                social.setFacebookUserName(firstName);  // this is what we can access by default...
-                Long id = businessWithNextGeneralKey.getNextGeneralId();
-                AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(id, social.getFacebookUserName(), "Social:Update:" + social.getId().toString(),
-                        "Facebook FirstName/Name updated to:" + firstName, "Facebook");
-                auditTrailCollection.add(auditTrail);
-            }
-            if (social.getFacebookEmail().compareToIgnoreCase(email) != 0) {
-                social.setFacebookEmail(email);
-                Long id = businessWithNextGeneralKey.getNextGeneralId();
-                AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(id, social.getFacebookUserName(), "Social:Update:" + social.getId().toString(),
-                        "Facebook Email updated to:" + email, "Facebook");
-                auditTrailCollection.add(auditTrail);
-            }
-            if (!auditTrailCollection.isEmpty()) {
-                businessWithSocial.updateSocial(social, auditTrailCollection);
-            }
+            autoUpdateFacebookSocial(social, firstName, email);
         }
         return social;
+    }
+
+    private void autoUpdateFacebookSocial(Social social, String firstName, String email) {
+        Collection<AuditTrail> auditTrailCollection = new ArrayList<>();
+        if (social.getFacebookFirstName().compareToIgnoreCase(firstName) != 0) {
+            social.setFacebookFirstName(firstName);
+            social.setFacebookUserName(firstName);  // this is what we can access by default...
+            Long id = businessWithNextGeneralKey.getNextGeneralId();
+            AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(id, social.getFacebookUserName(), AUDIT_SOCIAL_UPDATE + social.getId().toString(),
+                    "Facebook FirstName/Name updated to:" + firstName, FACEBOOK_TEXT);
+            auditTrailCollection.add(auditTrail);
+        }
+        if (social.getFacebookEmail().compareToIgnoreCase(email) != 0) {
+            social.setFacebookEmail(email);
+            Long id = businessWithNextGeneralKey.getNextGeneralId();
+            AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(id, social.getFacebookUserName(), AUDIT_SOCIAL_UPDATE + social.getId().toString(),
+                    "Facebook Email updated to:" + email, FACEBOOK_TEXT);
+            auditTrailCollection.add(auditTrail);
+        }
+        if (!auditTrailCollection.isEmpty()) {
+            businessWithSocial.updateSocial(social, auditTrailCollection);
+        }
     }
 
 }

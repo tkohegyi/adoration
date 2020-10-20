@@ -140,12 +140,12 @@ public class CurrentUserProvider {
             if (person != null) {
                 loggedInUserName = person.getName();
             } else {
-                loggedInUserName = "Vend\u00e9g - Anonymous";
+                loggedInUserName = GUEST_NAME_INTRO + "Anonymous";
                 if (principal instanceof GoogleUser) {
-                    loggedInUserName = "Vend\u00e9g - " + user.getSocial().getGoogleUserName();
+                    loggedInUserName = GUEST_NAME_INTRO + user.getSocial().getGoogleUserName();
                 }
                 if (principal instanceof FacebookUser) {
-                    loggedInUserName = "Vend\u00e9g - " + user.getSocial().getFacebookUserName();
+                    loggedInUserName = GUEST_NAME_INTRO + user.getSocial().getFacebookUserName();
                 }
             }
         }

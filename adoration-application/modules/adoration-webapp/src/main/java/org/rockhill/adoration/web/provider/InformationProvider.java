@@ -9,8 +9,8 @@ import org.rockhill.adoration.database.business.helper.enums.TranslatorDayNames;
 import org.rockhill.adoration.database.tables.Link;
 import org.rockhill.adoration.database.tables.Person;
 import org.rockhill.adoration.database.tables.Social;
-import org.rockhill.adoration.web.json.CoordinatorJson;
 import org.rockhill.adoration.web.json.CurrentUserInformationJson;
+import org.rockhill.adoration.web.json.GuestInformationJson;
 import org.rockhill.adoration.web.json.InformationJson;
 import org.rockhill.adoration.web.json.PersonJson;
 import org.slf4j.Logger;
@@ -59,34 +59,7 @@ public class InformationProvider {
             informationJson.hourInDayNext = (hourId + 1) % 24;
             informationJson.currentHourList = businessWithLink.getLinksOfHour(hourId);
             informationJson.futureHourList = businessWithLink.getLinksOfHour((hourId + 1) % 168);
-            Set<Long> personIds = new HashSet<>();
-            if (informationJson.linkList != null) {
-                for (Link l: informationJson.linkList) {
-                    personIds.add(l.getPersonId());
-                }
-            }
-            if (informationJson.currentHourList != null) {
-                for (Link l: informationJson.currentHourList) {
-                    personIds.add(l.getPersonId());
-                }
-            }
-            if (informationJson.futureHourList != null) {
-                for (Link l: informationJson.futureHourList) {
-                    personIds.add(l.getPersonId());
-                }
-            }
-            Iterator<Long> ppl = personIds.iterator();
-            List<PersonJson> relatedPersonList = new LinkedList<>();
-            while (ppl.hasNext()) {
-                Long id = ppl.next();
-                Person p = businessWithPerson.getPersonById(id);
-                if (p != null) {
-                    relatedPersonList.add(new PersonJson(p,currentUserInformationJson.isPrivilegedUser()));
-                } else {
-                    logger.warn("Person ID usage found without real Person, id: " + id.toString());
-                }
-            }
-            informationJson.relatedPersonList = relatedPersonList;
+            fillRelatedPersonIds(informationJson, currentUserInformationJson.isPrivilegedUser());
             //fill the day names first
             informationJson.dayNames = new HashMap<>();
             for (TranslatorDayNames dayName : TranslatorDayNames.values()) {
@@ -97,6 +70,38 @@ public class InformationProvider {
 
         }
         return informationJson;
+    }
+
+    private void fillRelatedPersonIds(InformationJson informationJson, boolean isPrivilegedUser) {
+        //NOTE: linkList, currentHourList and futureHourList must be filled already
+        Set<Long> personIds = new HashSet<>();
+        if (informationJson.linkList != null) {
+            for (Link l: informationJson.linkList) {
+                personIds.add(l.getPersonId());
+            }
+        }
+        if (informationJson.currentHourList != null) {
+            for (Link l: informationJson.currentHourList) {
+                personIds.add(l.getPersonId());
+            }
+        }
+        if (informationJson.futureHourList != null) {
+            for (Link l: informationJson.futureHourList) {
+                personIds.add(l.getPersonId());
+            }
+        }
+        Iterator<Long> ppl = personIds.iterator();
+        List<PersonJson> relatedPersonList = new LinkedList<>();
+        while (ppl.hasNext()) {
+            Long id = ppl.next();
+            Person p = businessWithPerson.getPersonById(id);
+            if (p != null) {
+                relatedPersonList.add(new PersonJson(p, isPrivilegedUser));
+            } else {
+                logger.warn("Person ID usage found without real Person, id: " + id.toString());
+            }
+        }
+        informationJson.relatedPersonList = relatedPersonList;
     }
 
     public Object getGuestInformation(CurrentUserInformationJson currentUserInformationJson, HttpSession httpSession) {
@@ -141,18 +146,4 @@ public class InformationProvider {
         }
         return guestInformationJson;
     }
-}
-
-class GuestInformationJson {
-    public String error; // filled only in case of error
-    public String socialServiceUsed;
-    public Boolean isGoogle;
-    public String nameGoogle;
-    public String emailGoogle;
-    public Boolean isFacebook;
-    public String nameFacebook;
-    public String emailFacebook;
-    public String status;   //status of the adorator
-    public String id;   //id of the social record
-    public List<CoordinatorJson> leadership; //main coordinators
 }

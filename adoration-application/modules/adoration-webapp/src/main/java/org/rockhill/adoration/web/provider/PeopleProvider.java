@@ -21,6 +21,8 @@ import java.util.*;
 @Component
 public class PeopleProvider {
 
+    private static final String USER = "User:";
+
     private final Logger logger = LoggerFactory.getLogger(PeopleProvider.class);
     private final String subjectNewAdorator = "[AdoratorApp] - Új adoráló";
     private final String subjectNewMessage = "[AdoratorApp] - Üzenet egy felhasználótól";
@@ -90,7 +92,7 @@ public class PeopleProvider {
         String oldValue = person.getName();
         //name length must be > 0, and shall not fit to other existing names
         if (newValue.length() == 0) {
-            logger.info("User:" + currentUserInformationJson.userName + " tried to create/update Person with empty name.");
+            logger.info(USER + currentUserInformationJson.userName + " tried to create/update Person with empty name.");
             return null;
         }
         person.setName(newValue);
@@ -208,7 +210,7 @@ public class PeopleProvider {
     public Long registerAdorator(RegisterAdoratorJson p, CurrentUserInformationJson currentUserInformationJson) {
         //validations
         if (p.name == null || p.comment == null || p.email == null || p.coordinate == null || p.dhc == null || p.mobile == null) {
-            logger.warn("User:" + currentUserInformationJson.userName + " tried to use null value(s) for a new Adorator.");
+            logger.warn(USER + currentUserInformationJson.userName + " tried to use null value(s) for a new Adorator.");
             throw new DatabaseHandlingException("Field content (nullString) is not allowed.");
         }
         businessWithAuditTrail.checkDangerousValue(p.name, currentUserInformationJson.userName);
@@ -219,16 +221,16 @@ public class PeopleProvider {
         businessWithAuditTrail.checkDangerousValue(p.mobile, currentUserInformationJson.userName);
         if (p.dayId == null || p.hourId == null || p.dayId < 0 || p.dayId > 6 || p.hourId < 0 || p.hourId > 23
                 || p.method < 1 || p.method > 3) {
-            logger.warn("User:" + currentUserInformationJson.userName + "/" + p.name + " tried to use dangerous value for a new Adorator.");
+            logger.warn(USER + currentUserInformationJson.userName + "/" + p.name + " tried to use dangerous value for a new Adorator.");
             throw new DatabaseHandlingException("Field content (Integer) is not allowed.");
         }
         //if person is identified, then it is not a new adorator
         if (p.personId != null) {
-            logger.warn("User:" + currentUserInformationJson.userName + "/" + p.name + " tried to register again.");
+            logger.warn(USER + currentUserInformationJson.userName + "/" + p.name + " tried to register again.");
             throw new DatabaseHandlingException("Duplicated registration is not allowed.");
         }
         if (p.dhc == null || !p.dhc.contentEquals("consent-yes")) {
-            logger.warn("User:" + currentUserInformationJson.userName + "/" + p.name + " tried to register without consent.");
+            logger.warn(USER + currentUserInformationJson.userName + "/" + p.name + " tried to register without consent.");
             throw new DatabaseHandlingException("Data handling consent is missing.");
         }
         Long newId = businessWithNextGeneralKey.getNextGeneralId();
@@ -269,14 +271,7 @@ public class PeopleProvider {
             if (!AdoratorStatusTypes.isInactive(p.getAdorationStatus())) {
                 personList.add(new PersonJson(p, privilegedAdorator));
                 List<Link> personLinkList = businessWithLink.getLinksOfPerson(p);
-                if (personLinkList != null) {
-                    for (Link l : personLinkList) {
-                        if (!linkList.contains(l)) {
-                            l.setAdminComment(""); //empty the admin comment part, since adorators shall not see this part
-                            linkList.add(l);
-                        }
-                    }
-                }
+                fillLinkListFromPersonLinkList(linkList, personLinkList);
             }
         }
         //now fill the structure
@@ -293,10 +288,22 @@ public class PeopleProvider {
         return linkJson;
     }
 
+    private void fillLinkListFromPersonLinkList(List<Link> linkList, List<Link> personLinkList) {
+        if (personLinkList != null) {
+            for (Link l : personLinkList) {
+                if (!linkList.contains(l)) {
+                    l.setAdminComment(""); //empty the admin comment part, since adorators shall not see this part
+                    linkList.add(l);
+                }
+            }
+        }
+    }
+
     public void messageToCoordinator(MessageToCoordinatorJson p, CurrentUserInformationJson currentUserInformationJson) {
-        String socialText = currentUserInformationJson.socialServiceUsed == null ? "[ Unknown ]" : currentUserInformationJson.socialServiceUsed;
-        String socialId = currentUserInformationJson.socialId == null ? "[ Unknown ]" : currentUserInformationJson.socialId.toString();
-        String personId = currentUserInformationJson.personId == null ? "[ Unknown ]" : currentUserInformationJson.personId.toString();
+        String unknown = "[ Unknown ]";
+        String socialText = currentUserInformationJson.socialServiceUsed == null ? unknown : currentUserInformationJson.socialServiceUsed;
+        String socialId = currentUserInformationJson.socialId == null ? unknown : currentUserInformationJson.socialId.toString();
+        String personId = currentUserInformationJson.personId == null ? unknown : currentUserInformationJson.personId.toString();
         String info = p.info == null ? "[ Nincs adat ]" : p.info;
         String message = p.text == null ? "[ Nincs üzenet ]" : p.text;
         //send mail from the person

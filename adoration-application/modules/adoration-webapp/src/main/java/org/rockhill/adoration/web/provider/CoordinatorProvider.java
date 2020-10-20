@@ -8,6 +8,7 @@ import org.rockhill.adoration.database.tables.Person;
 import org.rockhill.adoration.web.json.CoordinatorJson;
 import org.rockhill.adoration.web.json.CurrentUserInformationJson;
 import org.rockhill.adoration.web.json.DeleteEntityJson;
+import org.rockhill.adoration.web.provider.helper.Comparer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ import org.springframework.stereotype.Component;
 import java.util.*;
 
 @Component
-public class CoordinatorProvider {
+public class CoordinatorProvider extends Comparer {
 
     private final Logger logger = LoggerFactory.getLogger(CoordinatorProvider.class);
 
@@ -152,18 +153,6 @@ public class CoordinatorProvider {
         }
         id = businessWithCoordinator.updateCoordinator(newCoordinator, auditTrailCollection);
         return id;
-    }
-
-    private boolean isLongChanged(final Long oldLongValue, final Long newLongValue) {
-        boolean changed = false;
-        if (!((oldLongValue == null) && (newLongValue == null))) { //if both null, it was not changed
-            if (((oldLongValue == null) && (newLongValue != null)) //at least one of them is not null
-                    || ((oldLongValue != null) && (newLongValue == null))
-                    || (!oldLongValue.equals(newLongValue))) { //here both of them is not null
-                changed = true;
-            }
-        }
-        return changed;
     }
 
     public Object getCoordinatorHistoryAsObject(Long id) {

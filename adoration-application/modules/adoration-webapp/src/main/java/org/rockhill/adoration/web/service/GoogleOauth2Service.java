@@ -23,6 +23,7 @@ import org.rockhill.adoration.helper.EmailSender;
 import org.rockhill.adoration.web.configuration.PropertyDto;
 import org.rockhill.adoration.web.configuration.WebAppConfigurationAccess;
 import org.rockhill.adoration.database.json.GoogleUserInfoJson;
+import org.rockhill.adoration.web.service.helper.Oauth2ServiceBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,18 +41,19 @@ import java.util.List;
  * For Handling proper Google Oauth2 authorization tasks.
  */
 @Component
-public class GoogleOauth2Service {
+public class GoogleOauth2Service extends Oauth2ServiceBase {
 
-    private final Logger logger = LoggerFactory.getLogger(GoogleOauth2Service.class);
-    private final String subject = "[AdoratorApp] - Új Google Social";
-
-
+    private static final String GOOGLE_TEXT = "Google";
     private static final String USER_INFO_URL = "https://www.googleapis.com/oauth2/v1/userinfo";
     private static final List<String> SCOPES = Arrays.asList(
             "https://www.googleapis.com/auth/userinfo.profile",
             "https://www.googleapis.com/auth/userinfo.email");
-    private GoogleAuthorizationCodeFlow flow;
+
+    private final Logger logger = LoggerFactory.getLogger(GoogleOauth2Service.class);
+    private final String subject = "[AdoratorApp] - Új Google Social";
     private final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
+
+    private GoogleAuthorizationCodeFlow flow;
 
     @Autowired
     AdorationCustomAuthenticationProvider adorationCustomAuthenticationProvider;
@@ -105,14 +107,14 @@ public class GoogleOauth2Service {
     /**
      * Beware that this can be NULL, if something is wrong.
      *
-     * @param authCode
-     * @return
+     * @param authCode authenticaton code received from Google
+     * @return with Spring Authentication object
      */
     public Authentication getGoogleUserInfoJson(final String authCode) {
-        GoogleUser googleUser = null;
         Authentication authentication = null;
         PropertyDto propertyDto = webAppConfigurationAccess.getProperties();
         try {
+            GoogleUser googleUser;
             final GoogleTokenResponse response = flow.newTokenRequest(authCode)
                     .setRedirectUri(propertyDto.getGoogleRedirectUrl())
                     .execute();
@@ -146,15 +148,9 @@ public class GoogleOauth2Service {
     }
 
     private Social detectSocial(GoogleUserInfoJson googleUserInfoJson) {
-        if (googleUserInfoJson.email == null) {
-            googleUserInfoJson.email = "";
-        }
-        if (googleUserInfoJson.name == null) {
-            googleUserInfoJson.name = "";
-        }
-        if (googleUserInfoJson.picture == null) {
-            googleUserInfoJson.picture = "";
-        }
+        googleUserInfoJson.email = makeEmptyStringFromNull(googleUserInfoJson.email);
+        googleUserInfoJson.name = makeEmptyStringFromNull(googleUserInfoJson.name);
+        googleUserInfoJson.picture = makeEmptyStringFromNull(googleUserInfoJson.picture);
         Social social = businessWithSocial.getSocialByGUserId(googleUserInfoJson.id); //if there is no social this will cause exception that is unhandled !!!
         if (social == null) {
             social = new Social();
@@ -165,7 +161,7 @@ public class GoogleOauth2Service {
             social.setSocialStatus(SocialStatusTypes.WAIT_FOR_IDENTIFICATION.getTypeValue());
             Long id = businessWithNextGeneralKey.getNextGeneralId();
             social.setId(id);
-            AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(id, social.getGoogleUserName(), "Social:New:" + id.toString(), "New Google Social login created.", "Google");
+            AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(id, social.getGoogleUserName(), "Social:New:" + id.toString(), "New Google Social login created.", GOOGLE_TEXT);
             //this is a brand new login, try to identify - by using e-mail
             if ( (googleUserInfoJson.email != null) && (googleUserInfoJson.email.length() > 0) ) {
                 Person p = businessWithPerson.getPersonByEmail(googleUserInfoJson.email);
@@ -191,33 +187,37 @@ public class GoogleOauth2Service {
             social.setId(id); //Social object is ready
         } else {
             //detect social update and act
-            Collection<AuditTrail> auditTrailCollection = new ArrayList<>();
-            if (social.getGoogleUserName().compareToIgnoreCase(googleUserInfoJson.name) != 0) {
-                social.setGoogleUserName(googleUserInfoJson.name);
-                Long id = businessWithNextGeneralKey.getNextGeneralId();
-                AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(id, social.getGoogleUserName(), "Social:Update:" + social.getId().toString(),
-                        "Google Username updated to:" + googleUserInfoJson.name, "Google");
-                auditTrailCollection.add(auditTrail);
-            }
-            if (social.getGoogleEmail().compareToIgnoreCase(googleUserInfoJson.email) != 0) {
-                social.setGoogleEmail(googleUserInfoJson.email);
-                Long id = businessWithNextGeneralKey.getNextGeneralId();
-                AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(id, social.getGoogleUserName(), "Social:Update:" + social.getId().toString(),
-                        "Google Email updated to:" + googleUserInfoJson.email, "Google");
-                auditTrailCollection.add(auditTrail);
-            }
-            if (social.getGoogleUserPicture().compareToIgnoreCase(googleUserInfoJson.picture) != 0) {
-                social.setGoogleUserPicture(googleUserInfoJson.picture);
-                Long id = businessWithNextGeneralKey.getNextGeneralId();
-                AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(id, social.getGoogleUserName(), "Social:Update:" + social.getId().toString(),
-                        "Google Picture updated to:" + googleUserInfoJson.picture, "Google");
-                auditTrailCollection.add(auditTrail);
-            }
-            if (!auditTrailCollection.isEmpty()) {
-                businessWithSocial.updateSocial(social, auditTrailCollection);
-            }
+            autoUpdateGoogleSocial(social, googleUserInfoJson.name, googleUserInfoJson.email, googleUserInfoJson.picture);
         }
         return social;
+    }
+
+    private void autoUpdateGoogleSocial(Social social, String name, String email, String picture) {
+        Collection<AuditTrail> auditTrailCollection = new ArrayList<>();
+        if (social.getGoogleUserName().compareToIgnoreCase(name) != 0) {
+            social.setGoogleUserName(name);
+            Long id = businessWithNextGeneralKey.getNextGeneralId();
+            AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(id, social.getGoogleUserName(), AUDIT_SOCIAL_UPDATE + social.getId().toString(),
+                    "Google Username updated to:" + name, GOOGLE_TEXT);
+            auditTrailCollection.add(auditTrail);
+        }
+        if (social.getGoogleEmail().compareToIgnoreCase(email) != 0) {
+            social.setGoogleEmail(email);
+            Long id = businessWithNextGeneralKey.getNextGeneralId();
+            AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(id, social.getGoogleUserName(), AUDIT_SOCIAL_UPDATE + social.getId().toString(),
+                    "Google Email updated to:" + email, GOOGLE_TEXT);
+            auditTrailCollection.add(auditTrail);
+        }
+        if (social.getGoogleUserPicture().compareToIgnoreCase(picture) != 0) {
+            social.setGoogleUserPicture(picture);
+            Long id = businessWithNextGeneralKey.getNextGeneralId();
+            AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(id, social.getGoogleUserName(), AUDIT_SOCIAL_UPDATE + social.getId().toString(),
+                    "Google Picture updated to:" + picture, GOOGLE_TEXT);
+            auditTrailCollection.add(auditTrail);
+        }
+        if (!auditTrailCollection.isEmpty()) {
+            businessWithSocial.updateSocial(social, auditTrailCollection);
+        }
     }
 
 }

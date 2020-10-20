@@ -27,12 +27,6 @@ public class WebAppConfigurationAccess implements ConfigurationAccessBase {
      * @return the propertiesDTO object
      */
     public PropertyDto getProperties() {
-        if (properties == null) {
-            //it is unknown why we have 2 WebAppConfigurationAccess class in this app, and only one is initialized properly
-            //so it worth to check and reload if necessary
-            logger.warn("Had to reload WebAppConfigurationAccess properties...");
-            loadProperties();
-        }
         return properties;
     }
 

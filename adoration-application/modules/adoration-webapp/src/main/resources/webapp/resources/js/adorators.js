@@ -348,8 +348,11 @@ function saveChanges() {
             case "singleSelect": // select
                 v = o.find(":selected").val();
                 break;
-            default:
+            case "i/n":
+                v = o.prop("checked").toString();
+                break;
             case "input":
+            default:
                 v = o.prop("value");
                 if ((typeof row.mandatory != "undefined") && (row.mandatory == true)) { // if mandatory, cannot be empty
                     if (v.length <= 0) {
@@ -357,9 +360,6 @@ function saveChanges() {
                         bad = 1;
                         }
                 }
-                break;
-            case "i/n":
-                v = o.prop("checked").toString();
                 break;
         } //value in v
         let command = "b." + row.id + "=\"" + v.toString() + "\"";

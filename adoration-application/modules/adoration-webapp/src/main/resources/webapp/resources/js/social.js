@@ -272,16 +272,6 @@ function saveChanges() {
             case "singleSelect": // select
                 v = o.find(":selected").val();
                 break;
-            default:
-            case "input":
-                v = o.prop("value");
-                if ((typeof row.mandatory != "undefined") && (row.mandatory == true)) { // if mandatory, cannot be empty
-                    if (v.length <= 0) {
-                        eStr = "Value of \"" + row.name + "\" is not specified, pls specify!";
-                        bad = 1;
-                        }
-                }
-                break;
             case "i/n":
                 v = o.prop("checked").toString();
                 break;
@@ -303,6 +293,16 @@ function saveChanges() {
                         eStr = "Value of \"" + row.name + "\" must be null or valid ID, pls specify!";
                         bad = 1;
                     }
+                }
+                break;
+            case "input":
+            default:
+                v = o.prop("value");
+                if ((typeof row.mandatory != "undefined") && (row.mandatory == true)) { // if mandatory, cannot be empty
+                    if (v.length <= 0) {
+                        eStr = "Value of \"" + row.name + "\" is not specified, pls specify!";
+                        bad = 1;
+                        }
                 }
                 break;
         } //value in v

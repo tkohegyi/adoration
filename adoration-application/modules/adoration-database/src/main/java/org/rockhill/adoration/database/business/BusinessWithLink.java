@@ -19,9 +19,9 @@ import java.util.List;
 
 @Component
 public class BusinessWithLink extends BusinessBase {
-    private static final Integer MIN_HOUR = 0;
-    private static final Integer MAX_HOUR = 167;
     private final Logger logger = LoggerFactory.getLogger(BusinessWithLink.class);
+    public static final Integer MIN_HOUR = 0;
+    public static final Integer MAX_HOUR = 167;
 
     public boolean isValidHour(Integer hour) {
         return hour >= MIN_HOUR && hour <= MAX_HOUR;
