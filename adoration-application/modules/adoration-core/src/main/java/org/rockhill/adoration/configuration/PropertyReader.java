@@ -1,7 +1,5 @@
 package org.rockhill.adoration.configuration;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,8 +11,6 @@ import java.util.Set;
  */
 @Component
 public class PropertyReader {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(PropertyReader.class);
 
     @Autowired
     private PropertyHolder propertyHolder;
@@ -32,7 +28,6 @@ public class PropertyReader {
             String value = properties.getProperty(key.toString());
             propertyHolder.addProperty(key.toString(), value);
         }
-        LOGGER.debug("LOADED PROPERTY: " + propertyHolder.get("webapp.port"));
     }
 
 }

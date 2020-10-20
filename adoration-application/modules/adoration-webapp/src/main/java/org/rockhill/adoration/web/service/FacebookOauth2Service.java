@@ -72,7 +72,7 @@ public class FacebookOauth2Service extends Oauth2ServiceBase {
     @PostConstruct
     private void FacebookOauth2Service() {
         PropertyDto propertyDto = webAppConfigurationAccess.getProperties();
-        facebookConnectionFactory = new FacebookConnectionFactory(propertyDto.getFacebook_app_id(), propertyDto.getFacebook_app_secret());
+        facebookConnectionFactory = new FacebookConnectionFactory(propertyDto.getFacebookAppId(), propertyDto.getFacebookAppSecret());
         facebookConnectionFactory.setScope("email,public_profile");
     }
 
@@ -80,7 +80,7 @@ public class FacebookOauth2Service extends Oauth2ServiceBase {
         PropertyDto propertyDto = webAppConfigurationAccess.getProperties();
 
         String authorizationUrl = AUTHORIZATION_URL
-                + "client_id=" + propertyDto.getFacebook_app_id()
+                + "client_id=" + propertyDto.getFacebookAppId()
                 + "&redirect_uri=" + propertyDto.getGoogleRedirectUrl()
                 + "&state=no-state&display=popup&response_type=code&scope=" + facebookConnectionFactory.getScope();
         //note use this: &response_type=granted_scopes to get list of granted scopes
@@ -146,7 +146,7 @@ public class FacebookOauth2Service extends Oauth2ServiceBase {
         Authentication authentication = null;
         PropertyDto propertyDto = webAppConfigurationAccess.getProperties();
         try {
-            String accessToken = getAccessToken(authCode, propertyDto.getFacebook_app_id(), propertyDto.getFacebook_app_secret(), propertyDto.getGoogleRedirectUrl());
+            String accessToken = getAccessToken(authCode, propertyDto.getFacebookAppId(), propertyDto.getFacebookAppSecret(), propertyDto.getGoogleRedirectUrl());
             JSONObject facebookUserInfoJson = getFacebookGraph(accessToken);
             Social social = detectSocial(facebookUserInfoJson);
             Person person = detectPerson(social);
@@ -196,7 +196,7 @@ public class FacebookOauth2Service extends Oauth2ServiceBase {
                 }
             }
             String text = "New Social id: " + id.toString() + "\nFacebook Type,\n Name: " + social.getFacebookUserName() + ",\nEmail: " + social.getFacebookEmail();
-            emailSender.sendMail(subject, text); //send mail to administrator
+            emailSender.sendMailToAdministrator(subject, text); //send mail to administrator
             text = "Kedves " + social.getFacebookUserName() + "!\n\nKöszönettel vettük első bejelentkezésedet a Váci Örökimádás (https://orokimadas.info:9092/) weboldalán.\n\nA következő adatokat ismertük meg rólad:"
                     + "\nNév: " + social.getFacebookUserName()
                     + "\nE-mail: " + social.getFacebookEmail()
@@ -206,7 +206,7 @@ public class FacebookOauth2Service extends Oauth2ServiceBase {
                     + "\nUgyanezen a címen várjuk leveledet akkor is, ha kérdésed, észrevételed vagy javaslatod van a weboldallal kapcsolatban. "
                     + "\n\nAmennyiben már regisztrált adoráló vagy, erre a levélre válaszolva kérlek írd meg, hogy mikor szoktál az Örökimádásban részt venni, vagy a telefonszámodat, hogy felvehessük veled a kapcsolatot."
                     + "\n\nÜdvözlettel:\nKőhegyi Tamás\naz örökimádás világi koordinátora\n+36-70-375-4140\n";
-            emailSender.sendMailSpecial(social.getGoogleEmail(), "Belépés az Örökimádás weboldalán Facebook azonosítóval", text); //send feedback mail to the registered user
+            emailSender.sendMailFromSocialLogin(social.getGoogleEmail(), "Belépés az Örökimádás weboldalán Facebook azonosítóval", text); //send feedback mail to the registered user
             id = businessWithSocial.newSocial(social, auditTrail);
             social.setId(id); //Social object is ready
         } else {

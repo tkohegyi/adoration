@@ -5,50 +5,50 @@ package org.rockhill.adoration.configuration;
  */
 public class PropertyDto {
 
-    private final String smtp_server;
-    private final String smtp_port;
-    private final String smtp_userName;
-    private final String smtp_password;
-    private final String email_from;
-    private final String email_to;
+    private final String smtpServer;
+    private final String smtpPort;
+    private final String smtpUserName;
+    private final String smtpPassword;
+    private final String emailFrom;
+    private final String emailTo;
 
     /**
      * Constructs a new property holding object with the given fields.
      *
      */
-    public PropertyDto(final String smtp_server, final String smtp_port, final String smtp_userName,
-                       final String smtp_password, final String email_from, final String email_to) {
+    public PropertyDto(final String smtpServer, final String smtpPort, final String smtpUserName,
+                       final String smtpPassword, final String emailFrom, final String emailTo) {
         super();
-        this.smtp_server = smtp_server;
-        this.smtp_port = smtp_port;
-        this.smtp_userName = smtp_userName;
-        this.smtp_password = smtp_password;
-        this.email_from = email_from;
-        this.email_to = email_to;
+        this.smtpServer = smtpServer;
+        this.smtpPort = smtpPort;
+        this.smtpUserName = smtpUserName;
+        this.smtpPassword = smtpPassword;
+        this.emailFrom = emailFrom;
+        this.emailTo = emailTo;
     }
 
     public String getSmtpServer() {
-        return smtp_server;
+        return smtpServer;
     }
 
     public String getSmtpPort() {
-        return smtp_port;
+        return smtpPort;
     }
 
     public String getSmtpUserName() {
-        return smtp_userName;
+        return smtpUserName;
     }
 
     public String getSmtpPassword() {
-        return smtp_password;
+        return smtpPassword;
     }
 
     public String getEmailFrom() {
-        return email_from;
+        return emailFrom;
     }
 
     public String getEmailTo() {
-        return email_to;
+        return emailTo;
     }
 
 }

@@ -171,7 +171,7 @@ public class GoogleOauth2Service extends Oauth2ServiceBase {
                 }
             }
             String text = "New Social id: " + id.toString() + "\nGoogle Type,\nName: " + social.getGoogleUserName() + ",\nEmail: " + social.getGoogleEmail();
-            emailSender.sendMail(subject, text); //to administrator to inform about the person
+            emailSender.sendMailToAdministrator(subject, text); //to administrator to inform about the person
             text = "Kedves " + social.getGoogleUserName() + "!\n\nKöszönettel vettük első bejelentkezésedet a Váci Örökimádás (https://orokimadas.info:9092/) weboldalán.\n\nA következő adatokat ismertük meg rólad:"
                     + "\nNév: " + social.getGoogleUserName()
                     + "\nE-mail: " + social.getGoogleEmail()
@@ -182,7 +182,7 @@ public class GoogleOauth2Service extends Oauth2ServiceBase {
                     + "\nUgyanezen a címen várjuk leveledet akkor is, ha kérdésed, észrevételed vagy javaslatod van a weboldallal kapcsolatban. "
                     + "\n\nAmennyiben már regisztrált adoráló vagy, erre a levélre válaszolva kérlek írd meg, hogy mikor szoktál az Örökimádásban részt venni, vagy a telefonszámodat, hogy felvehessük veled a kapcsolatot."
                     + "\n\nÜdvözlettel:\nKőhegyi Tamás\naz örökimádás világi koordinátora\n+36-70-375-4140\n";
-            emailSender.sendMailSpecial(social.getGoogleEmail(), "Belépés az Örökimádás weboldalán Google azonosítóval", text); //send feedback mail to the registered user
+            emailSender.sendMailFromSocialLogin(social.getGoogleEmail(), "Belépés az Örökimádás weboldalán Google azonosítóval", text); //send feedback mail to the registered user
             id = businessWithSocial.newSocial(social, auditTrail);
             social.setId(id); //Social object is ready
         } else {

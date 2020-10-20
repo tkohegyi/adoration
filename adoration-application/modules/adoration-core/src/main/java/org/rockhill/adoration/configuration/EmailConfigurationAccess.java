@@ -1,7 +1,5 @@
 package org.rockhill.adoration.configuration;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -10,7 +8,6 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class EmailConfigurationAccess implements ConfigurationAccessBase {
-    private final Logger logger = LoggerFactory.getLogger(EmailConfigurationAccess.class);
 
     private PropertyDto properties;
 
@@ -23,21 +20,17 @@ public class EmailConfigurationAccess implements ConfigurationAccessBase {
      * @return the propertiesDTO object
      */
     public PropertyDto getProperties() {
-        if (properties == null) {
-            logger.warn("Had to reload EmailConfigurationAccess properties...");
-            loadProperties();
-        }
         return properties;
     }
 
     @Override
     public void loadProperties() {
-        String smtp_server = propertyHolder.get("smtp.server");
-        String smtp_port = propertyHolder.get("smtp.port");
-        String smtp_userName = propertyHolder.get("smtp.userName");
-        String smtp_password = propertyHolder.get("smtp.password");
-        String email_from = propertyHolder.get("email.from");
-        String email_to = propertyHolder.get("email.to");
-        properties = new PropertyDto(smtp_server, smtp_port, smtp_userName, smtp_password, email_from, email_to);
+        String smtpServer = propertyHolder.get("smtp.server");
+        String smtpPort = propertyHolder.get("smtp.port");
+        String smtpUserName = propertyHolder.get("smtp.userName");
+        String smtpPassword = propertyHolder.get("smtp.password");
+        String emailFrom = propertyHolder.get("email.from");
+        String emailTo = propertyHolder.get("email.to");
+        properties = new PropertyDto(smtpServer, smtpPort, smtpUserName, smtpPassword, emailFrom, emailTo);
     }
 }

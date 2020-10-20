@@ -5,82 +5,82 @@ package org.rockhill.adoration.web.configuration;
  */
 public class PropertyDto {
 
-    private final String google_client_id;
-    private final String google_client_secret;
-    private final String google_redirect_url;
-    private final String base_url;
-    private final String facebook_app_id;
-    private final String facebook_app_secret;
+    private final String googleClientId;
+    private final String googleClientSecret;
+    private final String googleRedirectUrl;
+    private final String baseUrl;
+    private final String facebookAppId;
+    private final String facebookAppSecret;
     private final Integer sessionTimeout;
-    private final String excel_file_name;
-    private final String daily_info_file_name;
-    private final String hourly_info_file_name;
-    private final String adorator_info_file_name;
-    private final String captcha_site_secret;
+    private final String excelFileName;
+    private final String dailyInfoFileName;
+    private final String hourlyInfoFileName;
+    private final String adoratorInfoFileName;
+    private final String captchaSiteSecret;
 
     /**
      * Constructs a new property holding object with the given fields.
      *
      */
-    public PropertyDto(final String google_client_id, final String google_client_secret, final String google_redirect_url,
-                       final String base_url, final String facebook_app_id, final String facebook_app_secret,
-                       final Integer sessionTimeout, final String excel_file_name, final String daily_info_file_name,
-                       final String hourly_info_file_name, final String adorator_info_file_name,
-                       final String captcha_site_secret) {
+    public PropertyDto(final String googleClientId, final String googleClientSecret, final String googleRedirectUrl,
+                       final String baseUrl, final String facebookAppId, final String facebookAppSecret,
+                       final Integer sessionTimeout, final String excelFileName, final String dailyInfoFileName,
+                       final String hourlyInfoFileName, final String adoratorInfoFileName,
+                       final String captchaSiteSecret) {
         super();
-        this.google_client_id = google_client_id;
-        this.google_client_secret = google_client_secret;
-        this.google_redirect_url = google_redirect_url;
-        this.base_url = base_url;
-        this.facebook_app_id = facebook_app_id;
-        this.facebook_app_secret = facebook_app_secret;
+        this.googleClientId = googleClientId;
+        this.googleClientSecret = googleClientSecret;
+        this.googleRedirectUrl = googleRedirectUrl;
+        this.baseUrl = baseUrl;
+        this.facebookAppId = facebookAppId;
+        this.facebookAppSecret = facebookAppSecret;
         this.sessionTimeout = sessionTimeout;
-        this.excel_file_name = excel_file_name;
-        this.daily_info_file_name = daily_info_file_name;
-        this.hourly_info_file_name = hourly_info_file_name;
-        this.adorator_info_file_name = adorator_info_file_name;
-        this.captcha_site_secret = captcha_site_secret;
+        this.excelFileName = excelFileName;
+        this.dailyInfoFileName = dailyInfoFileName;
+        this.hourlyInfoFileName = hourlyInfoFileName;
+        this.adoratorInfoFileName = adoratorInfoFileName;
+        this.captchaSiteSecret = captchaSiteSecret;
     }
 
     public String getGoogleClientId() {
-        return google_client_id;
+        return googleClientId;
     }
     public String getGoogleClientSecret() {
-        return google_client_secret;
+        return googleClientSecret;
     }
     public String getGoogleRedirectUrl() {
-        return google_redirect_url;
+        return googleRedirectUrl;
     }
 
     public String getBaseUrl() {
-        return base_url;
+        return baseUrl;
     }
 
-    public String getFacebook_app_id() {
-        return facebook_app_id;
+    public String getFacebookAppId() {
+        return facebookAppId;
     }
 
-    public String getFacebook_app_secret() {
-        return facebook_app_secret;
+    public String getFacebookAppSecret() {
+        return facebookAppSecret;
     }
 
     public Integer getSessionTimeout() {
         return sessionTimeout;
     }
 
-    public String getExcelFileName() { return excel_file_name; }
+    public String getExcelFileName() { return excelFileName; }
 
     public String getDailyInfoFileName() {
-        return daily_info_file_name;
+        return dailyInfoFileName;
     }
 
     public String getHourlyInfoFileName() {
-        return hourly_info_file_name;
+        return hourlyInfoFileName;
     }
 
     public String getAdoratorInfoFileName() {
-        return adorator_info_file_name;
+        return adoratorInfoFileName;
     }
 
-    public String getCaptchaSiteSecret() { return captcha_site_secret; }
+    public String getCaptchaSiteSecret() { return captchaSiteSecret; }
 }

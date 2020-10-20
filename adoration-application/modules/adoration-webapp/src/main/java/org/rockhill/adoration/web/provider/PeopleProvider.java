@@ -239,7 +239,7 @@ public class PeopleProvider {
         p.dhcSignedDate = dhcSignedDate;
         //send mail about the person
         String text = "New id: " + newId + "\nDHC Signed Date: " + dhcSignedDate + "\nAdatok:\n" + p.toString();
-        emailSender.sendMail(subjectNewAdorator, text);
+        emailSender.sendMailToAdministrator(subjectNewAdorator, text);
         //new Person
         Person person = new Person();
         person.setId(newId);
@@ -311,6 +311,6 @@ public class PeopleProvider {
                 + "\n  Egyéb azonosító: \n   Bejelentkezés: " + socialText + "\n   Social ID: " + socialId + "\n   Person ID: " + personId
                 + "\n\n  Kapcsolat üzenet: \n" + info
                 + "\n\n  Üzenet:\n" + message;
-        emailSender.sendMail(subjectNewMessage, text);
+        emailSender.sendMailToAdministrator(subjectNewMessage, text);
     }
 }
