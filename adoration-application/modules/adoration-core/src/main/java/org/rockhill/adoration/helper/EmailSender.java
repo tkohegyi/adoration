@@ -1,6 +1,6 @@
 package org.rockhill.adoration.helper;
 
-import com.sun.mail.smtp.SMTPTransport; //NOSONAR - need to be kept till it is working
+import com.sun.mail.smtp.SMTPTransport; //NOSONAR
 import org.rockhill.adoration.configuration.EmailConfigurationAccess;
 import org.rockhill.adoration.configuration.PropertyDto;
 import org.slf4j.Logger;
@@ -16,12 +16,16 @@ import javax.mail.internet.MimeMessage;
 import java.util.Date;
 import java.util.Properties;
 
+/**
+ * EmailSender is the Component that is used to send mails to administrator
+ * or to a user logged in with his/her social account for the first time.
+ */
 @Component
 public class EmailSender {
     private final Logger logger = LoggerFactory.getLogger(EmailSender.class);
 
     @Autowired
-    EmailConfigurationAccess emailConfigurationAccess;
+    private EmailConfigurationAccess emailConfigurationAccess;
 
     private void sendProperMail(final String subject, final String text, final String to, final String cc, final String typeText) {
         PropertyDto propertyDto = emailConfigurationAccess.getProperties();
@@ -53,20 +57,33 @@ public class EmailSender {
             // send
             t.sendMessage(msg, msg.getAllRecipients());
             response = t.getLastServerResponse();
-            logger.info(String.format("Send Email: %s, Response: %s", typeText, response));
+            logger.info("Send Email: {}, Response: {}", typeText, response);
             t.close();
         } catch (MessagingException e) {
-            logger.warn(String.format("Send Email: %s FAILED, Response: %s", typeText, response), e);
+            logger.warn("Send Email: {} FAILED, Response: {}", typeText, response, e);
         }
     }
 
+    /**
+     * Send an e-mail to the Administrator.
+     *
+     * @param subject is the subject of the mail
+     * @param text    is the body of the mail - which is a plain text mail
+     */
     public void sendMailToAdministrator(final String subject, final String text) {
         PropertyDto propertyDto = emailConfigurationAccess.getProperties();
         sendProperMail(subject, text, propertyDto.getEmailTo(), "", "to Administrator");
     }
 
-    public void sendMailFromSocialLogin(String proviedEmail, String subject, String text) {
+    /**
+     * Send a mail to a person + to Administrator in CC.
+     *
+     * @param providedEmail is the email of the adorator (or any other user)
+     * @param subject       is the subject of the mail
+     * @param text          is the body of the mail - which is a plain text mail
+     */
+    public void sendMailFromSocialLogin(String providedEmail, String subject, String text) {
         PropertyDto propertyDto = emailConfigurationAccess.getProperties();
-        sendProperMail(subject, text, proviedEmail, propertyDto.getEmailTo(), "to person logged-in first time");
+        sendProperMail(subject, text, providedEmail, propertyDto.getEmailTo(), "to person logged-in first time");
     }
 }

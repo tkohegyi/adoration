@@ -14,7 +14,6 @@ public class PropertyDto {
 
     /**
      * Constructs a new property holding object with the given fields.
-     *
      */
     public PropertyDto(final String smtpServer, final String smtpPort, final String smtpUserName,
                        final String smtpPassword, final String emailFrom, final String emailTo) {

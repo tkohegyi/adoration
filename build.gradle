@@ -44,7 +44,7 @@ subprojects {
 
     checkstyle.configFile = file("$rootProject.rootDir/config/checkstyle/checkstyle.xml")
     checkstyle.configProperties = ['samedir' : "$rootProject.rootDir/config/checkstyle"]
-    checkstyle.toolVersion = '5.6'
+    checkstyle.toolVersion = '7.0'
     checkstyle.ignoreFailures = true
 
     subprojects {
