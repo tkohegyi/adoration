@@ -16,6 +16,10 @@ import org.springframework.stereotype.Component;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Business class to handle Coordinator Database table.
+ * This table holds information about hourly, daily and overall coordinators, and special (like spiritual) leaders.
+ */
 @Component
 public class BusinessWithPerson extends BusinessBase {
     private final Logger logger = LoggerFactory.getLogger(BusinessWithPerson.class);
@@ -67,9 +71,9 @@ public class BusinessWithPerson extends BusinessBase {
     public Person getPersonById(@NotNull final Long id) {
         Session session = SessionFactoryHelper.getOpenedSession();
         session.beginTransaction();
-        String hql = "from Person as P where P.id = :" + EXPECTED_ID;
+        String hql = "from Person as P where P.id = :" + EXPECTED_PARAMETER;
         Query query = session.createQuery(hql);
-        query.setParameter(EXPECTED_ID, id);
+        query.setParameter(EXPECTED_PARAMETER, id);
         List<Person> result = (List<Person>) query.list();
         session.getTransaction().commit();
         session.close();

@@ -61,6 +61,11 @@ public class HomeController {
         return "redirect:/resources/robots.txt";
     }
 
+    @RequestMapping(value = "/.well-known/security.txt", method = {RequestMethod.GET})
+    public String securityText() {
+        return "redirect:/resources/security.txt";
+    }
+
     @RequestMapping(value = "/adoration/e404", method = {RequestMethod.GET})
     public String e404(HttpServletRequest httpServletRequest) {
 /*        if (httpServletRequest != null && httpServletRequest.getRemoteAddr() != null) {

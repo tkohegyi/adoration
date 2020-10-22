@@ -42,9 +42,9 @@ public class BusinessWithAuditTrail extends BusinessBase {
         List<AuditTrail> result;
         Session session = SessionFactoryHelper.getOpenedSession();
         session.beginTransaction();
-        String hql = "from AuditTrail as AT where AT.refId = :" + EXPECTED_ID + " OR AT.activityType like :likeValue order by AT.atWhen ASC";
+        String hql = "from AuditTrail as AT where AT.refId = :" + EXPECTED_PARAMETER + " OR AT.activityType like :likeValue order by AT.atWhen ASC";
         Query<AuditTrail> query = session.createQuery(hql, AuditTrail.class);
-        query.setParameter(EXPECTED_ID, id);
+        query.setParameter(EXPECTED_PARAMETER, id);
         query.setParameter("likeValue", "'%:" + id.toString() + "'");
         result = query.list();
         session.getTransaction().commit();

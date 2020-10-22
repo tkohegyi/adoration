@@ -8,6 +8,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * Business class to provide unique ID for all database item. This ID is unique id for every database item.
+ */
 @Component
 public class BusinessWithNextGeneralKey {
     private final Logger logger = LoggerFactory.getLogger(BusinessWithNextGeneralKey.class);

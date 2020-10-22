@@ -72,9 +72,9 @@ public class BusinessWithSocial extends BusinessBase {
     public List<Social> getSocialsOfPerson(@NotNull Person person) {
         Session session = SessionFactoryHelper.getOpenedSession();
         session.beginTransaction();
-        String hql = "from Social as S where S.personId = :" + EXPECTED_ID;
+        String hql = "from Social as S where S.personId = :" + EXPECTED_PARAMETER;
         Query query = session.createQuery(hql);
-        query.setParameter(EXPECTED_ID, person.getId());
+        query.setParameter(EXPECTED_PARAMETER, person.getId());
         List<Social> result = (List<Social>) query.list();
         session.getTransaction().commit();
         session.close();
@@ -97,9 +97,9 @@ public class BusinessWithSocial extends BusinessBase {
     public Social getSocialById(@NotNull Long id) {
         Session session = SessionFactoryHelper.getOpenedSession();
         session.beginTransaction();
-        String hql = "from Social as S where S.id = :" + EXPECTED_ID;
+        String hql = "from Social as S where S.id = :" + EXPECTED_PARAMETER;
         Query query = session.createQuery(hql);
-        query.setParameter(EXPECTED_ID, id);
+        query.setParameter(EXPECTED_PARAMETER, id);
         List<Social> result = (List<Social>) query.list();
         session.getTransaction().commit();
         session.close();
