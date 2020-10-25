@@ -175,7 +175,7 @@ public class FacebookOauth2Service extends Oauth2ServiceBase {
         email = makeEmptyStringFromNull(email);
         String firstName = facebookUserInfoJson.getAsString("name");
         firstName = makeEmptyStringFromNull(firstName);
-        Social social = businessWithSocial.getSocialByFUserId(userId);
+        Social social = businessWithSocial.getSocialByFacebookUserId(userId);
         if (social == null) {
             social = new Social();
             social.setFacebookUserId(userId);

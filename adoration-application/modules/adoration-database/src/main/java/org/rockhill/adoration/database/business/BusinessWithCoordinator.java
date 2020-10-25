@@ -80,10 +80,7 @@ public class BusinessWithCoordinator extends BusinessBase {
         List<Coordinator> result = query.list();
         session.getTransaction().commit();
         session.close();
-        if (result != null && !result.isEmpty()) {
-            return result.get(0);
-        }
-        return null;
+        return (Coordinator) returnWithFirstItem(result);
     }
 
     /**
@@ -178,10 +175,7 @@ public class BusinessWithCoordinator extends BusinessBase {
         List<Coordinator> result = query.list();
         session.getTransaction().commit();
         session.close();
-        if (result != null && !result.isEmpty()) {
-            return result.get(0);
-        }
-        return null;
+        return (Coordinator) returnWithFirstItem(result);
     }
 
     private Coordinator getByCoordinatorType(@NotNull Integer i) {
@@ -193,10 +187,7 @@ public class BusinessWithCoordinator extends BusinessBase {
         List<Coordinator> result = query.list();
         session.getTransaction().commit();
         session.close();
-        if (result != null && !result.isEmpty()) {
-            return result.get(0);
-        }
-        return null;
+        return (Coordinator) returnWithFirstItem(result);
     }
 
     /**

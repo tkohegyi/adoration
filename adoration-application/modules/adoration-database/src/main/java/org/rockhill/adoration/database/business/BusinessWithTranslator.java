@@ -1,9 +1,10 @@
 package org.rockhill.adoration.database.business;
 
-import com.sun.istack.NotNull;
+import com.sun.istack.NotNull;  //NOSONAR
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.rockhill.adoration.database.SessionFactoryHelper;
+import org.rockhill.adoration.database.business.helper.BusinessBase;
 import org.rockhill.adoration.database.tables.Translator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,8 +12,12 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+/**
+ * Business class to handle Translator Database table, that represents language translations.
+ * Only partially used on the we site, but will be used as base of a multi-language adoration page.
+ */
 @Component
-public class BusinessWithTranslator {
+public class BusinessWithTranslator extends BusinessBase {
 
     private final Logger logger = LoggerFactory.getLogger(BusinessWithTranslator.class);
 
@@ -26,9 +31,9 @@ public class BusinessWithTranslator {
         Session session = SessionFactoryHelper.getOpenedSession();
         session.beginTransaction();
         String hql = "from Translator as T where T.languageCode like :languageCode";
-        Query query = session.createQuery(hql);
+        Query<Translator> query = session.createQuery(hql, Translator.class);
         query.setParameter("languageCode", languageCode);
-        result = (List<Translator>) query.list();
+        result = query.list();
         session.getTransaction().commit();
         session.close();
         return result;
@@ -40,24 +45,25 @@ public class BusinessWithTranslator {
      * @param languageCode is the specific language code
      * @param textId       is the text id to be translated
      * @param defaultValue is the default return value in case the specific languageCode + textId cannot be found
-     * @return
+     * @return with the text translated to the specific language - or the default if translation was not found
      */
     public String getTranslatorValue(@NotNull String languageCode, @NotNull String textId, @NotNull String defaultValue) {
-        String result = defaultValue;
-        List<Translator> qResult = null;
+        String result;
         Session session = SessionFactoryHelper.getOpenedSession();
         session.beginTransaction();
         String hql = "from Translator as T where T.languageCode like :languageCode and T.textId like :textId";
-        Query query = session.createQuery(hql);
+        Query<Translator> query = session.createQuery(hql, Translator.class);
         query.setParameter("languageCode", languageCode);
         query.setParameter("textId", textId);
-        qResult = (List<Translator>) query.list();
+        List<Translator> qResult = query.list();
         session.getTransaction().commit();
         session.close();
-        if (qResult != null && qResult.size() > 0) {
-            result = qResult.get(0).getText();
+        Translator translator = (Translator) returnWithFirstItem(qResult);
+        if (translator == null) {
+            result = defaultValue;
+            logger.warn("Unable to find translator text for languageCode/textId pair: {}/{}", languageCode, textId);
         } else {
-            logger.warn("Unable to find translator text for languageCode/textId pair: " + languageCode + "/" + textId);
+            result = translator.getText();
         }
         return result;
     }

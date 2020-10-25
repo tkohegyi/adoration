@@ -151,7 +151,7 @@ public class GoogleOauth2Service extends Oauth2ServiceBase {
         googleUserInfoJson.email = makeEmptyStringFromNull(googleUserInfoJson.email);
         googleUserInfoJson.name = makeEmptyStringFromNull(googleUserInfoJson.name);
         googleUserInfoJson.picture = makeEmptyStringFromNull(googleUserInfoJson.picture);
-        Social social = businessWithSocial.getSocialByGUserId(googleUserInfoJson.id); //if there is no social this will cause exception that is unhandled !!!
+        Social social = businessWithSocial.getSocialByGoogleUserId(googleUserInfoJson.id); //if there is no social this will cause exception that is unhandled !!!
         if (social == null) {
             social = new Social();
             social.setGoogleEmail(googleUserInfoJson.email);

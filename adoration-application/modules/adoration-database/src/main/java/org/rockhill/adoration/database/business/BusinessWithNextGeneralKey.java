@@ -16,14 +16,18 @@ public class BusinessWithNextGeneralKey {
     private final Logger logger = LoggerFactory.getLogger(BusinessWithNextGeneralKey.class);
 
     @Autowired
-    NextGeneralKey nextGeneralKey;
+    private NextGeneralKey nextGeneralKey;
 
+    /**
+     * Get the next unique Id.
+     * @return with the new Id.
+     */
     public Long getNextGeneralId() {
         Long id;
         Session session = SessionFactoryHelper.getOpenedSession();
         session.beginTransaction();
         id = nextGeneralKey.getNextGeneralKay(session);
-        logger.debug("New sequence arrived:" + id.toString());
+        logger.debug("New sequence arrived: {}", id);
         session.getTransaction().commit();
         session.close();
         return id;
