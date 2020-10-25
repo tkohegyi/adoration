@@ -2,6 +2,9 @@ package org.rockhill.adoration.database.business.helper.enums;
 
 import org.rockhill.adoration.database.exception.DatabaseHandlingException;
 
+/**
+ * Enum of Coordinator Types.
+ */
 public enum CoordinatorTypes {
     HOURLY_COORDINATOR_0("Hourly Coordinator: 0", 0),
     HOURLY_COORDINATOR_1("Hourly Coordinator: 1", 1),
@@ -28,9 +31,9 @@ public enum CoordinatorTypes {
     HOURLY_COORDINATOR_22("Hourly Coordinator: 22", 22),
     HOURLY_COORDINATOR_23("Hourly Coordinator: 23", 23),
     NIGHT_COORDINATOR("Night Coordinator", 24),
-    MORNING_COORDINATOR("Morning Coordinator", 24+6),
-    AFTERNOON_COORDINATOR("Afternoon Coordinator", 24+12),
-    EVENING_COORDINATOR("Evening Coordinator", 24+18),
+    MORNING_COORDINATOR("Morning Coordinator", 24 + 6),
+    AFTERNOON_COORDINATOR("Afternoon Coordinator", 24 + 12),
+    EVENING_COORDINATOR("Evening Coordinator", 24 + 18),
     GENERAL_COORDINATOR("General Coordinator", 48),
     SPIRITUAL_COORDINATOR("Spiritual Coordinator", 96);
 
@@ -42,8 +45,14 @@ public enum CoordinatorTypes {
         this.coordinatorValue = coordinatorValue;
     }
 
+    /**
+     * Get CoordinatorType enum specified by its Id.
+     *
+     * @param coordinatorType is the enum we are searching for
+     * @return with the CoordinatorType the given type id matches
+     */
     public static CoordinatorTypes getTypeFromId(Integer coordinatorType) {
-        for (CoordinatorTypes coordinatorTypes: CoordinatorTypes.values()) {
+        for (CoordinatorTypes coordinatorTypes : CoordinatorTypes.values()) {
             if (coordinatorTypes.coordinatorValue.equals(coordinatorType)) {
                 return coordinatorTypes;
             }

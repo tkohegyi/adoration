@@ -6,7 +6,7 @@ import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.rockhill.adoration.database.SessionFactoryHelper;
 import org.rockhill.adoration.database.business.helper.BusinessBase;
-import org.rockhill.adoration.database.business.helper.Converter;
+import org.rockhill.adoration.database.business.helper.DateTimeConverter;
 import org.rockhill.adoration.database.exception.DatabaseHandlingException;
 import org.rockhill.adoration.database.tables.AuditTrail;
 import org.slf4j.Logger;
@@ -63,12 +63,12 @@ public class BusinessWithAuditTrail extends BusinessBase {
      * @return with the audit record prepared for save
      */
     public AuditTrail prepareAuditTrail(@NotNull Long refId, @NotNull String userName, @NotNull String type, @NotNull String description, @Nullable String data) {
-        Converter converter = new Converter();
+        DateTimeConverter dateTimeConverter = new DateTimeConverter();
         AuditTrail auditTrail = new AuditTrail();
         auditTrail.setId(businessWithNextGeneralKey.getNextGeneralId());
         auditTrail.setRefId(refId);
         auditTrail.setByWho(userName);
-        auditTrail.setAtWhen(converter.getCurrentDateTimeAsString());
+        auditTrail.setAtWhen(dateTimeConverter.getCurrentDateTimeAsString());
         auditTrail.setActivityType(type);
         auditTrail.setDescription(description);
         auditTrail.setData(data);

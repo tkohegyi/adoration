@@ -1,7 +1,7 @@
 package org.rockhill.adoration.web.provider;
 
 import org.rockhill.adoration.database.business.*;
-import org.rockhill.adoration.database.business.helper.Converter;
+import org.rockhill.adoration.database.business.helper.DateTimeConverter;
 import org.rockhill.adoration.database.business.helper.enums.AdoratorStatusTypes;
 import org.rockhill.adoration.database.business.helper.enums.TranslatorDayNames;
 import org.rockhill.adoration.database.exception.DatabaseHandlingException;
@@ -234,8 +234,8 @@ public class PeopleProvider {
             throw new DatabaseHandlingException("Data handling consent is missing.");
         }
         Long newId = businessWithNextGeneralKey.getNextGeneralId();
-        Converter converter = new Converter();
-        String dhcSignedDate = converter.getCurrentDateAsString();
+        DateTimeConverter dateTimeConverter = new DateTimeConverter();
+        String dhcSignedDate = dateTimeConverter.getCurrentDateAsString();
         p.dhcSignedDate = dhcSignedDate;
         //send mail about the person
         String text = "New id: " + newId + "\nDHC Signed Date: " + dhcSignedDate + "\nAdatok:\n" + p.toString();
