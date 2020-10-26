@@ -6,4 +6,5 @@
   <!-- relax rules in package info files, they are not real classes -->
   <suppress checks="RegexpHeader" files=".*package-info.java|.*.properties" />
   <suppress checks="VisibilityModifier" files="org.rockhill.adoration.engine.AdorationApplication.java|.*Json.java"/>
+  <suppress checks="maxParameterNumber" files=".*PropertyDTO.java"/>
 </suppressions>

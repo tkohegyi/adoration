@@ -5,11 +5,18 @@ import org.apache.tomcat.SimpleInstanceManager;
 import org.eclipse.jetty.annotations.ServletContainerInitializersStarter;
 import org.eclipse.jetty.apache.jsp.JettyJasperInitializer;
 import org.eclipse.jetty.plus.annotation.ContainerInitializer;
-import org.eclipse.jetty.server.*;
+import org.eclipse.jetty.server.Connector;
+import org.eclipse.jetty.server.HttpConfiguration;
+import org.eclipse.jetty.server.HttpConnectionFactory;
+import org.eclipse.jetty.server.SecureRequestCustomizer;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.server.SslConnectionFactory;
 import org.eclipse.jetty.servlet.ErrorPageErrorHandler;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.rockhill.adoration.web.service.ServerException;
+import org.springframework.http.HttpStatus;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -22,6 +29,7 @@ import java.util.List;
 public class WebAppServer {
 
     private static final int STOP_TIMEOUT = 5000;
+    private static final long IDLE_TIMEOUT = 50000;
     private static final String WEB_XML_LOCATION = "/WEB-INF/web.xml";
     private static final String WEBAPP_ROOT = "webapp";
     private Server server;
@@ -84,8 +92,8 @@ public class WebAppServer {
         context.addBean(new ServletContainerInitializersStarter(context), true);
 
         ErrorPageErrorHandler errorHandler = new ErrorPageErrorHandler();
-        errorHandler.addErrorPage(404, "/adoration/e404");
-        errorHandler.addErrorPage(500, "/adoration/e500");
+        errorHandler.addErrorPage(HttpStatus.NOT_FOUND.value(), "/adoration/e404");
+        errorHandler.addErrorPage(HttpStatus.INTERNAL_SERVER_ERROR.value(), "/adoration/e500");
         context.setErrorHandler(errorHandler);
         return context;
     }
@@ -99,19 +107,19 @@ public class WebAppServer {
 
         //HTTPS part
         if (isHttpsInUse) {
-            HttpConfiguration http_config = new HttpConfiguration();
-            http_config.setSecureScheme("https");
-            http_config.setSecurePort(port);
-            HttpConfiguration https_config = new HttpConfiguration(http_config);
-            https_config.addCustomizer(new SecureRequestCustomizer());
+            HttpConfiguration httpConfiguration = new HttpConfiguration();
+            httpConfiguration.setSecureScheme("https");
+            httpConfiguration.setSecurePort(port);
+            HttpConfiguration httpsConfig = new HttpConfiguration(httpConfiguration);
+            httpsConfig.addCustomizer(new SecureRequestCustomizer());
             SslContextFactory sslContextFactory = new SslContextFactory.Server();
             sslContextFactory.setKeyStorePath(keyStoreFile);
             sslContextFactory.setKeyStorePassword(keyStorePassword);
             ServerConnector httpsConnector = new ServerConnector(server,  //NOSONAR - java:S2095 / Resources should be closed - well, this one should not
                     new SslConnectionFactory(sslContextFactory, "http/1.1"),
-                    new HttpConnectionFactory(https_config));
+                    new HttpConnectionFactory(httpsConfig));
             httpsConnector.setPort(port);
-            httpsConnector.setIdleTimeout(50000);
+            httpsConnector.setIdleTimeout(IDLE_TIMEOUT);
             server.setConnectors(new Connector[]{httpsConnector});
         }
     }

@@ -117,7 +117,8 @@ public class AdorationBootstrapTest /* extends PowerMockTestCase */ {
         //WHEN
         underTest.bootstrap(NO_ARGS);
         //THEN
-        verify(logger).error(Mockito.contains("Configuration file was not specified as input argument!"));
+        verify(logger).error(Mockito.contains("Application cannot be started: {}"));
+        //verify E.TXT "Configuration file was not specified as input argument!"));
     }
 
     @Test
@@ -128,7 +129,8 @@ public class AdorationBootstrapTest /* extends PowerMockTestCase */ {
         //WHEN
         underTest.bootstrap(NOT_REAL_ARGS);
         //THEN it should throw exception
-        verify(logger).error(Mockito.contains("Configuration file must be a properties file!"));
+        verify(logger).error(Mockito.contains("Application cannot be started: {}"));
+        //verify E.TXT "Configuration file must be a properties file!"));
     }
 
     @Test

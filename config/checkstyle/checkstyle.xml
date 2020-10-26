@@ -9,9 +9,11 @@
         <property name="offCommentFormat" value="CHECKSTYLE.OFF" />
         <property name="onCommentFormat" value="CHECKSTYLE.ON" />
     </module>
+    <module name="SuppressWarningsFilter" />
     <module name="TreeWalker">
         <property name="tabWidth" value="4" />
         <module name="FileContentsHolder" />
+        <module name="SuppressWarningsHolder" />
         <module name="JavadocMethod">
             <property name="scope" value="protected" />
             <property name="allowUndeclaredRTE" value="true" />
@@ -291,7 +293,7 @@
             <property name="severity" value="error" />
         </module>
         <module name="UpperEll" />
-        <module name="ClassDataAbstractionCoupling" />
+
     </module>
     <module name="FileLength">
         <property name="severity" value="error" />

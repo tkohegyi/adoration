@@ -11,6 +11,10 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+/**
+ * Descriptor class for Database table: Person.
+ * Technically: Adorators.
+ */
 @Entity
 @Table(name = "dbo.person")
 public class Person {
@@ -30,6 +34,10 @@ public class Person {
     private String visibleComment;
     private String languageCode;
 
+    /**
+     * General constructor, used by Hibernate.
+     * Shall be used only when a new record is created - then fields need to be filled of course before saving it to the database.
+     */
     public Person() {
         // this form used by Hibernate
     }
@@ -49,6 +57,12 @@ public class Person {
         return name;
     }
 
+    /**
+     * Sets the name filed of the Person record.
+     *
+     * @param name is the name of the Person.
+     * @throws DatabaseHandlingException in case the name is an empty string or null.
+     */
     public void setName(String name) {
         if ((name == null) || (name.length() == 0)) {
             throw new DatabaseHandlingException("Person name tried to set to null/zero length.");
@@ -61,6 +75,12 @@ public class Person {
         return adorationStatus;
     }
 
+    /**
+     * Sets the adoration status by using the integer version of the enum.
+     *
+     * @param adorationStatus is the integer identifier of the enum
+     * @throws DatabaseHandlingException in case the id is not valid
+     */
     public void setAdorationStatus(Integer adorationStatus) {
         AdoratorStatusTypes.getTypeFromId(adorationStatus);
         this.adorationStatus = adorationStatus;
@@ -75,6 +95,11 @@ public class Person {
         this.isAnonymous = isAnonymous;
     }
 
+    /**
+     * Gets mobile field of a Person record, ensures that it never will have null value.
+     *
+     * @return with the mobile field value or with an empty string.
+     */
     @Column(name = "mobile", nullable = true)
     public String getMobile() {
         if (mobile != null) {
@@ -97,6 +122,11 @@ public class Person {
         this.mobileVisible = mobileVisible;
     }
 
+    /**
+     * Gets email field of a Person record, ensures that it never will have null value.
+     *
+     * @return with the email field value or with an empty string.
+     */
     @Column(name = "email", nullable = true)
     public String getEmail() {
         if (email != null) {
@@ -106,6 +136,11 @@ public class Person {
         }
     }
 
+    /**
+     * Sets email field, ensures that regardless of the input, only lowercase version stored.
+     *
+     * @param email is the value of the field
+     */
     public void setEmail(String email) {
         if (email != null) {
             this.email = email.toLowerCase();
@@ -123,6 +158,11 @@ public class Person {
         this.emailVisible = emailVisible;
     }
 
+    /**
+     * Gets adminComment field of a Person record, ensures that it never will have null value.
+     *
+     * @return with the adminComment field value or with an empty string.
+     */
     @Column(name = "adminComment", nullable = true)
     public String getAdminComment() {
         if (adminComment != null) {
@@ -145,6 +185,11 @@ public class Person {
         this.dhcSigned = dhcSigned;
     }
 
+    /**
+     * Gets dhcSignedDate field of a Person record, ensures that it never will have null value.
+     *
+     * @return with the dhcSignedDate field value or with an empty string.
+     */
     @Column(name = "dhcSignedDate", nullable = true)
     //this also might be null
     public String getDhcSignedDate() {
@@ -155,8 +200,14 @@ public class Person {
         }
     }
 
+    /**
+     * Sets the data handling consent date according to the given string, that must be in "YYYY-MM-DD" format.
+     *
+     * @param dhcSignedDate is the string format of the date
+     * @throws DatabaseHandlingException if the string format/content is invalid
+     */
     public void setDhcSignedDate(String dhcSignedDate) {
-        if ((dhcSignedDate != null) && (dhcSignedDate.length() > 0)){
+        if ((dhcSignedDate != null) && (dhcSignedDate.length() > 0)) {
             try {
                 DateFormat df1 = new SimpleDateFormat("yyyy-MM-dd");
                 df1.parse(dhcSignedDate);
@@ -167,6 +218,11 @@ public class Person {
         this.dhcSignedDate = dhcSignedDate;
     }
 
+    /**
+     * Gets coordinatorComment field of a Person record, ensures that it never will have null value.
+     *
+     * @return with the coordinatorComment field value or with an empty string.
+     */
     @Column(name = "coordinatorComment", nullable = true)
     public String getCoordinatorComment() {
         if (coordinatorComment != null) {
@@ -180,6 +236,11 @@ public class Person {
         this.coordinatorComment = coordinatorComment;
     }
 
+    /**
+     * Gets visibleComment field of a Person record, ensures that it never will have null value.
+     *
+     * @return with the visibleComment field value or with an empty string.
+     */
     @Column(name = "visibleComment", nullable = true)
     public String getVisibleComment() {
         if (visibleComment != null) {

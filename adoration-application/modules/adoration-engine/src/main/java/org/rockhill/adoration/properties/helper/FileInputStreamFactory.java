@@ -7,7 +7,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 /**
- * Factory for creating instances of {@link FileInputStream}.*
+ * Factory class.
+ * Used for creating instances of {@link FileInputStream}.*
  */
 @Component
 public class FileInputStreamFactory {

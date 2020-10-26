@@ -7,6 +7,9 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+/**
+ * Descriptor class for Database table: Link - connection betwen hours and adorators.
+ */
 @Entity
 @Table(name = "dbo.link")
 public class Link {
@@ -19,6 +22,10 @@ public class Link {
     private String adminComment;
     private String publicComment;
 
+    /**
+     * General constructor, used by Hibernate.
+     * Shall be used only when a new record is created - then fields need to be filled of course before saving it to the database.
+     */
     public Link() {
         // this form used by Hibernate
     }
@@ -56,6 +63,13 @@ public class Link {
         return type;
     }
 
+    /**
+     * Sets the type field of the Link table.
+     * The method check the value validity in implicit mode - searches for the associated enum object,
+     * and throws DatabaseHandlingException if the given value is incorrect.
+     *
+     * @param type is the integer representation of the adoration method type enum.
+     */
     public void setType(Integer type) {
         AdorationMethodTypes.getTypeFromId(type); //this will fail if the type is incorrect
         this.type = type;
@@ -70,6 +84,11 @@ public class Link {
         this.priority = priority;
     }
 
+    /**
+     * Gets adminComment field of a Link record, ensures that it never will have null value.
+     *
+     * @return with the adminComment field value or with an empty string.
+     */
     @Column(name = "adminComment", nullable = true)
     public String getAdminComment() {
         if (adminComment != null) {
@@ -83,6 +102,11 @@ public class Link {
         this.adminComment = adminComment;
     }
 
+    /**
+     * Gets publicComment field of a Link record, ensures that it never will have null value.
+     *
+     * @return with the publicComment field value or with an empty string.
+     */
     @Column(name = "publicComment", nullable = true)
     public String getPublicComment() {
         if (publicComment != null) {

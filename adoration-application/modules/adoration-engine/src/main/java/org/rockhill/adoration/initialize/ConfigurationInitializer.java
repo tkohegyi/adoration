@@ -2,6 +2,7 @@ package org.rockhill.adoration.initialize;
 
 import org.rockhill.adoration.bootstrap.StartUpMessageGenerator;
 import org.rockhill.adoration.configuration.ConfigurationAccessBase;
+import org.rockhill.adoration.exception.SystemException;
 import org.rockhill.adoration.properties.PropertyLoader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -11,7 +12,7 @@ import javax.annotation.PostConstruct;
 import java.util.List;
 
 /**
- *
+ * Loads and initialises all the configured properties, to make it available inside the application.
  */
 @Component
 public class ConfigurationInitializer {
@@ -27,12 +28,12 @@ public class ConfigurationInitializer {
 
 
     /**
-     * This method reads in property file of adorApp.
+     * This method reads in property file of adorationApplication.
      *
-     * @throws Exception {@link PropertyLoader}, {@link ApplicationContext} can throw different exceptions.
+     * @throws SystemException {@link PropertyLoader}, {@link ApplicationContext} can throw different exceptions.
      */
     @PostConstruct
-    void afterPropertiesSet() throws Exception {
+    void afterPropertiesSet() throws SystemException {
         propertyLoader.loadProperties();
         loadProperties();
         startUpMessageGenerator.logStartUpMessage();

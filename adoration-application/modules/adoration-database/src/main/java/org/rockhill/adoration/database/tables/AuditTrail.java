@@ -5,6 +5,9 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+/**
+ * Descriptor class for Database table: Audit trail.
+ */
 @Entity
 @Table(name = "dbo.auditTrail")
 public class AuditTrail {
@@ -17,6 +20,10 @@ public class AuditTrail {
     private String description;
     private String data;
 
+    /**
+     * General constructor, used by Hibernate.
+     * Shall be used only when a new record is created - then fields need to be filled of course before saving it to the database.
+     */
     public AuditTrail() {
         // this form used by Hibernate
     }

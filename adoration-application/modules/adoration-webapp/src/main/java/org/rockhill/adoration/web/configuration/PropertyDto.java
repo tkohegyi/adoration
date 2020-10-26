@@ -26,7 +26,7 @@ public class PropertyDto {
                        final String baseUrl, final String facebookAppId, final String facebookAppSecret,
                        final Integer sessionTimeout, final String excelFileName, final String dailyInfoFileName,
                        final String hourlyInfoFileName, final String adoratorInfoFileName,
-                       final String captchaSiteSecret) {
+                       final String captchaSiteSecret) { //NOSONAR
         super();
         this.googleClientId = googleClientId;
         this.googleClientSecret = googleClientSecret;
