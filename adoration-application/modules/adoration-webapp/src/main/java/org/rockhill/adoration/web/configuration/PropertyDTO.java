@@ -3,7 +3,7 @@ package org.rockhill.adoration.web.configuration;
 /**
  * Holds module specific properties.
  */
-public class PropertyDto {
+public class PropertyDTO {
 
     private final String googleClientId;
     private final String googleClientSecret;
@@ -20,9 +20,8 @@ public class PropertyDto {
 
     /**
      * Constructs a new property holding object with the given fields.
-     *
      */
-    public PropertyDto(final String googleClientId, final String googleClientSecret, final String googleRedirectUrl,
+    public PropertyDTO(final String googleClientId, final String googleClientSecret, final String googleRedirectUrl,
                        final String baseUrl, final String facebookAppId, final String facebookAppSecret,
                        final Integer sessionTimeout, final String excelFileName, final String dailyInfoFileName,
                        final String hourlyInfoFileName, final String adoratorInfoFileName,
@@ -45,9 +44,11 @@ public class PropertyDto {
     public String getGoogleClientId() {
         return googleClientId;
     }
+
     public String getGoogleClientSecret() {
         return googleClientSecret;
     }
+
     public String getGoogleRedirectUrl() {
         return googleRedirectUrl;
     }
@@ -68,7 +69,9 @@ public class PropertyDto {
         return sessionTimeout;
     }
 
-    public String getExcelFileName() { return excelFileName; }
+    public String getExcelFileName() {
+        return excelFileName;
+    }
 
     public String getDailyInfoFileName() {
         return dailyInfoFileName;
@@ -82,5 +85,7 @@ public class PropertyDto {
         return adoratorInfoFileName;
     }
 
-    public String getCaptchaSiteSecret() { return captchaSiteSecret; }
+    public String getCaptchaSiteSecret() {
+        return captchaSiteSecret;
+    }
 }

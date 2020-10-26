@@ -33,8 +33,6 @@ public class PropertyLoaderTest {
     @Mock
     private Properties properties;
     @Mock
-    private Properties validationProperties;
-    @Mock
     private FileInputStream inputStream;
     @Mock
     private FileInputStreamFactory inputStreamFactory;

@@ -20,7 +20,7 @@ import org.rockhill.adoration.database.tables.AuditTrail;
 import org.rockhill.adoration.database.tables.Person;
 import org.rockhill.adoration.database.tables.Social;
 import org.rockhill.adoration.helper.EmailSender;
-import org.rockhill.adoration.web.configuration.PropertyDto;
+import org.rockhill.adoration.web.configuration.PropertyDTO;
 import org.rockhill.adoration.web.configuration.WebAppConfigurationAccess;
 import org.rockhill.adoration.database.json.GoogleUserInfoJson;
 import org.rockhill.adoration.web.service.helper.Oauth2ServiceBase;
@@ -78,7 +78,7 @@ public class GoogleOauth2Service extends Oauth2ServiceBase {
 
     @PostConstruct
     private void GoogleOauth2Service() {
-        PropertyDto propertyDto = webAppConfigurationAccess.getProperties();
+        PropertyDTO propertyDto = webAppConfigurationAccess.getProperties();
         flow = new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT,
                 new JacksonFactory(), propertyDto.getGoogleClientId(), propertyDto.getGoogleClientSecret(), SCOPES).build();
     }
@@ -92,7 +92,7 @@ public class GoogleOauth2Service extends Oauth2ServiceBase {
         //see help from https://www.programcreek.com/java-api-examples/index.php?api=com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeRequestUrl
 
         GoogleClientSecrets.Details installedDetails = new GoogleClientSecrets.Details();
-        PropertyDto propertyDto = webAppConfigurationAccess.getProperties();
+        PropertyDTO propertyDto = webAppConfigurationAccess.getProperties();
         installedDetails.setClientId(propertyDto.getGoogleClientId());
         installedDetails.setClientSecret(propertyDto.getGoogleClientSecret());
 
@@ -112,7 +112,7 @@ public class GoogleOauth2Service extends Oauth2ServiceBase {
      */
     public Authentication getGoogleUserInfoJson(final String authCode) {
         Authentication authentication = null;
-        PropertyDto propertyDto = webAppConfigurationAccess.getProperties();
+        PropertyDTO propertyDto = webAppConfigurationAccess.getProperties();
         try {
             GoogleUser googleUser;
             final GoogleTokenResponse response = flow.newTokenRequest(authCode)

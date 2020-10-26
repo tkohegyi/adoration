@@ -16,17 +16,17 @@ public class ControllerBase {
     protected static final String UNAUTHORIZED_ACTION = "Unauthorized action.";
     protected static final String CONTENT_TYPE_XLSX = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
-    public Boolean isAdoratorAdmin(CurrentUserProvider currentUserProvider, HttpSession httpSession) {
+    public boolean isAdoratorAdmin(CurrentUserProvider currentUserProvider, HttpSession httpSession) {
         CurrentUserInformationJson currentUserInformationJson = currentUserProvider.getUserInformation(httpSession);
         return currentUserInformationJson.isAdoratorAdmin;
     }
 
-    public Boolean isPrivilegedAdorator(CurrentUserProvider currentUserProvider, HttpSession httpSession) {
+    public boolean isPrivilegedAdorator(CurrentUserProvider currentUserProvider, HttpSession httpSession) {
         CurrentUserInformationJson currentUserInformationJson = currentUserProvider.getUserInformation(httpSession);
         return currentUserInformationJson.isPrivilegedAdorator;
     }
 
-    public Boolean isRegisteredAdorator(CurrentUserProvider currentUserProvider, HttpSession httpSession) {
+    public boolean isRegisteredAdorator(CurrentUserProvider currentUserProvider, HttpSession httpSession) {
         CurrentUserInformationJson currentUserInformationJson = currentUserProvider.getUserInformation(httpSession);
         return currentUserInformationJson.isRegisteredAdorator;
     }
@@ -43,10 +43,11 @@ public class ControllerBase {
     }
 
     protected String getJsonString(final String id, final Object object) {
+        String json;
         Gson gson = new Gson();
         JsonObject jsonObject = new JsonObject();
         jsonObject.add(id, gson.toJsonTree(object));
-        String json = gson.toJson(jsonObject);
+        json = gson.toJson(jsonObject);
         return json;
     }
 

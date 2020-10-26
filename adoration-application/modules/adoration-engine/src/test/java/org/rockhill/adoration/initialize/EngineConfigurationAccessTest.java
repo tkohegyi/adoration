@@ -15,7 +15,7 @@ import static org.mockito.Mockito.doReturn;
  */
 public class EngineConfigurationAccessTest {
 
-    private PropertyDto properties;
+    private PropertyDTO properties;
     private Integer defaultPort = 8080;
 
     @Mock
@@ -32,10 +32,10 @@ public class EngineConfigurationAccessTest {
     @Test
     public void testGetProperties() {
         //GIVEN
-        properties = new PropertyDto(defaultPort);
+        properties = new PropertyDTO(defaultPort);
         Whitebox.setInternalState(underTest, "properties", properties);
         //WHEN
-        PropertyDto returnedProperty = underTest.getProperties();
+        PropertyDTO returnedProperty = underTest.getProperties();
         //THEN
         returnedProperty.getPort().equals(defaultPort);
     }

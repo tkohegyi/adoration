@@ -108,6 +108,7 @@ public class AdorationBootstrap {
     }
 
     private void logError(final Exception e) {
-        logger.error(String.format("Application cannot be started: {}", e.getMessage()));
+        String message = "Application cannot be started: " + e.getLocalizedMessage();
+        logger.error(message);
     }
 }

@@ -12,7 +12,7 @@ import org.rockhill.adoration.database.business.helper.enums.AdoratorStatusTypes
 import org.rockhill.adoration.database.tables.Coordinator;
 import org.rockhill.adoration.database.tables.Link;
 import org.rockhill.adoration.database.tables.Person;
-import org.rockhill.adoration.web.configuration.PropertyDto;
+import org.rockhill.adoration.web.configuration.PropertyDTO;
 import org.rockhill.adoration.web.configuration.WebAppConfigurationAccess;
 import org.rockhill.adoration.web.json.CoverageInformationJson;
 import org.rockhill.adoration.web.json.CurrentUserInformationJson;
@@ -122,7 +122,7 @@ public class ExcelProvider {
     }
 
     private Workbook createInitialXls() throws IOException {
-        PropertyDto propertyDto = webAppConfigurationAccess.getProperties();
+        PropertyDTO propertyDto = webAppConfigurationAccess.getProperties();
         return getSpecificXlsTemplate(propertyDto.getExcelFileName());
     }
 
@@ -223,7 +223,7 @@ public class ExcelProvider {
     }
 
     private Workbook createInitialDailyInfoXls() throws IOException {
-        PropertyDto propertyDto = webAppConfigurationAccess.getProperties();
+        PropertyDTO propertyDto = webAppConfigurationAccess.getProperties();
         return getSpecificXlsTemplate(propertyDto.getDailyInfoFileName());
     }
 
@@ -280,7 +280,7 @@ public class ExcelProvider {
     }
 
     private Workbook createInitialHourlyInfoXls() throws IOException {
-        PropertyDto propertyDto = webAppConfigurationAccess.getProperties();
+        PropertyDTO propertyDto = webAppConfigurationAccess.getProperties();
         return getSpecificXlsTemplate(propertyDto.getHourlyInfoFileName());
     }
 
@@ -363,7 +363,7 @@ public class ExcelProvider {
     }
 
     private Workbook createInitialAdoratorInfoXls() throws IOException {
-        PropertyDto propertyDto = webAppConfigurationAccess.getProperties();
+        PropertyDTO propertyDto = webAppConfigurationAccess.getProperties();
         return getSpecificXlsTemplate(propertyDto.getAdoratorInfoFileName());
     }
 

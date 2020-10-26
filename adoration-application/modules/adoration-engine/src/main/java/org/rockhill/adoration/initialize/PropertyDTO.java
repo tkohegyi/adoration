@@ -3,7 +3,7 @@ package org.rockhill.adoration.initialize;
 /**
  * Holds module specific properties.
  */
-public class PropertyDto {
+public class PropertyDTO {
 
     private final Integer port;
 
@@ -12,7 +12,7 @@ public class PropertyDto {
      *
      * @param port the port used by the web application
      */
-    public PropertyDto(final Integer port) {
+    public PropertyDTO(final Integer port) {
         super();
         this.port = port;
     }

@@ -6,10 +6,7 @@ import org.rockhill.adoration.web.provider.CurrentUserProvider;
 import org.rockhill.adoration.web.provider.PeopleProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.Optional;
@@ -30,7 +27,7 @@ public class AdoratorListController extends ControllerBase {
      *
      * @return the name of the adorators jsp file
      */
-    @RequestMapping(value = "/adorationSecure/adorationList", method = RequestMethod.GET)
+    @GetMapping(value = "/adorationSecure/adorationList")
     public String adorators(HttpSession httpSession) {
         if (!isRegisteredAdorator(currentUserProvider, httpSession)) {
             return "redirect:/adoration/";
@@ -39,7 +36,7 @@ public class AdoratorListController extends ControllerBase {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/adorationSecure/getAdoratorList", method = {RequestMethod.GET})
+    @GetMapping(value = "/adorationSecure/getAdoratorList")
     public TableDataInformationJson getPersonTable(HttpSession httpSession, @RequestParam("filter") Optional<String> filter) {
         TableDataInformationJson content = null;
         if (isRegisteredAdorator(currentUserProvider, httpSession)) {

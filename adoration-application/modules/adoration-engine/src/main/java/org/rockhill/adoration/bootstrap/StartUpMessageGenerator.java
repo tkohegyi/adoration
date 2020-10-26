@@ -2,7 +2,7 @@ package org.rockhill.adoration.bootstrap;
 
 import org.rockhill.adoration.configuration.VersionTitleProvider;
 import org.rockhill.adoration.initialize.EngineConfigurationAccess;
-import org.rockhill.adoration.initialize.PropertyDto;
+import org.rockhill.adoration.initialize.PropertyDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ public class StartUpMessageGenerator {
      * Logs the startup message.
      */
     public void logStartUpMessage() {
-        PropertyDto properties = configurationAccess.getProperties();
+        PropertyDTO properties = configurationAccess.getProperties();
         Integer port = properties.getPort();
         String startUpMessage = String.format(startMessage, versionTitleProvider.getVersionTitle(), port);
         logger.info(startUpMessage);

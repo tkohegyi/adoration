@@ -11,23 +11,23 @@ import org.springframework.stereotype.Component;
 @Component
 public class EngineConfigurationAccess implements ConfigurationAccessBase {
 
-    private PropertyDto properties;
+    private PropertyDTO properties;
 
     @Autowired
     private PropertyHolder propertyHolder;
 
     /**
-     * Returns a {@link PropertyDto} holding all module specific properties.
+     * Returns a {@link PropertyDTO} holding all module specific properties.
      *
      * @return the propertiesDTO object
      */
-    public PropertyDto getProperties() {
+    public PropertyDTO getProperties() {
         return properties;
     }
 
     @Override
     public void loadProperties() {
         Integer port = propertyHolder.getInt("webapp.port");
-        properties = new PropertyDto(port);
+        properties = new PropertyDTO(port);
     }
 }

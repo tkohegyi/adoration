@@ -13,7 +13,7 @@ import org.rockhill.adoration.database.tables.Person;
 import org.rockhill.adoration.database.tables.Social;
 import org.rockhill.adoration.exception.SystemException;
 import org.rockhill.adoration.helper.EmailSender;
-import org.rockhill.adoration.web.configuration.PropertyDto;
+import org.rockhill.adoration.web.configuration.PropertyDTO;
 import org.rockhill.adoration.web.configuration.WebAppConfigurationAccess;
 import org.rockhill.adoration.web.service.helper.Oauth2ServiceBase;
 import org.slf4j.Logger;
@@ -71,13 +71,13 @@ public class FacebookOauth2Service extends Oauth2ServiceBase {
 
     @PostConstruct
     private void FacebookOauth2Service() {
-        PropertyDto propertyDto = webAppConfigurationAccess.getProperties();
+        PropertyDTO propertyDto = webAppConfigurationAccess.getProperties();
         facebookConnectionFactory = new FacebookConnectionFactory(propertyDto.getFacebookAppId(), propertyDto.getFacebookAppSecret());
         facebookConnectionFactory.setScope("email,public_profile");
     }
 
     public String getLoginUrlInformation() {
-        PropertyDto propertyDto = webAppConfigurationAccess.getProperties();
+        PropertyDTO propertyDto = webAppConfigurationAccess.getProperties();
 
         String authorizationUrl = AUTHORIZATION_URL
                 + "client_id=" + propertyDto.getFacebookAppId()
@@ -144,7 +144,7 @@ public class FacebookOauth2Service extends Oauth2ServiceBase {
     public Authentication getFacebookUserInfoJson(final String authCode) {
         FacebookUser facebookUser = null;
         Authentication authentication = null;
-        PropertyDto propertyDto = webAppConfigurationAccess.getProperties();
+        PropertyDTO propertyDto = webAppConfigurationAccess.getProperties();
         try {
             String accessToken = getAccessToken(authCode, propertyDto.getFacebookAppId(), propertyDto.getFacebookAppSecret(), propertyDto.getGoogleRedirectUrl());
             JSONObject facebookUserInfoJson = getFacebookGraph(accessToken);

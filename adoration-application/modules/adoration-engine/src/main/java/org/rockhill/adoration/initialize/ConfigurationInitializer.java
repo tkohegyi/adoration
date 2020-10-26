@@ -33,7 +33,7 @@ public class ConfigurationInitializer {
      * @throws SystemException {@link PropertyLoader}, {@link ApplicationContext} can throw different exceptions.
      */
     @PostConstruct
-    void afterPropertiesSet() throws SystemException {
+    void afterPropertiesSet() {
         propertyLoader.loadProperties();
         loadProperties();
         startUpMessageGenerator.logStartUpMessage();
