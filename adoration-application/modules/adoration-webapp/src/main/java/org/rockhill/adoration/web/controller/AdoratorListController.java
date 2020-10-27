@@ -6,7 +6,9 @@ import org.rockhill.adoration.web.provider.CurrentUserProvider;
 import org.rockhill.adoration.web.provider.PeopleProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
 import java.util.Optional;
@@ -35,6 +37,13 @@ public class AdoratorListController extends ControllerBase {
         return "adoratorList";
     }
 
+    /**
+     * Gets full list of adorators, provided info is depending on the right of the logged in user.
+     *
+     * @param httpSession session that identifies the user
+     * @param filter      optional parameter - actually does nothing
+     * @return with list of adorators in Json format
+     */
     @ResponseBody
     @GetMapping(value = "/adorationSecure/getAdoratorList")
     public TableDataInformationJson getPersonTable(HttpSession httpSession, @RequestParam("filter") Optional<String> filter) {

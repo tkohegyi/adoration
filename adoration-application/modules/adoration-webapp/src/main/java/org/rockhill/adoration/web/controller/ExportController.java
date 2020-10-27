@@ -1,20 +1,26 @@
 package org.rockhill.adoration.web.controller;
 
-import org.apache.http.HttpStatus;
 import org.rockhill.adoration.web.controller.helper.ControllerBase;
+import org.rockhill.adoration.web.controller.helper.enums.ExcelExportType;
+import org.rockhill.adoration.web.json.CurrentUserInformationJson;
 import org.rockhill.adoration.web.provider.CurrentUserProvider;
 import org.rockhill.adoration.web.provider.ExcelProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
+import static org.rockhill.adoration.web.controller.helper.enums.ExcelExportType.ADORATOR_INFO;
+import static org.rockhill.adoration.web.controller.helper.enums.ExcelExportType.BIG_INFO;
+import static org.rockhill.adoration.web.controller.helper.enums.ExcelExportType.DAILY_INFO;
+import static org.rockhill.adoration.web.controller.helper.enums.ExcelExportType.HOURLY_INFO;
 import static org.springframework.http.HttpHeaders.CONTENT_DISPOSITION;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 
@@ -36,108 +42,70 @@ public class ExportController extends ControllerBase {
 
     /**
      * Serves request to get full export to Excel.
-     *
-     * @return the with the excel file
      */
-    @RequestMapping(value = "/adorationSecure/getExcelFull", method = {RequestMethod.GET})
+    @GetMapping(value = "/adorationSecure/getExcelFull")
     public void getExcelContent(HttpSession httpSession, HttpServletResponse httpServletResponse) {
-        httpServletResponse.addHeader(CONTENT_DISPOSITION, String.format(ATTACHMENT_TEMPLATE, "nagyRegiszter.xlsx"));
-        httpServletResponse.addHeader(CONTENT_TYPE, CONTENT_TYPE_XLSX);
-        if (isAdoratorAdmin(currentUserProvider, httpSession)) {
-            try {
-                httpServletResponse.setStatus(200);
-                excelProvider.getExcelFull(currentUserProvider.getUserInformation(httpSession), httpServletResponse.getOutputStream());
-                httpServletResponse.flushBuffer();
-            } catch (IOException e) {
-                logger.warn("Issue at full xls export.", e);
-            }
-        } else {
-            try {
-                httpServletResponse.setStatus(HttpStatus.SC_FORBIDDEN);
-                httpServletResponse.flushBuffer();
-            } catch (IOException e) {
-                logger.warn("Issue/b at full xls export.", e);
-            }
-        }
+        prepareAndSendExcelResponse(httpSession, httpServletResponse, BIG_INFO);
     }
 
     /**
      * Serves request to get full export to Excel.
-     *
-     * @return the with the excel file
      */
-    @RequestMapping(value = "/adorationSecure/getExcelDailyInfo", method = {RequestMethod.GET})
+    @GetMapping(value = "/adorationSecure/getExcelDailyInfo")
     public void getExcelDailyInfo(HttpSession httpSession, HttpServletResponse httpServletResponse) {
-        httpServletResponse.addHeader(CONTENT_DISPOSITION, String.format(ATTACHMENT_TEMPLATE, "napszakFedettség.xlsx"));
-        httpServletResponse.addHeader(CONTENT_TYPE, CONTENT_TYPE_XLSX);
-        if (isPrivilegedAdorator(currentUserProvider, httpSession)) {
-            try {
-                httpServletResponse.setStatus(200);
-                excelProvider.getExcelDailyInfo(currentUserProvider.getUserInformation(httpSession), httpServletResponse.getOutputStream());
-                httpServletResponse.flushBuffer();
-            } catch (IOException e) {
-                logger.warn("Issue at daily info export.", e);
-            }
-        } else {
-            try {
-                httpServletResponse.setStatus(HttpStatus.SC_FORBIDDEN);
-                httpServletResponse.flushBuffer();
-            } catch (IOException e) {
-                logger.warn("Issue/b at daily info export.", e);
-            }
-        }
+        prepareAndSendExcelResponse(httpSession, httpServletResponse, DAILY_INFO);
     }
 
     /**
      * Serves request to get hourly coordinator info.
-     *
-     * @return the with the excel file
      */
-    @RequestMapping(value = "/adorationSecure/getExcelHourlyInfo", method = {RequestMethod.GET})
+    @GetMapping(value = "/adorationSecure/getExcelHourlyInfo")
     public void getExcelHourlyInfo(HttpSession httpSession, HttpServletResponse httpServletResponse) {
-        httpServletResponse.addHeader(CONTENT_DISPOSITION, String.format(ATTACHMENT_TEMPLATE, "órainformáció.xlsx"));
-        httpServletResponse.addHeader(CONTENT_TYPE, CONTENT_TYPE_XLSX);
-        if (isPrivilegedAdorator(currentUserProvider, httpSession)) {
-            try {
-                httpServletResponse.setStatus(200);
-                excelProvider.getExcelHourlyInfo(currentUserProvider.getUserInformation(httpSession), httpServletResponse.getOutputStream());
-                httpServletResponse.flushBuffer();
-            } catch (IOException e) {
-                logger.warn("Issue at hourly info export.", e);
-            }
-        } else {
-            try {
-                httpServletResponse.setStatus(HttpStatus.SC_FORBIDDEN);
-                httpServletResponse.flushBuffer();
-            } catch (IOException e) {
-                logger.warn("Issue/b at hourly info export.", e);
-            }
-        }
+        prepareAndSendExcelResponse(httpSession, httpServletResponse, HOURLY_INFO);
     }
 
     /**
      * Serves request to get adorator info.
-     *
-     * @return the with the excel file
      */
-    @RequestMapping(value = "/adorationSecure/getExcelAdoratorInfo", method = {RequestMethod.GET})
+    @GetMapping(value = "/adorationSecure/getExcelAdoratorInfo")
     public void getExcelAdoratorInfo(HttpSession httpSession, HttpServletResponse httpServletResponse) {
-        httpServletResponse.addHeader(CONTENT_DISPOSITION, String.format(ATTACHMENT_TEMPLATE, "adoráló-adatok.xlsx"));
+        prepareAndSendExcelResponse(httpSession, httpServletResponse, ADORATOR_INFO);
+    }
+
+    private void prepareAndSendExcelResponse(HttpSession httpSession, HttpServletResponse httpServletResponse, ExcelExportType excelExportType) {
+        String templateFileName = excelExportType.getTemplateName();
+        httpServletResponse.addHeader(CONTENT_DISPOSITION, String.format(ATTACHMENT_TEMPLATE, templateFileName));
         httpServletResponse.addHeader(CONTENT_TYPE, CONTENT_TYPE_XLSX);
-        if (isRegisteredAdorator(currentUserProvider, httpSession)) {
+        if (isAdoratorAdmin(currentUserProvider, httpSession)) {
             try {
-                httpServletResponse.setStatus(200);
-                excelProvider.getExcelAdoratorInfo(currentUserProvider.getUserInformation(httpSession), httpServletResponse.getOutputStream());
+                httpServletResponse.setStatus(HttpStatus.OK.value());
+                CurrentUserInformationJson currentUserInformationJson = currentUserProvider.getUserInformation(httpSession);
+                ServletOutputStream servletOutputStream = httpServletResponse.getOutputStream();
+                switch (excelExportType) {
+                case BIG_INFO:
+                    excelProvider.getExcelFull(currentUserInformationJson, servletOutputStream);
+                    break;
+                case DAILY_INFO:
+                    excelProvider.getExcelDailyInfo(currentUserInformationJson, servletOutputStream);
+                    break;
+                case HOURLY_INFO:
+                    excelProvider.getExcelHourlyInfo(currentUserInformationJson, servletOutputStream);
+                    break;
+                default:
+                case ADORATOR_INFO:
+                    excelProvider.getExcelAdoratorInfo(currentUserInformationJson, servletOutputStream);
+                    break;
+                }
                 httpServletResponse.flushBuffer();
             } catch (IOException e) {
-                logger.warn("Issue at adorator info export.", e);
+                logger.warn("Issue at xls export: {}", templateFileName, e);
             }
         } else {
             try {
-                httpServletResponse.setStatus(HttpStatus.SC_FORBIDDEN);
+                httpServletResponse.setStatus(HttpStatus.FORBIDDEN.value());
                 httpServletResponse.flushBuffer();
             } catch (IOException e) {
-                logger.warn("Issue/b at adorator info export.", e);
+                logger.warn("Issue at xls export preparation: {}", templateFileName, e);
             }
         }
     }

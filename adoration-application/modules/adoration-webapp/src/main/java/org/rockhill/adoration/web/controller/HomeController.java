@@ -8,8 +8,7 @@ import org.rockhill.adoration.web.provider.CoverageProvider;
 import org.rockhill.adoration.web.provider.CurrentUserProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,63 +31,92 @@ public class HomeController {
     private static final String JSON_COVERAGE_INFO = "coverageInfo";
 
     @Autowired
-    CurrentUserProvider currentUserProvider;
+    private CurrentUserProvider currentUserProvider;
     @Autowired
-    CoverageProvider coverageProvider;
+    private CoverageProvider coverageProvider;
 
     /**
      * Serves requests which arrive to home and sends back the home page.
      *
      * @return the name of the jsp to display as result
      */
-    @RequestMapping(value = "/", method = {RequestMethod.GET})
+    @GetMapping(value = "/")
     public String pseudoHome() {
         return "redirect:/adoration/";
     }
 
-    @RequestMapping(value = "/adoration/", method = {RequestMethod.GET})
+    /**
+     * Serving the Home page request.
+     *
+     * @return with proper content
+     */
+    @GetMapping(value = "/adoration/")
     public String realHome() {
         return "home";
     }
 
-    @RequestMapping(value = "/favicon.ico", method = {RequestMethod.GET})
+    /**
+     * Serving "favicon.ico" request.
+     *
+     * @return with proper content
+     */
+    @GetMapping(value = "/favicon.ico")
     public String favicon() {
         return "redirect:/resources/img/favicon.ico";
     }
 
-    @RequestMapping(value = "/robots.txt", method = {RequestMethod.GET})
+    /**
+     * Serving "robots.txt" request.
+     *
+     * @return with the proper content
+     */
+    @GetMapping(value = "/robots.txt")
     public String robots() {
         return "redirect:/resources/robots.txt";
     }
 
-    @RequestMapping(value = "/.well-known/security.txt", method = {RequestMethod.GET})
+    /**
+     * Serving the ".well-known/security.txt" request.
+     *
+     * @return with the proper content
+     */
+    @GetMapping(value = "/.well-known/security.txt")
     public String securityText() {
         return "redirect:/resources/security.txt";
     }
 
-    @RequestMapping(value = "/adoration/e404", method = {RequestMethod.GET})
+    /**
+     * Grace handling of E404 (File not found) issues.
+     *
+     * @param httpServletRequest is the request
+     * @return with proper content
+     */
+    @GetMapping(value = "/adoration/e404")
     public String e404(HttpServletRequest httpServletRequest) {
-/*        if (httpServletRequest != null && httpServletRequest.getRemoteAddr() != null) {
-            logger.info("Strange request arrived from: " + httpServletRequest.getRemoteAddr());
-        } */
         return "E404";
     }
 
-    @RequestMapping(value = "/adoration/e500", method = {RequestMethod.GET})
+    /**
+     * Grace handling of E500 (Internal Server Error) issues.
+     *
+     * @param httpServletRequest is the request
+     * @return with proper content
+     */
+    @GetMapping(value = "/adoration/e500")
     public String e500(HttpServletRequest httpServletRequest) {
-/*        if (httpServletRequest != null && httpServletRequest.getRemoteAddr() != null) {
-            logger.info("Strange request arrived from: " + httpServletRequest.getRemoteAddr());
-        } */
         return "E404";
     }
 
-    @RequestMapping(value = "/adorationSecure/myInfoMyAccounts", method = RequestMethod.GET)
-    public String myInfoMyAccounts() {
-        return "myInfoMyAccounts";
-    }
-
+    /**
+     * Serves information about the logged in user.
+     *
+     * @param httpSession         is the session of the user
+     * @param httpServletResponse to be used for the response
+     * @return with proper content
+     * @throws IOException in case exception occurs
+     */
     @ResponseBody
-    @RequestMapping(value = "/adoration/getLoggedInUserInfo", method = {RequestMethod.GET})
+    @GetMapping(value = "/adoration/getLoggedInUserInfo")
     public Map<String, Collection<String>> getLoggedInUserInfo(HttpSession httpSession, HttpServletResponse httpServletResponse
     ) throws IOException {
         httpServletResponse.setHeader("Cache-Control", "no-cache, no-store, max-age=0, must-revalidate");
@@ -105,8 +133,16 @@ public class HomeController {
         return jsonResponse;
     }
 
+    /**
+     * Serves full information about the coverage information.
+     *
+     * @param httpSession         is the session of the user
+     * @param httpServletResponse to use it for the response
+     * @return with proper content
+     * @throws IOException in case error occurs
+     */
     @ResponseBody
-    @RequestMapping(value = "/adoration/getCoverageInformation", method = {RequestMethod.GET})
+    @GetMapping(value = "/adoration/getCoverageInformation")
     public Map<String, Collection<String>> getCoverageInformation(HttpSession httpSession, HttpServletResponse httpServletResponse) throws IOException {
 
         httpServletResponse.setHeader("Cache-Control", "no-cache, no-store, max-age=0, must-revalidate");

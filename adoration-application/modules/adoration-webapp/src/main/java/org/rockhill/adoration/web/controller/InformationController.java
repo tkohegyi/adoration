@@ -13,13 +13,12 @@ import org.rockhill.adoration.web.service.CaptchaService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
@@ -43,11 +42,11 @@ public class InformationController extends ControllerBase {
     private CaptchaService captchaService;
 
     /**
-     * Serves requests for general Information.
+     * Serves user requests for general Information.
      *
      * @return the name of the jsp to display as result
      */
-    @RequestMapping(value = "/adorationSecure/information", method = {RequestMethod.GET})
+    @GetMapping(value = "/adorationSecure/information")
     public String informationPage(HttpSession httpSession) {
         CurrentUserInformationJson currentUserInformationJson = currentUserProvider.getUserInformation(httpSession);
         if (currentUserInformationJson.isRegisteredAdorator) { //registered adorator
@@ -59,8 +58,15 @@ public class InformationController extends ControllerBase {
         return "redirect:/adoration/"; //not even logged in -> go back to basic home page
     }
 
+    /**
+     * Serves general information data for the logged in user, who is an adorator (at least).
+     *
+     * @param httpSession         identifies the user
+     * @param httpServletResponse is used to build the response
+     * @return with proper content
+     */
     @ResponseBody
-    @RequestMapping(value = "/adorationSecure/getInformation", method = {RequestMethod.GET})
+    @GetMapping(value = "/adorationSecure/getInformation")
     public TableDataInformationJson getInformation(HttpSession httpSession, HttpServletResponse httpServletResponse) {
         httpServletResponse.setHeader("Cache-Control", "no-cache, no-store, max-age=0, must-revalidate");
         httpServletResponse.setHeader("Pragma", "no-cache");
@@ -73,8 +79,15 @@ public class InformationController extends ControllerBase {
         return content;
     }
 
+    /**
+     * Serves general information for a logged-in user (who is not-yet identified, or identified as Guest).
+     *
+     * @param httpSession         identifies the user
+     * @param httpServletResponse is used to build the response
+     * @return with proper content
+     */
     @ResponseBody
-    @RequestMapping(value = "/adorationSecure/getGuestInformation", method = {RequestMethod.GET})
+    @GetMapping(value = "/adorationSecure/getGuestInformation")
     public TableDataInformationJson getProfileInformation(HttpSession httpSession, HttpServletResponse httpServletResponse) {
         httpServletResponse.setHeader("Cache-Control", "no-cache, no-store, max-age=0, must-revalidate");
         httpServletResponse.setHeader("Pragma", "no-cache");
@@ -82,7 +95,7 @@ public class InformationController extends ControllerBase {
         CurrentUserInformationJson currentUserInformationJson = currentUserProvider.getUserInformation(httpSession);
         if (currentUserInformationJson.isRegisteredAdorator) { //registered adorator
             //we should not be here, this area for Guests only
-            logger.warn("Registered adorator: " + currentUserInformationJson.personId.toString() + " reached hidden area, pls check!");
+            logger.warn("Registered adorator: {} reached hidden area, pls check!", currentUserInformationJson.personId);
             content = new TableDataInformationJson(null);
         } else if (currentUserInformationJson.isLoggedIn) { //can be waiting for identification or guest
             Object information = informationProvider.getGuestInformation(currentUserInformationJson, httpSession);
@@ -94,14 +107,13 @@ public class InformationController extends ControllerBase {
     /**
      * Serves requests to send message to main coordinator(s).
      *
-     * @return
+     * @return with info about the result of the message sending
      */
     @ResponseBody
-    @RequestMapping(value = "/adorationSecure/messageToCoordinator", method = RequestMethod.POST)
+    @PostMapping(value = "/adorationSecure/messageToCoordinator")
     public ResponseEntity<String> messageToCoordinator(@RequestBody final String body, final HttpSession httpSession) {
-        String resultString = "OK";
+        String resultString;
         ResponseEntity<String> result;
-        HttpHeaders responseHeaders = setHeadersForJSON();
         try {
             CurrentUserInformationJson currentUserInformationJson = currentUserProvider.getUserInformation(httpSession);
             Gson g = new Gson();
@@ -110,19 +122,19 @@ public class InformationController extends ControllerBase {
             if (currentUserInformationJson.isLoggedIn && isCaptchaValid(p.captcha)) { //anybody who logged in can send message to maintainers
                 peopleProvider.messageToCoordinator(p, currentUserInformationJson);
                 resultString = "OK";
-                result = new ResponseEntity<String>(getJsonString(JSON_RESPONSE_UPDATE, resultString), responseHeaders, HttpStatus.CREATED);
+                result = buildResponseBodyResult(JSON_RESPONSE_UPDATE, resultString, HttpStatus.CREATED);
             } else { //a non logged in person or without proper captcha, a user wants to send something - it is prohibited
                 resultString = "Üzenetküldés sikertelen.";
+                result = buildResponseBodyResult(JSON_RESPONSE_UPDATE, resultString, HttpStatus.BAD_REQUEST);
                 logger.warn("WARNING, somebody - who was not logged in or did not set proper captcha - tried to send a message to us.");
-                result = new ResponseEntity<String>(getJsonString(JSON_RESPONSE_UPDATE, resultString), responseHeaders, HttpStatus.BAD_REQUEST);
             }
         } catch (SystemException e) {
             resultString = e.getMessage();
-            result = new ResponseEntity<String>(getJsonString(JSON_RESPONSE_UPDATE, resultString), responseHeaders, HttpStatus.BAD_REQUEST);
+            result = buildResponseBodyResult(JSON_RESPONSE_UPDATE, resultString, HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             resultString = "Az üzenetküldés sikertelen, kérjük lépjen kapcsolatba a weboldal karbantartójával!";
+            result = buildResponseBodyResult(JSON_RESPONSE_UPDATE, resultString, HttpStatus.BAD_REQUEST);
             logger.warn("Error happened at send message to coordinator function, pls contact to maintainers", e);
-            result = new ResponseEntity<String>(getJsonString(JSON_RESPONSE_UPDATE, resultString), responseHeaders, HttpStatus.BAD_REQUEST);
         }
         return result;
     }

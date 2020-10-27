@@ -1,20 +1,37 @@
 package org.rockhill.adoration.web.json;
 
+import org.rockhill.adoration.helper.JsonField;
+
 public class CurrentUserInformationJson {
+    @JsonField
     public boolean isLoggedIn;
+    @JsonField
     public boolean isAuthorized;
+    @JsonField
     public Long personId;
+    @JsonField
     public Long socialId;
+    @JsonField
     public String socialEmail;
+    @JsonField
     public String loggedInUserName;
+    @JsonField
     public String userName;
+    @JsonField
     public String languageCode;
+    @JsonField
     public boolean isRegisteredAdorator;
+    @JsonField
     public boolean isPrivilegedAdorator;
+    @JsonField
     public boolean isAdoratorAdmin;
+    @JsonField
     public Integer coordinatorId;  // id of a coordinator or -1 otherwise
+    @JsonField
     public boolean isDailyCoordinator;
+    @JsonField
     public boolean isHourlyCoordinator;
+    @JsonField
     public String socialServiceUsed;
 
     public CurrentUserInformationJson() {

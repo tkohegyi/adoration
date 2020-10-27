@@ -10,7 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -27,22 +29,29 @@ public class LiveController extends ControllerBase {
     private static final String JSON_INFO = "hash";
 
     @Autowired
-    LiveAdoratorProvider liveAdoratorProvider;
+    private LiveAdoratorProvider liveAdoratorProvider;
     @Autowired
-    CurrentUserProvider currentUserProvider;
+    private CurrentUserProvider currentUserProvider;
 
     /**
-     * Serves the applog page.
+     * Serves the live adoration page.
      *
-     * @return the name of the applog jsp file
+     * @return with proper content
      */
-    @RequestMapping(value = "/adorationSecure/live", method = RequestMethod.GET)
+    @GetMapping(value = "/adorationSecure/live")
     public String live() {
         return "live";
     }
 
+    /**
+     * Registers actual user in actual live list of online adorators.
+     *
+     * @param httpSession         identifies the user
+     * @param httpServletResponse is used to build up the response
+     * @return with hash information to be used by the browser as heartbeat
+     */
     @ResponseBody
-    @RequestMapping(value = "/adoration/registerLiveAdorator", method = {RequestMethod.GET})
+    @GetMapping(value = "/adoration/registerLiveAdorator")
     public Map<String, Collection<String>> registerLiveAdorator(HttpSession httpSession, HttpServletResponse httpServletResponse) {
 
         httpServletResponse.setHeader("Cache-Control", "no-cache, no-store, max-age=0, must-revalidate");
@@ -60,13 +69,13 @@ public class LiveController extends ControllerBase {
     }
 
     /**
-     * Gets the content of the log file.
+     * Recognises heartbeat from live adorator.
      *
      * @param hashString is the adorator identifier
-     * @return nothing
+     * @return nothing special
      */
-    @RequestMapping(value = "/adoration/liveAdorator/{hash:.+}", method = {RequestMethod.GET})
-    public ResponseEntity<String> getLogFileContent(HttpSession httpSession, @PathVariable("hash") final String hashString) {
+    @GetMapping(value = "/adoration/liveAdorator/{hash:.+}")
+    public ResponseEntity<String> liveAdoratorHeartBeat(HttpSession httpSession, @PathVariable("hash") final String hashString) {
         currentUserProvider.getUserInformation(httpSession); //keep session alive even if user does nothing - after all the user is adorating
         liveAdoratorProvider.incomingTick(hashString);
         String jsonData = "{\"hash\":\"" + hashString + "\"}";

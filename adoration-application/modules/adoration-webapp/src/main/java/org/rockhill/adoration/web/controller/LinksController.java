@@ -6,7 +6,10 @@ import org.rockhill.adoration.web.provider.CurrentUserProvider;
 import org.rockhill.adoration.web.provider.LinkProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
 import java.util.Optional;
@@ -27,7 +30,7 @@ public class LinksController extends ControllerBase {
      *
      * @return the name of the adorators jsp file
      */
-    @RequestMapping(value = "/adorationSecure/links", method = RequestMethod.GET)
+    @GetMapping(value = "/adorationSecure/links")
     public String adorators(HttpSession httpSession) {
         if (!isAdoratorAdmin(currentUserProvider, httpSession)) {
             return "redirect:/adoration/";
@@ -35,14 +38,13 @@ public class LinksController extends ControllerBase {
         return "links";
     }
 
-
     /**
-     * Gets the list of Adorators
+     * Gets the list of Links.
      *
      * @return with the list of people as a JSON response
      */
     @ResponseBody
-    @RequestMapping(value = "/adorationSecure/getLinkTable", method = {RequestMethod.GET})
+    @GetMapping(value = "/adorationSecure/getLinkTable")
     public TableDataInformationJson getLinkTable(HttpSession httpSession, @RequestParam("filter") Optional<String> filter) {
         TableDataInformationJson content = null;
         if (isAdoratorAdmin(currentUserProvider, httpSession)) {
@@ -54,12 +56,12 @@ public class LinksController extends ControllerBase {
     }
 
     /**
-     * Gets log history of a specific link
+     * Gets log history of a specific link.
      *
      * @return with the link history as a JSON response
      */
     @ResponseBody
-    @RequestMapping(value = "/adorationSecure/getLinkHistory/{id:.+}", method = {RequestMethod.GET})
+    @GetMapping(value = "/adorationSecure/getLinkHistory/{id:.+}")
     public TableDataInformationJson getLinkHistoryById(HttpSession httpSession, @PathVariable("id") final String requestedId) {
         TableDataInformationJson content = null;
         if (isAdoratorAdmin(currentUserProvider, httpSession)) {
@@ -72,12 +74,12 @@ public class LinksController extends ControllerBase {
     }
 
     /**
-     * Gets specific Link
+     * Gets specific Link.
      *
      * @return with the link as a JSON response
      */
     @ResponseBody
-    @RequestMapping(value = "/adorationSecure/getLink/{id:.+}", method = {RequestMethod.GET})
+    @GetMapping(value = "/adorationSecure/getLink/{id:.+}")
     public TableDataInformationJson getLinkById(HttpSession httpSession, @PathVariable("id") final String requestedId) {
         TableDataInformationJson content = null;
         if (isAdoratorAdmin(currentUserProvider, httpSession)) {

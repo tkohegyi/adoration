@@ -11,8 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,27 +29,27 @@ import static org.springframework.security.web.context.HttpSessionSecurityContex
  */
 @Controller
 public class LoginController {
+    private final static String[] VALID_HOSTS = {"127.0.0.1", "orokimadas.info"};
+    private final static String LOGIN_PAGE = "login";
+    private final static String HOME_PAGE = "home";
+
     private final Logger logger = LoggerFactory.getLogger(LoginController.class);
-    private final String[] VALID_HOSTS = { "127.0.0.1", "orokimadas.info" };
-    private static final String LOGIN_PAGE = "login";
-    private static final String HOME_PAGE = "home";
 
     @Autowired
-    GoogleOauth2Service googleOauth2Service;
+    private GoogleOauth2Service googleOauth2Service;
     @Autowired
-    FacebookOauth2Service facebookOauth2Service;
+    private FacebookOauth2Service facebookOauth2Service;
     @Autowired
     private CurrentUserProvider currentUserProvider;
-
     @Autowired
-    WebAppConfigurationAccess webAppConfigurationAccess;
+    private WebAppConfigurationAccess webAppConfigurationAccess;
 
     /**
      * Serves requests which arrive to home and sends back the home page.
      *
      * @return the name of the jsp to display as result
      */
-    @RequestMapping(value = "/adoration/login", method = {RequestMethod.GET})
+    @GetMapping(value = "/adoration/login")
     public String showLoginPage(
             @RequestParam(value = "result", defaultValue = "") final String result
     ) {
@@ -67,7 +66,7 @@ public class LoginController {
      *
      * @return the name of the jsp to display as result
      */
-    @RequestMapping(value = "/adoration/loginGoogle", method = {RequestMethod.GET})
+    @GetMapping(value = "/adoration/loginGoogle")
     public String showGoogleLoginPage(HttpServletResponse httpServletResponse) {
         String loginUrl = googleOauth2Service.getLoginUrlInformation();
         try {
@@ -84,7 +83,7 @@ public class LoginController {
      *
      * @return the name of the jsp to display as result
      */
-    @RequestMapping(value = "/adoration/loginFacebook", method = {RequestMethod.GET})
+    @GetMapping(value = "/adoration/loginFacebook")
     public String showFacebookLoginPage(HttpServletResponse httpServletResponse) {
         String loginUrl = facebookOauth2Service.getLoginUrlInformation();
         try {
@@ -96,8 +95,21 @@ public class LoginController {
         return LOGIN_PAGE;
     }
 
+    /**
+     * Serves login requests in general, can deal with logins both from Google and Facebook.
+     *
+     * @param code                Google uses this
+     * @param scope               unused
+     * @param authuser            unused
+     * @param state               facebok uses this
+     * @param access_token        is a token
+     * @param httpSession         identifies the user
+     * @param httpServletResponse is used to build the response
+     * @param httpServletRequest  is used to work with the request
+     * @return depends on the status of the login procedure
+     */
     //https://fuf.me/adoration/loginResult?code=4%2FrgG8fzvTngq_gf3YiQgi5x8vGrZis4JD4SXyLxyVhHD97o-k13uxXJHmSqnBa5o-7y-QmjtgMZnyHryn4u_heR8&scope=email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+openid&authuser=0&session_state=8ca7cab3c0dd23415b112fae84f84b1cb9957590..dd73&prompt=consent#
-    @RequestMapping(value = "/adoration/loginResult", method = {RequestMethod.GET})
+    @GetMapping(value = "/adoration/loginResult")
     public String showLoginResultPage(
             @RequestParam(value = "code", defaultValue = "") final String code,  //google uses this
             @RequestParam(value = "scope", defaultValue = "") final String scope,
@@ -111,7 +123,7 @@ public class LoginController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String host = httpServletRequest.getRemoteHost();
         if (!Arrays.asList(VALID_HOSTS).contains(host)) {
-            logger.warn("SSRF trial detected from: " + host);
+            logger.warn("SSRF trial detected from: {}", host);
             return HOME_PAGE;
         }
         if ((code.length() > 0) && (state.length() == 0) && (auth == null)) {  //if GOOGLE login can be performed and it is not yet authenticated for Ador App
@@ -122,7 +134,7 @@ public class LoginController {
             SecurityContext sc = SecurityContextHolder.getContext();
             sc.setAuthentication(authentication);
             httpSession.setAttribute(SPRING_SECURITY_CONTEXT_KEY, sc);
-            logger.info("User logged in with Google: " + currentUserProvider.getQuickUserName(authentication));
+            logger.info("User logged in with Google: {}", currentUserProvider.getQuickUserName(authentication));
             currentUserProvider.registerLogin(httpSession, "Google");
             try {
                 httpServletResponse.sendRedirect(webAppConfigurationAccess.getProperties().getGoogleRedirectUrl());
@@ -137,7 +149,7 @@ public class LoginController {
             SecurityContext sc = SecurityContextHolder.getContext();
             sc.setAuthentication(authentication);
             httpSession.setAttribute(SPRING_SECURITY_CONTEXT_KEY, sc);
-            logger.info("User logged in with Facebook: " + currentUserProvider.getQuickUserName(authentication));
+            logger.info("User logged in with Facebook: {}", currentUserProvider.getQuickUserName(authentication));
             currentUserProvider.registerLogin(httpSession, "Facebook");
             try {
                 httpServletResponse.sendRedirect(webAppConfigurationAccess.getProperties().getGoogleRedirectUrl());
@@ -150,7 +162,14 @@ public class LoginController {
         return HOME_PAGE;
     }
 
-    @RequestMapping(value = "/adorationSecure/exit", method = {RequestMethod.GET})
+    /**
+     * Serves Logout requests.
+     *
+     * @param httpSession         identifies the user
+     * @param httpServletResponse is used to build up the response
+     * @return with a logged-out state and with the home page
+     */
+    @GetMapping(value = "/adorationSecure/exit")
     public String showExitPage(
             HttpSession httpSession,
             HttpServletResponse httpServletResponse
@@ -160,7 +179,7 @@ public class LoginController {
         if (sc != null) {
             Authentication authentication = sc.getAuthentication();
             if (authentication != null) {
-                logger.info("User logout: " + currentUserProvider.getQuickUserName(authentication));
+                logger.info("User logout: {}", currentUserProvider.getQuickUserName(authentication));
                 currentUserProvider.registerLogout(httpSession);
             }
             sc.setAuthentication(null); // this cleans up the authentication data technically

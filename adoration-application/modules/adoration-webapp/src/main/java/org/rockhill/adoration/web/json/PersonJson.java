@@ -1,14 +1,22 @@
 package org.rockhill.adoration.web.json;
 
 import org.rockhill.adoration.database.tables.Person;
+import org.rockhill.adoration.helper.JsonField;
 
 public class PersonJson {
     private static final String UNKNOWN_DATA = "???";
+
+    @JsonField
     public Long id;
+    @JsonField
     public String name;
+    @JsonField
     public String email;
+    @JsonField
     public String mobile;
+    @JsonField
     public String coordinatorComment;
+    @JsonField
     public String visibleComment;
 
     /**

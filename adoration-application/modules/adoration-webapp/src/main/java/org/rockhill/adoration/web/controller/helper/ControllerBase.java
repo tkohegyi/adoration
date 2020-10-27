@@ -5,7 +5,9 @@ import com.google.gson.JsonObject;
 import org.rockhill.adoration.web.json.CurrentUserInformationJson;
 import org.rockhill.adoration.web.provider.CurrentUserProvider;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 
 import javax.servlet.http.HttpSession;
 
@@ -42,6 +44,15 @@ public class ControllerBase {
         return responseHeaders;
     }
 
+    /**
+     * Returns with a String version of a Json object.
+     *
+     * Like:
+     *  { id : { the object } }
+     * @param id is the element id
+     * @param object is the object
+     * @return with the string version of the Json object
+     */
     protected String getJsonString(final String id, final Object object) {
         String json;
         Gson gson = new Gson();
@@ -49,6 +60,19 @@ public class ControllerBase {
         jsonObject.add(id, gson.toJsonTree(object));
         json = gson.toJson(jsonObject);
         return json;
+    }
+
+    protected ResponseEntity<String> buildResponseBodyResult(final String resultId, final Object resultObject, final HttpStatus httpStatus) {
+        ResponseEntity<String> result;
+        HttpHeaders responseHeaders = setHeadersForJSON();
+        result = new ResponseEntity<>(getJsonString(resultId, resultObject), responseHeaders, httpStatus);
+        return result;
+    }
+
+    protected ResponseEntity<String> buildUnauthorizedActionBodyResult() {
+        ResponseEntity<String> result;
+        result = buildResponseBodyResult(JSON_RESPONSE_UPDATE, UNAUTHORIZED_ACTION, HttpStatus.FORBIDDEN);
+        return result;
     }
 
 }

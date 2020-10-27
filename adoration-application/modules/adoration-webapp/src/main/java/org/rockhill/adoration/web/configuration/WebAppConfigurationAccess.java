@@ -13,17 +13,17 @@ import org.springframework.stereotype.Component;
 public class WebAppConfigurationAccess implements ConfigurationAccessBase {
     private static final int SESSION_TIMEOUT_DEFAULT_VALUE = 500;
 
-    private PropertyDTO properties;
+    private PropertyDto properties;
 
     @Autowired
     private PropertyHolder propertyHolder;
 
     /**
-     * Returns a {@link PropertyDTO} holding all module specific properties.
+     * Returns a {@link PropertyDto} holding all module specific properties.
      *
      * @return the propertiesDTO object
      */
-    public PropertyDTO getProperties() {
+    public PropertyDto getProperties() {
         return properties;
     }
 
@@ -41,7 +41,7 @@ public class WebAppConfigurationAccess implements ConfigurationAccessBase {
         String hourlyInfoFileName = propertyHolder.get("hourly_info_file_name");
         String adoratorInfoFileName = propertyHolder.get("adorator_info_file_name");
         String captchaSiteSecret = propertyHolder.get("captcha_site_secret");
-        properties = new PropertyDTO(googleClientId, googleClientSecret, googleRedirectUrl, baseUrl,
+        properties = new PropertyDto(googleClientId, googleClientSecret, googleRedirectUrl, baseUrl,
                 facebookAppId, facebookAppSecret, sessionTimeout,
                 excelFileName, dailyInfoFileName, hourlyInfoFileName, adoratorInfoFileName, captchaSiteSecret);
     }

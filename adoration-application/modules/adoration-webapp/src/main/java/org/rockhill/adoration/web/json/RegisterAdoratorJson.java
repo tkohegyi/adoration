@@ -1,19 +1,32 @@
 package org.rockhill.adoration.web.json;
 
 import org.rockhill.adoration.database.business.helper.enums.TranslatorDayNames;
+import org.rockhill.adoration.helper.JsonField;
 
 public class RegisterAdoratorJson {
+    @JsonField
     public String name;
+    @JsonField
     public String comment;
+    @JsonField
     public Integer dayId;
+    @JsonField
     public Integer hourId;
+    @JsonField
     public String email;
+    @JsonField
     public String coordinate;
+    @JsonField
     public Integer method;
+    @JsonField
     public String dhc;
+    @JsonField
     public String dhcSignedDate;
+    @JsonField
     public String mobile;
+    @JsonField
     public Long personId;
+    @JsonField
     public Long socialId;
 
     public String toString() {

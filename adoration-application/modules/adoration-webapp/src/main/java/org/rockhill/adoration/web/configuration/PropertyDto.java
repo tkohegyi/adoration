@@ -3,7 +3,7 @@ package org.rockhill.adoration.web.configuration;
 /**
  * Holds module specific properties.
  */
-public class PropertyDTO {
+public class PropertyDto {
 
     private final String googleClientId;
     private final String googleClientSecret;
@@ -21,11 +21,11 @@ public class PropertyDTO {
     /**
      * Constructs a new property holding object with the given fields.
      */
-    public PropertyDTO(final String googleClientId, final String googleClientSecret, final String googleRedirectUrl,
+    public PropertyDto(final String googleClientId, final String googleClientSecret, final String googleRedirectUrl, //NOSONAR
                        final String baseUrl, final String facebookAppId, final String facebookAppSecret,
                        final Integer sessionTimeout, final String excelFileName, final String dailyInfoFileName,
                        final String hourlyInfoFileName, final String adoratorInfoFileName,
-                       final String captchaSiteSecret) { //NOSONAR
+                       final String captchaSiteSecret) {
         super();
         this.googleClientId = googleClientId;
         this.googleClientSecret = googleClientSecret;
