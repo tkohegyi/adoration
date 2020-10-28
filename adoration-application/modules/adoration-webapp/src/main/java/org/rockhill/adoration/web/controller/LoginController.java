@@ -20,6 +20,8 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Arrays;
 
+import static org.rockhill.adoration.web.service.FacebookOauth2Service.FACEBOOK_TEXT;
+import static org.rockhill.adoration.web.service.GoogleOauth2Service.GOOGLE_TEXT;
 import static org.springframework.security.web.context.HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY;
 
 /**
@@ -29,9 +31,9 @@ import static org.springframework.security.web.context.HttpSessionSecurityContex
  */
 @Controller
 public class LoginController {
-    private final static String[] VALID_HOSTS = {"127.0.0.1", "orokimadas.info"};
-    private final static String LOGIN_PAGE = "login";
-    private final static String HOME_PAGE = "home";
+    private static final String[] VALID_HOSTS = {"127.0.0.1", "orokimadas.info"};
+    private static final String LOGIN_PAGE = "login";
+    private static final String HOME_PAGE = "home";
 
     private final Logger logger = LoggerFactory.getLogger(LoginController.class);
 
@@ -102,20 +104,21 @@ public class LoginController {
      * @param scope               unused
      * @param authuser            unused
      * @param state               facebok uses this
-     * @param access_token        is a token
+     * @param accessToken        is a token
      * @param httpSession         identifies the user
      * @param httpServletResponse is used to build the response
      * @param httpServletRequest  is used to work with the request
      * @return depends on the status of the login procedure
      */
-    //https://fuf.me/adoration/loginResult?code=4%2FrgG8fzvTngq_gf3YiQgi5x8vGrZis4JD4SXyLxyVhHD97o-k13uxXJHmSqnBa5o-7y-QmjtgMZnyHryn4u_heR8&scope=email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+openid&authuser=0&session_state=8ca7cab3c0dd23415b112fae84f84b1cb9957590..dd73&prompt=consent#
+    //https://fuf.me/adoration/loginResult?code=4%2F...eR8&scope=email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile
+    // +https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+openid&authuser=0&session_state=8ca7cab3c0dd23415b112fae84f84b1cb9957590..dd73&prompt=consent#
     @GetMapping(value = "/adoration/loginResult")
     public String showLoginResultPage(
             @RequestParam(value = "code", defaultValue = "") final String code,  //google uses this
             @RequestParam(value = "scope", defaultValue = "") final String scope,
             @RequestParam(value = "authuser", defaultValue = "") final String authuser,
             @RequestParam(value = "state", defaultValue = "") final String state,  //facebook uses this
-            @RequestParam(value = "access_token", defaultValue = "") final String access_token,
+            @RequestParam(value = "access_token", defaultValue = "") final String accessToken,
             HttpSession httpSession,
             HttpServletResponse httpServletResponse,
             HttpServletRequest httpServletRequest
@@ -127,39 +130,52 @@ public class LoginController {
             return HOME_PAGE;
         }
         if ((code.length() > 0) && (state.length() == 0) && (auth == null)) {  //if GOOGLE login can be performed and it is not yet authenticated for Ador App
-            Authentication authentication = googleOauth2Service.getGoogleUserInfoJson(code);
-            if (authentication == null) { //was unable to get user info properly
-                return LOGIN_PAGE;
-            }
-            SecurityContext sc = SecurityContextHolder.getContext();
-            sc.setAuthentication(authentication);
-            httpSession.setAttribute(SPRING_SECURITY_CONTEXT_KEY, sc);
-            logger.info("User logged in with Google: {}", currentUserProvider.getQuickUserName(authentication));
-            currentUserProvider.registerLogin(httpSession, "Google");
-            try {
-                httpServletResponse.sendRedirect(webAppConfigurationAccess.getProperties().getGoogleRedirectUrl());
-                return null;
-            } catch (IOException e) {
-                logger.warn("Redirect after Google authentication does not work.", e);
-                return LOGIN_PAGE;
-            }
+            String nextPage;
+            nextPage = authenticateWithGoogle(httpSession, httpServletResponse, code);
+            return nextPage;
         }
         if ((code.length() > 0) && (state.length() > 0) && (auth == null)) {  //if FACEBOOK login can be performed and it is not yet authenticated for Ador App
-            Authentication authentication = facebookOauth2Service.getFacebookUserInfoJson(code);
-            SecurityContext sc = SecurityContextHolder.getContext();
-            sc.setAuthentication(authentication);
-            httpSession.setAttribute(SPRING_SECURITY_CONTEXT_KEY, sc);
-            logger.info("User logged in with Facebook: {}", currentUserProvider.getQuickUserName(authentication));
-            currentUserProvider.registerLogin(httpSession, "Facebook");
-            try {
-                httpServletResponse.sendRedirect(webAppConfigurationAccess.getProperties().getGoogleRedirectUrl());
-                return null;
-            } catch (IOException e) {
-                logger.warn("Redirect after Facebook authentication does not work.", e);
-                return LOGIN_PAGE;
-            }
+            String nextPage;
+            nextPage = authenticateWithFacebook(httpSession, httpServletResponse, code);
+            return nextPage;
         }
         return HOME_PAGE;
+    }
+
+    private String commonAuthentication(HttpSession httpSession, HttpServletResponse httpServletResponse,
+                                        Authentication authentication, String serviceName) {
+        String followUpPage;
+        SecurityContext sc = SecurityContextHolder.getContext();
+        sc.setAuthentication(authentication);
+        httpSession.setAttribute(SPRING_SECURITY_CONTEXT_KEY, sc);
+        logger.info("User logged in with {}: {}", serviceName, currentUserProvider.getQuickUserName(authentication));
+        currentUserProvider.registerLogin(httpSession, serviceName);
+        try {
+            httpServletResponse.sendRedirect(webAppConfigurationAccess.getProperties().getGoogleRedirectUrl());
+            followUpPage = null;
+        } catch (IOException e) {
+            logger.warn("Redirect after {} authentication does not work.", serviceName, e);
+            followUpPage = LOGIN_PAGE;
+        }
+        return followUpPage;
+    }
+
+    private String authenticateWithFacebook(HttpSession httpSession, HttpServletResponse httpServletResponse, String code) {
+        String followUpPage;
+        Authentication authentication = facebookOauth2Service.getFacebookUserInfoJson(code);
+        followUpPage = commonAuthentication(httpSession, httpServletResponse, authentication, FACEBOOK_TEXT);
+        return followUpPage;
+    }
+
+    private String authenticateWithGoogle(HttpSession httpSession, HttpServletResponse httpServletResponse, String code) {
+        String followUpPage;
+        Authentication authentication = googleOauth2Service.getGoogleUserInfoJson(code);
+        if (authentication == null) { //was unable to get user info properly
+            followUpPage = LOGIN_PAGE;
+        } else {
+            followUpPage = commonAuthentication(httpSession, httpServletResponse, authentication, GOOGLE_TEXT);
+        }
+        return followUpPage;
     }
 
     /**

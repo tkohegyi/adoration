@@ -43,7 +43,8 @@ import java.util.List;
 @Component
 public class GoogleOauth2Service extends Oauth2ServiceBase {
 
-    private static final String GOOGLE_TEXT = "Google";
+    public static final String GOOGLE_TEXT = "Google";
+
     private static final String USER_INFO_URL = "https://www.googleapis.com/oauth2/v1/userinfo";
     private static final List<String> SCOPES = Arrays.asList(
             "https://www.googleapis.com/auth/userinfo.profile",

@@ -83,7 +83,7 @@
         <module name="ParameterNumber">
             <property name="severity" value="error" />
             <property name="ignoreOverriddenMethods" value="true" />
-            <property name="max" value="6" />
+            <property name="max" value="8" />
             <property name="id" value="ParameterNumber_Error" />
         </module>
         <module name="EmptyForIteratorPad">
@@ -206,7 +206,7 @@
         </module>
         <module name="ReturnCount">
             <property name="severity" value="error" />
-            <property name="max" value="3" />
+            <property name="max" value="4" />
         </module>
         <module name="StringLiteralEquality">
             <property name="severity" value="error" />
