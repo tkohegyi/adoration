@@ -8,21 +8,23 @@ import org.rockhill.adoration.web.json.CurrentUserInformationJson;
 import org.rockhill.adoration.web.json.DeleteEntityJson;
 import org.rockhill.adoration.web.json.TableDataInformationJson;
 import org.rockhill.adoration.web.provider.CurrentUserProvider;
-import org.rockhill.adoration.web.provider.LogFileProvider;
 import org.rockhill.adoration.web.provider.SocialProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
 
 /**
- * Controller for accessing the application log files.
+ * Controller for handling records/information of Social (Facebook and/or Google) users.
  */
 @Controller
 public class SocialController extends ControllerBase {
@@ -39,7 +41,7 @@ public class SocialController extends ControllerBase {
      *
      * @return the name of the social jsp file
      */
-    @RequestMapping(value = "/adorationSecure/social", method = RequestMethod.GET)
+    @GetMapping(value = "/adorationSecure/social")
     public String social(HttpSession httpSession) {
         if (!isAdoratorAdmin(currentUserProvider, httpSession)) {
             return "redirect:/adoration/";
@@ -49,12 +51,12 @@ public class SocialController extends ControllerBase {
 
 
     /**
-     * Gets the list of Socials
+     * Gets the list of Socials.
      *
      * @return with the list of socials as a JSON response
      */
     @ResponseBody
-    @RequestMapping(value = "/adorationSecure/getSocialTable", method = {RequestMethod.GET})
+    @GetMapping(value = "/adorationSecure/getSocialTable")
     public TableDataInformationJson getSocialTable(HttpSession httpSession) {
         TableDataInformationJson content = null;
         if (isAdoratorAdmin(currentUserProvider, httpSession)) {
@@ -66,12 +68,12 @@ public class SocialController extends ControllerBase {
     }
 
     /**
-     * Gets specific Social
+     * Gets a specific Social record.
      *
      * @return with the social as a JSON response
      */
     @ResponseBody
-    @RequestMapping(value = "/adorationSecure/getSocial/{id:.+}", method = {RequestMethod.GET})
+    @GetMapping(value = "/adorationSecure/getSocial/{id:.+}")
     public TableDataInformationJson getSocialById(HttpSession httpSession, @PathVariable("id") final String requestedId) {
         TableDataInformationJson content = null;
         if (isAdoratorAdmin(currentUserProvider, httpSession)) {
@@ -84,55 +86,53 @@ public class SocialController extends ControllerBase {
     }
 
     /**
-     * Update an existing Social.
+     * Update an existing Social record.
      *
      * @param session is the actual HTTP session
      * @return list of hits as a JSON response
      */
     @ResponseBody
-    @RequestMapping(value = "/adorationSecure/updateSocial", method = RequestMethod.POST)
+    @PostMapping(value = "/adorationSecure/updateSocial")
     public ResponseEntity<String> updateSocial(@RequestBody final String body, final HttpSession session) {
-        String resultString = "OK";
+        String resultString;
         ResponseEntity<String> result;
-        HttpHeaders responseHeaders = setHeadersForJSON();
         try {
             CurrentUserInformationJson currentUserInformationJson = currentUserProvider.getUserInformation(session);
-            Gson g = new Gson();
-            Social p = g.fromJson(body, Social.class);
             //check authorization: user must have right user type
             if (!currentUserInformationJson.isAdoratorAdmin) {
-                resultString = UNAUTHORIZED_ACTION;
-                result = new ResponseEntity<String>(getJsonString(JSON_RESPONSE_UPDATE, resultString), responseHeaders, HttpStatus.FORBIDDEN);
+                result = buildUnauthorizedActionBodyResult();
             } else {
                 //authorization checked, ok
+                Gson g = new Gson();
+                Social p = g.fromJson(body, Social.class);
                 Long updateInformation = socialProvider.updateSocial(p, currentUserInformationJson);
                 if (updateInformation != null) {
                     resultString = "OK-" + updateInformation.toString();
-                    result = new ResponseEntity<String>(getJsonString(JSON_RESPONSE_UPDATE, resultString), responseHeaders, HttpStatus.CREATED);
+                    result = buildResponseBodyResult(JSON_RESPONSE_UPDATE, resultString, HttpStatus.CREATED);
                 } else {
                     resultString = "Cannot update the Social, please check the values and retry.";
-                    logger.info("Cannot update the Social with ID:" + p.getId());
-                    result = new ResponseEntity<String>(getJsonString(JSON_RESPONSE_UPDATE, resultString), responseHeaders, HttpStatus.BAD_REQUEST);
+                    result = buildResponseBodyResult(JSON_RESPONSE_UPDATE, resultString, HttpStatus.BAD_REQUEST);
+                    logger.info("Cannot update the Social with ID: {}", p.getId());
                 }
             }
         } catch (SystemException e) {
             resultString = e.getMessage();
-            result = new ResponseEntity<String>(getJsonString(JSON_RESPONSE_UPDATE, resultString), responseHeaders, HttpStatus.BAD_REQUEST);
+            result = buildResponseBodyResult(JSON_RESPONSE_UPDATE, resultString, HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             resultString = "Cannot update the Social, please contact to maintainers.";
+            result = buildResponseBodyResult(JSON_RESPONSE_UPDATE, resultString, HttpStatus.BAD_REQUEST);
             logger.warn("Error happened at Social, pls contact to maintainers", e);
-            result = new ResponseEntity<String>(getJsonString(JSON_RESPONSE_UPDATE, resultString), responseHeaders, HttpStatus.BAD_REQUEST);
         }
         return result;
     }
 
     /**
-     * Gets log history of a specific Social
+     * Gets log history of a specific Social record.
      *
      * @return with the social history as a JSON response
      */
     @ResponseBody
-    @RequestMapping(value = "/adorationSecure/getSocialHistory/{id:.+}", method = {RequestMethod.GET})
+    @GetMapping(value = "/adorationSecure/getSocialHistory/{id:.+}")
     public TableDataInformationJson getSocialHistoryById(HttpSession httpSession, @PathVariable("id") final String requestedId) {
         TableDataInformationJson content = null;
         if (isAdoratorAdmin(currentUserProvider, httpSession)) {
@@ -145,44 +145,42 @@ public class SocialController extends ControllerBase {
     }
 
     /**
-     * Delete an existing Social.
+     * Delete an existing Social record.
      *
      * @param session is the actual HTTP session
      * @return list of hits as a JSON response
      */
     @ResponseBody
-    @RequestMapping(value = "/adorationSecure/deleteSocial", method = RequestMethod.POST)
+    @PostMapping(value = "/adorationSecure/deleteSocial")
     public ResponseEntity<String> deletePerson(@RequestBody final String body, final HttpSession session) {
-        String resultString = "OK";
+        String resultString;
         ResponseEntity<String> result;
-        HttpHeaders responseHeaders = setHeadersForJSON();
         try {
             CurrentUserInformationJson currentUserInformationJson = currentUserProvider.getUserInformation(session);
-            Gson g = new Gson();
-            DeleteEntityJson p = g.fromJson(body, DeleteEntityJson.class);
             //check authorization
             if (!currentUserInformationJson.isAdoratorAdmin) {
-                resultString = UNAUTHORIZED_ACTION;
-                result = new ResponseEntity<String>(getJsonString(JSON_RESPONSE_DELETE, resultString), responseHeaders, HttpStatus.FORBIDDEN);
+                result = buildUnauthorizedActionBodyResult();
             } else {
                 //authorization checked, ok
+                Gson g = new Gson();
+                DeleteEntityJson p = g.fromJson(body, DeleteEntityJson.class);
                 Long updatedObjectId = socialProvider.deleteSocial(p, currentUserInformationJson);
                 if (updatedObjectId != null) {
                     resultString = "OK";
-                    result = new ResponseEntity<String>(getJsonString(resultString, JSON_RESPONSE_DELETE), responseHeaders, HttpStatus.CREATED);
+                    result = buildResponseBodyResult(JSON_RESPONSE_DELETE, resultString, HttpStatus.CREATED);
                 } else {
                     resultString = "Cannot delete Social, please check and retry.";
+                    result = buildResponseBodyResult(JSON_RESPONSE_DELETE, resultString, HttpStatus.BAD_REQUEST);
                     logger.info("Cannot delete Link - data issue.");
-                    result = new ResponseEntity<String>(getJsonString(resultString, JSON_RESPONSE_DELETE), responseHeaders, HttpStatus.BAD_REQUEST);
                 }
             }
         } catch (SystemException e) {
             resultString = e.getMessage();
-            result = new ResponseEntity<String>(getJsonString(resultString, JSON_RESPONSE_DELETE), responseHeaders, HttpStatus.BAD_REQUEST);
+            result = buildResponseBodyResult(JSON_RESPONSE_DELETE, resultString, HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            logger.warn("Error happened at delete Social call", e);
             resultString = "Cannot delete Social, pls contact to maintainers.";
-            result = new ResponseEntity<String>(getJsonString(resultString, JSON_RESPONSE_DELETE), responseHeaders, HttpStatus.BAD_REQUEST);
+            result = buildResponseBodyResult(JSON_RESPONSE_DELETE, resultString, HttpStatus.BAD_REQUEST);
+            logger.warn("Error happened at delete Social call", e);
         }
         return result;
     }

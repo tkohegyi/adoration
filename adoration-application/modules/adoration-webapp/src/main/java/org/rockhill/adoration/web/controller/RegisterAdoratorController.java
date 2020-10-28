@@ -10,13 +10,12 @@ import org.rockhill.adoration.web.provider.PeopleProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
@@ -28,10 +27,10 @@ import javax.servlet.http.HttpSession;
 @Controller
 public class RegisterAdoratorController extends ControllerBase {
 
-    private final Logger logger = LoggerFactory.getLogger(AdoratorsController.class);
+    private final Logger logger = LoggerFactory.getLogger(RegisterAdoratorController.class);
 
     @Autowired
-    CurrentUserProvider currentUserProvider;
+    private CurrentUserProvider currentUserProvider;
     @Autowired
     private PeopleProvider peopleProvider;
 
@@ -40,24 +39,23 @@ public class RegisterAdoratorController extends ControllerBase {
      *
      * @return the name of the adorRegistration jsp file
      */
-    @RequestMapping(value = "/adoration/adorRegistration", method = RequestMethod.GET)
+    @GetMapping(value = "/adoration/adorRegistration")
     public String adorRegistration(HttpSession httpSession,
-                         HttpServletResponse httpServletResponse) {
+                                   HttpServletResponse httpServletResponse) {
         return "adorRegistration";
     }
 
     /**
-     * Update an existing Person.
+     * Register a new adorator.
      *
      * @param session is the actual HTTP session
      * @return list of hits as a JSON response
      */
     @ResponseBody
-    @RequestMapping(value = "/adoration/registerAdorator", method = RequestMethod.POST)
+    @PostMapping(value = "/adoration/registerAdorator")
     public ResponseEntity<String> registerAdorator(@RequestBody final String body, final HttpSession session) {
-        String resultString = "OK";
+        String resultString;
         ResponseEntity<String> result;
-        HttpHeaders responseHeaders = setHeadersForJSON();
         try {
             CurrentUserInformationJson currentUserInformationJson = currentUserProvider.getUserInformation(session);
             Gson g = new Gson();
@@ -68,26 +66,30 @@ public class RegisterAdoratorController extends ControllerBase {
             Long updateInformation = peopleProvider.registerAdorator(p, currentUserInformationJson);
             if (updateInformation != null) {
                 resultString = "OK-" + updateInformation.toString();
-                result = new ResponseEntity<String>(getJsonString(JSON_RESPONSE_UPDATE, resultString), responseHeaders, HttpStatus.CREATED);
+                result = buildResponseBodyResult(JSON_RESPONSE_UPDATE, resultString, HttpStatus.CREATED);
             } else {
                 resultString = "A regisztrálás sikertelen, kérjük ellenőrizze a megadott adatokat és próbálkozzon újra.";
-                logger.info("Cannot register Adorator:" + p.name);
-                result = new ResponseEntity<String>(getJsonString(JSON_RESPONSE_UPDATE, resultString), responseHeaders, HttpStatus.BAD_REQUEST);
+                result = buildResponseBodyResult(JSON_RESPONSE_UPDATE, resultString, HttpStatus.BAD_REQUEST);
+                logger.info("Cannot register Adorator: {}", p.name);
             }
         } catch (SystemException e) {
             resultString = e.getMessage();
-            result = new ResponseEntity<String>(getJsonString(JSON_RESPONSE_UPDATE, resultString), responseHeaders, HttpStatus.BAD_REQUEST);
+            result = buildResponseBodyResult(JSON_RESPONSE_UPDATE, resultString, HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             resultString = "A regiszrálás sikertelen, kérjük lépjen kapcsolatba a weboldal karbantartójával!";
+            result = buildResponseBodyResult(JSON_RESPONSE_UPDATE, resultString, HttpStatus.BAD_REQUEST);
             logger.warn("Error happened at register new Adorator function, pls contact to maintainers", e);
-            result = new ResponseEntity<String>(getJsonString(JSON_RESPONSE_UPDATE, resultString), responseHeaders, HttpStatus.BAD_REQUEST);
         }
         return result;
     }
 
-    @RequestMapping(value = "/adoration/registrationSuccess", method = RequestMethod.GET)
-    public String registrationSuccess(HttpSession httpSession,
-                                   HttpServletResponse httpServletResponse) {
+    /**
+     * Called when the registration of a new adorator was successful.
+     *
+     * @return with the correct page content
+     */
+    @GetMapping(value = "/adoration/registrationSuccess")
+    public String registrationSuccess() {
         return "registrationSuccess";
     }
 

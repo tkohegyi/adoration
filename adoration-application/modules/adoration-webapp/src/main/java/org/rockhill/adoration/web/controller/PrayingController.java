@@ -1,8 +1,7 @@
 package org.rockhill.adoration.web.controller;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
 
 /**
  * Controller for handling requests for the application pages about praying.
@@ -17,7 +16,7 @@ public class PrayingController {
      *
      * @return the name of the jsp to display as result
      */
-    @RequestMapping(value = "/adoration/prayingDay", method = {RequestMethod.GET})
+    @GetMapping(value = "/adoration/prayingDay")
     public String prayingDayPage() {
         return "prayingDay";
     }

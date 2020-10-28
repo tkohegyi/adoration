@@ -11,6 +11,9 @@ import org.springframework.http.ResponseEntity;
 
 import javax.servlet.http.HttpSession;
 
+/**
+ * Base class of every controller.
+ */
 public class ControllerBase {
 
     public static final String JSON_RESPONSE_UPDATE = "entityUpdate";
