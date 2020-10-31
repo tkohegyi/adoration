@@ -4,6 +4,9 @@ import org.rockhill.adoration.helper.JsonField;
 
 import java.util.List;
 
+/**
+ * Json structure to provide information for a "guest" user.
+ */
 public class GuestInformationJson {
     @JsonField
     public String error; // filled only in case of error

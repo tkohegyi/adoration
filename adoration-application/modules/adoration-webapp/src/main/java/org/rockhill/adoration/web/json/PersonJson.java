@@ -3,6 +3,9 @@ package org.rockhill.adoration.web.json;
 import org.rockhill.adoration.database.tables.Person;
 import org.rockhill.adoration.helper.JsonField;
 
+/**
+ * Json structure to be used about a person when the information is provided to a non-privileged person.
+ */
 public class PersonJson {
     private static final String UNKNOWN_DATA = "???";
 
@@ -33,22 +36,22 @@ public class PersonJson {
      */
     public PersonJson(Person person, Boolean isPrivilegedUser) {
         this.id = person.getId();
-        if (!person.getIsAnonymous() || isPrivilegedUser) {
+        if (!person.getIsAnonymous() || Boolean.TRUE.equals(isPrivilegedUser)) {
             this.name = person.getName();
         } else {
             this.name = "Anonymous";
         }
-        if ((person.getIsAnonymous() || !person.getEmailVisible()) && !isPrivilegedUser) {
+        if ((person.getIsAnonymous() || !person.getEmailVisible()) && !Boolean.TRUE.equals(isPrivilegedUser)) {
             this.email = UNKNOWN_DATA;
         } else {
             this.email = person.getEmail();
         }
-        if (person.getMobileVisible() || isPrivilegedUser) {
+        if (person.getMobileVisible() || Boolean.TRUE.equals(isPrivilegedUser)) {
             this.mobile = person.getMobile();
         } else {
             this.mobile = UNKNOWN_DATA;
         }
-        if (isPrivilegedUser) {
+        if (Boolean.TRUE.equals(isPrivilegedUser)) {
             this.coordinatorComment = person.getCoordinatorComment();
         } else {
             this.coordinatorComment = "";

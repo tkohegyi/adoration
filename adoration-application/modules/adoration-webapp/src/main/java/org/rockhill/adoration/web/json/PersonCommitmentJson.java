@@ -4,15 +4,22 @@ import org.rockhill.adoration.database.tables.Link;
 import org.rockhill.adoration.helper.JsonField;
 
 import java.util.ArrayList;
+import java.util.List;
 
+/**
+ * Json structure to be used to contain information about committed hours of a specific person.
+ */
 public class PersonCommitmentJson {
     @JsonField
-    public ArrayList<Link> linkedHours;
+    public List<Link> linkedHours;
     @JsonField
-    public ArrayList<Link> others;
+    public List<Link> others;
     @JsonField
-    public ArrayList<String> dayNames;
+    public List<String> dayNames;
 
+    /**
+     * Constructor of the structure with empty arrays.
+     */
     public PersonCommitmentJson() {
         linkedHours = new ArrayList<>();
         others = new ArrayList<>();

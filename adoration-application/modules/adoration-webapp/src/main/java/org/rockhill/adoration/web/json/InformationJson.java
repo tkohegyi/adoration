@@ -6,6 +6,9 @@ import org.rockhill.adoration.helper.JsonField;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Json structure that is used to provide information for a registered adorator.
+ */
 public class InformationJson {
     @JsonField
     public String error; // filled only in case of error
@@ -26,7 +29,7 @@ public class InformationJson {
     @JsonField
     public List<PersonJson> relatedPersonList; //info about ppl
     @JsonField
-    public Map<Integer,String> dayNames; //dayId - text pairs
+    public Map<Integer, String> dayNames; //dayId - text pairs
     @JsonField
     public Integer hourInDayNow;
     @JsonField

@@ -2,6 +2,9 @@ package org.rockhill.adoration.web.json;
 
 import org.rockhill.adoration.helper.JsonField;
 
+/**
+ * Json structure to hold information about the actual user.
+ */
 public class CurrentUserInformationJson {
     @JsonField
     public boolean isLoggedIn;
@@ -34,10 +37,16 @@ public class CurrentUserInformationJson {
     @JsonField
     public String socialServiceUsed;
 
+    /**
+     * Constructor - fills the json structure with default values.
+     */
     public CurrentUserInformationJson() {
         reset();
     }
 
+    /**
+     * Fill the json structure with basic and default (user not logged in) information.
+     */
     //  öéüőáóúűÖÉÜŐÁÓÚŰ
     //  \u00f6 \u00e9 \u00fc \u0151 \u00e1 \u00f3 \u00fa \u0171 \u00d6 \u00c9 \u00dc \u0150 \u00c1 \u00d3 \u00da \u0170
     public void reset() {

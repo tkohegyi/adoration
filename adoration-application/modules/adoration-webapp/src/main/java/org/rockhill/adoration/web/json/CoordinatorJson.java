@@ -2,6 +2,9 @@ package org.rockhill.adoration.web.json;
 
 import org.rockhill.adoration.helper.JsonField;
 
+/**
+ * Json structure to hold Coordinator information.
+ */
 public class CoordinatorJson {
     @JsonField
     public String id;

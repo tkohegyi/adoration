@@ -21,26 +21,43 @@ public class ControllerBase {
     protected static final String UNAUTHORIZED_ACTION = "Unauthorized action.";
     protected static final String CONTENT_TYPE_XLSX = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
+    /**
+     * Checks if the current user is administrator or not.
+     */
     public boolean isAdoratorAdmin(CurrentUserProvider currentUserProvider, HttpSession httpSession) {
         CurrentUserInformationJson currentUserInformationJson = currentUserProvider.getUserInformation(httpSession);
         return currentUserInformationJson.isAdoratorAdmin;
     }
 
+    /**
+     * Checks if the current user is a privileged adorator or not.
+     */
     public boolean isPrivilegedAdorator(CurrentUserProvider currentUserProvider, HttpSession httpSession) {
         CurrentUserInformationJson currentUserInformationJson = currentUserProvider.getUserInformation(httpSession);
         return currentUserInformationJson.isPrivilegedAdorator;
     }
 
+    /**
+     * Checks if the current user is a registered adorator or not.
+     */
     public boolean isRegisteredAdorator(CurrentUserProvider currentUserProvider, HttpSession httpSession) {
         CurrentUserInformationJson currentUserInformationJson = currentUserProvider.getUserInformation(httpSession);
         return currentUserInformationJson.isRegisteredAdorator;
     }
 
+    /**
+     * Gets the 2 char long language code of the user - right now it is hardcoded to "hu".
+     */
     public String getLanguageCode(CurrentUserProvider currentUserProvider, HttpSession httpSession) {
         CurrentUserInformationJson currentUserInformationJson = currentUserProvider.getUserInformation(httpSession);
         return currentUserInformationJson.languageCode;
     }
 
+    /**
+     * Prepares media type: json for a response.
+     *
+     * @return with the necessary headers
+     */
     protected HttpHeaders setHeadersForJSON() {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.setContentType(MediaType.APPLICATION_JSON);
@@ -49,10 +66,10 @@ public class ControllerBase {
 
     /**
      * Returns with a String version of a Json object.
-     *
      * Like:
-     *  { id : { the object } }
-     * @param id is the element id
+     * { id : { the object } }
+     *
+     * @param id     is the element id
      * @param object is the object
      * @return with the string version of the Json object
      */
@@ -65,6 +82,14 @@ public class ControllerBase {
         return json;
     }
 
+    /**
+     * Builds a full prepared json answer.
+     *
+     * @param resultId     is the identifier of the request type
+     * @param resultObject is the result object itself
+     * @param httpStatus   is the result HTTP status value
+     * @return with the ready-to-send response
+     */
     protected ResponseEntity<String> buildResponseBodyResult(final String resultId, final Object resultObject, final HttpStatus httpStatus) {
         ResponseEntity<String> result;
         HttpHeaders responseHeaders = setHeadersForJSON();
@@ -72,6 +97,11 @@ public class ControllerBase {
         return result;
     }
 
+    /**
+     * Builds a full prepared json response, that says that the request was unauthorized.
+     *
+     * @return with the ready-to-send response
+     */
     protected ResponseEntity<String> buildUnauthorizedActionBodyResult() {
         ResponseEntity<String> result;
         result = buildResponseBodyResult(JSON_RESPONSE_UPDATE, UNAUTHORIZED_ACTION, HttpStatus.FORBIDDEN);
