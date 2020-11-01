@@ -23,6 +23,8 @@ public class ControllerBase {
 
     /**
      * Checks if the current user is administrator or not.
+     *
+     * @return true when the user is administrator.
      */
     public boolean isAdoratorAdmin(CurrentUserProvider currentUserProvider, HttpSession httpSession) {
         CurrentUserInformationJson currentUserInformationJson = currentUserProvider.getUserInformation(httpSession);
@@ -31,6 +33,8 @@ public class ControllerBase {
 
     /**
      * Checks if the current user is a privileged adorator or not.
+     *
+     * @return true if the user is a privileged adorator
      */
     public boolean isPrivilegedAdorator(CurrentUserProvider currentUserProvider, HttpSession httpSession) {
         CurrentUserInformationJson currentUserInformationJson = currentUserProvider.getUserInformation(httpSession);
@@ -39,6 +43,8 @@ public class ControllerBase {
 
     /**
      * Checks if the current user is a registered adorator or not.
+     *
+     * @return true if the user is a registered adorator
      */
     public boolean isRegisteredAdorator(CurrentUserProvider currentUserProvider, HttpSession httpSession) {
         CurrentUserInformationJson currentUserInformationJson = currentUserProvider.getUserInformation(httpSession);
@@ -47,6 +53,8 @@ public class ControllerBase {
 
     /**
      * Gets the 2 char long language code of the user - right now it is hardcoded to "hu".
+     *
+     * @return with "hu", always.
      */
     public String getLanguageCode(CurrentUserProvider currentUserProvider, HttpSession httpSession) {
         CurrentUserInformationJson currentUserInformationJson = currentUserProvider.getUserInformation(httpSession);

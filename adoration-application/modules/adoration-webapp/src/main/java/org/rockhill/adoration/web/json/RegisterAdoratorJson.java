@@ -35,6 +35,8 @@ public class RegisterAdoratorJson {
     /**
      * Method to convert the structure to a text format.
      * Such string is sent as mail body to the administrator as notification about the newly registered adorator.
+     *
+     * @return the text representation of a registration information
      */
     public String toString() {
         StringBuilder sb = new StringBuilder();

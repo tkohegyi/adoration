@@ -27,6 +27,7 @@ public class BusinessWithLink extends BusinessBase {
     public static final Integer MIN_HOUR = 0;
     public static final Integer HOUR_IN_A_DAY = 24;
     public static final Integer MAX_HOUR = 167;
+    public static final Integer PRIORITY_BORDER = 3; //below this is high priority
 
     private final Logger logger = LoggerFactory.getLogger(BusinessWithLink.class);
 

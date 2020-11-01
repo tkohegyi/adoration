@@ -7,7 +7,7 @@ import org.rockhill.adoration.database.tables.AuditTrail;
 import org.rockhill.adoration.database.tables.Social;
 import org.rockhill.adoration.web.json.CurrentUserInformationJson;
 import org.rockhill.adoration.web.json.DeleteEntityJson;
-import org.rockhill.adoration.web.provider.helper.Comparer;
+import org.rockhill.adoration.web.provider.helper.ProviderBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,15 +17,18 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Class to provide information about social users.
+ */
 @Component
-public class SocialProvider extends Comparer {
+public class SocialProvider extends ProviderBase {
 
     private final Logger logger = LoggerFactory.getLogger(SocialProvider.class);
 
     @Autowired
-    BusinessWithAuditTrail businessWithAuditTrail;
+    private BusinessWithAuditTrail businessWithAuditTrail;
     @Autowired
-    BusinessWithSocial businessWithSocial;
+    private BusinessWithSocial businessWithSocial;
 
 
     public Object getSocialListAsObject() {
@@ -51,14 +54,8 @@ public class SocialProvider extends Comparer {
         Long oldLongValue = targetSocial.getPersonId();
         if (isLongChanged(oldLongValue, newLongValue)) {
             targetSocial.setPersonId(newLongValue); //if we are here, it must have been changed
-            String oldValue = "N/A";
-            if (oldLongValue != null) {
-                oldValue = oldLongValue.toString();
-            }
-            String newValue = "N/A";
-            if (newLongValue != null) {
-                newValue = newLongValue.toString();
-            }
+            String oldValue = prepareAuditValueString(oldLongValue);
+            String newValue = prepareAuditValueString(newLongValue);
             auditTrailCollection.add(prepareAuditTrail(refId, currentUserInformationJson.userName, "PersonId", oldValue, newValue));
         }
         //socialStatus
@@ -141,8 +138,10 @@ public class SocialProvider extends Comparer {
     private boolean handleSocialUpdatePreparationFacebookPart(Social targetSocial, Social proposedSocial, Collection<AuditTrail> auditTrailCollection, String userName) {
         Long refId = proposedSocial.getId();
         //facebookUserName
-        String newString = proposedSocial.getFacebookUserName();
-        String oldString = targetSocial.getFacebookUserName();
+        String newString;
+        newString = proposedSocial.getFacebookUserName();
+        String oldString;
+        oldString = targetSocial.getFacebookUserName();
         if (!isSocialStringFieldChangeValid(oldString, newString, userName)) {
             return false;
         }
@@ -189,7 +188,7 @@ public class SocialProvider extends Comparer {
 
     private boolean isSocialStringFieldChangeValid(String oldString, String newString, String userName) {
         if ((oldString == null) || (newString == null)) {
-            logger.info("User:" + userName + " tried to create/update Social with null string.");
+            logger.info("User: {} tried to create/update Social with null string.", userName);
             return false;
         }
         businessWithAuditTrail.checkDangerousValue(newString, userName);
@@ -197,8 +196,9 @@ public class SocialProvider extends Comparer {
     }
 
     public Object getSocialHistoryAsObject(Long id) {
-        List<AuditTrail> a = businessWithAuditTrail.getAuditTrailOfObject(id);
-        return a;
+        List<AuditTrail> auditTrailOfObject;
+        auditTrailOfObject = businessWithAuditTrail.getAuditTrailOfObject(id);
+        return auditTrailOfObject;
     }
 
     public Long deleteSocial(DeleteEntityJson p, CurrentUserInformationJson currentUserInformationJson) {
@@ -206,7 +206,8 @@ public class SocialProvider extends Comparer {
         Social social = businessWithSocial.getSocialById(id);
         //collect related audit records
         List<AuditTrail> auditTrailList = businessWithAuditTrail.getAuditTrailOfObject(id);
-        Long result = businessWithSocial.deleteSocial(social, auditTrailList);
+        Long result;
+        result = businessWithSocial.deleteSocial(social, auditTrailList);
         return result;
     }
 }

@@ -18,6 +18,10 @@ public enum AdoratorStatusTypes {
     ADORATOR_EMPHASIZED("Emphasized Adorator", 6), //for Margit and all coordinators
     ADORATOR_ADMIN("Administrator", 7);
 
+    private static final Set<AdoratorStatusTypes> REGISTERED_ADORATOR;
+    private static final Set<AdoratorStatusTypes> LEADERS;
+    private static final Set<AdoratorStatusTypes> ADMINS;
+
     private static final Set<AdoratorStatusTypes> INACTIVE_ADORATORS;
 
     static {
@@ -26,6 +30,19 @@ public enum AdoratorStatusTypes {
         INACTIVE_ADORATORS.add(AdoratorStatusTypes.PRE_ADORATOR);
         INACTIVE_ADORATORS.add(AdoratorStatusTypes.POST_ADORATOR);
         INACTIVE_ADORATORS.add(AdoratorStatusTypes.DIED_ADORATOR);
+
+        REGISTERED_ADORATOR = new HashSet<>();
+        REGISTERED_ADORATOR.add(AdoratorStatusTypes.ADORATOR_ADMIN);
+        REGISTERED_ADORATOR.add(AdoratorStatusTypes.ADORATOR);
+        REGISTERED_ADORATOR.add(AdoratorStatusTypes.ADORATOR_EMPHASIZED);
+
+        LEADERS = new HashSet<>();
+        LEADERS.add(AdoratorStatusTypes.ADORATOR_ADMIN);
+        LEADERS.add(AdoratorStatusTypes.ADORATOR_EMPHASIZED);
+
+        ADMINS = new HashSet<>();
+        ADMINS.add(AdoratorStatusTypes.ADORATOR_ADMIN);
+
     }
 
     private final String adoratorStatusText;
@@ -37,6 +54,17 @@ public enum AdoratorStatusTypes {
     }
 
     // helper functions
+    public static Set<AdoratorStatusTypes> getRegisteredAdoratorSet() {
+        return REGISTERED_ADORATOR;
+    }
+
+    public static Set<AdoratorStatusTypes> getLeadersSet() {
+        return LEADERS;
+    }
+
+    public static Set<AdoratorStatusTypes> getAdminsSet() {
+        return ADMINS;
+    }
 
     /**
      * Get adorator status as string.
@@ -74,7 +102,7 @@ public enum AdoratorStatusTypes {
      * @param typeId is the adorator status type Id
      * @return true if the adorator type means that the adorator is inactive (not doing adoration), otherwise false
      */
-    public static Boolean isInactive(Integer typeId) {
+    public static boolean isInactive(Integer typeId) {
         AdoratorStatusTypes adoratorStatusTypes = getTypeFromId(typeId);
         return INACTIVE_ADORATORS.contains(adoratorStatusTypes);
     }

@@ -7,4 +7,6 @@
   <suppress checks="RegexpHeader" files=".*package-info.java|.*.properties" />
   <suppress checks="VisibilityModifier" files="org.rockhill.adoration.engine.AdorationApplication.java|.*Json.java"/>
   <suppress checks="ParameterNumber" files=".*PropertyDto.java"/>
+  <!-- relax rules Excel handling files since we work with a lot of cell numbers -->
+  <suppress checks="MagicNumber" files=".*ExcelProvider.java"/>
 </suppressions>

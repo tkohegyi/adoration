@@ -1,6 +1,10 @@
 package org.rockhill.adoration.web.provider;
 
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFFormulaEvaluator;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.rockhill.adoration.database.business.BusinessWithCoordinator;
@@ -30,46 +34,49 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Class to provide support of Excel based exports and downloads.
+ */
 @Component
 public class ExcelProvider {
 
+    private static final Map<Integer, String> HOUR_CODES;
+    private static final Map<Integer, String> DAY_CODES;
     private static final String THERE_IS_NO_INFORMATION = "-";
-    public static HashMap<Integer, String> hourCodes;
-    public static HashMap<Integer, String> dayCodes;
 
     static {
-        hourCodes = new HashMap<>();
-        hourCodes.put(0, "V;");
-        hourCodes.put(1, "H;");
-        hourCodes.put(2, "K;");
-        hourCodes.put(3, "Sze;");
-        hourCodes.put(4, "Cs;");
-        hourCodes.put(5, "P;");
-        hourCodes.put(6, "Szo;");
-        dayCodes = new HashMap<>();
-        dayCodes.put(0, "vasárnap");
-        dayCodes.put(1, "hétfő");
-        dayCodes.put(2, "kedd");
-        dayCodes.put(3, "szerda");
-        dayCodes.put(4, "csütörtök");
-        dayCodes.put(5, "péntek");
-        dayCodes.put(6, "szombat");
+        HOUR_CODES = new HashMap<>();
+        HOUR_CODES.put(0, "V;");
+        HOUR_CODES.put(1, "H;");
+        HOUR_CODES.put(2, "K;");
+        HOUR_CODES.put(3, "Sze;");
+        HOUR_CODES.put(4, "Cs;");
+        HOUR_CODES.put(5, "P;");
+        HOUR_CODES.put(6, "Szo;");
+        DAY_CODES = new HashMap<>();
+        DAY_CODES.put(0, "vasárnap");
+        DAY_CODES.put(1, "hétfő");
+        DAY_CODES.put(2, "kedd");
+        DAY_CODES.put(3, "szerda");
+        DAY_CODES.put(4, "csütörtök");
+        DAY_CODES.put(5, "péntek");
+        DAY_CODES.put(6, "szombat");
     }
 
     @Autowired
-    BusinessWithPerson businessWithPerson;
+    private BusinessWithPerson businessWithPerson;
     @Autowired
-    BusinessWithLink businessWithLink;
+    private BusinessWithLink businessWithLink;
     @Autowired
-    BusinessWithCoordinator businessWithCoordinator;
+    private BusinessWithCoordinator businessWithCoordinator;
     @Autowired
-    WebAppConfigurationAccess webAppConfigurationAccess;
+    private WebAppConfigurationAccess webAppConfigurationAccess;
     @Autowired
-    CoverageProvider coverageProvider;
+    private CoverageProvider coverageProvider;
     @Autowired
-    CoordinatorProvider coordinatorProvider;
+    private CoordinatorProvider coordinatorProvider;
     @Autowired
-    BusinessWithTranslator businessWithTranslator;
+    private BusinessWithTranslator businessWithTranslator;
 
     private Row getRow(Sheet sheet, int rowNo) {
         Row row = sheet.getRow(rowNo);
@@ -111,14 +118,17 @@ public class ExcelProvider {
         return workbook;
     }
 
+    /**
+     * Get full excel export - usually used by main coordinators only.
+     *
+     * @throws IOException if any issue happens
+     */
     public void getExcelFull(CurrentUserInformationJson userInformation, ServletOutputStream outputStream) throws IOException {
         Workbook w = createInitialXls();
-        if (w != null) {
-            updateAdorators(w);
-            updateCoverage(userInformation, w);
-            reCalculateAllExcelCells(w);
-            w.write(outputStream);
-        }
+        updateAdorators(w);
+        updateCoverage(userInformation, w);
+        reCalculateAllExcelCells(w);
+        w.write(outputStream);
     }
 
     private Workbook createInitialXls() throws IOException {
@@ -127,9 +137,9 @@ public class ExcelProvider {
     }
 
     private String getHourString(Integer hourId) {
-        Integer day = hourId / 24;
-        int hour = hourId % 24;
-        String dayString = hourCodes.get(day);
+        Integer day = hourId / BusinessWithLink.HOUR_IN_A_DAY;
+        int hour = hourId % BusinessWithLink.HOUR_IN_A_DAY;
+        String dayString = HOUR_CODES.get(day);
         return dayString + hour + ";";
     }
 
@@ -200,8 +210,8 @@ public class ExcelProvider {
         int rowCount = 39;
         for (int d = 0; d < 7; d++) {
             Row row = sheet.createRow(rowCount + d);
-            for (int h = 0; h < 24; h++) {
-                Integer noOfAdorators = coverageInformationJson.visibleHours.get(d * 24 + h);
+            for (int h = 0; h < BusinessWithLink.HOUR_IN_A_DAY; h++) {
+                Integer noOfAdorators = coverageInformationJson.visibleHours.get(d * BusinessWithLink.HOUR_IN_A_DAY + h);
                 Cell c = getCell(row, 4 + h);
                 long cellValue = 2 - noOfAdorators.longValue();
                 if (cellValue < 0) {
@@ -213,13 +223,16 @@ public class ExcelProvider {
         }
     }
 
-    public void getExcelDailyInfo(CurrentUserInformationJson userInformation, ServletOutputStream outputStream) throws IOException {
+    /**
+     * Get excel export for daily coordinators.
+     *
+     * @throws IOException if any issue happens
+     */
+    public void getExcelDailyInfo(ServletOutputStream outputStream) throws IOException {
         Workbook w = createInitialDailyInfoXls();
-        if (w != null) {
-            updateDailyInfo(userInformation, w);
-            reCalculateAllExcelCells(w);
-            w.write(outputStream);
-        }
+        updateDailyInfo(w);
+        reCalculateAllExcelCells(w);
+        w.write(outputStream);
     }
 
     private Workbook createInitialDailyInfoXls() throws IOException {
@@ -227,10 +240,10 @@ public class ExcelProvider {
         return getSpecificXlsTemplate(propertyDto.getDailyInfoFileName());
     }
 
-    private void updateDailyInfo(CurrentUserInformationJson userInformation, Workbook w) {
+    private void updateDailyInfo(Workbook w) {
         //fill hour coordinators
         Sheet sheet = w.getSheet("Adatok");
-        fillCellsWithHourlyCoordinators(sheet, 3, 2);
+        fillCellsWithHourlyCoordinators(sheet);
         //prepare data
         Map<Integer, Integer> posRecord = new HashMap<>();
         for (int i = BusinessWithLink.MIN_HOUR; i <= BusinessWithLink.MAX_HOUR; i++) { //this is about priority only
@@ -241,7 +254,7 @@ public class ExcelProvider {
         int rowBase = 3;
         for (int i = BusinessWithLink.MIN_HOUR; i <= BusinessWithLink.MAX_HOUR; i++) {
             List<Link> links = businessWithLink.getPhysicalLinksOfHour(i);
-            if (links != null && links.size() > 0) {
+            if (links != null && !links.isEmpty()) {
                 links.sort(Comparator.comparing(Link::getPriority));
                 for (Link l : links) {
                     Cell cell = getSheetCell(sheet, rowBase + posRecord.get(i), colBase + i);
@@ -256,7 +269,9 @@ public class ExcelProvider {
         }
     }
 
-    private void fillCellsWithHourlyCoordinators(Sheet sheet, int rowPos, int colPos) {
+    private void fillCellsWithHourlyCoordinators(Sheet sheet) {
+        int rowPos = 3;
+        int colPos = 2;
         List<Coordinator> coordinators = coordinatorProvider.getCoordinatorList();
         for (Coordinator coo : coordinators) {
             if (coo.getCoordinatorType() < 24) { //if hourly coordinator
@@ -270,13 +285,19 @@ public class ExcelProvider {
         }
     }
 
+    /**
+     * Get excel export for hourly coordinators.
+     *
+     * @throws IOException if any issue happens
+     */
     public void getExcelHourlyInfo(CurrentUserInformationJson userInformation, ServletOutputStream outputStream) throws IOException {
         Workbook w = createInitialHourlyInfoXls();
-        if (w != null) {
-            updateHourlyInfo(userInformation, w);
-            reCalculateAllExcelCells(w);
-            w.write(outputStream);
+        if (userInformation.personId != null) {
+            //person is identified
+            updateHourlyInfo(userInformation.personId, w);
         }
+        reCalculateAllExcelCells(w);
+        w.write(outputStream);
     }
 
     private Workbook createInitialHourlyInfoXls() throws IOException {
@@ -284,59 +305,58 @@ public class ExcelProvider {
         return getSpecificXlsTemplate(propertyDto.getHourlyInfoFileName());
     }
 
-    private void updateHourlyInfo(CurrentUserInformationJson userInformation, Workbook w) {
+    private void updateHourlyInfo(Long personId, Workbook w) {
         Sheet sheet = w.getSheet("Órakoordinátor");
-        if (userInformation.personId == null) {
-            return;
-        } // the person is not identified
-        Coordinator coordinator = businessWithCoordinator.getCoordinatorFromPersonId(userInformation.personId);
-        if (coordinator == null) {
-            return;
-        } //the coordinator is not identified
-        //coordinator has been identified
-        Integer coordinatorType = coordinator.getCoordinatorType();
-        if (coordinatorType > 23) {
-            return; // the person is not an hourly coordinator
-        }
-        //hourly coordinator identified, fill the xls
-        Cell c = getSheetCell(sheet, 2, 2);
-        c.setCellValue(coordinator.getCoordinatorType());
-        Coordinator dailyCoo = businessWithCoordinator.getDailyCooOfHour(coordinatorType);
-        if (dailyCoo != null) {
-            Person p = businessWithPerson.getPersonById(dailyCoo.getPersonId());
-            if (p != null) {
-                Row row = getRow(sheet, 6); //row of daily coo
-                c = getCell(row, 1);
-                c.setCellValue(p.getName());
-                c = getCell(row, 3);
-                c.setCellValue(p.getMobile());
-                c = getCell(row, 4);
-                c.setCellValue(p.getEmail());
+        Coordinator coordinator = businessWithCoordinator.getCoordinatorFromPersonId(personId);
+        if (coordinator != null) {
+            //coordinator has been identified
+            Integer coordinatorType = coordinator.getCoordinatorType();
+            if (coordinatorType < BusinessWithLink.HOUR_IN_A_DAY) {
+                //person is an hourly coordinator, fill the xls
+                Cell c = getSheetCell(sheet, 2, 2);
+                c.setCellValue(coordinator.getCoordinatorType());
+                Coordinator dailyCoo = businessWithCoordinator.getDailyCooOfHour(coordinatorType);
+                if (dailyCoo != null) {
+                    Person p = businessWithPerson.getPersonById(dailyCoo.getPersonId());
+                    if (p != null) {
+                        Row row = getRow(sheet, 6); //row of daily coo
+                        c = getCell(row, 1);
+                        c.setCellValue(p.getName());
+                        c = getCell(row, 3);
+                        c.setCellValue(p.getMobile());
+                        c = getCell(row, 4);
+                        c.setCellValue(p.getEmail());
+                    }
+                }
+                Person p = businessWithPerson.getPersonById(coordinator.getPersonId());
+                if (p != null) { // if we have the hourly coo person
+                    Row row = getRow(sheet, 10); //hourly coo row
+                    c = getCell(row, 1);
+                    c.setCellValue(p.getName());
+                    c = getCell(row, 3);
+                    c.setCellValue(p.getMobile());
+                    c = getCell(row, 4);
+                    c.setCellValue(p.getEmail());
+                    c = getCell(row, 5);
+                    c.setCellValue(p.getVisibleComment());
+                }
+                //iterate through the adorators
+                iterateThroughAdorators(coordinatorType, sheet);
             }
         }
-        Person p = businessWithPerson.getPersonById(coordinator.getPersonId());
-        if (p != null) { // if we have the hourly coo person
-            Row row = getRow(sheet, 10); //hourly coo row
-            c = getCell(row, 1);
-            c.setCellValue(p.getName());
-            c = getCell(row, 3);
-            c.setCellValue(p.getMobile());
-            c = getCell(row, 4);
-            c.setCellValue(p.getEmail());
-            c = getCell(row, 5);
-            c.setCellValue(p.getVisibleComment());
-        }
-        //iterate through the adorators
+    }
+
+    private void iterateThroughAdorators(Integer coordinatorType, Sheet sheet) {
         List<Link> links = businessWithLink.getLinksOfWeek(coordinatorType);
         int baseRow = 14;
         for (Link l : links) {
             Integer hourId = l.getHourId();
-            Integer day = hourId / 24;
-            String dayString = dayCodes.get(day);
-            p = businessWithPerson.getPersonById(l.getPersonId());
+            Integer day = hourId / BusinessWithLink.HOUR_IN_A_DAY;
+            String dayString = DAY_CODES.get(day);
+            Person p = businessWithPerson.getPersonById(l.getPersonId());
             if (p != null) {
                 Row row = getRow(sheet, baseRow); //adorator row
-                c = getCell(row, 1);
+                Cell c = getCell(row, 1);
                 c.setCellValue(dayString);
                 c = getCell(row, 2);
                 c.setCellValue(p.getName());
@@ -353,13 +373,18 @@ public class ExcelProvider {
         }
     }
 
+    /**
+     * Get excel export about the adorator him/herself.
+     *
+     * @throws IOException if any issue happens
+     */
     public void getExcelAdoratorInfo(CurrentUserInformationJson userInformation, ServletOutputStream outputStream) throws IOException {
         Workbook w = createInitialAdoratorInfoXls();
-        if (w != null) {
-            updateAdoratorInfo(userInformation, w);
-            reCalculateAllExcelCells(w);
-            w.write(outputStream);
+        if (userInformation.personId != null) {
+            updateAdoratorInfo(userInformation.personId, userInformation.languageCode, w);
         }
+        reCalculateAllExcelCells(w);
+        w.write(outputStream);
     }
 
     private Workbook createInitialAdoratorInfoXls() throws IOException {
@@ -367,14 +392,13 @@ public class ExcelProvider {
         return getSpecificXlsTemplate(propertyDto.getAdoratorInfoFileName());
     }
 
-    private void updateAdoratorInfo(CurrentUserInformationJson userInformation, Workbook w) {
+    private void updateAdoratorInfo(Long personId, String languageCode, Workbook w) {
         final String publicName = "Publikus";
         final String hiddenName = "Titkos";
-        if (userInformation.personId == null) return;
         Sheet sheet = w.getSheet("Adoráló");
-        Person p = businessWithPerson.getPersonById(userInformation.personId);
+        Person p = businessWithPerson.getPersonById(personId);
         setCellOnSheet(sheet, 2, 2, p.getName());
-        if (!p.getIsAnonymous()) {
+        if (!Boolean.TRUE.equals(p.getIsAnonymous())) {
             setCellOnSheet(sheet, 2, 3, publicName);
         } else {
             setCellOnSheet(sheet, 2, 3, hiddenName);
@@ -382,13 +406,13 @@ public class ExcelProvider {
         setCellOnSheet(sheet, 3, 2, AdoratorStatusTypes.getTranslatedString(p.getAdorationStatus()));
         setCellOnSheet(sheet, 4, 2, p.getId().toString());
         setCellOnSheet(sheet, 5, 2, p.getMobile());
-        if (p.getMobileVisible()) {
+        if (Boolean.TRUE.equals(p.getMobileVisible())) {
             setCellOnSheet(sheet, 5, 3, publicName);
         } else {
             setCellOnSheet(sheet, 5, 3, hiddenName);
         }
         setCellOnSheet(sheet, 6, 2, p.getEmail());
-        if (p.getEmailVisible()) {
+        if (Boolean.TRUE.equals(p.getEmailVisible())) {
             setCellOnSheet(sheet, 6, 3, publicName);
         } else {
             setCellOnSheet(sheet, 6, 3, hiddenName);
@@ -404,7 +428,7 @@ public class ExcelProvider {
             if (c.getPersonId() != null) {
                 Person coo = businessWithPerson.getPersonById(c.getPersonId());
                 if (coo != null) {
-                    String coordinatorText = businessWithTranslator.getTranslatorValue(userInformation.languageCode,
+                    String coordinatorText = businessWithTranslator.getTranslatorValue(languageCode,
                             "COORDINATOR-" + c.getCoordinatorType().toString(), "N/A");
                     setCellOnSheet(sheet, baseRow, 1, coordinatorText);
                     setCellOnSheet(sheet, baseRow, 3, getPersonNameInformation(coo));
@@ -413,48 +437,52 @@ public class ExcelProvider {
                 }
             }
         }
-        //fill date
+        fillDateField(sheet); //fill date
+    }
+
+    private void fillDateField(Sheet sheet) {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
         setCellOnSheet(sheet, 30, 2, dtf.format(now));
     }
 
     private void fillCellsWithAssignedHours(Sheet sheet, Person p, int baseRow) {
+        int actualRow = baseRow;
         List<Link> links = businessWithLink.getLinksOfPerson(p);
         if (links != null) {  //have assigned hours to be filled
             for (Link l : links) {
                 Integer hourId = l.getHourId();
-                int day = hourId / 24;
-                Integer hour = hourId - day * 24;
-                String dayString = dayCodes.get(day);
-                setCellOnSheet(sheet, baseRow, 1, dayString + " " + hour.toString() + " óra");
+                int day = hourId / BusinessWithLink.HOUR_IN_A_DAY;
+                Integer hour = hourId - day * BusinessWithLink.HOUR_IN_A_DAY;
+                String dayString = DAY_CODES.get(day);
+                setCellOnSheet(sheet, actualRow, 1, dayString + " " + hour.toString() + " óra");
                 Coordinator coo = businessWithCoordinator.getHourlyCooOfHour(hour);
                 Person cooP = null;
                 if (coo != null) {
                     cooP = businessWithPerson.getPersonById(coo.getPersonId());
                 }
                 if (cooP != null) {
-                    setCellOnSheet(sheet, baseRow, 2, getPersonNameInformation(cooP));
-                    setCellOnSheet(sheet, baseRow, 3, getPersonMobileAndEmailInformation(cooP));
+                    setCellOnSheet(sheet, actualRow, 2, getPersonNameInformation(cooP));
+                    setCellOnSheet(sheet, actualRow, 3, getPersonMobileAndEmailInformation(cooP));
                 } else {
-                    setCellOnSheet(sheet, baseRow, 2, THERE_IS_NO_INFORMATION);
-                    setCellOnSheet(sheet, baseRow, 3, THERE_IS_NO_INFORMATION);
+                    setCellOnSheet(sheet, actualRow, 2, THERE_IS_NO_INFORMATION);
+                    setCellOnSheet(sheet, actualRow, 3, THERE_IS_NO_INFORMATION);
                 }
                 //fill previous hour
                 Integer previousHour = businessWithLink.getPreviousHour(hourId);
-                fillNeighbourHour(sheet, previousHour, baseRow, 4);
+                fillNeighbourHour(sheet, previousHour, actualRow, 4);
                 //fill next hour
                 Integer nextHour = businessWithLink.getNextHour(hourId);
-                fillNeighbourHour(sheet, previousHour, baseRow, 6);
+                fillNeighbourHour(sheet, nextHour, actualRow, 6);
 
-                baseRow++;
+                actualRow++;
             }
         }
     }
 
     private void fillNeighbourHour(Sheet sheet, Integer previousHour, int baseRow, int baseCol) {
         List<Link> previousLinks = businessWithLink.getLinksOfHour(previousHour);
-        if (previousLinks != null && previousLinks.size() > 0) {
+        if (previousLinks != null && !previousLinks.isEmpty()) {
             Link aPreviousLink = previousLinks.get(0);
             Person aPreviousPerson = businessWithPerson.getPersonById(aPreviousLink.getPersonId());
             if (aPreviousPerson != null) {
@@ -469,7 +497,7 @@ public class ExcelProvider {
 
     private String getPersonNameInformation(Person p) {
         String name;
-        if (!p.getIsAnonymous()) {
+        if (!Boolean.TRUE.equals(p.getIsAnonymous())) {
             name = p.getName();
         } else {
             name = "Anoním";
@@ -479,13 +507,13 @@ public class ExcelProvider {
 
     private String getPersonMobileAndEmailInformation(Person p) {
         String mobile;
-        if (p.getMobileVisible()) {
+        if (Boolean.TRUE.equals(p.getMobileVisible())) {
             mobile = p.getMobile();
         } else {
             mobile = THERE_IS_NO_INFORMATION;
         }
         String email;
-        if (p.getEmailVisible()) {
+        if (Boolean.TRUE.equals(p.getEmailVisible())) {
             email = p.getEmail();
         } else {
             email = THERE_IS_NO_INFORMATION;

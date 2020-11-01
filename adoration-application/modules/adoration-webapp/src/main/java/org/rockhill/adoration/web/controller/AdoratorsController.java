@@ -227,7 +227,7 @@ public class AdoratorsController extends ControllerBase {
                 //authorization checked, ok
                 Gson g = new Gson();
                 DeleteEntityJson p = g.fromJson(body, DeleteEntityJson.class);
-                Long updatedObjectId = peopleProvider.deletePerson(p, currentUserInformationJson);
+                Long updatedObjectId = peopleProvider.deletePerson(p);
                 if (updatedObjectId != null) {
                     resultString = "OK";
                     result = buildResponseBodyResult(JSON_RESPONSE_DELETE, resultString, HttpStatus.CREATED);

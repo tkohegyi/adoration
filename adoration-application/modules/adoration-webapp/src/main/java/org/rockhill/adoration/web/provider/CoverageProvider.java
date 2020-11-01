@@ -7,6 +7,7 @@ import org.rockhill.adoration.database.business.BusinessWithPerson;
 import org.rockhill.adoration.database.business.BusinessWithTranslator;
 import org.rockhill.adoration.database.business.helper.enums.AdorationMethodTypes;
 import org.rockhill.adoration.database.business.helper.enums.TranslatorDayNames;
+import org.rockhill.adoration.database.exception.DatabaseHandlingException;
 import org.rockhill.adoration.database.tables.AuditTrail;
 import org.rockhill.adoration.database.tables.Link;
 import org.rockhill.adoration.database.tables.Person;
@@ -20,25 +21,41 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
+/**
+ * Class to provide Coverage related information.
+ */
 @Component
 public class CoverageProvider {
 
-    private final Logger logger = LoggerFactory.getLogger(CoverageProvider.class);
     private static final String USER = "User:";
+    private static final String CANNOT_UPDATE_PERSON_COMMITMENT_TEXT = "Cannot update the Person Commitment, please check the values and retry.";
+    private static final Integer MAX_PRIORITY = 25;
+    private final Logger logger = LoggerFactory.getLogger(CoverageProvider.class);
 
     @Autowired
-    BusinessWithTranslator businessWithTranslator;
+    private BusinessWithTranslator businessWithTranslator;
     @Autowired
-    BusinessWithLink businessWithLink;
+    private BusinessWithLink businessWithLink;
     @Autowired
-    BusinessWithNextGeneralKey businessWithNextGeneralKey;
+    private BusinessWithNextGeneralKey businessWithNextGeneralKey;
     @Autowired
-    BusinessWithAuditTrail businessWithAuditTrail;
+    private BusinessWithAuditTrail businessWithAuditTrail;
     @Autowired
-    BusinessWithPerson businessWithPerson;
+    private BusinessWithPerson businessWithPerson;
 
+    /**
+     * Get information about the coverage for the specific person.
+     *
+     * @param currentUserInformationJson identifies the actual user
+     * @return with the coverage information in json
+     */
     public CoverageInformationJson getCoverageInfo(CurrentUserInformationJson currentUserInformationJson) {
         CoverageInformationJson coverageInformationJson = new CoverageInformationJson();
 
@@ -56,7 +73,7 @@ public class CoverageProvider {
         coverageInformationJson.onlineHours = new HashMap<>();
         coverageInformationJson.adorators = new HashMap<>();
         //ensure that we have initial info about all the hours
-        for (int i = 0; i < 168; i++) {
+        for (int i = 0; i <= BusinessWithLink.MAX_HOUR; i++) {
             coverageInformationJson.visibleHours.put(i, 0);
             coverageInformationJson.allHours.put(i, new HashSet<>());
             coverageInformationJson.onlineHours.put(i, new HashSet<>());
@@ -99,15 +116,14 @@ public class CoverageProvider {
                 }
             } else {
                 //we don't have this in our map, data error !
-                logger.warn("Unexpected row in Link table, with Id:" + link.getId());
+                logger.warn("Unexpected row in Link table, with Id: {}", link.getId());
             }
             //fill visible hours
-            if (link.getPriority() < 3) { //for physical we ask priority 1,2 too
-                if (coverageInformationJson.visibleHours.containsKey(hourId)) {
-                    //we already have this in the map
-                    coverageInformationJson.visibleHours.put(hourId, coverageInformationJson.visibleHours.get(hourId) + 1);
-                } //else part already handled at allHours
-            }
+            if ((link.getPriority() < BusinessWithLink.PRIORITY_BORDER) //for physical we ask priority 1,2 too
+                    && coverageInformationJson.visibleHours.containsKey(hourId)) {
+                //we already have this in the map
+                coverageInformationJson.visibleHours.put(hourId, coverageInformationJson.visibleHours.get(hourId) + 1);
+            } //else part already handled at allHours
         }
     }
 
@@ -124,11 +140,18 @@ public class CoverageProvider {
                 }
             } else {
                 //we don't have this in our map, data error !
-                logger.warn("Unexpected row in Link table, with Id:" + link.getId());
+                logger.warn("Unexpected row in Link table, with Id: {}", link.getId());
             }
         }
     }
 
+    /**
+     * Get person commitment information (the hours when the person performs adoration) as json object.
+     *
+     * @param id           identifies the person
+     * @param languageCode of the actual user
+     * @return with the json object
+     */
     public Object getPersonCommitmentAsObject(Long id, String languageCode) {
         PersonCommitmentJson personCommitmentJson = new PersonCommitmentJson();
         List<Link> linkList = businessWithLink.getLinkList();
@@ -147,7 +170,7 @@ public class CoverageProvider {
             }
         }
         //fill dayNames since we need to decode it from hourId
-        for (TranslatorDayNames dayName: TranslatorDayNames.values()) {
+        for (TranslatorDayNames dayName : TranslatorDayNames.values()) {
             personCommitmentJson.dayNames.add(businessWithTranslator.getTranslatorValue(languageCode, dayName.toString(), "unknown"));
         }
         return personCommitmentJson;
@@ -155,7 +178,8 @@ public class CoverageProvider {
 
     private AuditTrail prepareUpdateAuditTrail(Long id, Long linkId, String userName, String fieldName, String oldValue, String newValue) {
         AuditTrail auditTrail;
-        auditTrail = businessWithAuditTrail.prepareAuditTrail(id, userName, "Link:Update:" + linkId.toString(), fieldName + " changed from:\"" + oldValue + "\" to:\"" + newValue + "\"", "");
+        auditTrail = businessWithAuditTrail.prepareAuditTrail(id, userName, "Link:Update:" + linkId.toString(),
+                fieldName + " changed from:\"" + oldValue + "\" to:\"" + newValue + "\"", "");
         return auditTrail;
     }
 
@@ -177,92 +201,118 @@ public class CoverageProvider {
         boolean result = true;
         Person p = businessWithPerson.getPersonById(newLink.getPersonId());
         if (p == null) {
-            logger.info(USER + currentUserInformationJson.userName + " tried to create/update Link for a non-existing Person.");
+            logger.info("{} {} tried to create/update Link for a non-existing Person.", USER, currentUserInformationJson.userName);
             result = false;
         }
         if (!newLink.getPersonId().equals(oldLink.getPersonId())) {
             //changing person is not supported so this request must be rouge
-            logger.info(USER + currentUserInformationJson.userName + " tried to change Person for Link:" + newLink.getId());
+            logger.info("{} {} tried to change Person for Link: {}", USER, currentUserInformationJson.userName, newLink.getId());
             result = false;
         }
         return result;
     }
 
-    public Long updatePersonCommitment(Link l, CurrentUserInformationJson currentUserInformationJson) {
+    /**
+     * Update a person commitment (technically a link).
+     *
+     * @param link                       to be updated
+     * @param currentUserInformationJson is the actual user
+     * @return with id of the updated link
+     */
+    public Long updatePersonCommitment(Link link, CurrentUserInformationJson currentUserInformationJson) {
         Collection<AuditTrail> auditTrailCollection = new ArrayList<>();
         Long id;
         Link oldLink;
-        l.setAdminComment(l.getAdminComment().trim());
-        l.setPublicComment(l.getPublicComment().trim());
-        if (l.getId() == 0) {
+        link.setAdminComment(link.getAdminComment().trim());
+        link.setPublicComment(link.getPublicComment().trim());
+        if (link.getId() == 0) {
             //new Link
-            return createPersonCommitment(currentUserInformationJson, l);
+            return createPersonCommitment(currentUserInformationJson, link);
         } else { //fill old link
-            oldLink = businessWithLink.getLink(l.getId());
+            oldLink = businessWithLink.getLink(link.getId());
             if (oldLink == null) {
-                logger.info(USER + currentUserInformationJson.userName + " tried to update a not existing Person Commitment/Link");
-                return null;
+                logger.info("{} {} tried to update a not existing Person Commitment/Link", USER, currentUserInformationJson.userName);
+                throw new DatabaseHandlingException(CANNOT_UPDATE_PERSON_COMMITMENT_TEXT);
             }
         }
         //hourid
-        Integer newInt = l.getHourId();
-        Integer oldInt = oldLink.getHourId();
-        if (!businessWithLink.isValidHour(newInt)) {
-            logger.info(USER + currentUserInformationJson.userName + " tried to create/update Link with bad hour id:\""
-                    + newInt.toString() + "\".");
-            return null;
-        }
-        if (!newInt.equals(oldInt)) {
-            auditTrailCollection.add(prepareUpdateAuditTrail(l.getPersonId(), l.getId(), currentUserInformationJson.userName,"Day/Hour",
-                    businessWithLink.getDayNameFromHourId(oldLink.getHourId()) + "/" + businessWithLink.getHourFromHourId(oldLink.getHourId()),
-                    businessWithLink.getDayNameFromHourId(l.getHourId()) + "/" + businessWithLink.getHourFromHourId(l.getHourId())));
-        }
+        handleHourIdUpdate(link, oldLink, currentUserInformationJson.userName, auditTrailCollection);
         //personId
-        if (!isNewPersonValid(currentUserInformationJson, oldLink, l)) {
-            return null; //something is wrong with the person settings
+        if (!isNewPersonValid(currentUserInformationJson, oldLink, link)) {
+            //something is wrong with the person settings
+            throw new DatabaseHandlingException(CANNOT_UPDATE_PERSON_COMMITMENT_TEXT);
         }
         //priority
-        newInt = l.getPriority();
-        oldInt = oldLink.getPriority();
-        if ((newInt < 0) || (newInt > 25)) { //need to synch with applog.jsp
-            logger.info(USER + currentUserInformationJson.userName + " tried to create/update Link with bad priority.");
-            return null;
-        }
-        if (!newInt.equals(oldInt)) {
-            auditTrailCollection.add(prepareUpdateAuditTrail(l.getPersonId(), l.getId(), currentUserInformationJson.userName,"Priority", oldInt.toString(), newInt.toString()));
-        }
+        handlePriorityUpdate(link, oldLink, currentUserInformationJson.userName, auditTrailCollection);
         //admincomment
-        String newValue = l.getAdminComment();
+        String newValue = link.getAdminComment();
         String oldValue = oldLink.getAdminComment();
         businessWithAuditTrail.checkDangerousValue(newValue, currentUserInformationJson.userName);
         if (!newValue.contentEquals(oldValue)) {
-            auditTrailCollection.add(prepareUpdateAuditTrail(l.getPersonId(), l.getId(), currentUserInformationJson.userName,"Admin Comment", oldValue, newValue));
+            auditTrailCollection.add(prepareUpdateAuditTrail(link.getPersonId(), link.getId(), currentUserInformationJson.userName, "Admin Comment", oldValue, newValue));
         }
         //publicComment
-        newValue = l.getPublicComment();
+        newValue = link.getPublicComment();
         oldValue = oldLink.getPublicComment();
         businessWithAuditTrail.checkDangerousValue(newValue, currentUserInformationJson.userName);
         if (!newValue.contentEquals(oldValue)) {
-            auditTrailCollection.add(prepareUpdateAuditTrail(l.getPersonId(), l.getId(), currentUserInformationJson.userName,"Public Comment", oldValue, newValue));
+            auditTrailCollection.add(prepareUpdateAuditTrail(link.getPersonId(), link.getId(), currentUserInformationJson.userName, "Public Comment", oldValue, newValue));
         }
         //type
-        newInt = l.getType();
-        oldInt = oldLink.getType();
-        if ((newInt < 0) || (newInt > 1)) {
-            logger.info(USER + currentUserInformationJson.userName + " tried to create/update Link with bad type.");
-            return null;
-        }
-        if (!newInt.equals(oldInt)) {
-            auditTrailCollection.add(prepareUpdateAuditTrail(l.getPersonId(), l.getId(), currentUserInformationJson.userName,"Type",
-                    AdorationMethodTypes.getTranslatedString(oldInt), AdorationMethodTypes.getTranslatedString(newInt)));
-        }
+        handleTypeUpdate(link, oldLink, currentUserInformationJson.userName, auditTrailCollection);
 
-        id = businessWithLink.updateLink(l, auditTrailCollection);
+        id = businessWithLink.updateLink(link, auditTrailCollection);
         return id;
     }
 
-    public Long deletePersonCommitment(DeleteEntityJson p, CurrentUserInformationJson currentUserInformationJson) {
-        Long id = Long.parseLong(p.entityId);
+    private void handleTypeUpdate(Link newLink, Link oldLink, String userName, Collection<AuditTrail> auditTrailCollection) {
+        Integer newInt = newLink.getType();
+        Integer oldInt = oldLink.getType();
+        if ((newInt < 0) || (newInt > 1)) {
+            logger.info("{} {} tried to create/update Link with bad type.", USER, userName);
+            throw new DatabaseHandlingException(CANNOT_UPDATE_PERSON_COMMITMENT_TEXT);
+        }
+        if (!newInt.equals(oldInt)) {
+            auditTrailCollection.add(prepareUpdateAuditTrail(newLink.getPersonId(), newLink.getId(), userName, "Type",
+                    AdorationMethodTypes.getTranslatedString(oldInt), AdorationMethodTypes.getTranslatedString(newInt)));
+        }
+    }
+
+    private void handlePriorityUpdate(Link newLink, Link oldLink, String userName, Collection<AuditTrail> auditTrailCollection) {
+        Integer newInt = newLink.getPriority();
+        Integer oldInt = oldLink.getPriority();
+        if ((newInt < 0) || (newInt > MAX_PRIORITY)) { //need to synch with applog.jsp
+            logger.info("{} {} tried to create/update Link with bad priority.", USER, userName);
+            throw new DatabaseHandlingException(CANNOT_UPDATE_PERSON_COMMITMENT_TEXT);
+        }
+        if (!newInt.equals(oldInt)) {
+            auditTrailCollection.add(prepareUpdateAuditTrail(newLink.getPersonId(), newLink.getId(), userName, "Priority", oldInt.toString(), newInt.toString()));
+        }
+    }
+
+    private void handleHourIdUpdate(Link newLink, Link oldLink, String userName, Collection<AuditTrail> auditTrailCollection) {
+        Integer newInt = newLink.getHourId();
+        Integer oldInt = oldLink.getHourId();
+        if (!businessWithLink.isValidHour(newInt)) {
+            logger.info("{} {} tried to create/update Link with bad hour id: {}.", USER, userName, newInt);
+            throw new DatabaseHandlingException(CANNOT_UPDATE_PERSON_COMMITMENT_TEXT);
+        }
+        if (!newInt.equals(oldInt)) {
+            auditTrailCollection.add(prepareUpdateAuditTrail(newLink.getPersonId(), newLink.getId(), userName, "Day/Hour",
+                    businessWithLink.getDayNameFromHourId(oldLink.getHourId()) + "/" + businessWithLink.getHourFromHourId(oldLink.getHourId()),
+                    businessWithLink.getDayNameFromHourId(newLink.getHourId()) + "/" + businessWithLink.getHourFromHourId(newLink.getHourId())));
+        }
+    }
+
+    /**
+     * Delete an hour that is associated to an adorator.
+     *
+     * @param deleteEntityJson           is the id of the Link to be deleted
+     * @param currentUserInformationJson is the actual user
+     * @return with the id of the deleted Link
+     */
+    public Long deletePersonCommitment(DeleteEntityJson deleteEntityJson, CurrentUserInformationJson currentUserInformationJson) {
+        Long id = Long.parseLong(deleteEntityJson.entityId);
         Link l = businessWithLink.getLink(id);
         AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(l.getPersonId(), currentUserInformationJson.userName,
                 "Link:Delete:" + l.getId().toString(), "Day/Hour: " + businessWithLink.getDayNameFromHourId(l.getHourId())

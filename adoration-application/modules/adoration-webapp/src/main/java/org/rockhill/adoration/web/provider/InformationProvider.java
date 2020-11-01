@@ -5,6 +5,7 @@ import org.rockhill.adoration.database.business.BusinessWithPerson;
 import org.rockhill.adoration.database.business.BusinessWithSocial;
 import org.rockhill.adoration.database.business.BusinessWithTranslator;
 import org.rockhill.adoration.database.business.helper.enums.AdoratorStatusTypes;
+import org.rockhill.adoration.database.business.helper.enums.SocialStatusTypes;
 import org.rockhill.adoration.database.business.helper.enums.TranslatorDayNames;
 import org.rockhill.adoration.database.tables.Link;
 import org.rockhill.adoration.database.tables.Person;
@@ -18,33 +19,46 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.HttpSession;
-import java.util.*;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
+/**
+ * Class to provide Information about users.
+ */
 @Component
 public class InformationProvider {
 
     private final Logger logger = LoggerFactory.getLogger(InformationProvider.class);
 
     @Autowired
-    BusinessWithPerson businessWithPerson;
+    private BusinessWithPerson businessWithPerson;
     @Autowired
-    BusinessWithSocial businessWithSocial;
+    private BusinessWithSocial businessWithSocial;
     @Autowired
-    BusinessWithLink businessWithLink;
+    private BusinessWithLink businessWithLink;
     @Autowired
-    BusinessWithTranslator businessWithTranslator;
+    private BusinessWithTranslator businessWithTranslator;
     @Autowired
-    CoordinatorProvider coordinatorProvider;
+    private CoordinatorProvider coordinatorProvider;
 
-    public Object getInformation(CurrentUserInformationJson currentUserInformationJson, HttpSession httpSession) {
+    /**
+     * Get overall information about a registered adorator.
+     *
+     * @return with the info in json object form
+     */
+    public Object getInformation(CurrentUserInformationJson currentUserInformationJson) {
         InformationJson informationJson = new InformationJson();
         //get name and status
         Long personId = currentUserInformationJson.personId;
         Person person = businessWithPerson.getPersonById(personId);
         if (person == null) {
             //wow, we should not be here
-            logger.warn("User got access to prohibited area: " + currentUserInformationJson.loggedInUserName);
+            logger.warn("User got access to prohibited area: {}", currentUserInformationJson.loggedInUserName);
             informationJson.error = "access denied";
         } else {
             //we have person info
@@ -54,11 +68,11 @@ public class InformationProvider {
             informationJson.linkList = businessWithLink.getLinksOfPerson(person);
             informationJson.leadership = coordinatorProvider.getLeadership(currentUserInformationJson);
             Calendar cal = Calendar.getInstance();
-            int hourId = (cal.get(Calendar.DAY_OF_WEEK)-1) * 24 + cal.get(Calendar.HOUR_OF_DAY);  // use sun as 0 day
-            informationJson.hourInDayNow = hourId % 24;
-            informationJson.hourInDayNext = (hourId + 1) % 24;
+            int hourId = (cal.get(Calendar.DAY_OF_WEEK) - 1) * BusinessWithLink.HOUR_IN_A_DAY + cal.get(Calendar.HOUR_OF_DAY);  // use sun as 0 day
+            informationJson.hourInDayNow = hourId % BusinessWithLink.HOUR_IN_A_DAY;
+            informationJson.hourInDayNext = (hourId + 1) % BusinessWithLink.HOUR_IN_A_DAY;
             informationJson.currentHourList = businessWithLink.getLinksOfHour(hourId);
-            informationJson.futureHourList = businessWithLink.getLinksOfHour((hourId + 1) % 168);
+            informationJson.futureHourList = businessWithLink.getLinksOfHour((hourId + 1) % (BusinessWithLink.MAX_HOUR + 1));
             fillRelatedPersonIds(informationJson, currentUserInformationJson.isPrivilegedUser());
             //fill the day names first
             informationJson.dayNames = new HashMap<>();
@@ -76,17 +90,17 @@ public class InformationProvider {
         //NOTE: linkList, currentHourList and futureHourList must be filled already
         Set<Long> personIds = new HashSet<>();
         if (informationJson.linkList != null) {
-            for (Link l: informationJson.linkList) {
+            for (Link l : informationJson.linkList) {
                 personIds.add(l.getPersonId());
             }
         }
         if (informationJson.currentHourList != null) {
-            for (Link l: informationJson.currentHourList) {
+            for (Link l : informationJson.currentHourList) {
                 personIds.add(l.getPersonId());
             }
         }
         if (informationJson.futureHourList != null) {
-            for (Link l: informationJson.futureHourList) {
+            for (Link l : informationJson.futureHourList) {
                 personIds.add(l.getPersonId());
             }
         }
@@ -98,20 +112,25 @@ public class InformationProvider {
             if (p != null) {
                 relatedPersonList.add(new PersonJson(p, isPrivilegedUser));
             } else {
-                logger.warn("Person ID usage found without real Person, id: " + id.toString());
+                logger.warn("Person ID usage found without real Person, id: {}", id);
             }
         }
         informationJson.relatedPersonList = relatedPersonList;
     }
 
-    public Object getGuestInformation(CurrentUserInformationJson currentUserInformationJson, HttpSession httpSession) {
+    /**
+     * Get information for a guest.
+     *
+     * @return with the info in json object form
+     */
+    public Object getGuestInformation(CurrentUserInformationJson currentUserInformationJson) {
         GuestInformationJson guestInformationJson = new GuestInformationJson();
         //get name and status
         Long socialId = currentUserInformationJson.socialId;
         Social social = businessWithSocial.getSocialById(socialId);
         if (social == null) {
             //wow, we should not be here
-            logger.warn("Guest User got access to prohibited area: " + currentUserInformationJson.loggedInUserName);
+            logger.warn("Guest User got access to prohibited area: {}", currentUserInformationJson.loggedInUserName);
             guestInformationJson.error = "access denied";
         } else {
             //we have social info
@@ -129,17 +148,20 @@ public class InformationProvider {
             } else {
                 guestInformationJson.isGoogle = false;
             }
-            switch (social.getSocialStatus()) {
-                default:
-                case 1: //waiting for identification
-                    guestInformationJson.status = "Nem azonosított felhasználó, kérjük írja meg elérhetőségét a koordinátoroknak, a lentebb található Üzenetküldés segítségével, hogy az azonosítás megtörténhessen.";
-                    break;
-                case 2: //adoráló - we should be be here
-                    guestInformationJson.status = "Regisztrált adoráló.";
-                    break;
-                case 3: //guest
-                    guestInformationJson.status = "Vendég felhasználó.";
-                    break;
+            switch (SocialStatusTypes.getTypeFromId(social.getSocialStatus())) {
+            case IDENTIFIED_USER: //adoráló - we should be be here
+                guestInformationJson.status = "Regisztrált adoráló.";
+                break;
+            case SOCIAL_USER: //guest
+                guestInformationJson.status = "Vendég felhasználó.";
+                break;
+            default:
+            case WAIT_FOR_IDENTIFICATION: //waiting for identification
+                guestInformationJson.status
+                        = "Nem azonosított felhasználó. "
+                        + "Kérjük írja meg elérhetőségét a koordinátoroknak, a lentebb található Üzenetküldés segítségével, "
+                        + "hogy az azonosítás megtörténhessen.";
+                break;
             }
             guestInformationJson.leadership = coordinatorProvider.getLeadership(currentUserInformationJson);
             guestInformationJson.socialServiceUsed = currentUserInformationJson.socialServiceUsed;

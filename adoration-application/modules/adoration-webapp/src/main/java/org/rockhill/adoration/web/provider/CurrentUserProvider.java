@@ -2,7 +2,6 @@ package org.rockhill.adoration.web.provider;
 
 import org.rockhill.adoration.database.business.BusinessWithAuditTrail;
 import org.rockhill.adoration.database.business.BusinessWithCoordinator;
-import org.rockhill.adoration.database.business.helper.enums.AdoratorStatusTypes;
 import org.rockhill.adoration.database.tables.AuditTrail;
 import org.rockhill.adoration.database.tables.Coordinator;
 import org.rockhill.adoration.database.tables.Person;
@@ -17,39 +16,28 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpSession;
-import java.util.HashSet;
-import java.util.Set;
 
 import static org.springframework.security.web.context.HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY;
 
+/**
+ * Class to provide information about the actual user.
+ */
 @Component
 public class CurrentUserProvider {
     private static final String GUEST_NAME_INTRO = "Vend\u00e9g - ";
 
     @Autowired
-    BusinessWithAuditTrail businessWithAuditTrail;
+    private BusinessWithAuditTrail businessWithAuditTrail;
 
     @Autowired
-    BusinessWithCoordinator businessWithCoordinator;
+    private BusinessWithCoordinator businessWithCoordinator;
 
-    private final Set<AdoratorStatusTypes> registeredAdorator;
-    private final Set<AdoratorStatusTypes> leaders;
-    private final Set<AdoratorStatusTypes> admins;
-
-    CurrentUserProvider() {
-        registeredAdorator = new HashSet<>();
-        registeredAdorator.add(AdoratorStatusTypes.ADORATOR_ADMIN);
-        registeredAdorator.add(AdoratorStatusTypes.ADORATOR);
-        registeredAdorator.add(AdoratorStatusTypes.ADORATOR_EMPHASIZED);
-
-        leaders = new HashSet<>();
-        leaders.add(AdoratorStatusTypes.ADORATOR_ADMIN);
-        leaders.add(AdoratorStatusTypes.ADORATOR_EMPHASIZED);
-
-        admins = new HashSet<>();
-        admins.add(AdoratorStatusTypes.ADORATOR_ADMIN);
-    }
-
+    /**
+     * Get information about the actual user.
+     *
+     * @param httpSession that the user have
+     * @return with current user information in json
+     */
     public CurrentUserInformationJson getUserInformation(HttpSession httpSession) {
         CurrentUserInformationJson currentUserInformationJson = new CurrentUserInformationJson(); //default info - user not logged in
 
@@ -77,8 +65,8 @@ public class CurrentUserProvider {
     private CurrentUserInformationJson getCurrentUserInformation(AuthenticatedUser user) {
         String loggedInUserName;
         String userName;
-        Person person; // = null;
-        Social social; // = null;
+        Person person;
+        Social social;
         CurrentUserInformationJson currentUserInformationJson = new CurrentUserInformationJson();
         currentUserInformationJson.isLoggedIn = true;  // if authentication is not null then the person is logged in
         currentUserInformationJson.coordinatorId = -1;
@@ -87,14 +75,10 @@ public class CurrentUserProvider {
         person = user.getPerson();
         if (person != null) {
             Coordinator coordinator = businessWithCoordinator.getCoordinatorFromPersonId(person.getId());
-            if (coordinator != null) {
-                currentUserInformationJson.coordinatorId = coordinator.getCoordinatorType();
-                currentUserInformationJson.isHourlyCoordinator = currentUserInformationJson.coordinatorId < 24;
-                currentUserInformationJson.isDailyCoordinator = !currentUserInformationJson.isHourlyCoordinator;
-            }
+            currentUserInformationJson.fillIdentifiedPersonFields(person, coordinator);
             loggedInUserName = person.getName();
             userName = loggedInUserName;
-        } else {
+        } else { //only Social info we have - person is not identified
             userName = "Anonymous";
             loggedInUserName = GUEST_NAME_INTRO + userName;
             if (user instanceof GoogleUser) {
@@ -111,29 +95,21 @@ public class CurrentUserProvider {
         currentUserInformationJson.userName = userName; //user who registered as adorator (his/her name may differ from the username used in Social)
         social = user.getSocial();
         if (social != null) {
-            currentUserInformationJson.socialId = social.getId();
-            String email = social.getGoogleEmail();
-            if (email.length() == 0) {
-                email = social.getFacebookEmail();
-            }
-            currentUserInformationJson.socialEmail = email;
-        }
-        if (person != null) {
-            currentUserInformationJson.isAuthorized = true; //not just logged in, but since the person is known, authorized too
-            currentUserInformationJson.personId = person.getId();
-            currentUserInformationJson.userName = person.getName();
-            AdoratorStatusTypes status = AdoratorStatusTypes.getTypeFromId(person.getAdorationStatus());
-            currentUserInformationJson.isRegisteredAdorator = registeredAdorator.contains(status);
-            currentUserInformationJson.isPrivilegedAdorator = leaders.contains(status) || currentUserInformationJson.coordinatorId > -1;
-            currentUserInformationJson.isAdoratorAdmin = admins.contains(status);
+            currentUserInformationJson.fillIdentifiedSocialFields(social);
         }
         return currentUserInformationJson;
     }
 
+    /**
+     * Gets the name of the actual user.
+     *
+     * @param authentication is the authentication object
+     * @return with the name
+     */
     public String getQuickUserName(Authentication authentication) {
         Object principal = authentication.getPrincipal();
         String loggedInUserName = "";
-        Person person; // = null;
+        Person person;
         if (principal instanceof AuthenticatedUser) {
             AuthenticatedUser user = (AuthenticatedUser) principal;
             person = user.getPerson();
@@ -152,6 +128,12 @@ public class CurrentUserProvider {
         return loggedInUserName;
     }
 
+    /**
+     * Register login event in audit trail.
+     *
+     * @param httpSession       identifies the user
+     * @param oauth2ServiceName identifies the used social service
+     */
     public void registerLogin(HttpSession httpSession, final String oauth2ServiceName) {
         CurrentUserInformationJson currentUserInformationJson = getUserInformation(httpSession);
         String data = oauth2ServiceName;
@@ -166,6 +148,11 @@ public class CurrentUserProvider {
         businessWithAuditTrail.saveAuditTrailSafe(auditTrail);
     }
 
+    /**
+     * Register logout event in audit trail.
+     *
+     * @param httpSession identifies the user
+     */
     public void registerLogout(HttpSession httpSession) {
         CurrentUserInformationJson currentUserInformationJson = getUserInformation(httpSession);
         String data = "";

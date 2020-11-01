@@ -73,7 +73,7 @@ public class InformationController extends ControllerBase {
         TableDataInformationJson content = null;
         if (isRegisteredAdorator(currentUserProvider, httpSession)) {
             //has right to collect and see information
-            Object information = informationProvider.getInformation(currentUserProvider.getUserInformation(httpSession), httpSession);
+            Object information = informationProvider.getInformation(currentUserProvider.getUserInformation(httpSession));
             content = new TableDataInformationJson(information);
         }
         return content;
@@ -98,7 +98,7 @@ public class InformationController extends ControllerBase {
             logger.warn("Registered adorator: {} reached hidden area, pls check!", currentUserInformationJson.personId);
             content = new TableDataInformationJson(null);
         } else if (currentUserInformationJson.isLoggedIn) { //can be waiting for identification or guest
-            Object information = informationProvider.getGuestInformation(currentUserInformationJson, httpSession);
+            Object information = informationProvider.getGuestInformation(currentUserInformationJson);
             content = new TableDataInformationJson(information);
         }
         return content;

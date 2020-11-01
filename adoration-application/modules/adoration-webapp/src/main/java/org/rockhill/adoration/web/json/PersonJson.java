@@ -36,7 +36,7 @@ public class PersonJson {
      */
     public PersonJson(Person person, Boolean isPrivilegedUser) {
         this.id = person.getId();
-        if (!person.getIsAnonymous() || Boolean.TRUE.equals(isPrivilegedUser)) {
+        if (!Boolean.TRUE.equals(person.getIsAnonymous()) || Boolean.TRUE.equals(isPrivilegedUser)) {
             this.name = person.getName();
         } else {
             this.name = "Anonymous";
@@ -46,7 +46,7 @@ public class PersonJson {
         } else {
             this.email = person.getEmail();
         }
-        if (person.getMobileVisible() || Boolean.TRUE.equals(isPrivilegedUser)) {
+        if (Boolean.TRUE.equals(person.getMobileVisible()) || Boolean.TRUE.equals(isPrivilegedUser)) {
             this.mobile = person.getMobile();
         } else {
             this.mobile = UNKNOWN_DATA;

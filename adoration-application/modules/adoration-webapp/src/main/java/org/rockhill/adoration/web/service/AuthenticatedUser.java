@@ -39,7 +39,7 @@ public class AuthenticatedUser {
         this.sessionTimeout = System.currentTimeMillis() + sessionTimeoutExtender;
     }
 
-    public Boolean isSessionValid() {
+    public boolean isSessionValid() {
         return this.sessionTimeout > System.currentTimeMillis();
     }
 

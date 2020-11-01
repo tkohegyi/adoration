@@ -1,5 +1,10 @@
 package org.rockhill.adoration.web.json;
 
+import org.rockhill.adoration.database.business.BusinessWithLink;
+import org.rockhill.adoration.database.business.helper.enums.AdoratorStatusTypes;
+import org.rockhill.adoration.database.tables.Coordinator;
+import org.rockhill.adoration.database.tables.Person;
+import org.rockhill.adoration.database.tables.Social;
 import org.rockhill.adoration.helper.JsonField;
 
 /**
@@ -47,8 +52,6 @@ public class CurrentUserInformationJson {
     /**
      * Fill the json structure with basic and default (user not logged in) information.
      */
-    //  öéüőáóúűÖÉÜŐÁÓÚŰ
-    //  \u00f6 \u00e9 \u00fc \u0151 \u00e1 \u00f3 \u00fa \u0171 \u00d6 \u00c9 \u00dc \u0150 \u00c1 \u00d3 \u00da \u0170
     public void reset() {
         personId = null;
         socialId = null;
@@ -66,5 +69,40 @@ public class CurrentUserInformationJson {
 
     public boolean isPrivilegedUser() {
         return isPrivilegedAdorator || isAdoratorAdmin;
+    }
+
+    /**
+     * Fill json fields from a given Person.
+     *
+     * @param person      is the person
+     * @param coordinator in case the person is a coordinator, holds the most important coordinator rank of the person
+     */
+    public void fillIdentifiedPersonFields(Person person, Coordinator coordinator) {
+        if (coordinator != null) {
+            coordinatorId = coordinator.getCoordinatorType();
+            isHourlyCoordinator = coordinatorId < BusinessWithLink.HOUR_IN_A_DAY;
+            isDailyCoordinator = !isHourlyCoordinator;
+        }
+        isAuthorized = true; //not just logged in, but since the person is known, authorized too
+        personId = person.getId();
+        userName = person.getName();
+        AdoratorStatusTypes status = AdoratorStatusTypes.getTypeFromId(person.getAdorationStatus());
+        isRegisteredAdorator = AdoratorStatusTypes.getRegisteredAdoratorSet().contains(status);
+        isPrivilegedAdorator = AdoratorStatusTypes.getLeadersSet().contains(status) || coordinatorId > -1;
+        isAdoratorAdmin = AdoratorStatusTypes.getAdminsSet().contains(status);
+    }
+
+    /**
+     * Fills json fields from the Social data.
+     *
+     * @param social is the Social data
+     */
+    public void fillIdentifiedSocialFields(Social social) {
+        socialId = social.getId();
+        String email = social.getGoogleEmail();
+        if (email.length() == 0) {
+            email = social.getFacebookEmail();
+        }
+        socialEmail = email;
     }
 }

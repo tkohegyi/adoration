@@ -1,6 +1,11 @@
 package org.rockhill.adoration.web.provider;
 
-import org.rockhill.adoration.database.business.*;
+import org.rockhill.adoration.database.business.BusinessWithAuditTrail;
+import org.rockhill.adoration.database.business.BusinessWithLink;
+import org.rockhill.adoration.database.business.BusinessWithNextGeneralKey;
+import org.rockhill.adoration.database.business.BusinessWithPerson;
+import org.rockhill.adoration.database.business.BusinessWithSocial;
+import org.rockhill.adoration.database.business.BusinessWithTranslator;
 import org.rockhill.adoration.database.business.helper.DateTimeConverter;
 import org.rockhill.adoration.database.business.helper.enums.AdoratorStatusTypes;
 import org.rockhill.adoration.database.business.helper.enums.TranslatorDayNames;
@@ -10,192 +15,246 @@ import org.rockhill.adoration.database.tables.Link;
 import org.rockhill.adoration.database.tables.Person;
 import org.rockhill.adoration.database.tables.Social;
 import org.rockhill.adoration.helper.EmailSender;
-import org.rockhill.adoration.web.json.*;
+import org.rockhill.adoration.web.json.CurrentUserInformationJson;
+import org.rockhill.adoration.web.json.DeleteEntityJson;
+import org.rockhill.adoration.web.json.LinkJson;
+import org.rockhill.adoration.web.json.MessageToCoordinatorJson;
+import org.rockhill.adoration.web.json.PersonInformationJson;
+import org.rockhill.adoration.web.json.PersonJson;
+import org.rockhill.adoration.web.json.RegisterAdoratorJson;
+import org.rockhill.adoration.web.provider.helper.ProviderBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 
+/**
+ * Class to provide information about users.
+ */
 @Component
-public class PeopleProvider {
+public class PeopleProvider extends ProviderBase {
 
     private static final String USER = "User:";
+    private static final String SUBJECT_NEW_ADORATOR = "[AdoratorApp] - Új adoráló";
+    private static final String SUBJECT_NEW_MESSAGE = "[AdoratorApp] - Üzenet egy felhasználótól";
 
     private final Logger logger = LoggerFactory.getLogger(PeopleProvider.class);
-    private final String subjectNewAdorator = "[AdoratorApp] - Új adoráló";
-    private final String subjectNewMessage = "[AdoratorApp] - Üzenet egy felhasználótól";
 
     @Autowired
-    BusinessWithPerson businessWithPerson;
+    private BusinessWithPerson businessWithPerson;
     @Autowired
-    BusinessWithAuditTrail businessWithAuditTrail;
+    private BusinessWithAuditTrail businessWithAuditTrail;
     @Autowired
-    BusinessWithNextGeneralKey businessWithNextGeneralKey;
+    private BusinessWithNextGeneralKey businessWithNextGeneralKey;
     @Autowired
-    BusinessWithLink businessWithLink;
+    private BusinessWithLink businessWithLink;
     @Autowired
-    BusinessWithSocial businessWithSocial;
+    private BusinessWithSocial businessWithSocial;
     @Autowired
-    BusinessWithTranslator businessWithTranslator;
+    private BusinessWithTranslator businessWithTranslator;
     @Autowired
-    EmailSender emailSender;
+    private EmailSender emailSender;
 
 
+    /**
+     * Get simple full list of people.
+     *
+     * @return with the list as object
+     */
     public Object getPersonListAsObject() {
-        List<Person> people = businessWithPerson.getPersonList();
+        List<Person> people;
+        people = businessWithPerson.getPersonList();
         return people;
     }
 
+    /**
+     * Get a specific person.
+     *
+     * @param id of the person
+     * @return with the person as object
+     */
     public Object getPersonAsObject(final Long id) {
-        Person p = businessWithPerson.getPersonById(id);
-        return p;
+        Person person;
+        person = businessWithPerson.getPersonById(id);
+        return person;
     }
 
     private AuditTrail prepareAuditTrail(Long id, String userName, String fieldName, String oldValue, String newValue) {
         AuditTrail auditTrail;
-        auditTrail = businessWithAuditTrail.prepareAuditTrail(id, userName, "Person:Update:" + id.toString(), fieldName + " changed from:\"" + oldValue + "\" to:\"" + newValue + "\"", "");
+        auditTrail = businessWithAuditTrail.prepareAuditTrail(id, userName, "Person:Update:" + id.toString(),
+                fieldName + " changed from:\"" + oldValue + "\" to:\"" + newValue + "\"", "");
         return auditTrail;
     }
 
-    public Long updatePerson(PersonInformationJson p, CurrentUserInformationJson currentUserInformationJson) {
+    /**
+     * Update a Person information.
+     *
+     * @param personInformationJson      is the updated Person information to be saved
+     * @param currentUserInformationJson is the actual user
+     * @return with the id of the updated Person
+     */
+    public Long updatePerson(PersonInformationJson personInformationJson, CurrentUserInformationJson currentUserInformationJson) {
         Collection<AuditTrail> auditTrailCollection = new ArrayList<>();
-        Long id = Long.parseLong(p.id);
+        Long id = Long.parseLong(personInformationJson.id);
         Person person = businessWithPerson.getPersonById(id);
         if (person == null) {
             //new Person
-            person = new Person();
-            person.setId(businessWithNextGeneralKey.getNextGeneralId());
-            person.setName(p.name);
-            person.setAdorationStatus(Integer.parseInt(p.adorationStatus));
-            person.setAdminComment(p.adminComment);
-            person.setCoordinatorComment(p.coordinatorComment);
-            person.setDhcSigned(Boolean.getBoolean(p.dhcSigned));
-            person.setDhcSignedDate(p.dhcSignedDate);
-            person.setEmail(p.email);
-            person.setEmailVisible(Boolean.getBoolean(p.emailVisible));
-            person.setLanguageCode("hu");
-            person.setMobile(p.mobile);
-            person.setMobileVisible(Boolean.getBoolean(p.mobileVisible));
-            person.setVisibleComment(p.visibleComment);
-            person.setIsAnonymous(Boolean.getBoolean(p.isAnonymous));
-            AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(person.getId(), currentUserInformationJson.userName,
-                    "Person:New:" + person.getId(), "Name: " + person.getName() + ", e-mail: " + person.getEmail()
-                            + ", Phone: " + person.getMobile(), "");
-            id = businessWithPerson.newPerson(person, auditTrail);
+            id = createNewPerson(personInformationJson, currentUserInformationJson.userName);
             return id;
         }
         //prepare new name and validate it
-        String newValue = p.name.trim();
-        businessWithAuditTrail.checkDangerousValue(newValue, currentUserInformationJson.userName);
-        String oldValue = person.getName();
-        //name length must be > 0, and shall not fit to other existing names
-        if (newValue.length() == 0) {
-            logger.info(USER + currentUserInformationJson.userName + " tried to create/update Person with empty name.");
-            return null;
-        }
-        person.setName(newValue);
-        if (!oldValue.contentEquals(newValue)) {
-            auditTrailCollection.add(prepareAuditTrail(person.getId(), currentUserInformationJson.userName, "Name", oldValue, newValue));
-        }
+        handleNameUpdate(personInformationJson, person, currentUserInformationJson.userName, auditTrailCollection);
+        //adorationStatus
+        handleAdorationStatusUpdate(personInformationJson, person, currentUserInformationJson.userName, auditTrailCollection);
+        //other string fields
+        handleAllOtherStringFields(personInformationJson, person, currentUserInformationJson.userName, auditTrailCollection);
+        //other boolean fields
+        handleAllOtherBooleanFields(personInformationJson, person, currentUserInformationJson.userName, auditTrailCollection);
 
-        Integer newStatus = Integer.parseInt(p.adorationStatus);
-        Integer oldStatus = person.getAdorationStatus();
-        person.setAdorationStatus(newStatus);
-        if (!oldStatus.equals(newStatus)) {
-            auditTrailCollection.add(prepareAuditTrail(person.getId(), currentUserInformationJson.userName, "AdorationStatus",
-                    AdoratorStatusTypes.getTranslatedString(oldStatus), AdoratorStatusTypes.getTranslatedString(newStatus)));
-        }
-
-        Boolean oldBoolean = person.getIsAnonymous();
-        Boolean newBoolean = p.isAnonymous.contains("true");
-        person.setIsAnonymous(newBoolean);
-        if (!oldBoolean.equals(newBoolean)) {
-            auditTrailCollection.add(prepareAuditTrail(person.getId(), currentUserInformationJson.userName, "isAnonymous", oldBoolean.toString(), newBoolean.toString()));
-        }
-
-        oldValue = person.getMobile();
-        newValue = p.mobile.trim();
-        businessWithAuditTrail.checkDangerousValue(newValue, currentUserInformationJson.userName);
-        person.setMobile(newValue);
-        if (!oldValue.contentEquals(newValue)) {
-            auditTrailCollection.add(prepareAuditTrail(person.getId(), currentUserInformationJson.userName, "Mobile", oldValue, newValue));
-        }
-
-        oldBoolean = person.getMobileVisible();
-        newBoolean = p.mobileVisible.contains("true");
-        person.setMobileVisible(newBoolean);
-        if (!oldBoolean.equals(newBoolean)) {
-            auditTrailCollection.add(prepareAuditTrail(person.getId(), currentUserInformationJson.userName, "MobileVisible", oldBoolean.toString(), newBoolean.toString()));
-        }
-
-        oldValue = person.getEmail();
-        newValue = p.email.trim();
-        businessWithAuditTrail.checkDangerousValue(newValue, currentUserInformationJson.userName);
-        person.setEmail(newValue);
-        if (!oldValue.contentEquals(newValue)) {
-            auditTrailCollection.add(prepareAuditTrail(person.getId(), currentUserInformationJson.userName, "Email", oldValue, newValue));
-        }
-
-        oldBoolean = person.getEmailVisible();
-        newBoolean = p.emailVisible.contains("true");
-        person.setEmailVisible(newBoolean);
-        if (!oldBoolean.equals(newBoolean)) {
-            auditTrailCollection.add(prepareAuditTrail(person.getId(), currentUserInformationJson.userName, "EmailVisible", oldBoolean.toString(), newBoolean.toString()));
-        }
-
-        oldValue = person.getAdminComment();
-        newValue = p.adminComment.trim();
-        businessWithAuditTrail.checkDangerousValue(newValue, currentUserInformationJson.userName);
-        person.setAdminComment(newValue);
-        if (!oldValue.contentEquals(newValue)) {
-            auditTrailCollection.add(prepareAuditTrail(person.getId(), currentUserInformationJson.userName, "AdminComment", oldValue, newValue));
-        }
-
-        oldBoolean = person.getDhcSigned();
-        newBoolean = p.dhcSigned.contains("true");
-        person.setDhcSigned(newBoolean);
-        if (!oldBoolean.equals(newBoolean)) {
-            auditTrailCollection.add(prepareAuditTrail(person.getId(), currentUserInformationJson.userName, "DhcSigned", oldBoolean.toString(), newBoolean.toString()));
-        }
-
-        oldValue = person.getDhcSignedDate();
-        newValue = p.dhcSignedDate;
-        businessWithAuditTrail.checkDangerousValue(newValue, currentUserInformationJson.userName);
-        person.setDhcSignedDate(newValue);
-        if (!oldValue.contentEquals(newValue)) {
-            auditTrailCollection.add(prepareAuditTrail(person.getId(), currentUserInformationJson.userName, "DhcSignedDate", oldValue, newValue));
-        }
-
-        oldValue = person.getCoordinatorComment();
-        newValue = p.coordinatorComment.trim();
-        businessWithAuditTrail.checkDangerousValue(newValue, currentUserInformationJson.userName);
-        person.setCoordinatorComment(newValue);
-        if (!oldValue.contentEquals(newValue)) {
-            auditTrailCollection.add(prepareAuditTrail(person.getId(), currentUserInformationJson.userName, "CoordinatorComment", oldValue, newValue));
-        }
-
-        oldValue = person.getVisibleComment();
-        newValue = p.visibleComment.trim();
-        businessWithAuditTrail.checkDangerousValue(newValue, currentUserInformationJson.userName);
-        person.setVisibleComment(newValue);
-        if (!oldValue.contentEquals(newValue)) {
-            auditTrailCollection.add(prepareAuditTrail(person.getId(), currentUserInformationJson.userName, "VisibleComment", oldValue, newValue));
-        }
-
-        //+ we do not set String languageCode;
+        //we do not set the string languageCode
         id = businessWithPerson.updatePerson(person, auditTrailCollection);
         return id;
     }
 
-    public Object getPersonHistoryAsObject(Long id) {
-        List<AuditTrail> a = businessWithAuditTrail.getAuditTrailOfObject(id);
-        return a;
+    private void handleAllOtherBooleanFields(PersonInformationJson personInformationJson, Person person, String userName, Collection<AuditTrail> auditTrailCollection) {
+        Boolean newBoolean;
+        //isAnonymous
+        newBoolean = handleSimpleBooleanFieldUpdate(person.getId(), personInformationJson.isAnonymous.contains("true"), person.getIsAnonymous(),
+                userName, auditTrailCollection, "isAnonymous");
+        person.setIsAnonymous(newBoolean);
+        //mobileVisible
+        newBoolean = handleSimpleBooleanFieldUpdate(person.getId(), personInformationJson.mobileVisible.contains("true"), person.getMobileVisible(),
+                userName, auditTrailCollection, "MobileVisible");
+        person.setMobileVisible(newBoolean);
+        //emailVisible
+        newBoolean = handleSimpleBooleanFieldUpdate(person.getId(), personInformationJson.emailVisible.contains("true"), person.getEmailVisible(),
+                userName, auditTrailCollection, "EmailVisible");
+        person.setEmailVisible(newBoolean);
+        //dchSigned
+        newBoolean = handleSimpleBooleanFieldUpdate(person.getId(), personInformationJson.dhcSigned.contains("true"), person.getDhcSigned(),
+                userName, auditTrailCollection, "DhcSigned");
+        person.setDhcSigned(newBoolean);
     }
 
-    public Long deletePerson(DeleteEntityJson p, CurrentUserInformationJson currentUserInformationJson) {
-        Long personId = Long.parseLong(p.entityId);
+    private void handleAllOtherStringFields(PersonInformationJson personInformationJson, Person person, String userName, Collection<AuditTrail> auditTrailCollection) {
+        String newValue;
+        //mobile
+        newValue = handleSimpleStringFieldUpdate(person.getId(), personInformationJson.mobile.trim(), person.getMobile(),
+                userName, auditTrailCollection, "Mobile");
+        person.setMobile(newValue);
+        //email
+        newValue = handleSimpleStringFieldUpdate(person.getId(), personInformationJson.email.trim(), person.getEmail(),
+                userName, auditTrailCollection, "Email");
+        person.setEmail(newValue);
+        //adminComment
+        newValue = handleSimpleStringFieldUpdate(person.getId(), personInformationJson.adminComment.trim(), person.getAdminComment(),
+                userName, auditTrailCollection, "AdminComment");
+        person.setAdminComment(newValue);
+        //dhcSignedDate
+        newValue = handleSimpleStringFieldUpdate(person.getId(), personInformationJson.dhcSignedDate, person.getDhcSignedDate(),
+                userName, auditTrailCollection, "DhcSignedDate");
+        person.setDhcSignedDate(newValue);
+        //coordinatorComment
+        newValue = handleSimpleStringFieldUpdate(person.getId(), personInformationJson.coordinatorComment.trim(), person.getCoordinatorComment(),
+                userName, auditTrailCollection, "CoordinatorComment");
+        person.setCoordinatorComment(newValue);
+        //visibleComment
+        newValue = handleSimpleStringFieldUpdate(person.getId(), personInformationJson.visibleComment.trim(), person.getVisibleComment(),
+                userName, auditTrailCollection, "VisibleComment");
+        person.setVisibleComment(newValue);
+    }
+
+    private void handleAdorationStatusUpdate(PersonInformationJson personInformationJson, Person person, String userName, Collection<AuditTrail> auditTrailCollection) {
+        Integer newStatus = Integer.parseInt(personInformationJson.adorationStatus);
+        Integer oldStatus = person.getAdorationStatus();
+        person.setAdorationStatus(newStatus);
+        if (!oldStatus.equals(newStatus)) {
+            auditTrailCollection.add(prepareAuditTrail(person.getId(), userName, "AdorationStatus",
+                    AdoratorStatusTypes.getTranslatedString(oldStatus), AdoratorStatusTypes.getTranslatedString(newStatus)));
+        }
+    }
+
+    private Boolean handleSimpleBooleanFieldUpdate(Long refId, Boolean newBoolean, Boolean oldBoolean,
+                                                   String userName, Collection<AuditTrail> auditTrailCollection, String fieldName) {
+        if (!oldBoolean.equals(newBoolean)) {
+            auditTrailCollection.add(prepareAuditTrail(refId, userName, fieldName, oldBoolean.toString(), newBoolean.toString()));
+        }
+        return newBoolean;
+    }
+
+    private String handleSimpleStringFieldUpdate(Long refId, String newValue, String oldValue,
+                                                 String userName, Collection<AuditTrail> auditTrailCollection, String fieldName) {
+        businessWithAuditTrail.checkDangerousValue(newValue, userName);
+        if (!oldValue.contentEquals(newValue)) {
+            auditTrailCollection.add(prepareAuditTrail(refId, userName, fieldName, oldValue, newValue));
+        }
+        return newValue;
+    }
+
+    private void handleNameUpdate(PersonInformationJson personInformationJson, Person person,
+                                  String userName, Collection<AuditTrail> auditTrailCollection) {
+        String newValue = personInformationJson.name.trim();
+        String oldValue = person.getName();
+        businessWithAuditTrail.checkDangerousValue(newValue, userName);
+        //name length must be > 0, and shall not fit to other existing names
+        if (newValue.length() == 0) {
+            logger.info("{} {} tried to create/update Person with empty name.", USER, userName);
+            throw new DatabaseHandlingException("Field content is not allowed.");
+        }
+        person.setName(newValue);
+        if (!oldValue.contentEquals(newValue)) {
+            auditTrailCollection.add(prepareAuditTrail(person.getId(), userName, "Name", oldValue, newValue));
+        }
+    }
+
+    private Long createNewPerson(PersonInformationJson personInformationJson, String userName) {
+        Long id;
+        Person person = new Person();
+        person.setId(businessWithNextGeneralKey.getNextGeneralId());
+        person.setName(personInformationJson.name);
+        person.setAdorationStatus(Integer.parseInt(personInformationJson.adorationStatus));
+        person.setAdminComment(personInformationJson.adminComment);
+        person.setCoordinatorComment(personInformationJson.coordinatorComment);
+        person.setDhcSigned(Boolean.getBoolean(personInformationJson.dhcSigned));
+        person.setDhcSignedDate(personInformationJson.dhcSignedDate);
+        person.setEmail(personInformationJson.email);
+        person.setEmailVisible(Boolean.getBoolean(personInformationJson.emailVisible));
+        person.setLanguageCode("hu");
+        person.setMobile(personInformationJson.mobile);
+        person.setMobileVisible(Boolean.getBoolean(personInformationJson.mobileVisible));
+        person.setVisibleComment(personInformationJson.visibleComment);
+        person.setIsAnonymous(Boolean.getBoolean(personInformationJson.isAnonymous));
+        AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(person.getId(), userName,
+                "Person:New:" + person.getId(), "Name: " + person.getName() + ", e-mail: " + person.getEmail()
+                        + ", Phone: " + person.getMobile(), "");
+        id = businessWithPerson.newPerson(person, auditTrail);
+        return id;
+    }
+
+    /**
+     * Get the audit records of the Person.
+     *
+     * @param id is the identifier of the Person
+     * @return with the list of audit events as object
+     */
+    public Object getPersonHistoryAsObject(Long id) {
+        return getEntityHistoryAsObject(businessWithAuditTrail, id);
+    }
+
+    /**
+     * Delete a specific Person.
+     *
+     * @param personJson identifies the Person
+     * @return with the id of the deleted Person
+     */
+    public Long deletePerson(DeleteEntityJson personJson) {
+        Long personId = Long.parseLong(personJson.entityId);
         Person person = businessWithPerson.getPersonById(personId);
         //collect related social - this can be null, if there was no social for the person + we need to clear the social - person connection only
         List<Social> socialList = businessWithSocial.getSocialsOfPerson(person);
@@ -203,65 +262,89 @@ public class PeopleProvider {
         List<Link> linkList = businessWithLink.getLinksOfPerson(person);
         //collect related audit records
         List<AuditTrail> auditTrailList = businessWithAuditTrail.getAuditTrailOfObject(personId);
-        Long result = businessWithPerson.deletePerson(person, socialList, linkList, auditTrailList);
+        Long result;
+        result = businessWithPerson.deletePerson(person, socialList, linkList, auditTrailList);
         return result;
     }
 
-    public Long registerAdorator(RegisterAdoratorJson p, CurrentUserInformationJson currentUserInformationJson) {
+    /**
+     * Register a new adorator (add a new Person).
+     *
+     * @param adoratorJson               is the person details
+     * @param currentUserInformationJson is the actual user
+     * @return with the id of the registered adorator / Person
+     */
+    public Long registerAdorator(RegisterAdoratorJson adoratorJson, CurrentUserInformationJson currentUserInformationJson) {
         //validations
-        if (p.name == null || p.comment == null || p.email == null || p.coordinate == null || p.dhc == null || p.mobile == null) {
-            logger.warn(USER + currentUserInformationJson.userName + " tried to use null value(s) for a new Adorator.");
+        if (adoratorJson.name == null || adoratorJson.comment == null || adoratorJson.email == null
+                || adoratorJson.coordinate == null || adoratorJson.dhc == null || adoratorJson.mobile == null) {
+            logger.warn("{} {} tried to use null value(s) for a new Adorator.", USER, currentUserInformationJson.userName);
             throw new DatabaseHandlingException("Field content (nullString) is not allowed.");
         }
-        businessWithAuditTrail.checkDangerousValue(p.name, currentUserInformationJson.userName);
-        businessWithAuditTrail.checkDangerousValue(p.comment, currentUserInformationJson.userName);
-        businessWithAuditTrail.checkDangerousValue(p.email, currentUserInformationJson.userName);
-        businessWithAuditTrail.checkDangerousValue(p.coordinate, currentUserInformationJson.userName);
-        businessWithAuditTrail.checkDangerousValue(p.dhc, currentUserInformationJson.userName);
-        businessWithAuditTrail.checkDangerousValue(p.mobile, currentUserInformationJson.userName);
-        if (p.dayId == null || p.hourId == null || p.dayId < 0 || p.dayId > 6 || p.hourId < 0 || p.hourId > 23
-                || p.method < 1 || p.method > 3) {
-            logger.warn(USER + currentUserInformationJson.userName + "/" + p.name + " tried to use dangerous value for a new Adorator.");
+        businessWithAuditTrail.checkDangerousValue(adoratorJson.name, currentUserInformationJson.userName);
+        businessWithAuditTrail.checkDangerousValue(adoratorJson.comment, currentUserInformationJson.userName);
+        businessWithAuditTrail.checkDangerousValue(adoratorJson.email, currentUserInformationJson.userName);
+        businessWithAuditTrail.checkDangerousValue(adoratorJson.coordinate, currentUserInformationJson.userName);
+        businessWithAuditTrail.checkDangerousValue(adoratorJson.dhc, currentUserInformationJson.userName);
+        businessWithAuditTrail.checkDangerousValue(adoratorJson.mobile, currentUserInformationJson.userName);
+        if (adoratorJson.dayId == null || adoratorJson.hourId == null || adoratorJson.dayId < 0 || adoratorJson.dayId > 6 || adoratorJson.hourId < 0 || adoratorJson.hourId > 23
+                || adoratorJson.method < 1 || adoratorJson.method > 3) {
+            logger.warn("{} {} / {} tried to use dangerous value for a new Adorator.", USER, currentUserInformationJson.userName, adoratorJson.name);
             throw new DatabaseHandlingException("Field content (Integer) is not allowed.");
         }
         //if person is identified, then it is not a new adorator
-        if (p.personId != null) {
-            logger.warn(USER + currentUserInformationJson.userName + "/" + p.name + " tried to register again.");
+        if (adoratorJson.personId != null) {
+            logger.warn("{} {} / {} tried to register again.", USER, currentUserInformationJson.userName, adoratorJson.name);
             throw new DatabaseHandlingException("Duplicated registration is not allowed.");
         }
-        if (p.dhc == null || !p.dhc.contentEquals("consent-yes")) {
-            logger.warn(USER + currentUserInformationJson.userName + "/" + p.name + " tried to register without consent.");
+        if (adoratorJson.dhc == null || !adoratorJson.dhc.contentEquals("consent-yes")) {
+            logger.warn("{} {} / {}  tried to register without consent.", USER, currentUserInformationJson.userName, adoratorJson.name);
             throw new DatabaseHandlingException("Data handling consent is missing.");
         }
+        Long id;
+        id = createNewAdorator(adoratorJson);
+        return id;
+    }
+
+    private Long createNewAdorator(RegisterAdoratorJson adoratorJson) {
         Long newId = businessWithNextGeneralKey.getNextGeneralId();
         DateTimeConverter dateTimeConverter = new DateTimeConverter();
         String dhcSignedDate = dateTimeConverter.getCurrentDateAsString();
-        p.dhcSignedDate = dhcSignedDate;
+        adoratorJson.dhcSignedDate = dhcSignedDate;
         //send mail about the person
-        String text = "New id: " + newId + "\nDHC Signed Date: " + dhcSignedDate + "\nAdatok:\n" + p.toString();
-        emailSender.sendMailToAdministrator(subjectNewAdorator, text);
+        String text = "New id: " + newId + "\nDHC Signed Date: " + dhcSignedDate + "\nAdatok:\n" + adoratorJson.toString();
+        emailSender.sendMailToAdministrator(SUBJECT_NEW_ADORATOR, text);
         //new Person
         Person person = new Person();
         person.setId(newId);
-        person.setName(p.name);
+        person.setName(adoratorJson.name);
         person.setAdorationStatus(AdoratorStatusTypes.PRE_ADORATOR.getAdoratorStatusValue());
-        person.setAdminComment("Adorálás módja: " + p.method + ", Segítség:" + p.coordinate + ", DHC:" + p.dhc + ", SelfComment: " + p.comment);
+        person.setAdminComment("Adorálás módja: " + adoratorJson.method + ", Segítség:" + adoratorJson.coordinate
+                + ", DHC:" + adoratorJson.dhc + ", SelfComment: " + adoratorJson.comment);
         person.setDhcSigned(true);
         person.setDhcSignedDate(dhcSignedDate);
-        person.setEmail(p.email);
+        person.setEmail(adoratorJson.email);
         person.setEmailVisible(true);
         person.setLanguageCode("hu");
-        person.setMobile(p.mobile);
+        person.setMobile(adoratorJson.mobile);
         person.setMobileVisible(true);
         person.setVisibleComment("");
         person.setIsAnonymous(false);
         person.setCoordinatorComment("");
         AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(person.getId(), "SYSTEM",
                 "Person:New:" + person.getId(), "Új adoráló regisztrációja.", text);
-        Long id = businessWithPerson.newPerson(person, auditTrail);
+        Long id;
+        id = businessWithPerson.newPerson(person, auditTrail);
         return id;
     }
 
+    /**
+     * Gets the list of the adorators (People).
+     *
+     * @param currentUserInformationJson is the actual user
+     * @param privilegedAdorator         if the actual user is privileged or not - privileged user has right to see hidden fields.
+     * @return with the list of adorators as object
+     */
     public Object getAdoratorListAsObject(CurrentUserInformationJson currentUserInformationJson, Boolean privilegedAdorator) {
         List<Person> people = businessWithPerson.getPersonList();
         List<PersonJson> personList = new LinkedList<>();
@@ -299,18 +382,24 @@ public class PeopleProvider {
         }
     }
 
-    public void messageToCoordinator(MessageToCoordinatorJson p, CurrentUserInformationJson currentUserInformationJson) {
+    /**
+     * Send Email message to the main coordinator/administrator.
+     *
+     * @param messageToCoordinatorJson   is the message descriptor json
+     * @param currentUserInformationJson is the actual user
+     */
+    public void messageToCoordinator(MessageToCoordinatorJson messageToCoordinatorJson, CurrentUserInformationJson currentUserInformationJson) {
         String unknown = "[ Unknown ]";
         String socialText = currentUserInformationJson.socialServiceUsed == null ? unknown : currentUserInformationJson.socialServiceUsed;
         String socialId = currentUserInformationJson.socialId == null ? unknown : currentUserInformationJson.socialId.toString();
         String personId = currentUserInformationJson.personId == null ? unknown : currentUserInformationJson.personId.toString();
-        String info = p.info == null ? "[ Nincs adat ]" : p.info;
-        String message = p.text == null ? "[ Nincs üzenet ]" : p.text;
+        String info = messageToCoordinatorJson.info == null ? "[ Nincs adat ]" : messageToCoordinatorJson.info;
+        String message = messageToCoordinatorJson.text == null ? "[ Nincs üzenet ]" : messageToCoordinatorJson.text;
         //send mail from the person
         String text = "Felhasználó neve: " + currentUserInformationJson.loggedInUserName
                 + "\n  Egyéb azonosító: \n   Bejelentkezés: " + socialText + "\n   Social ID: " + socialId + "\n   Person ID: " + personId
                 + "\n\n  Kapcsolat üzenet: \n" + info
                 + "\n\n  Üzenet:\n" + message;
-        emailSender.sendMailToAdministrator(subjectNewMessage, text);
+        emailSender.sendMailToAdministrator(SUBJECT_NEW_MESSAGE, text);
     }
 }
