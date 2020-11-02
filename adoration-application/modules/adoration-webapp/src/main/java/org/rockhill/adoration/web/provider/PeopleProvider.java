@@ -40,9 +40,10 @@ import java.util.List;
 @Component
 public class PeopleProvider extends ProviderBase {
 
-    private static final String USER = "User:";
     private static final String SUBJECT_NEW_ADORATOR = "[AdoratorApp] - Új adoráló";
     private static final String SUBJECT_NEW_MESSAGE = "[AdoratorApp] - Üzenet egy felhasználótól";
+    private static final int MIN_METHOD_NUMBER = 1;
+    private static final int MAX_METHOD_NUMBER = 3;
 
     private final Logger logger = LoggerFactory.getLogger(PeopleProvider.class);
 
@@ -204,7 +205,7 @@ public class PeopleProvider extends ProviderBase {
         businessWithAuditTrail.checkDangerousValue(newValue, userName);
         //name length must be > 0, and shall not fit to other existing names
         if (newValue.length() == 0) {
-            logger.info("{} {} tried to create/update Person with empty name.", USER, userName);
+            logger.info("User: {} tried to create/update Person with empty name.", userName);
             throw new DatabaseHandlingException("Field content is not allowed.");
         }
         person.setName(newValue);
@@ -238,7 +239,7 @@ public class PeopleProvider extends ProviderBase {
     }
 
     /**
-     * Get the audit records of the Person.
+     * Get the audit records of a Person.
      *
      * @param id is the identifier of the Person
      * @return with the list of audit events as object
@@ -270,40 +271,48 @@ public class PeopleProvider extends ProviderBase {
     /**
      * Register a new adorator (add a new Person).
      *
-     * @param adoratorJson               is the person details
-     * @param currentUserInformationJson is the actual user
+     * @param adoratorJson is the person details
+     * @param userName     is the name of the actual user
      * @return with the id of the registered adorator / Person
      */
-    public Long registerAdorator(RegisterAdoratorJson adoratorJson, CurrentUserInformationJson currentUserInformationJson) {
+    public Long registerAdorator(RegisterAdoratorJson adoratorJson, String userName) {
         //validations
-        if (adoratorJson.name == null || adoratorJson.comment == null || adoratorJson.email == null
-                || adoratorJson.coordinate == null || adoratorJson.dhc == null || adoratorJson.mobile == null) {
-            logger.warn("{} {} tried to use null value(s) for a new Adorator.", USER, currentUserInformationJson.userName);
-            throw new DatabaseHandlingException("Field content (nullString) is not allowed.");
-        }
-        businessWithAuditTrail.checkDangerousValue(adoratorJson.name, currentUserInformationJson.userName);
-        businessWithAuditTrail.checkDangerousValue(adoratorJson.comment, currentUserInformationJson.userName);
-        businessWithAuditTrail.checkDangerousValue(adoratorJson.email, currentUserInformationJson.userName);
-        businessWithAuditTrail.checkDangerousValue(adoratorJson.coordinate, currentUserInformationJson.userName);
-        businessWithAuditTrail.checkDangerousValue(adoratorJson.dhc, currentUserInformationJson.userName);
-        businessWithAuditTrail.checkDangerousValue(adoratorJson.mobile, currentUserInformationJson.userName);
-        if (adoratorJson.dayId == null || adoratorJson.hourId == null || adoratorJson.dayId < 0 || adoratorJson.dayId > 6 || adoratorJson.hourId < 0 || adoratorJson.hourId > 23
-                || adoratorJson.method < 1 || adoratorJson.method > 3) {
-            logger.warn("{} {} / {} tried to use dangerous value for a new Adorator.", USER, currentUserInformationJson.userName, adoratorJson.name);
+        checkDangerousStringValues(adoratorJson, userName);
+        if (!businessWithLink.isValidDay(adoratorJson.dayId) || !businessWithLink.isValidHour(adoratorJson.hourId)
+                || !isMethodAcceptable(adoratorJson.method)) {
+            logger.warn("User: {} / {} tried to use dangerous value for a new Adorator.", userName, adoratorJson.name);
             throw new DatabaseHandlingException("Field content (Integer) is not allowed.");
         }
         //if person is identified, then it is not a new adorator
         if (adoratorJson.personId != null) {
-            logger.warn("{} {} / {} tried to register again.", USER, currentUserInformationJson.userName, adoratorJson.name);
+            logger.warn("User: {} / {} tried to register again.", userName, adoratorJson.name);
             throw new DatabaseHandlingException("Duplicated registration is not allowed.");
         }
-        if (adoratorJson.dhc == null || !adoratorJson.dhc.contentEquals("consent-yes")) {
-            logger.warn("{} {} / {}  tried to register without consent.", USER, currentUserInformationJson.userName, adoratorJson.name);
+        if (!adoratorJson.dhc.contentEquals("consent-yes")) { // the not null part has been checked as first thing
+            logger.warn("User: {} / {} tried to register without consent.", userName, adoratorJson.name);
             throw new DatabaseHandlingException("Data handling consent is missing.");
         }
         Long id;
         id = createNewAdorator(adoratorJson);
         return id;
+    }
+
+    private void checkDangerousStringValues(RegisterAdoratorJson adoratorJson, String userName) {
+        if (adoratorJson.name == null || adoratorJson.comment == null || adoratorJson.email == null
+                || adoratorJson.coordinate == null || adoratorJson.dhc == null || adoratorJson.mobile == null) {
+            logger.warn("User: {} tried to use null value for a new Adorator.", userName);
+            throw new DatabaseHandlingException("Field content (null) is not allowed.");
+        }
+        businessWithAuditTrail.checkDangerousValue(adoratorJson.name, userName);
+        businessWithAuditTrail.checkDangerousValue(adoratorJson.comment, userName);
+        businessWithAuditTrail.checkDangerousValue(adoratorJson.email, userName);
+        businessWithAuditTrail.checkDangerousValue(adoratorJson.coordinate, userName);
+        businessWithAuditTrail.checkDangerousValue(adoratorJson.dhc, userName);
+        businessWithAuditTrail.checkDangerousValue(adoratorJson.mobile, userName);
+    }
+
+    private boolean isMethodAcceptable(Integer method) {
+        return method >= MIN_METHOD_NUMBER && method <= MAX_METHOD_NUMBER;
     }
 
     private Long createNewAdorator(RegisterAdoratorJson adoratorJson) {

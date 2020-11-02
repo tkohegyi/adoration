@@ -63,7 +63,7 @@ public class RegisterAdoratorController extends ControllerBase {
             p.personId = currentUserInformationJson.personId;
             p.socialId = currentUserInformationJson.socialId;
             //authorization is irrelevant
-            Long updateInformation = peopleProvider.registerAdorator(p, currentUserInformationJson);
+            Long updateInformation = peopleProvider.registerAdorator(p, currentUserInformationJson.userName);
             if (updateInformation != null) {
                 resultString = "OK-" + updateInformation.toString();
                 result = buildResponseBodyResult(JSON_RESPONSE_UPDATE, resultString, HttpStatus.CREATED);

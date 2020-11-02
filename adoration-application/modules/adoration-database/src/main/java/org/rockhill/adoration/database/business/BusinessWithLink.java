@@ -27,6 +27,8 @@ public class BusinessWithLink extends BusinessBase {
     public static final Integer MIN_HOUR = 0;
     public static final Integer HOUR_IN_A_DAY = 24;
     public static final Integer MAX_HOUR = 167;
+    public static final Integer MIN_DAY = 0;
+    public static final Integer MAX_DAY = 6;
     public static final Integer PRIORITY_BORDER = 3; //below this is high priority
 
     private final Logger logger = LoggerFactory.getLogger(BusinessWithLink.class);
@@ -38,7 +40,17 @@ public class BusinessWithLink extends BusinessBase {
      * @return true if hour is a valid week hour, otherwise false
      */
     public boolean isValidHour(Integer hour) {
-        return hour >= MIN_HOUR && hour <= MAX_HOUR;
+        return hour != null && hour >= MIN_HOUR && hour <= MAX_HOUR;
+    }
+
+    /**
+     * Check if the given day number is valid.
+     *
+     * @param day is the specific day of the week, starting with 0, which means Sunday.
+     * @return true if day is a valid day number, otherwise false
+     */
+    public boolean isValidDay(Integer day) {
+        return day != null && day >= MIN_DAY && day <= MAX_DAY;
     }
 
     /**

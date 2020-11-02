@@ -10,13 +10,19 @@ import java.util.Timer;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Class to handle online adoration.
+ */
 @Component
-public class LiveMap {
-    private final Logger logger = LoggerFactory.getLogger(LiveMap.class);
-    private static final Object o = new Object();
-    private final Map<String, LiveMapElement> liveMap = new ConcurrentHashMap<>();
+public class LiveAdoratorHandler {
+    private static final Object OBJECT = new Object();
+    private static final long TIMER_DELAY = 30000;
+    private static final long TIMER_PERIOD = 30000;
     private static Timer liveMapCheckerTimer;
-    private static Boolean isLogActive = true;
+    private static boolean isLogActive = true;
+
+    private final Logger logger = LoggerFactory.getLogger(LiveAdoratorHandler.class);
+    private final Map<String, LiveMapElement> liveMap = new ConcurrentHashMap<>();
 
     /**
      * Method that generates the list of the live users in JSON format.
@@ -26,7 +32,7 @@ public class LiveMap {
     public String getLiveMapAsResponse() {
         StringBuilder response = new StringBuilder("{\n  \"liveMap\": [\n");
         if (!liveMap.isEmpty()) {
-            synchronized (o) {
+            synchronized (OBJECT) {
                 String[] keySet = liveMap.keySet().toArray(new String[liveMap.size()]);
                 for (int i = 0; i < keySet.length; i++) {
                     String entryKey = keySet[i];
@@ -43,28 +49,39 @@ public class LiveMap {
         return response.toString();
     }
 
+    /**
+     * Method to register a live adorator in the map.
+     *
+     * @param currentUserInformationJson is the actual user
+     * @return with a uuid associated to the live adorator
+     */
     public String registerLiveAdorator(CurrentUserInformationJson currentUserInformationJson) {
         String uuid = UUID.randomUUID().toString();
-        synchronized (o) {
+        synchronized (OBJECT) {
             if (liveMap.get(uuid) == null) {
-                logger.info("Live Adorator joined - " + currentUserInformationJson.userName + " - " + uuid);
+                logger.info("Live Adorator joined - {} - {}", currentUserInformationJson.userName, uuid);
             }
-            liveMap.putIfAbsent(uuid,new LiveMapElement(currentUserInformationJson)); //add new online adorator
+            liveMap.putIfAbsent(uuid, new LiveMapElement(currentUserInformationJson)); //add new online adorator
             isLogActive = true; //turn on logging
             if (liveMapCheckerTimer == null) { //initiate timer
                 liveMapCheckerTimer = new Timer(true);
-                liveMapCheckerTimer.scheduleAtFixedRate(new LiveMapTimerTask(this),30000,30000);
+                liveMapCheckerTimer.scheduleAtFixedRate(new LiveAdoratorHandlerTimerTask(this), TIMER_DELAY, TIMER_PERIOD);
             }
         }
         return uuid;
     }
 
+    /**
+     * Need to be called to renew the existence of the live adorator in the map.
+     *
+     * @param hashString is the uuid of the live adorator to be extended
+     */
     public void reNewLiveAdorator(String hashString) {
-        synchronized (o) {
+        synchronized (OBJECT) {
             if (liveMap.containsKey(hashString)) {
                 LiveMapElement liveMapElement = liveMap.get(hashString);
                 liveMapElement.extend();
-                logger.info("Live Adorator extended - " + liveMapElement.getCurrentUserInformationJson().userName +" - " + hashString);
+                logger.info("Live Adorator extended - {} - {}", liveMapElement.getCurrentUserInformationJson().userName, hashString);
             } else {
                 logger.warn("Unexpected incoming tick.");
             }
@@ -72,27 +89,27 @@ public class LiveMap {
     }
 
     /**
-     * This is to clean up obsolete entries from the map.
+     * This is to clean up obsolete entries (live adorators) from the map.
      */
     public void timerTick() {
         if (isLogActive) {
-            logger.info("LiveMap Timer tick... online adorators: " + liveMap.size());
+            logger.info("LiveMap Timer tick... online adorators: {}", liveMap.size());
         }
         if (!liveMap.isEmpty()) {
             long now = System.currentTimeMillis();
-            synchronized (o) {
+            synchronized (OBJECT) {
                 String[] keySet = liveMap.keySet().toArray(new String[liveMap.size()]);
                 for (String entryKey : keySet) {
                     LiveMapElement liveMapElement = liveMap.get(entryKey);
                     if (liveMapElement.getDeadline() < now) { //if expired
                         liveMap.remove(entryKey); //remove the entry
-                        logger.info("Live Adorator left - " + liveMapElement.getCurrentUserInformationJson().userName + " - " + entryKey);
+                        logger.info("Live Adorator left - {} - {}", liveMapElement.getCurrentUserInformationJson().userName, entryKey);
                     }
                 }
             }
         } else {
             //no online adorator
-            synchronized (o) {
+            synchronized (OBJECT) {
                 isLogActive = false;
             }
         }

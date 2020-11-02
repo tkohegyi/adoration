@@ -3,6 +3,7 @@ package org.rockhill.adoration.web.provider;
 import org.rockhill.adoration.database.business.BusinessWithAuditTrail;
 import org.rockhill.adoration.database.business.BusinessWithSocial;
 import org.rockhill.adoration.database.business.helper.enums.SocialStatusTypes;
+import org.rockhill.adoration.database.exception.DatabaseHandlingException;
 import org.rockhill.adoration.database.tables.AuditTrail;
 import org.rockhill.adoration.database.tables.Social;
 import org.rockhill.adoration.web.json.CurrentUserInformationJson;
@@ -30,21 +31,39 @@ public class SocialProvider extends ProviderBase {
     @Autowired
     private BusinessWithSocial businessWithSocial;
 
-
+    /**
+     * Get simple full list of social logins.
+     *
+     * @return with the list as object
+     */
     public Object getSocialListAsObject() {
         return businessWithSocial.getSocialList();
     }
 
+    /**
+     * Get a specific social login.
+     *
+     * @param id of the social login
+     * @return with the social record as object
+     */
     public Object getSocialAsObject(final Long id) {
         return businessWithSocial.getSocialById(id);
     }
 
     private AuditTrail prepareAuditTrail(Long id, String userName, String fieldName, String oldValue, String newValue) {
         AuditTrail auditTrail;
-        auditTrail = businessWithAuditTrail.prepareAuditTrail(id, userName, "Social:Update:" + id.toString(), fieldName + " changed from:\"" + oldValue + "\" to:\"" + newValue + "\"", "");
+        auditTrail = businessWithAuditTrail.prepareAuditTrail(id, userName, "Social:Update:" + id.toString(),
+                fieldName + " changed from:\"" + oldValue + "\" to:\"" + newValue + "\"", "");
         return auditTrail;
     }
 
+    /**
+     * Update a Social information.
+     *
+     * @param proposedSocial             is the updated Social information to be saved
+     * @param currentUserInformationJson is the actual user
+     * @return with the id of the updated Social
+     */
     public Long updateSocial(Social proposedSocial, CurrentUserInformationJson currentUserInformationJson) {
         Collection<AuditTrail> auditTrailCollection = new ArrayList<>();
         Long refId = proposedSocial.getId();
@@ -66,143 +85,121 @@ public class SocialProvider extends ProviderBase {
             auditTrailCollection.add(prepareAuditTrail(refId, currentUserInformationJson.userName, "SocialStatus",
                     SocialStatusTypes.getTranslatedString(oldStatus), SocialStatusTypes.getTranslatedString(newStatus)));
         }
-        if (!handleSocialUpdatePreparationFacebookPart(targetSocial, proposedSocial, auditTrailCollection, currentUserInformationJson.userName)) {
-            return null;
-        }
-        if (!handleSocialUpdatePreparationGooglePart(targetSocial, proposedSocial, auditTrailCollection, currentUserInformationJson.userName)) {
+        try {
+            handleSocialUpdatePreparationFacebookPart(targetSocial, proposedSocial, auditTrailCollection, currentUserInformationJson.userName);
+            handleSocialUpdatePreparationGooglePart(targetSocial, proposedSocial, auditTrailCollection, currentUserInformationJson.userName);
+        } catch (DatabaseHandlingException e) {
             return null;
         }
         //comment
         String newString = proposedSocial.getComment();
         String oldString = targetSocial.getComment();
-        if (!isSocialStringFieldChangeValid(oldString, newString, currentUserInformationJson.userName)) {
-            return null;
-        }
-        if (!oldString.contentEquals(newString)) {
+        try {
+            isSocialStringFieldChangeValid(oldString, newString, currentUserInformationJson.userName);
+            handleSimpleStringFieldUpdate(refId, newString, oldString, currentUserInformationJson.userName, auditTrailCollection, "Comment");
             targetSocial.setComment(newString);
-            auditTrailCollection.add(prepareAuditTrail(refId, currentUserInformationJson.userName, "Comment",
-                    oldString, newString));
+        } catch (DatabaseHandlingException e) {
+            return null;
         }
         return businessWithSocial.updateSocial(targetSocial, auditTrailCollection);
     }
 
-    private boolean handleSocialUpdatePreparationGooglePart(Social targetSocial, Social proposedSocial, Collection<AuditTrail> auditTrailCollection, String userName) {
+    private void handleSocialUpdatePreparationGooglePart(Social targetSocial, Social proposedSocial, Collection<AuditTrail> auditTrailCollection, String userName) {
         Long refId = proposedSocial.getId();
+        String newString;
+        String oldString;
         //googleUserName
-        String newString = proposedSocial.getGoogleUserName();
-        String oldString = targetSocial.getGoogleUserName();
-        if (!isSocialStringFieldChangeValid(oldString, newString, userName)) {
-            return false;
-        }
-        if (!oldString.contentEquals(newString)) {
-            targetSocial.setGoogleUserName(newString);
-            auditTrailCollection.add(prepareAuditTrail(refId, userName, "GoogleUserName",
-                    oldString, newString));
-        }
+        newString = proposedSocial.getGoogleUserName();
+        oldString = targetSocial.getGoogleUserName();
+        isSocialStringFieldChangeValid(oldString, newString, userName);
+        handleSimpleStringFieldUpdate(refId, newString, oldString, userName, auditTrailCollection, "GoogleUserName");
+        targetSocial.setGoogleUserName(newString);
         //googleUserPicture
         newString = proposedSocial.getGoogleUserPicture();
         oldString = targetSocial.getGoogleUserPicture();
-        if (!isSocialStringFieldChangeValid(oldString, newString, userName)) {
-            return false;
-        }
-        if (!oldString.contentEquals(newString)) {
-            targetSocial.setGoogleUserPicture(newString);
-            auditTrailCollection.add(prepareAuditTrail(refId, userName, "GoogleUserPicture",
-                    oldString, newString));
-        }
+        isSocialStringFieldChangeValid(oldString, newString, userName);
+        handleSimpleStringFieldUpdate(refId, newString, oldString, userName, auditTrailCollection, "GoogleUserPicture");
+        targetSocial.setGoogleUserPicture(newString);
         //googleEmail
         newString = proposedSocial.getGoogleEmail();
         oldString = targetSocial.getGoogleEmail();
-        if (!isSocialStringFieldChangeValid(oldString, newString, userName)) {
-            return false;
-        }
-        if (!oldString.contentEquals(newString)) {
-            targetSocial.setGoogleEmail(newString);
-            auditTrailCollection.add(prepareAuditTrail(refId, userName, "GoogleEmail",
-                    oldString, newString));
-        }
+        isSocialStringFieldChangeValid(oldString, newString, userName);
+        handleSimpleStringFieldUpdate(refId, newString, oldString, userName, auditTrailCollection, "GoogleEmail");
+        targetSocial.setGoogleEmail(newString);
         //googleUserId
         newString = proposedSocial.getGoogleUserId();
         oldString = targetSocial.getGoogleUserId();
-        if (!isSocialStringFieldChangeValid(oldString, newString, userName)) {
-            return false;
-        }
-        if (!oldString.contentEquals(newString)) {
-            targetSocial.setGoogleUserId(newString);
-            auditTrailCollection.add(prepareAuditTrail(refId, userName, "GoogleUserId",
-                    oldString, newString));
-        }
-        return true;
+        isSocialStringFieldChangeValid(oldString, newString, userName);
+        handleSimpleStringFieldUpdate(refId, newString, oldString, userName, auditTrailCollection, "GoogleUserId");
+        targetSocial.setGoogleUserId(newString);
     }
 
-    private boolean handleSocialUpdatePreparationFacebookPart(Social targetSocial, Social proposedSocial, Collection<AuditTrail> auditTrailCollection, String userName) {
+    private void handleSocialUpdatePreparationFacebookPart(Social targetSocial, Social proposedSocial, Collection<AuditTrail> auditTrailCollection, String userName) {
         Long refId = proposedSocial.getId();
-        //facebookUserName
         String newString;
-        newString = proposedSocial.getFacebookUserName();
         String oldString;
+        //facebookUserName
+        newString = proposedSocial.getFacebookUserName();
         oldString = targetSocial.getFacebookUserName();
-        if (!isSocialStringFieldChangeValid(oldString, newString, userName)) {
-            return false;
-        }
-        if (!oldString.contentEquals(newString)) {
-            targetSocial.setFacebookUserName(newString);
-            auditTrailCollection.add(prepareAuditTrail(refId, userName, "FacebookUserName",
-                    oldString, newString));
-        }
+        isSocialStringFieldChangeValid(oldString, newString, userName);
+        handleSimpleStringFieldUpdate(refId, newString, oldString, userName, auditTrailCollection, "FacebookUserName");
+        targetSocial.setFacebookUserName(newString);
         //facebookFirstName
         newString = proposedSocial.getFacebookFirstName();
         oldString = targetSocial.getFacebookFirstName();
-        if (!isSocialStringFieldChangeValid(oldString, newString, userName)) {
-            return false;
-        }
-        if (!oldString.contentEquals(newString)) {
-            targetSocial.setFacebookFirstName(newString);
-            auditTrailCollection.add(prepareAuditTrail(refId, userName, "FacebookFirstName",
-                    oldString, newString));
-        }
+        isSocialStringFieldChangeValid(oldString, newString, userName);
+        handleSimpleStringFieldUpdate(refId, newString, oldString, userName, auditTrailCollection, "FacebookFirstName");
+        targetSocial.setFacebookFirstName(newString);
         //facebookEmail
         newString = proposedSocial.getFacebookEmail();
         oldString = targetSocial.getFacebookEmail();
-        if (!isSocialStringFieldChangeValid(oldString, newString, userName)) {
-            return false;
-        }
-        if (!oldString.contentEquals(newString)) {
-            targetSocial.setFacebookEmail(newString);
-            auditTrailCollection.add(prepareAuditTrail(refId, userName, "FacebookEmail",
-                    oldString, newString));
-        }
+        isSocialStringFieldChangeValid(oldString, newString, userName);
+        handleSimpleStringFieldUpdate(refId, newString, oldString, userName, auditTrailCollection, "FacebookEmail");
+        targetSocial.setFacebookEmail(newString);
         //facebookUserId
         newString = proposedSocial.getFacebookUserId();
         oldString = targetSocial.getFacebookUserId();
-        if (!isSocialStringFieldChangeValid(oldString, newString, userName)) {
-            return false;
-        }
-        if (!oldString.contentEquals(newString)) {
-            targetSocial.setFacebookUserId(newString);
-            auditTrailCollection.add(prepareAuditTrail(refId, userName, "FacebookUserId",
-                    oldString, newString));
-        }
-        return true;
+        isSocialStringFieldChangeValid(oldString, newString, userName);
+        handleSimpleStringFieldUpdate(refId, newString, oldString, userName, auditTrailCollection, "FacebookUserId");
+        targetSocial.setFacebookUserId(newString);
     }
 
-    private boolean isSocialStringFieldChangeValid(String oldString, String newString, String userName) {
+    private void handleSimpleStringFieldUpdate(Long refId, String newValue, String oldValue,
+                                               String userName, Collection<AuditTrail> auditTrailCollection, String fieldName) {
+        if (!oldValue.contentEquals(newValue)) {
+            auditTrailCollection.add(prepareAuditTrail(refId, userName, fieldName, oldValue, newValue));
+        }
+    }
+
+    private void isSocialStringFieldChangeValid(String oldString, String newString, String userName) {
         if ((oldString == null) || (newString == null)) {
-            logger.info("User: {} tried to create/update Social with null string.", userName);
-            return false;
+            String issue = "User: " + userName + " tried to create/update Social with null string.";
+            logger.info(issue);
+            throw new DatabaseHandlingException(issue);
         }
         businessWithAuditTrail.checkDangerousValue(newString, userName);
-        return true;
     }
 
+    /**
+     * Get the audit records of a Social record.
+     *
+     * @param id is the identifier of the Social record
+     * @return with the list of audit events as object
+     */
     public Object getSocialHistoryAsObject(Long id) {
         List<AuditTrail> auditTrailOfObject;
         auditTrailOfObject = businessWithAuditTrail.getAuditTrailOfObject(id);
         return auditTrailOfObject;
     }
 
-    public Long deleteSocial(DeleteEntityJson p, CurrentUserInformationJson currentUserInformationJson) {
-        Long id = Long.parseLong(p.entityId);
+    /**
+     * Delete a specific Social record.
+     *
+     * @param deleteEntityJson identifies the Social record
+     * @return with the id of the deleted Social record
+     */
+    public Long deleteSocial(DeleteEntityJson deleteEntityJson) {
+        Long id = Long.parseLong(deleteEntityJson.entityId);
         Social social = businessWithSocial.getSocialById(id);
         //collect related audit records
         List<AuditTrail> auditTrailList = businessWithAuditTrail.getAuditTrailOfObject(id);

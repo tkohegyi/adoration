@@ -5,20 +5,36 @@ import org.rockhill.adoration.database.tables.AuditTrail;
 
 import java.util.List;
 
+/**
+ * Base class of Providers.
+ */
 public class ProviderBase {
 
+    /**
+     * Detects if the two long is different. Any of hem can be null too.
+     * If both of them is null, that means they are the same.
+     *
+     * @param oldLongValue is one value
+     * @param newLongValue is the other value
+     * @return true if different, otherwise false
+     */
     protected boolean isLongChanged(final Long oldLongValue, final Long newLongValue) {
         boolean changed = false;
         if (!((oldLongValue == null) && (newLongValue == null))) { //if both null, it was not changed
-            if (((oldLongValue == null) && (newLongValue != null)) //at least one of them is not null
-                    || ((oldLongValue != null) && (newLongValue == null))
-                    || (!oldLongValue.equals(newLongValue))) { //here both of them is not null
+            //at least one of them is not null
+            if (oldLongValue == null || !oldLongValue.equals(newLongValue)) { //here both of them is not null
                 changed = true;
             }
         }
         return changed;
     }
 
+    /**
+     * Converts a long to a string, defaulting to "N/A" in case the long is null.
+     *
+     * @param value of the long
+     * @return with its string
+     */
     protected String prepareAuditValueString(Long value) {
         String stringValue;
         if (value != null) {
@@ -33,7 +49,7 @@ public class ProviderBase {
      * Gets the list of audit events associated to a specific object Id.
      *
      * @param businessWithAuditTrail is the business class to work with audit record
-     * @param id identifies the record we are interested about its history
+     * @param id                     identifies the record we are interested about its history
      * @return with the list of audit trail that belong to the specified item, as object
      */
     protected Object getEntityHistoryAsObject(BusinessWithAuditTrail businessWithAuditTrail, Long id) {

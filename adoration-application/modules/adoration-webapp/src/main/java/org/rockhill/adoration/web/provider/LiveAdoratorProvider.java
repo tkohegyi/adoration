@@ -1,7 +1,7 @@
 package org.rockhill.adoration.web.provider;
 
 import org.rockhill.adoration.web.json.CurrentUserInformationJson;
-import org.rockhill.adoration.web.provider.helper.LiveMap;
+import org.rockhill.adoration.web.provider.helper.LiveAdoratorHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 public class LiveAdoratorProvider {
 
     @Autowired
-    private LiveMap liveMap;
+    private LiveAdoratorHandler liveAdoratorHandler;
 
     /**
      * Register a live adorator in the map.
@@ -22,7 +22,7 @@ public class LiveAdoratorProvider {
      */
     public String registerLiveAdorator(CurrentUserInformationJson currentUserInformationJson) {
         String uuid;
-        uuid = liveMap.registerLiveAdorator(currentUserInformationJson);
+        uuid = liveAdoratorHandler.registerLiveAdorator(currentUserInformationJson);
         return uuid;
     }
 
@@ -33,7 +33,7 @@ public class LiveAdoratorProvider {
      */
     public void incomingTick(String hashString) {
         if (hashString != null) {
-            liveMap.reNewLiveAdorator(hashString);
+            liveAdoratorHandler.reNewLiveAdorator(hashString);
         }
     }
 }

@@ -164,7 +164,7 @@ public class SocialController extends ControllerBase {
                 //authorization checked, ok
                 Gson g = new Gson();
                 DeleteEntityJson p = g.fromJson(body, DeleteEntityJson.class);
-                Long updatedObjectId = socialProvider.deleteSocial(p, currentUserInformationJson);
+                Long updatedObjectId = socialProvider.deleteSocial(p);
                 if (updatedObjectId != null) {
                     resultString = "OK";
                     result = buildResponseBodyResult(JSON_RESPONSE_DELETE, resultString, HttpStatus.CREATED);
