@@ -13,6 +13,9 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * Service class for Google Captcha service - on server side.
+ */
 @Component
 public class CaptchaService {
     private static final String SECRET_PARAM = "secret";
@@ -20,7 +23,7 @@ public class CaptchaService {
     private static final String SITE_VERIFY_URL = "https://www.google.com/recaptcha/api/siteverify";
 
     @Autowired
-    WebAppConfigurationAccess webAppConfigurationAccess;
+    private WebAppConfigurationAccess webAppConfigurationAccess;
 
     private JSONObject performRecaptchaSiteVerify(String recaptchaResponseToken)
             throws IOException {
@@ -36,34 +39,35 @@ public class CaptchaService {
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
         urlConnection.setDoOutput(true);
         urlConnection.setRequestMethod("POST");
-        urlConnection.setRequestProperty(
-                "Content-Type", "application/x-www-form-urlencoded");
-        urlConnection.setRequestProperty(
-                "charset", StandardCharsets.UTF_8.displayName());
-        urlConnection.setRequestProperty(
-                "Content-Length", Integer.toString(postData.length()));
+        urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+        urlConnection.setRequestProperty("charset", StandardCharsets.UTF_8.displayName());
+        urlConnection.setRequestProperty("Content-Length", Integer.toString(postData.length()));
         urlConnection.setUseCaches(false);
-        urlConnection.getOutputStream()
-                .write(postData.getBytes(StandardCharsets.UTF_8));
+        urlConnection.getOutputStream().write(postData.getBytes(StandardCharsets.UTF_8));
         JSONTokener jsonTokener = new JSONTokener(urlConnection.getInputStream());
         return new JSONObject(jsonTokener);
     }
 
-    private StringBuilder addParam(
-            StringBuilder postData, String param, String value)
-            throws UnsupportedEncodingException {
+    private void addParam(StringBuilder postData, String param, String value) throws UnsupportedEncodingException {
         if (postData.length() != 0) {
             postData.append("&");
         }
-        return postData.append(
-                String.format("%s=%s",
-                        URLEncoder.encode(param, StandardCharsets.UTF_8.displayName()),
-                        URLEncoder.encode(value, StandardCharsets.UTF_8.displayName())));
+        postData.append(String.format("%s=%s",
+                URLEncoder.encode(param, StandardCharsets.UTF_8.displayName()),
+                URLEncoder.encode(value, StandardCharsets.UTF_8.displayName())));
     }
 
+    /**
+     * Verify captcha information.
+     *
+     * @param captcha received from the browser
+     * @return true if captch test passed successfully, otherwise returns with false
+     * @throws IOException when issue happens during the validation
+     */
     public boolean verifyCaptcha(String captcha) throws IOException {
+        boolean success;
         JSONObject jsonObject = performRecaptchaSiteVerify(captcha);
-        boolean success = jsonObject.getBoolean("success");
+        success = jsonObject.getBoolean("success");
         return success;
     }
 }

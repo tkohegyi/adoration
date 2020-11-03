@@ -11,40 +11,49 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Custom Authentication Provider for Adoration application.
+ */
 @Component
 public class AdorationCustomAuthenticationProvider implements AuthenticationProvider {
 
+    /**
+     * Do the custom authentication for the application.
+     *
+     * @param authentication is the object the authentication will be performed
+     * @return with either the authenticated object or null
+     * @throws AuthenticationException as the implemented method expects it
+     */
     @Override
-    public Authentication authenticate(Authentication authentication)
-            throws AuthenticationException {
+    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+        Authentication validAuthentication = null;
         if ((authentication != null) && (authentication.getPrincipal() instanceof GoogleUser)) {
-            GoogleUser googleUser = ((GoogleUser)authentication.getPrincipal());
+            GoogleUser googleUser = (GoogleUser) authentication.getPrincipal();
             Social social = googleUser.getSocial();
             if (social != null) {
                 //authenticated !
                 List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
                 //grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER")); //we don't need it
-                Authentication auth = new PreAuthenticatedAuthenticationToken(googleUser, authentication.getCredentials(), grantedAuthorities);
-                return auth; //google login success
+                validAuthentication = new PreAuthenticatedAuthenticationToken(googleUser, authentication.getCredentials(), grantedAuthorities);
+                //google login success
             }
         }
         if ((authentication != null) && (authentication.getPrincipal() instanceof FacebookUser)) {
-            FacebookUser facebookUser = ((FacebookUser)authentication.getPrincipal());
+            FacebookUser facebookUser = (FacebookUser) authentication.getPrincipal();
             Social social = facebookUser.getSocial();
             if (social != null) {
                 //authenticated !
                 List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
                 //grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER")); //we don't need it
-                Authentication auth = new PreAuthenticatedAuthenticationToken(facebookUser, authentication.getCredentials(), grantedAuthorities);
-                return auth; //facebook login success
+                validAuthentication = new PreAuthenticatedAuthenticationToken(facebookUser, authentication.getCredentials(), grantedAuthorities);
+                //facebook login success
             }
         }
-        return null; //login failed
+        return validAuthentication;
     }
 
     @Override
     public boolean supports(Class<?> authentication) {
-        return authentication.equals(
-                PreAuthenticatedAuthenticationToken.class);
+        return authentication.equals(PreAuthenticatedAuthenticationToken.class);
     }
 }

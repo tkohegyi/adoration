@@ -20,11 +20,9 @@ public class ProviderBase {
      */
     protected boolean isLongChanged(final Long oldLongValue, final Long newLongValue) {
         boolean changed = false;
-        if (!((oldLongValue == null) && (newLongValue == null))) { //if both null, it was not changed
-            //at least one of them is not null
-            if (oldLongValue == null || !oldLongValue.equals(newLongValue)) { //here both of them is not null
-                changed = true;
-            }
+        if ((!((oldLongValue == null) && (newLongValue == null))) && //if both null, it was not changed
+                (oldLongValue == null || !oldLongValue.equals(newLongValue))) { //if old is null then the new is not ...
+            changed = true;
         }
         return changed;
     }

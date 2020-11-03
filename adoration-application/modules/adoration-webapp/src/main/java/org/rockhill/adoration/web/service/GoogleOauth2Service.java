@@ -16,13 +16,13 @@ import org.rockhill.adoration.database.business.BusinessWithNextGeneralKey;
 import org.rockhill.adoration.database.business.BusinessWithPerson;
 import org.rockhill.adoration.database.business.BusinessWithSocial;
 import org.rockhill.adoration.database.business.helper.enums.SocialStatusTypes;
+import org.rockhill.adoration.database.json.GoogleUserInfoJson;
 import org.rockhill.adoration.database.tables.AuditTrail;
 import org.rockhill.adoration.database.tables.Person;
 import org.rockhill.adoration.database.tables.Social;
 import org.rockhill.adoration.helper.EmailSender;
 import org.rockhill.adoration.web.configuration.PropertyDto;
 import org.rockhill.adoration.web.configuration.WebAppConfigurationAccess;
-import org.rockhill.adoration.database.json.GoogleUserInfoJson;
 import org.rockhill.adoration.web.service.helper.Oauth2ServiceBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,46 +46,41 @@ public class GoogleOauth2Service extends Oauth2ServiceBase {
     public static final String GOOGLE_TEXT = "Google";
 
     private static final String USER_INFO_URL = "https://www.googleapis.com/oauth2/v1/userinfo";
+    private static final String SUBJECT = "[AdoratorApp] - Új Google Social";
     private static final List<String> SCOPES = Arrays.asList(
             "https://www.googleapis.com/auth/userinfo.profile",
             "https://www.googleapis.com/auth/userinfo.email");
 
     private final Logger logger = LoggerFactory.getLogger(GoogleOauth2Service.class);
-    private final String subject = "[AdoratorApp] - Új Google Social";
-    private final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
+    private final HttpTransport httpTransport = new NetHttpTransport();
 
     private GoogleAuthorizationCodeFlow flow;
 
     @Autowired
-    AdorationCustomAuthenticationProvider adorationCustomAuthenticationProvider;
-
+    private AdorationCustomAuthenticationProvider adorationCustomAuthenticationProvider;
     @Autowired
-    WebAppConfigurationAccess webAppConfigurationAccess;
-
+    private WebAppConfigurationAccess webAppConfigurationAccess;
     @Autowired
-    BusinessWithSocial businessWithSocial;
-
+    private BusinessWithSocial businessWithSocial;
     @Autowired
-    BusinessWithPerson businessWithPerson;
-
+    private BusinessWithPerson businessWithPerson;
     @Autowired
-    BusinessWithAuditTrail businessWithAuditTrail;
-
+    private BusinessWithAuditTrail businessWithAuditTrail;
     @Autowired
-    BusinessWithNextGeneralKey businessWithNextGeneralKey;
-
+    private BusinessWithNextGeneralKey businessWithNextGeneralKey;
     @Autowired
-    EmailSender emailSender;
+    private EmailSender emailSender;
 
     @PostConstruct
-    private void GoogleOauth2Service() {
+    private void googleOauth2Service() {
         PropertyDto propertyDto = webAppConfigurationAccess.getProperties();
-        flow = new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT,
+        flow = new GoogleAuthorizationCodeFlow.Builder(httpTransport,
                 new JacksonFactory(), propertyDto.getGoogleClientId(), propertyDto.getGoogleClientSecret(), SCOPES).build();
     }
 
     /**
      * Gets the Google login url.
+     *
      * @return with Google login url
      */
     public String getLoginUrlInformation() {
@@ -120,7 +115,7 @@ public class GoogleOauth2Service extends Oauth2ServiceBase {
                     .setRedirectUri(propertyDto.getGoogleRedirectUrl())
                     .execute();
             final Credential credential = flow.createAndStoreCredential(response, null);
-            final HttpRequest request = HTTP_TRANSPORT.createRequestFactory(credential)
+            final HttpRequest request = httpTransport.createRequestFactory(credential)
                     .buildGetRequest(new GenericUrl(USER_INFO_URL));
             request.getHeaders().setContentType("application/json");
 
@@ -162,9 +157,10 @@ public class GoogleOauth2Service extends Oauth2ServiceBase {
             social.setSocialStatus(SocialStatusTypes.WAIT_FOR_IDENTIFICATION.getTypeValue());
             Long id = businessWithNextGeneralKey.getNextGeneralId();
             social.setId(id);
-            AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(id, social.getGoogleUserName(), "Social:New:" + id.toString(), "New Google Social login created.", GOOGLE_TEXT);
+            AuditTrail auditTrail = businessWithAuditTrail.prepareAuditTrail(id, social.getGoogleUserName(),
+                    AUDIT_SOCIAL_CREATE + id.toString(), "New Google Social login created.", GOOGLE_TEXT);
             //this is a brand new login, try to identify - by using e-mail
-            if ( (googleUserInfoJson.email != null) && (googleUserInfoJson.email.length() > 0) ) {
+            if ((googleUserInfoJson.email != null) && (googleUserInfoJson.email.length() > 0)) {
                 Person p = businessWithPerson.getPersonByEmail(googleUserInfoJson.email);
                 if (p != null) { // we were able to identify the person by e-mail
                     social.setPersonId(p.getId());
@@ -172,8 +168,10 @@ public class GoogleOauth2Service extends Oauth2ServiceBase {
                 }
             }
             String text = "New Social id: " + id.toString() + "\nGoogle Type,\nName: " + social.getGoogleUserName() + ",\nEmail: " + social.getGoogleEmail();
-            emailSender.sendMailToAdministrator(subject, text); //to administrator to inform about the person
-            text = "Kedves " + social.getGoogleUserName() + "!\n\nKöszönettel vettük első bejelentkezésedet a Váci Örökimádás (https://orokimadas.info:9092/) weboldalán.\n\nA következő adatokat ismertük meg rólad:"
+            emailSender.sendMailToAdministrator(SUBJECT, text); //to administrator to inform about the person
+            text = "Kedves " + social.getGoogleUserName()
+                    + "!\n\nKöszönettel vettük első bejelentkezésedet a Váci Örökimádás (https://orokimadas.info:9092/) weboldalán."
+                    + "\n\nA következő adatokat ismertük meg rólad:"
                     + "\nNév: " + social.getGoogleUserName()
                     + "\nE-mail: " + social.getGoogleEmail()
                     + "\nGoogle azonosító: " + social.getGoogleUserId()
@@ -181,9 +179,11 @@ public class GoogleOauth2Service extends Oauth2ServiceBase {
                     + "\n\nAdatkezelési tájékoztatónkat megtalálhatod itt: https://orokimadas.info:9092/resources/img/AdatkezelesiSzabalyzat.pdf"
                     + "\nAdataidról információt illetve azok törlését pedig erre az e-mail címre írva kérheted: kohegyi.tamas (kukac) vac-deakvar.vaciegyhazmegye.hu."
                     + "\nUgyanezen a címen várjuk leveledet akkor is, ha kérdésed, észrevételed vagy javaslatod van a weboldallal kapcsolatban. "
-                    + "\n\nAmennyiben már regisztrált adoráló vagy, erre a levélre válaszolva kérlek írd meg, hogy mikor szoktál az Örökimádásban részt venni, vagy a telefonszámodat, hogy felvehessük veled a kapcsolatot."
+                    + "\n\nAmennyiben már regisztrált adoráló vagy, erre a levélre válaszolva kérlek írd meg, hogy mikor szoktál az Örökimádásban részt venni, "
+                    + "vagy a telefonszámodat, hogy felvehessük veled a kapcsolatot."
                     + "\n\nÜdvözlettel:\nKőhegyi Tamás\naz örökimádás világi koordinátora\n+36-70-375-4140\n";
-            emailSender.sendMailFromSocialLogin(social.getGoogleEmail(), "Belépés az Örökimádás weboldalán Google azonosítóval", text); //send feedback mail to the registered user
+            //send feedback mail to the registered user
+            emailSender.sendMailFromSocialLogin(social.getGoogleEmail(), "Belépés az Örökimádás weboldalán Google azonosítóval", text);
             id = businessWithSocial.newSocial(social, auditTrail);
             social.setId(id); //Social object is ready
         } else {
