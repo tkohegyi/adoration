@@ -77,12 +77,40 @@
     padding: 3px
 }
 
+.fullWidth {
+    width: 100%;
+}
+
 .table {
     margin-bottom: 0rem
 }
 
 .taskCommandLine {
     text-align: right
+}
+
+.textLeft  {
+    text-align: left;
+}
+
+.textCenter  {
+    text-align: center;
+}
+
+.textRight  {
+    text-align: right;
+}
+
+.textWebkitLeft  {
+    text-align: -webkit-left;
+}
+
+.textWebkitCenter  {
+    text-align: -webkit-center;
+}
+
+.textWebkitRight  {
+    text-align: -webkit-right;
 }
 
 .subTaskCommand {
