@@ -24,17 +24,22 @@ function getInformation() {
         $("#adoratorId").text("Az Ön adorálói azonosítószáma: " + information.id);
         //show offered hours
         $("#yesOfferedHours").empty();
+        var tr;
+        var i;
+        var coordinator;
+        var offeredHour;
+        var person;
         if ((information.linkList != null) && (information.linkList.length > 0)) {
             //has offered hours
             $("#noOfferedHours").hide();
             $("#yesOfferedHours").show();
-            var tr = $("<tr class=\"tableHead\"><th class=\"infoTable\" colspan=\"2\">Vállalt órám/óráim:</th><th class=\"infoTable\" colspan=\"3\">Órafelelős:</th></tr>");
+            tr = $("<tr class=\"tableHead\"><th class=\"infoTable\" colspan=\"2\">Vállalt órám/óráim:</th><th class=\"infoTable\" colspan=\"3\">Órafelelős:</th></tr>");
             $("#yesOfferedHours").append(tr);
             tr = $("<tr class=\"tableHead\"><th class=\"infoTable\">Nap:</th><th class=\"infoTable\">Óra:</th><th class=\"infoTable\">Név:</th><th class=\"infoTable\">Telefon:</th><th class=\"infoTable\">E-mail:</th></tr>");
             $("#yesOfferedHours").append(tr);
-            for (var i = 0; i < information.linkList.length; i++) {
-                var offeredHour = information.linkList[i];
-                var dayName = getDayName(offeredHour.hourId, information.dayNames);
+            for (i = 0; i < information.linkList.length; i++) {
+                offeredHour = information.linkList[i];
+                var dayName = getDayNameLocalized(offeredHour.hourId, information.dayNames);
                 var hourName = getHourName(offeredHour.hourId);
                 tr = $("<tr/>");
                 if (i % 2 == 0) {
@@ -47,7 +52,7 @@ function getInformation() {
                 var email = "N/A";
                 if (information.leadership.length > 0) { //detect hour coordinator
                     for (var j = 0; j < information.leadership.length; j++) {
-                        var coordinator = information.leadership[j];
+                        coordinator = information.leadership[j];
                         if (parseInt(coordinator.coordinatorType) == hourName) {
                             coordinatorName = coordinator.personName;
                             phone = coordinator.phone;
@@ -74,12 +79,12 @@ function getInformation() {
             //has leadership info
             $("#noLeadership").hide();
             $("#yesLeadership").show();
-            var tr = $("<tr class=\"tableHead\"><th class=\"infoTable\" colspan=\"4\">Napszak és Általános Koordinátorok:</th></tr>");
+            tr = $("<tr class=\"tableHead\"><th class=\"infoTable\" colspan=\"4\">Napszak és Általános Koordinátorok:</th></tr>");
             $("#yesLeadership").append(tr);
             tr = $("<tr class=\"tableHead\"><th class=\"infoTable\">Szolgálat:</th><th class=\"infoTable\">Név:</th><th class=\"infoTable\">Telefon:</th><th class=\"infoTable\">E-mail:</th></tr>");
             $("#yesLeadership").append(tr);
-            for (var i = 0; i < information.leadership.length; i++) {
-                var coordinator = information.leadership[i];
+            for (i = 0; i < information.leadership.length; i++) {
+                coordinator = information.leadership[i];
                 if (parseInt(coordinator.coordinatorType) > 23) { //only for main coordinators
                     tr = $("<tr/>");
                     if (i % 2 == 0) {
@@ -106,9 +111,9 @@ function getInformation() {
             $("#noAdoratorNow").hide();
             tr = $("<tr class=\"tableHead\"><th class=\"infoTable\">Név:</th><th class=\"infoTable\">Telefon:</th><th class=\"infoTable\">E-mail:</th></tr>");
             $("#yesAdoratorNow").append(tr);
-            for (var i = 0; i < information.currentHourList.length; i++) {
-                var offeredHour = information.currentHourList[i];
-                var person = getPerson(information.relatedPersonList, offeredHour.personId);
+            for (i = 0; i < information.currentHourList.length; i++) {
+                offeredHour = information.currentHourList[i];
+                person = getPerson(information.relatedPersonList, offeredHour.personId);
                 tr = $("<tr/>");
                 if (i % 2 == 0) {
                     tr.addClass("evenInfo");
@@ -143,9 +148,9 @@ function getInformation() {
             $("#noAdoratorNext").hide();
             tr = $("<tr class=\"tableHead\"><th class=\"infoTable\">Név:</th><th class=\"infoTable\">Telefon:</th><th class=\"infoTable\">E-mail:</th></tr>");
             $("#yesAdoratorNext").append(tr);
-            for (var i = 0; i < information.futureHourList.length; i++) {
-                var offeredHour = information.futureHourList[i];
-                var person = getPerson(information.relatedPersonList, offeredHour.personId);
+            for (i = 0; i < information.futureHourList.length; i++) {
+                offeredHour = information.futureHourList[i];
+                person = getPerson(information.relatedPersonList, offeredHour.personId);
                 tr = $("<tr/>");
                 if (i % 2 == 0) {
                     tr.addClass("evenInfo");

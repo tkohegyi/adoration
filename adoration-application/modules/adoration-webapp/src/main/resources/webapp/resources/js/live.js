@@ -13,8 +13,8 @@ $(document).ready(function() {
 function prepareInfo() {
     //if not logged in -> suggest to log in / if logged in - be happy
     if (typeof loggedInUserInfo != "undefined") {
-        if (loggedInUserInfo.isLoggedIn) {
-        } else { //not logged in
+        if (!loggedInUserInfo.isLoggedIn) {
+            //not logged in
             $("#suggestLogin").show();
         }
     } else { //not logged in
@@ -63,4 +63,4 @@ function isInViewport(elem) {
         bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
         bounding.right <= (window.innerWidth || document.documentElement.clientWidth)
     );
-};
+}

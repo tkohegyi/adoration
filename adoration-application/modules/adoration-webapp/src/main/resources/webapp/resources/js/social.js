@@ -163,7 +163,7 @@ function reBuildModal() {
     var c = $('#editContent');
     c.remove();
     var t = $('#editTable');
-    var c = $("<tbody id=\"editContent\"/>");
+    c = $("<tbody id=\"editContent\"/>");
     t.append(c);
     //get and fill modal
     var social;

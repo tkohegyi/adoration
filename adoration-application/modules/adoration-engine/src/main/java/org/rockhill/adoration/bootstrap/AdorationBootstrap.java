@@ -57,7 +57,6 @@ public class AdorationBootstrap {
             webAppServer.stop();
             SessionFactoryHelper.shutdownHibernateSessionFactory();
         }
-
     }
 
     private String getStringInfo(String[] args, String propertyName) {

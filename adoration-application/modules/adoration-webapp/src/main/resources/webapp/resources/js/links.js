@@ -65,7 +65,7 @@ function setupLinkTable() {
             },
             {
                 "render": function ( data, type, row ) {
-                    var z = getDayName(row.hourId, linkInfo.dayNames)
+                    var z = getDayNameLocalized(row.hourId, linkInfo.dayNames)
                     return z;
                 },
                 "targets": 1

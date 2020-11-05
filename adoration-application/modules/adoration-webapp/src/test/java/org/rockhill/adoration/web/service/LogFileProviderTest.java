@@ -4,16 +4,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.rockhill.adoration.web.provider.LogFileProvider;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.Test;
+import org.junit.Before;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
-import static org.testng.AssertJUnit.assertEquals;
 
 /**
  * Unit test for {@link LogFileProvider}.
@@ -31,7 +31,7 @@ public class LogFileProviderTest {
     @InjectMocks
     private LogFileProvider underTest;
 
-    @BeforeMethod
+    @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
     }

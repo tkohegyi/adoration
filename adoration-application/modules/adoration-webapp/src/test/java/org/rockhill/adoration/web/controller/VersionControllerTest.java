@@ -7,11 +7,11 @@ import org.rockhill.adoration.configuration.VersionTitleProvider;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
-import static org.testng.AssertJUnit.assertEquals;
+import org.junit.Test;
+import org.junit.Before;
 
 /**
  * Unit test for {@link VersionController}.
@@ -24,7 +24,7 @@ public class VersionControllerTest {
     @InjectMocks
     private VersionController underTest;
 
-    @BeforeMethod
+    @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
     }
@@ -36,7 +36,7 @@ public class VersionControllerTest {
         //WHEN
         ResponseEntity<String> result = underTest.getVersion();
         //THEN
-        assertEquals(result.getStatusCode(), HttpStatus.OK);
+        assertEquals(HttpStatus.OK, result.getStatusCode());
         assertEquals("{\"adorationApplicationVersion\":\"version\"}", result.getBody());
         assertEquals(MediaType.APPLICATION_JSON, result.getHeaders().getContentType());
     }

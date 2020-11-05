@@ -63,6 +63,7 @@
 }
 
 .dayName {
+    --dummy-marker: foo;
 }
 
 .coverageHour {

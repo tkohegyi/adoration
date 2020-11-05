@@ -190,7 +190,7 @@ function setupLinkTable() {
             },
             {
                 "render": function ( data, type, row ) {
-                    var z = getDayName(row.hourId, dayNames)
+                    var z = getDayNameLocalized(row.hourId, dayNames)
                     return z;
                 },
                 "targets": 0
@@ -260,15 +260,15 @@ function buildHours(personId) {
         for (var i = 0; i < hourInfo.length; i++) {
             if (hourInfo[i].personId == personId) {
                 var hourId = hourInfo[i].hourId;
-                var z = "<div>" + getDayName(hourId, dayNames) + ", " + getHourName(hourId) + " óra";
+                var z = "<div>" + getDayNameLocalized(hourId, dayNames) + ", " + getHourName(hourId) + " óra";
                 if (hourInfo[i].type == 0) {
                     z = z + ", Kápolnában"
                 } else {
                     z = z + ", Online"
-                };
+                }
                 if (hourInfo[i].publicComment.length > 0) {
                     z = z + ", Megjegyzés:" + hourInfo[i].publicComment;
-                };
+                }
                 data = data + z + "</div><br/>";
             }
         }

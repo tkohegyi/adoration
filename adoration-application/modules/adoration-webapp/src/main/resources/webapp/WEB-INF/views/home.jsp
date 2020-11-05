@@ -12,9 +12,9 @@
 <meta name="Description" content="Perpetual adoration in Hungary, Vác / Örökimádás a váci Szent Anna Piarista Templomban" />
 <meta name="Keywords" content="örökimádás,vác,perpetual,adoration" />
 <title>Örökimádás - Vác</title>
-<link href="/resources/css/external/bootstrap-4.3.1.min.css" rel="stylesheet" media="screen" charset="utf-8">
-<link href="/resources/css/menu.css" rel="stylesheet" media="screen" charset="utf-8">
-<link href="/resources/css/coverageBar.css" rel="stylesheet" media="screen" charset="utf-8">
+<link href="/resources/css/external/bootstrap-4.3.1.min.css" rel="stylesheet" media="screen">
+<link href="/resources/css/menu.css" rel="stylesheet" media="screen">
+<link href="/resources/css/coverageBar.css" rel="stylesheet" media="screen">
 <link id="favicon" rel="shortcut icon" type="image/png" href="/resources/img/favicon.png" />
 </head>
 <body class="body">
@@ -43,28 +43,28 @@
 				<th scope="col"></th>
 			</tr>
 			<tr>
-				<td valign="top" align="right" class="veryBadCoverage">2 - Piros&nbsp;</td>
+				<td style="vertical-align:top;" class="veryBadCoverage textRight">2 - Piros&nbsp;</td>
 				<td style="padding-left:4px">színűek azok az órák, amelyekben a jelentkezőkre leginkább szükség van. Ezért, ha teheted, jelentkezz a pirossal jelölt órák valamelyikére.</td>
 			</tr>
 			<tr>
-				<td valign="middle" align="right" class="badCoverage">1 - Sárga&nbsp;</td>
+				<td style="vertical-align:middle;" class="badCoverage textRight">1 - Sárga&nbsp;</td>
 				<td style="padding-left:4px">színűek azok az órák, amelyekben az Örökimádás folyamatos, de nem megfelelően biztosított -
 					ezekre az időpontokra is örömmel várunk még jelentkezőket.</td>
 			</tr>
 			<tr>
-				<td valign="middle" align="right" class="goodCoverage">Zöld&nbsp;</td>
+				<td style="vertical-align:middle;" class="goodCoverage textRight">Zöld&nbsp;</td>
 				<td style="padding-left:4px">színűek azok az órák, amelyekben az Örökimádás folytonossága megfelelően biztosított. Természetesen ezekre az órákra is lehet még jelentkezni.</td>
 			</tr>
 			<tr>
-				<td valign="middle" align="right" class="onlineAdorator">Kék keret&nbsp;&nbsp;</td>
+				<td style="vertical-align:middle;" class="onlineAdorator textRight">Kék keret&nbsp;&nbsp;</td>
 				<td style="padding-left:4px">-tel rendelkeznek azok az órák, amelyekben Online módon is biztosítva van az Örökimádás. Online adorálásra az ország azaz a világ bármely pontjáról lehet jelentkezni, illetve azon idősebb vagy beteg testvéreinknek is ezt a módot ajánljuk, akik személyesen nem tudják felkeresni a kápolnát.</td>
 			</tr>
 			<tr>
-				<td valign="middle" align="right" class="lowPriorityColumn">Szürke&nbsp;&nbsp;</td>
+				<td style="vertical-align:middle;" class="lowPriorityColumn textRight">Szürke&nbsp;&nbsp;</td>
 				<td style="padding-left:4px">színűek azok az órák, amelyekben a kápolnában ideiglenesen szünetel az Örökimádás. Ezeknél az óráknál csak Online adorálásra van lehetőség, így javasoljuk, hogy válassza azt.</td>
 			</tr>
 			<tr>
-				<td valign="middle" align="right" style="background-color:#60ABF3">Kék&nbsp;&nbsp;</td>
+				<td style="vertical-align:middle;background-color:#60ABF3" class="textRight" >Kék&nbsp;&nbsp;</td>
 				<td style="padding-left:4px">színűek azok az órák, amelyekben a kápolnában ideiglenesen szünetel az Örökimádás, de van bejegyzett Online adoráló, aki távolról végzi az Örökimádást.</td>
 			</tr>
 		</table>

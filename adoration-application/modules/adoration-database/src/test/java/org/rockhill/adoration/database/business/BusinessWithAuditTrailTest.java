@@ -1,16 +1,16 @@
 package org.rockhill.adoration.database.business;
 
+import org.junit.Test;
+import org.junit.Before;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 import org.rockhill.adoration.database.exception.DatabaseHandlingException;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 public class BusinessWithAuditTrailTest {
     @InjectMocks
     private BusinessWithAuditTrail underTest;
 
-    @BeforeMethod
+    @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
     }
@@ -24,7 +24,7 @@ public class BusinessWithAuditTrailTest {
         //nothing
     }
 
-    @Test(expectedExceptions = DatabaseHandlingException.class)
+    @Test(expected = DatabaseHandlingException.class)
     public void testCheckDangerousValueLeftBIssue() {
         //GIVEN
         //WHEN
@@ -33,7 +33,7 @@ public class BusinessWithAuditTrailTest {
         //exception shall occur
     }
 
-    @Test(expectedExceptions = DatabaseHandlingException.class)
+    @Test(expected = DatabaseHandlingException.class)
     public void testCheckDangerousValueRightBIssue() {
         //GIVEN
         //WHEN
@@ -42,7 +42,7 @@ public class BusinessWithAuditTrailTest {
         //exception shall occur
     }
 
-    @Test(expectedExceptions = DatabaseHandlingException.class)
+    @Test(expected = DatabaseHandlingException.class)
     public void testCheckDangerousValueBackSlIssue() {
         //GIVEN
         //WHEN
@@ -51,7 +51,7 @@ public class BusinessWithAuditTrailTest {
         //exception shall occur
     }
 
-    @Test(expectedExceptions = DatabaseHandlingException.class)
+    @Test(expected = DatabaseHandlingException.class)
     public void testCheckDangerousValueHashIssue() {
         //GIVEN
         //WHEN
@@ -60,7 +60,7 @@ public class BusinessWithAuditTrailTest {
         //exception shall occur
     }
 
-    @Test(expectedExceptions = DatabaseHandlingException.class)
+    @Test(expected = DatabaseHandlingException.class)
     public void testCheckDangerousValueAtIssue() {
         //GIVEN
         //WHEN
@@ -68,6 +68,5 @@ public class BusinessWithAuditTrailTest {
         //THEN
         //exception shall occur
     }
-
 
 }

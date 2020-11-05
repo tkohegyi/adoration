@@ -1,13 +1,15 @@
 package org.rockhill.adoration.initialize;
 
+import org.junit.Before;
+import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.powermock.reflect.Whitebox;
 import org.rockhill.adoration.configuration.PropertyHolder;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doReturn;
 
 /**
@@ -24,7 +26,7 @@ public class EngineConfigurationAccessTest {
     @InjectMocks
     private EngineConfigurationAccess underTest;
 
-    @BeforeMethod
+    @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
     }
@@ -37,7 +39,7 @@ public class EngineConfigurationAccessTest {
         //WHEN
         PropertyDto returnedProperty = underTest.getProperties();
         //THEN
-        returnedProperty.getPort().equals(defaultPort);
+        assertEquals(returnedProperty.getPort(), defaultPort);
     }
 
     @Test
@@ -48,7 +50,7 @@ public class EngineConfigurationAccessTest {
         //WHEN
         underTest.loadProperties();
         //THEN
-        underTest.getProperties().getPort().equals(defaultPort);
+        assertEquals(underTest.getProperties().getPort(), defaultPort);
     }
 
 }

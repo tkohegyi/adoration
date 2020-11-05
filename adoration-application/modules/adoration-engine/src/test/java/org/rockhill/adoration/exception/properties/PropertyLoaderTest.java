@@ -1,6 +1,7 @@
 package org.rockhill.adoration.exception.properties;
 
-
+import org.junit.Before;
+import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -10,19 +11,17 @@ import org.rockhill.adoration.properties.PropertyLoader;
 import org.rockhill.adoration.properties.helper.FileInputStreamFactory;
 import org.rockhill.adoration.properties.helper.PropertiesFactory;
 import org.rockhill.adoration.properties.helper.PropertiesNotAvailableException;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.verify;
 import static org.powermock.reflect.internal.WhiteboxImpl.setInternalState;
-import static org.testng.Assert.assertEquals;
 
 /**
  * Unit tests for the clasd {@link PropertyLoader}.
@@ -44,7 +43,7 @@ public class PropertyLoaderTest {
     @InjectMocks
     private PropertyLoader underTest;
 
-    @BeforeMethod
+    @Before
     public void setUp() throws IOException {
         underTest = Mockito.spy(new PropertyLoader());
         MockitoAnnotations.initMocks(this);
@@ -53,7 +52,7 @@ public class PropertyLoaderTest {
         setInternalState(underTest, "configFile", configFile);
     }
 
-    @Test(expectedExceptions = PropertiesNotAvailableException.class)
+    @Test(expected = PropertiesNotAvailableException.class)
     public void testLoadPropertiesWhenProgramArgumentEmptyShouldThrowException() {
         //GIVEN
         setInternalState(underTest, "configFile", "");
@@ -62,7 +61,7 @@ public class PropertyLoaderTest {
         //THEN excpetion should be thrown
     }
 
-    @Test(expectedExceptions = PropertiesNotAvailableException.class)
+    @Test(expected = PropertiesNotAvailableException.class)
     public void testLoadPropertiesWhenProgramArgumentInvalidShouldThrowException() {
         //GIVEN
         setInternalState(underTest, "configFile", "adorator.conf.prop");
@@ -89,7 +88,7 @@ public class PropertyLoaderTest {
         verify(propertyReader).setProperties(properties);
     }
 
-    @Test(expectedExceptions = PropertiesNotAvailableException.class)
+    @Test(expected = PropertiesNotAvailableException.class)
     public void testLoadPropertiesWhenFileNotFoundShouldThrowException() throws Exception {
         //GIVEN
         given(inputStreamFactory.createFileInputStream(configFile)).willThrow(new FileNotFoundException());
@@ -99,7 +98,7 @@ public class PropertyLoaderTest {
 
     }
 
-    @Test(expectedExceptions = PropertiesNotAvailableException.class)
+    @Test(expected = PropertiesNotAvailableException.class)
     public void testLoadPropertiesWhenIOExcpetionShouldThrowException() throws Exception {
         //GIVEN
         willThrow(new IOException()).given(properties).load(inputStream);
@@ -114,10 +113,10 @@ public class PropertyLoaderTest {
         //WHEN
         Properties actual = underTest.loadProperties(configFile);
         //THEN
-        assertEquals(actual.getProperty("webapp.port"), "8080");
+        assertEquals("8080", actual.getProperty("webapp.port"));
     }
 
-    @Test(expectedExceptions = PropertiesNotAvailableException.class)
+    @Test(expected = PropertiesNotAvailableException.class)
     public void testLoadPropertiesShouldThrowExceptionWhenPropertiesNotFound() {
         //GIVEN in setUp
         //WHEN

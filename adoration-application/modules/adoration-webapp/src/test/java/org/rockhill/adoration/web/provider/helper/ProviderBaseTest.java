@@ -2,15 +2,17 @@ package org.rockhill.adoration.web.provider.helper;
 
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.Test;
+import org.junit.Before;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class ProviderBaseTest {
 
     private ProviderBase underTest;
 
-    @BeforeMethod
+    @Before
     public void setUp() {
         underTest = Mockito.spy(new ProviderBase());
         MockitoAnnotations.initMocks(this);
@@ -19,15 +21,14 @@ public class ProviderBaseTest {
     @Test
     public void testIsLongChangedNullNull() {
         boolean result = underTest.isLongChanged(null, null);
-        Assert.assertFalse(result);
-
+        assertFalse(result);
     }
 
     @Test
     public void testIsLongChangedNullA() {
         Long a = 0L;
         boolean result = underTest.isLongChanged(null, a);
-        Assert.assertTrue(result);
+        assertTrue(result);
 
     }
 
@@ -35,7 +36,7 @@ public class ProviderBaseTest {
     public void testIsLongChangedANull() {
         Long a = 0L;
         boolean result = underTest.isLongChanged(a, null);
-        Assert.assertTrue(result);
+        assertTrue(result);
     }
 
     @Test
@@ -43,7 +44,7 @@ public class ProviderBaseTest {
         Long a = 0L;
         Long b = 0L;
         boolean result = underTest.isLongChanged(a, b);
-        Assert.assertFalse(result);
+        assertFalse(result);
     }
 
     @Test
@@ -51,7 +52,7 @@ public class ProviderBaseTest {
         Long a = 0L;
         Long b = 1L;
         boolean result = underTest.isLongChanged(a, b);
-        Assert.assertTrue(result);
+        assertTrue(result);
     }
 
 }

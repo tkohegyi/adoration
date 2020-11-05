@@ -144,7 +144,7 @@ function reBuildModal() {
     var c = $('#editContent');
     c.remove();
     var t = $('#editTable');
-    var c = $("<tbody id=\"editContent\"/>");
+    c = $("<tbody id=\"editContent\"/>");
     t.append(c);
     //get and fill modal
     var retObj;
@@ -224,10 +224,9 @@ function reBuildAddModal() {
     var c = $('#editContent');
     c.remove();
     var t = $('#editTable');
-    var c = $("<tbody id=\"editContent\"/>");
+    c = $("<tbody id=\"editContent\"/>");
     t.append(c);
     //get and fill modal
-    var editId = 0; //indicator of new person - $("#editId").val(); //filled by the button's onclick method
     if (typeof structureInfo != "undefined") {
         //we have structureInfo
         var info = structureInfo.info;
@@ -445,7 +444,7 @@ function reBuildTimeModal(personId) {
     $.get('/adorationSecure/getPersonCommitments/' + personId , function(data) {
         if ((typeof data != "undefined") && (typeof data.data != "undefined") && (typeof data.data.linkedHours != "undefined")) {
             hourInfo = data.data.linkedHours;
-            var info2 = data.data.others;
+            //var info2 = data.data.others;
             var info3 = data.data.dayNames;
             for (var i = 0; i < hourInfo.length; i++) {
               var r = $("<tr onclick=\"clickHourEdit(" + hourInfo[i].hourId + ")\" />");
@@ -453,10 +452,10 @@ function reBuildTimeModal(personId) {
               var x = Math.floor(hourInfo[i].hourId / 24);
               var d = $("<td>" + info3[x] + "</td>");r.append(d);
               //hour
-              var x = hourInfo[i].hourId % 24;
-              var d = $("<td>" + x + "</td>");r.append(d);
+              x = hourInfo[i].hourId % 24;
+              d = $("<td>" + x + "</td>");r.append(d);
               //priority
-              var d = $("<td>" + hourInfo[i].priority + "</td>");r.append(d);
+              d = $("<td>" + hourInfo[i].priority + "</td>");r.append(d);
               //type/online
               var z;
               if (hourInfo[i].type > 0) {
@@ -466,13 +465,13 @@ function reBuildTimeModal(personId) {
                   imgSrc = "/resources/img/orange-cross-th.png";
                   z = "<td><img alt=\"Nem\" src=\"" + imgSrc + "\" height=\"20\" width=\"20\" /></td>";
               }
-              var d = $(z);r.append(d);
+              d = $(z);r.append(d);
               //other adorators
-              var d = $("<td>" + "TBD..." + "</td>");r.append(d);
+              d = $("<td>" + "TBD..." + "</td>");r.append(d);
               //admin comment
-              var d = $("<td>" + hourInfo[i].adminComment + "</td>");r.append(d);
+              d = $("<td>" + hourInfo[i].adminComment + "</td>");r.append(d);
               //public comment
-              var d = $("<td>" + hourInfo[i].publicComment + "</td>");r.append(d);
+              d = $("<td>" + hourInfo[i].publicComment + "</td>");r.append(d);
               hc.append(r);
             }
             if (hourInfo.length == 0) {

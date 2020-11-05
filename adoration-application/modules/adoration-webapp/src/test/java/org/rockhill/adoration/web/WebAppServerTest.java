@@ -1,15 +1,18 @@
 package org.rockhill.adoration.web;
 
 import org.eclipse.jetty.server.Server;
+import org.junit.Before;
+import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.rockhill.adoration.web.service.ServerException;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.powermock.reflect.Whitebox.setInternalState;
 
 /**
@@ -24,7 +27,7 @@ public class WebAppServerTest {
 
     private WebAppServer underTest;
 
-    @BeforeMethod
+    @Before
     public void setUp() {
         underTest = Mockito.spy(new WebAppServer());
         MockitoAnnotations.initMocks(this);
@@ -40,7 +43,7 @@ public class WebAppServerTest {
         verify(underTest).startJettyServer();
     }
 
-    @Test(expectedExceptions = ServerException.class)
+    @Test(expected = ServerException.class)
     public void testStartShouldLogErrorWhenCannotStart() throws Exception {
         //GIVEN
         doThrow(new Exception()).when(underTest).startJettyServer();
@@ -49,7 +52,7 @@ public class WebAppServerTest {
         //THEN it should throw exception
     }
 
-    @Test(expectedExceptions = ServerException.class)
+    @Test(expected = ServerException.class)
     public void testStopShouldThrowExceptionWhenWebAppCanNotBeStopped() throws Exception {
         //GIVEN
         setInternalState(underTest, "server", server);
@@ -76,7 +79,7 @@ public class WebAppServerTest {
     @Test
     public void testStopShouldDoNothingWhenServerIsNull() throws Exception {
         //GIVEN
-        setInternalState(underTest, "server", (Object[])null);
+        setInternalState(underTest, "server", (Object[]) null);
         //WHEN
         underTest.stop();
         //THEN

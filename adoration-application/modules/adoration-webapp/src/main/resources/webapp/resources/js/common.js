@@ -52,7 +52,7 @@ function findGetParameter(parameterName) {
     return result;
 }
 
-function getDayName(hourId, dayNames) {
+function getDayNameLocalized(hourId, dayNames) {
     var x = getDay(hourId);
     return dayNames[x];
 }

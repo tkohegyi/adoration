@@ -48,8 +48,8 @@ function setupCoverage() {
             eval(command); //NOSONAR
         }
 
-        for (var i = 0; i < 168; i++) { //since we have 168 hours altogether
-            var item = $("#hour-" + i);
+        for (i = 0; i < 168; i++) { //since we have 168 hours altogether
+            item = $("#hour-" + i);
             var item2 = $("#hour-" + i + "-2");
             var value = hours[i];
             if (value == 0) {
@@ -142,7 +142,7 @@ function coverageClick(h) {
         }
         var counter = 1;
         if (personArray.length > 0) {
-            for (var i=0; i<personArray.length; i++,counter++) {
+            for (i=0; i<personArray.length; i++,counter++) {
                 var r = $("<tr/>");
                 var p = personArray[i];
                 var commentContent = "";
@@ -164,23 +164,23 @@ function coverageClick(h) {
         personArray = []; //empty object;
         users = coverageOnlineHourInfo[h];
         if ((users != null) && (users.length > 0)) {
-            for (var i=0; i<users.length; i++) {
-                var personId = users[i];
-                var personInfo = coverageAdoratorInfo[personId];
+            for (i=0; i<users.length; i++) {
+                personId = users[i];
+                personInfo = coverageAdoratorInfo[personId];
                 if (typeof personInfo != "undefined") {
                     personArray.push(personInfo);
                 }
             }
         }
         if (personArray.length > 0) {
-            for (var i=0; i<personArray.length; i++,counter++) {
-                var r = $("<tr/>");
-                var p = personArray[i];
-                var commentContent = "";
+            for (i=0; i<personArray.length; i++,counter++) {
+                r = $("<tr/>");
+                p = personArray[i];
+                commentContent = "";
                 if (p.visibleComment.length > 0) {
                     commentContent = "<tr><td>Megjegyzés: " + p.visibleComment + "</td></tr>";
                 }
-                var rContent = "<td><table><tr><td class=\"coverageDay onlineAdorator\" align=\"center\" width=\"25px\">" + counter + "</td><td>" +
+                rContent = "<td><table><tr><td class=\"coverageDay onlineAdorator\" align=\"center\" width=\"25px\">" + counter + "</td><td>" +
                     "<table><tbody><tr><td>ID: " + p.id + ", Név: " + p.name + "</td></tr>"
                         + "<tr><td>E-mail: " + p.email + "</td></tr>"
                         + "<tr><td>Telefon: " + p.mobile + "</td></tr>"

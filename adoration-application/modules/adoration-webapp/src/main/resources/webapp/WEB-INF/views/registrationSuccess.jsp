@@ -12,15 +12,15 @@
 <meta name="Description" content="Perpetual adoration in Hungary, Vác / Örökimádás a váci Szent Anna Piarista Templomban" />
 <meta name="Keywords" content="örökimádás,vác,perpetual,adoration" />
 <title>Örökimádás - Vác - Sikeres Regisztráció</title>
-<link href="/resources/css/external/bootstrap-4.3.1.min.css" rel="stylesheet" media="screen" charset="utf-8">
-<link href="/resources/css/menu.css" rel="stylesheet" media="screen" charset="utf-8">
+<link href="/resources/css/external/bootstrap-4.3.1.min.css" rel="stylesheet" media="screen">
+<link href="/resources/css/menu.css" rel="stylesheet" media="screen">
 <link id="favicon" rel="shortcut icon" type="image/png" href="/resources/img/favicon.png" />
 </head>
 <body class="body">
 <div class="container">
     <%@include file="../include/navbar.html" %>
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-	<div class="centerwidediv" align="center">
+	<div class="centerwidediv centerDiv">
         <legend class="message-legend h4"d>Sikeres Regisztráció</legend>
 		<p>
 			Jelentkezését hamarosan feldolgozzuk, és a megadott telefonszámon, vagy e-mailen felkeressük Önt adategyeztetésre.

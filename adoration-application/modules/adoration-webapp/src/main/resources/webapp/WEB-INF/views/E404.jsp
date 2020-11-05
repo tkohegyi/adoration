@@ -6,23 +6,22 @@
 <META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
 <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0, user-scalable=yes" />
-<META http-equiv="refresh" content="10;URL=/adoration/">
 <meta name="HandheldFriendly" content="true" />
 <meta name="apple-mobile-web-app-capable" content="YES" />
 <meta name="author" content="Tamas Kohegyi" />
 <meta name="Description" content="Perpetual adoration in Hungary, Vác / Örökimádás a váci Szent Anna Piarista Templomban" />
 <meta name="Keywords" content="örökimádás,vác,perpetual,adoration" />
 <title>Örökimádás - Vác</title>
-<link href="/resources/css/external/bootstrap-4.3.1.min.css" rel="stylesheet" media="screen" charset="utf-8">
-<link href="/resources/css/menu.css" rel="stylesheet" media="screen" charset="utf-8">
-<link href="/resources/css/coverageBar.css" rel="stylesheet" media="screen" charset="utf-8">
+<link href="/resources/css/external/bootstrap-4.3.1.min.css" rel="stylesheet" media="screen">
+<link href="/resources/css/menu.css" rel="stylesheet" media="screen">
+<link href="/resources/css/coverageBar.css" rel="stylesheet" media="screen">
 <link id="favicon" rel="shortcut icon" type="image/png" href="/resources/img/favicon.png" />
 </head>
 <body class="body">
   <div class="container">
     <%@include file="../include/navbar.html" %>
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-    <div class="centerwidediv" align="center">
+    <div class="centerwidediv textWebkitCenter">
 		<br />
 		Oppá, hiba történt.
 		<br />
@@ -34,7 +33,7 @@
 		<br/>
     <hr />
 		<br/>
-		<div align="center">A fenti menüsort használva folytassa a tevékenységét, vagy várjon 10 másodpercet, és az oldal újratöltődik az Örökimádás fő oldalával.</div>
+		<div class="textWebkitCenter">A fenti menüsort használva folytassa a tevékenységét, vagy várjon 10 másodpercet, és az oldal újratöltődik az Örökimádás fő oldalával.</div>
 		<br />
 	</div>
   </div>

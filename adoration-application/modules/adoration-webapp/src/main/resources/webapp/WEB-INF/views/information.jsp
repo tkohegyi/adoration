@@ -20,40 +20,40 @@
 <script src="/resources/js/sendMessage.js"></script>
 <script src="/resources/js/information.js"></script>
 <title>Örökimádás - Vác - Információk</title>
-<link href="/resources/css/external/bootstrap-4.3.1.min.css" rel="stylesheet" media="screen" charset="utf-8">
-<link href="/resources/css/menu.css" rel="stylesheet" media="screen" charset="utf-8">
+<link href="/resources/css/external/bootstrap-4.3.1.min.css" rel="stylesheet" media="screen">
+<link href="/resources/css/menu.css" rel="stylesheet" media="screen">
 <link id="favicon" rel="shortcut icon" type="image/png" href="/resources/img/favicon.png" />
 </head>
 <body class="body">
 <div class="container">
     <%@include file="../include/navbar.html" %>
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-	<div class="centerwidediv" align="center">
+	<div class="centerwidediv centerDiv">
 	    <br/>
         <legend class="message-legend h4">Információk</legend>
 			<div id="name">...</div>
 			<div id="status">...</div>
 			<div id="adoratorId">...</div><br/>
 	</div>
-	<div class="centerwidediv" align="center">
+	<div class="centerwidediv centerDiv">
         <legend class="message-legend h4" id="allocatedHours">Vállalt órák</legend>
         <div id="noOfferedHours">Önnek nincs vállalt órája.</div>
 		<p><table id="yesOfferedHours" role="presentation"><tbody></tbody></table></p>
 	</div>
-	<div class="centerwidediv" align="center">
+	<div class="centerwidediv centerDiv">
         <legend class="message-legend h4" id="allocatedHours">Szentségimádók most</legend>
         <div id="noAdoratorNow">Sajnos nincs megjeleníthető adat.</div>
 		<p><table id="yesAdoratorNow" role="presentation"><tbody></tbody></table></p>
 	</div>
-	<div class="centerwidediv" align="center">
+	<div class="centerwidediv centerDiv">
         <legend class="message-legend h4" id="adoratorsNextHour">Szentségimádók a következő órában</legend>
         <div id="noAdoratorNext">Sajnos nincs megjeleníthető adat.</div>
 		<p><table id="yesAdoratorNext" role="presentation"><tbody></tbody></table></p>
 	</div>
-	<div class="centerwidediv" align="center">
+	<div class="centerwidediv centerDiv">
         <legend class="message-legend h4" id="dailyCoordinators">Napszak koordinátorok elérhetősége</legend>
-            <div class="centerwidediv" align="center">
-                <div class="container" style="padding:5px" align="center"><button id="message-button" type="button" class="btn btn-primary" data-toggle="modal" data-target="#sendMessageModal" onclick="msgClick()">Üzenet küldése az általános koordinátornak...</button></div>
+            <div class="centerwidediv centerDiv">
+                <div class="container centerDiv" style="padding:5px"><button id="message-button" type="button" class="btn btn-primary" data-toggle="modal" data-target="#sendMessageModal" onclick="msgClick()">Üzenet küldése az általános koordinátornak...</button></div>
             </div>
             <%@include file="../include/sendMessage.html" %>
 
@@ -62,7 +62,7 @@
 	</div>
 
     <div class="form-horizontal" id="downloads">
-        <div class="centerwidediv" align="center">
+        <div class="centerwidediv centerDiv">
             <legend class="message-legend h4">Letöltések</legend>
             <div class="control-group" id="forDc">
                 <a id="translator-button" class="btn btn-primary" href="/adorationSecure/getExcelDailyInfo">Napszakok fedettségtáblázata</a>

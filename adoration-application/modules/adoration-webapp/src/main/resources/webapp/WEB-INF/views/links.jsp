@@ -32,10 +32,10 @@
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
     <fieldset class="form-horizontal" id="hourList">
         <legend>Órák listája</legend>
-        <div class="container" style="padding:5px" align="right"><button id="add-button" type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal" onclick="addClick()">Új óra rögzítése...</button></div>
-        <div class="container" style="padding:5px" align="right"><button id="refreshAll-button" type="button" class="btn btn-secondary" onclick="processEntityUpdated()">Frissítés</button></div>
+        <div class="container centerDiv" style="padding:5px"><button id="add-button" type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal" onclick="addClick()">Új óra rögzítése...</button></div>
+        <div class="container centerDiv" style="padding:5px"><button id="refreshAll-button" type="button" class="btn btn-secondary" onclick="processEntityUpdated()">Frissítés</button></div>
         <div class="control-group">
-            <table id="link" class="table table-striped table-bordered table-hover compact cell-border" style="width:100%" aria-describedby="hourList">
+            <table id="link" class="table table-striped table-bordered table-hover compact cell-border fullWidth" aria-describedby="hourList">
                     <thead>
                         <tr>
                             <th scope="col">ID</th>
@@ -146,9 +146,9 @@
               </form>
           </div>
           <div class="modal-footer">
-            <table width="100%" role="presentation"><tr>
-                <td align="left"><button id="deleteButton" type="button" class="btn btn-danger" onclick="deleteLink()">Óra törlése</button></td>
-                <td align="right">
+            <table class="fullWidth" role="presentation"><tr>
+                <td class="textLeft"><button id="deleteButton" type="button" class="btn btn-danger" onclick="deleteLink()">Óra törlése</button></td>
+                <td class="textRight">
                     <button id="cancelButton" type="button" class="btn btn-info" data-dismiss="modal">Mégsem</button>
                     <button id="saveChangesButton" type="button" class="btn btn-success" onclick="saveNew()">Mentés</button>
                 </td>

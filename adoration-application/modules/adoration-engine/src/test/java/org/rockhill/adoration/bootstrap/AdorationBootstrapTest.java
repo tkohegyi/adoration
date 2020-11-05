@@ -1,37 +1,33 @@
 package org.rockhill.adoration.bootstrap;
 
+import org.junit.Before;
+import org.junit.Test;
 import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.testng.PowerMockTestCase;
-import org.powermock.api.mockito.PowerMockito;
 import org.rockhill.adoration.bootstrap.helper.SystemExceptionSelector;
 import org.rockhill.adoration.database.SessionFactoryHelper;
-import org.rockhill.adoration.exception.InvalidPropertyException;
 import org.rockhill.adoration.exception.SystemException;
 import org.rockhill.adoration.properties.PropertyLoader;
-import org.rockhill.adoration.properties.helper.PropertiesNotAvailableException;
 import org.rockhill.adoration.web.WebAppServer;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.BeanCreationException;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 import java.util.Properties;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willThrow;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.verify;
 import static org.powermock.reflect.Whitebox.setInternalState;
 
 /**
  * Unit tests for the class {@link AdorationBootstrap}.
  */
-//@PrepareForTest(SessionFactoryHelper.class)
-public class AdorationBootstrapTest /* extends PowerMockTestCase */ {
+public class AdorationBootstrapTest {
 
     private static final String[] ARGS = {"conf.properties"};
     private static final String[] NO_ARGS = {};
@@ -56,7 +52,7 @@ public class AdorationBootstrapTest /* extends PowerMockTestCase */ {
     @InjectMocks
     private AdorationBootstrap underTest;
 
-    @BeforeMethod
+    @Before
     public void setUp() {
         underTest = Mockito.spy(new AdorationBootstrap());
         MockitoAnnotations.initMocks(this);
@@ -95,7 +91,7 @@ public class AdorationBootstrapTest /* extends PowerMockTestCase */ {
         verify(logger).error(Mockito.anyString());
     }
 
-    @Test(expectedExceptions = BeanCreationException.class)
+    @Test(expected = BeanCreationException.class)
     public void testBootstrapShouldThrowException() {
         //GIVEN
         properties.setProperty("webapp.port", "8080");

@@ -1,19 +1,20 @@
 package org.rockhill.adoration.bootstrap.helper;
 
+import org.junit.Test;
+import org.junit.Before;
 
 import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.rockhill.adoration.exception.SystemException;
 import org.springframework.beans.factory.BeanCreationException;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+
 
 import java.io.IOException;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.mockito.BDDMockito.given;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
 
 /**
  * Unit tests for the class {@link SystemExceptionSelector}.
@@ -30,7 +31,7 @@ public class SystemExceptionSelectorTest {
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     private BeanCreationException beanCreationException;
 
-    @BeforeMethod
+    @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         underTest = new SystemExceptionSelector();

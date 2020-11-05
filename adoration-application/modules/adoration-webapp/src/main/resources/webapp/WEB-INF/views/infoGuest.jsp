@@ -20,25 +20,25 @@
 <script src="/resources/js/sendMessage.js"></script>
 <script src="/resources/js/infoGuest.js"></script>
 <title>Örökimádás - Vác - Személyes Információk</title>
-<link href="/resources/css/external/bootstrap-4.3.1.min.css" rel="stylesheet" media="screen" charset="utf-8">
-<link href="/resources/css/menu.css" rel="stylesheet" media="screen" charset="utf-8">
+<link href="/resources/css/external/bootstrap-4.3.1.min.css" rel="stylesheet" media="screen">
+<link href="/resources/css/menu.css" rel="stylesheet" media="screen">
 <link id="favicon" rel="shortcut icon" type="image/png" href="/resources/img/favicon.png" />
 </head>
 <body class="body">
 <div class="container">
     <%@include file="../include/navbar.html" %>
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-	<div class="centerwidediv" align="center">
+	<div class="centerwidediv centerDiv">
 	    <br/>
         <legend class="message-legend h4"d>Információk</legend>
-        	<div class="centerwidediv" align="center">
+        	<div class="centerwidediv centerDiv">
                 <div id="noGoogle"></div>
                 <div id="yesGoogle"><span style="font-weight:bold">Az Önhöz rendelt Google fiók adatai:</span>
                 			<div id="nameGoogle">...</div>
                 			<div id="emailGoogle">...</div>
                 </div>
         	</div>
-            <div class="centerwidediv" align="center">
+            <div class="centerwidediv centerDiv">
                 <div id="noFacebook"></div>
                 <div id="yesFacebook"><span style="font-weight:bold">Az Önhöz rendelt Facebook fiók adatai:</span>
                 			<div id="nameFacebook">...</div>
@@ -48,20 +48,20 @@
             <div id="socialServiceUsed">...</div>
             <div id="status">...</div>
 	</div><br/><div/>
-	<div class="centerwidediv" align="center">
+	<div class="centerwidediv centerDiv">
         <legend class="message-legend h4"d>Fő koordinátorok elérhetősége</legend>
         <div id="noLeadership">Sajnos nincs megjeleníthető adat.</div>
 		<p><table id="yesLeadership" role="presentation"><tbody></tbody></table></p>
 	</div>
 
-	<div class="centerwidediv" align="center">
-        <div class="container" style="padding:5px" align="center"><button id="message-button" type="button" class="btn btn-primary" data-toggle="modal" data-target="#sendMessageModal" onclick="msgClick()">Üzenet küldése az általános koordinátornak...</button></div>
+	<div class="centerwidediv centerDiv">
+        <div class="container centerDiv" style="padding:5px"><button id="message-button" type="button" class="btn btn-primary" data-toggle="modal" data-target="#sendMessageModal" onclick="msgClick()">Üzenet küldése az általános koordinátornak...</button></div>
 	</div>
 
     <%@include file="../include/sendMessage.html" %>
 
     <div class="form-horizontal" id="downloads">
-        <div class="centerwidediv" align="center">
+        <div class="centerwidediv centerDiv">
         </div>
     </div>
 

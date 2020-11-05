@@ -31,8 +31,8 @@
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
     <fieldset class="form-horizontal" id="coordinatorList">
         <legend>Koordinátorok listája</legend>
-        <div class="container" style="padding:5px" align="right"><button id="add-button" type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal" onclick="addClick()">Új koordinátor felvétele...</button></div>
-        <div class="container" style="padding:5px" align="right"><button id="refreshAll-button" type="button" class="btn btn-secondary" onclick="processEntityUpdated()">Frissítés</button></div>
+        <div class="container textWebkitRight" style="padding:5px"><button id="add-button" type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal" onclick="addClick()">Új koordinátor felvétele...</button></div>
+        <div class="container textWebkitRight" style="padding:5px"><button id="refreshAll-button" type="button" class="btn btn-secondary" onclick="processEntityUpdated()">Frissítés</button></div>
         <div class="control-group">
             <table id="coordinator" class="table table-striped table-bordered table-hover compact cell-border" style="width:100%" aria-describedby="coordinatorList">
                     <thead>
@@ -83,9 +83,9 @@
                </form>
           </div>
           <div class="modal-footer">
-            <table width="100%" role="presentation"><tr>
-                <td align="left"><button id="deleteButton" type="button" class="btn btn-danger" onclick="deleteEntity()">Koordinátor törlése</button></td>
-                <td align="right">
+            <table class="fullWidth" role="presentation"><tr>
+                <td class="textLeft"><button id="deleteButton" type="button" class="btn btn-danger" onclick="deleteEntity()">Koordinátor törlése</button></td>
+                <td class="textRight">
                     <button id="resetChangesButton" type="button" class="btn btn-secondary" onclick="reBuildModal()">Eredeti adatok visszanyerése</button>
                     <button id="cancelButton" type="button" class="btn btn-info" data-dismiss="modal">Mégsem</button>
                     <button id="saveChangesButton" type="button" class="btn btn-success" onclick="saveChanges()">Mentés</button>

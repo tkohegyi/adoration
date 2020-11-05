@@ -5,14 +5,16 @@ import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 import org.rockhill.adoration.configuration.PropertyHolder;
 import org.rockhill.adoration.configuration.PropertyReader;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.Test;
+import org.junit.Before;
+
 
 import java.util.Properties;
 
+import static org.junit.Assert.assertEquals;
 import static org.powermock.reflect.Whitebox.getInternalState;
 import static org.powermock.reflect.Whitebox.setInternalState;
-import static org.testng.Assert.assertEquals;
+
 
 /**
  * Unit tests for the class {@link PropertyReader}.
@@ -25,7 +27,7 @@ public class PropertyReaderTest {
     @InjectMocks
     private PropertyReader underTest;
 
-    @BeforeMethod
+    @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         properties = new Properties();
