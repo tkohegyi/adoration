@@ -68,7 +68,9 @@ public class ControllerBase {
      */
     protected HttpHeaders setHeadersForJSON() {
         HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.setContentType(MediaType.APPLICATION_JSON);
+        responseHeaders.setContentType(MediaType.APPLICATION_JSON_UTF8);
+        responseHeaders.add("Cache-Control", "no-cache, no-store, max-age=0, must-revalidate");
+        responseHeaders.add("Pragma", "no-cache");
         return responseHeaders;
     }
 

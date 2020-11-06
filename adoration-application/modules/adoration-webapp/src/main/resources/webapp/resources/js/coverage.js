@@ -32,7 +32,7 @@ function setupCoverage() {
     let intViewportWidth = window.innerWidth;
     handleSize(intViewportWidth);
     $.get('/adoration/getCoverageInformation', function(data) {
-        var coverageInfo = JSON.parse(data.coverageInfo[0]);
+        var coverageInfo = data.coverageInfo;
         var hours = coverageInfo.visibleHours; // hour is 0-167,  eg: 75: 0
         coverageAllHourInfo = coverageInfo.allHours; // hour is 0-167,  eg: 75: [327, 34, 8]
         coverageOnlineHourInfo = coverageInfo.onlineHours; // hour is 0-167,  eg: 75: [327, 34, 8]

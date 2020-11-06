@@ -1,5 +1,7 @@
 package org.rockhill.adoration.web.controller;
 
+import org.junit.Before;
+import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -10,8 +12,6 @@ import org.rockhill.adoration.web.provider.LogFileProvider;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.junit.Test;
-import org.junit.Before;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -45,9 +45,27 @@ public class AppLogControllerTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        Whitebox.setInternalState(underTest,"currentUserProvider", currentUserProvider);
-        Whitebox.setInternalState(underTest,"logFileProvider", logFileProvider);
+        Whitebox.setInternalState(underTest, "currentUserProvider", currentUserProvider);
+        Whitebox.setInternalState(underTest, "logFileProvider", logFileProvider);
         doReturn(currentUserInformationJson).when(currentUserProvider).getUserInformation(null);
+    }
+
+    @Test
+    public void appLogCallByRegisteredAdoratorShallReturnWithApplogJsp() {
+        currentUserInformationJson.isAdoratorAdmin = true;
+        //when
+        String result = underTest.appLog(null, null);
+        //then
+        assertEquals("applog", result);
+    }
+
+    @Test
+    public void appLogCallByGuestShallRedirectToHome() {
+        currentUserInformationJson.isAdoratorAdmin = false;
+        //when
+        String result = underTest.appLog(null, null);
+        //then
+        assertEquals("redirect:/adoration/", result);
     }
 
     @Test
@@ -58,7 +76,7 @@ public class AppLogControllerTest {
         fileNames.add("a");
         expected.put(JSON_NAME, fileNames);
         given(logFileProvider.getLogFileNames()).willReturn(fileNames);
-        Whitebox.setInternalState(currentUserInformationJson,"isAdoratorAdmin", true);
+        Whitebox.setInternalState(currentUserInformationJson, "isAdoratorAdmin", true);
         //WHEN
         Map<String, Collection<String>> result = underTest.getLogFiles(null);
         //THEN
@@ -71,7 +89,7 @@ public class AppLogControllerTest {
         String expectedBody = "content";
         String fileName = "something";
         given(logFileProvider.getLogContent(fileName)).willReturn(expectedBody);
-        Whitebox.setInternalState(currentUserInformationJson,"isAdoratorAdmin", true);
+        Whitebox.setInternalState(currentUserInformationJson, "isAdoratorAdmin", true);
         //WHEN
         ResponseEntity<String> result = underTest.getLogFileContent(null, fileName, true, NOT_IMPORTANT);
         //THEN
@@ -87,7 +105,7 @@ public class AppLogControllerTest {
         String expectedBody = "content";
         String fileName = "something";
         given(logFileProvider.getLogContent(fileName)).willReturn(expectedBody);
-        Whitebox.setInternalState(currentUserInformationJson,"isAdoratorAdmin", true);
+        Whitebox.setInternalState(currentUserInformationJson, "isAdoratorAdmin", true);
         //WHEN
         ResponseEntity<String> result = underTest.getLogFileContent(null, fileName, false, NOT_IMPORTANT);
         //THEN
@@ -105,7 +123,7 @@ public class AppLogControllerTest {
         String body = "content\n";
         String fileName = "something";
         given(logFileProvider.getLogContent(fileName)).willReturn(body);
-        Whitebox.setInternalState(currentUserInformationJson,"isAdoratorAdmin", true);
+        Whitebox.setInternalState(currentUserInformationJson, "isAdoratorAdmin", true);
         //WHEN
         ResponseEntity<String> result = underTest.getLogFileContent(null, fileName, true, userAgentWindows);
         //THEN
