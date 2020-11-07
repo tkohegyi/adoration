@@ -83,9 +83,13 @@ public class AdoratorsController extends ControllerBase {
         TableDataInformationJson content = null;
         if (isAdoratorAdmin(currentUserProvider, httpSession)) {
             //can get the person
-            Long id = Long.valueOf(requestedId);
-            Object person = peopleProvider.getPersonAsObject(id);
-            content = new TableDataInformationJson(person);
+            try {
+                Long id = Long.valueOf(requestedId);
+                Object person = peopleProvider.getPersonAsObject(id);
+                content = new TableDataInformationJson(person);
+            } catch (NumberFormatException e) {
+                logger.warn("Rouge request to getPerson endpoint with bad id.");
+            }
         }
         return content;
     }
@@ -101,9 +105,13 @@ public class AdoratorsController extends ControllerBase {
         TableDataInformationJson content = null;
         if (isAdoratorAdmin(currentUserProvider, httpSession)) {
             //can get the person history
-            Long id = Long.valueOf(requestedId);
-            Object personHistory = peopleProvider.getPersonHistoryAsObject(id);
-            content = new TableDataInformationJson(personHistory);
+            try {
+                Long id = Long.valueOf(requestedId);
+                Object personHistory = peopleProvider.getPersonHistoryAsObject(id);
+                content = new TableDataInformationJson(personHistory);
+            } catch (NumberFormatException e) {
+                logger.warn("Rouge request to getPersonHistory endpoint with bad id.");
+            }
         }
         return content;
     }
@@ -119,9 +127,13 @@ public class AdoratorsController extends ControllerBase {
         TableDataInformationJson content = null;
         if (isAdoratorAdmin(currentUserProvider, httpSession)) {
             //can get the person commitments
-            Long id = Long.valueOf(requestedId);
-            Object personCommitments = coverageProvider.getPersonCommitmentAsObject(id, getLanguageCode(currentUserProvider, httpSession));
-            content = new TableDataInformationJson(personCommitments);
+            try {
+                Long id = Long.valueOf(requestedId);
+                Object personCommitments = coverageProvider.getPersonCommitmentAsObject(id, getLanguageCode(currentUserProvider, httpSession));
+                content = new TableDataInformationJson(personCommitments);
+            } catch (NumberFormatException e) {
+                logger.warn("Rouge request to getPersonCommitments endpoint with bad id.");
+            }
         }
         return content;
     }
@@ -161,13 +173,13 @@ public class AdoratorsController extends ControllerBase {
         } catch (Exception e) {
             resultString = "Cannot update the Person, please contact to maintainers.";
             result = buildResponseBodyResult(JSON_RESPONSE_UPDATE, resultString, HttpStatus.BAD_REQUEST);
-            logger.warn("Error happened at Person, pls contact to maintainers", e);
+            logger.warn("Error happened at update Person, pls contact to maintainers", e);
         }
         return result;
     }
 
     /**
-     * Update an existing Person.
+     * Update commitments of an existing Person.
      *
      * @param session is the actual HTTP session
      * @return list of hits as a JSON response

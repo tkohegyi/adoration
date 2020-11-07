@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -107,7 +106,6 @@ public class HomeController extends ControllerBase {
      * Serves information about the logged in user.
      *
      * @param httpSession         is the session of the user
-     * @param httpServletResponse to be used for the response
      * @return with proper content
      */
     @ResponseBody
@@ -123,7 +121,6 @@ public class HomeController extends ControllerBase {
      * Serves full information about the coverage information.
      *
      * @param httpSession         is the session of the user
-     * @param httpServletResponse to use it for the response
      * @return with proper content
      */
     @ResponseBody

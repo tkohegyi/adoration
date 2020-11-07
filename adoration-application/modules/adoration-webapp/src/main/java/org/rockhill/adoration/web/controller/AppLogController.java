@@ -135,16 +135,17 @@ public class AppLogController extends ControllerBase {
      */
     @ResponseBody
     @GetMapping(value = "/adoration/endpointdoc")
-    public Map<String, Collection<String>> show() {
+    public Map<String, Collection<String>> showEndPoints(HttpSession httpSession) {
         Map<RequestMappingInfo, HandlerMethod> methods = this.handlerMapping.getHandlerMethods();
         Map<String, Collection<String>> jsonResponse = new HashMap<>();
 
-        for (Map.Entry<RequestMappingInfo, HandlerMethod> entry: methods.entrySet()) {
-            Collection<String> collection = new ArrayList<>();
-            collection.add(entry.getValue().toString());
-            jsonResponse.put(entry.getKey().toString(), collection);
+        if (isAdoratorAdmin(currentUserProvider, httpSession)) {  //visible only for admins
+            for (Map.Entry<RequestMappingInfo, HandlerMethod> entry : methods.entrySet()) {
+                Collection<String> collection = new ArrayList<>();
+                collection.add(entry.getValue().toString());
+                jsonResponse.put(entry.getKey().toString(), collection);
+            }
         }
-
         return jsonResponse;
     }
 

@@ -6,7 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.powermock.reflect.Whitebox;
-import org.rockhill.adoration.web.TestObject;
+import org.rockhill.adoration.web.helper.DummyTestObject;
 import org.rockhill.adoration.web.json.CurrentUserInformationJson;
 import org.rockhill.adoration.web.json.TableDataInformationJson;
 import org.rockhill.adoration.web.provider.CurrentUserProvider;
@@ -58,7 +58,7 @@ public class AdoratorListControllerTest {
     public void getPersonTableByPrivilegedAdoratorShallReturnWithPersonTable() {
         currentUserInformationJson.isRegisteredAdorator = true;
         currentUserInformationJson.isPrivilegedAdorator = true;
-        TestObject expected = new TestObject();
+        DummyTestObject expected = new DummyTestObject();
         doReturn(expected).when(peopleProvider).getAdoratorListAsObject(currentUserInformationJson, true);
         doReturn(null).when(peopleProvider).getAdoratorListAsObject(currentUserInformationJson, false);
         //when
@@ -71,22 +71,22 @@ public class AdoratorListControllerTest {
     public void getPersonTableByNonPrivilegedAdoratorShallReturnWithPersonTable() {
         currentUserInformationJson.isRegisteredAdorator = true;
         currentUserInformationJson.isPrivilegedAdorator = false;
-        TestObject expected = new TestObject();
+        DummyTestObject expected = new DummyTestObject();
         doReturn(expected).when(peopleProvider).getAdoratorListAsObject(currentUserInformationJson, false);
         doReturn(null).when(peopleProvider).getAdoratorListAsObject(currentUserInformationJson, true);
         //when
-        Object result = underTest.getPersonTable(null, null);
+        TableDataInformationJson result = underTest.getPersonTable(null, null);
         //then
-        assertEquals(expected, ((TableDataInformationJson) result).data);
+        assertEquals(expected, result.data);
     }
 
     @Test
     public void getPersonTableByGuestShallReturnWithNone() {
         currentUserInformationJson.isRegisteredAdorator = false;
-        doReturn(null).when(peopleProvider).getAdoratorListAsObject(currentUserInformationJson, false);
-        doReturn(null).when(peopleProvider).getAdoratorListAsObject(currentUserInformationJson, true);
+        doReturn(new DummyTestObject()).when(peopleProvider).getAdoratorListAsObject(currentUserInformationJson, false);
+        doReturn(new DummyTestObject()).when(peopleProvider).getAdoratorListAsObject(currentUserInformationJson, true);
         //when
-        Object result = underTest.getPersonTable(null, null);
+        TableDataInformationJson result = underTest.getPersonTable(null, null);
         //then
         assertNull(result);
     }
