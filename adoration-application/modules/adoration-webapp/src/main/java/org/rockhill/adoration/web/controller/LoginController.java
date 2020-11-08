@@ -31,7 +31,6 @@ import static org.springframework.security.web.context.HttpSessionSecurityContex
  */
 @Controller
 public class LoginController {
-    private static final String[] VALID_HOSTS = {"127.0.0.1", "orokimadas.info", "95.111.227.163"};
     private static final String LOGIN_PAGE = "login";
     private static final String HOME_PAGE = "home";
 
@@ -124,11 +123,6 @@ public class LoginController {
             HttpServletRequest httpServletRequest
     ) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String host = httpServletRequest.getRemoteHost();
-        if (!Arrays.asList(VALID_HOSTS).contains(host)) {
-            logger.warn("SSRF trial detected from: {}", host);
-            return HOME_PAGE;
-        }
         if ((code.length() > 0) && (state.length() == 0) && (auth == null)) {  //if GOOGLE login can be performed and it is not yet authenticated for Ador App
             String nextPage;
             nextPage = authenticateWithGoogle(httpSession, httpServletResponse, code);
