@@ -45,7 +45,7 @@ public class ExportController extends ControllerBase {
      */
     @GetMapping(value = "/adorationSecure/getExcelFull")
     public void getExcelContent(HttpSession httpSession, HttpServletResponse httpServletResponse) {
-        prepareAndSendExcelResponse(httpSession, httpServletResponse, BIG_INFO);
+        prepareAndSendExcelResponse(httpSession, httpServletResponse, BIG_INFO, isAdoratorAdmin(currentUserProvider, httpSession));
     }
 
     /**
@@ -53,7 +53,7 @@ public class ExportController extends ControllerBase {
      */
     @GetMapping(value = "/adorationSecure/getExcelDailyInfo")
     public void getExcelDailyInfo(HttpSession httpSession, HttpServletResponse httpServletResponse) {
-        prepareAndSendExcelResponse(httpSession, httpServletResponse, DAILY_INFO);
+        prepareAndSendExcelResponse(httpSession, httpServletResponse, DAILY_INFO, isPrivilegedAdorator(currentUserProvider, httpSession));
     }
 
     /**
@@ -61,7 +61,7 @@ public class ExportController extends ControllerBase {
      */
     @GetMapping(value = "/adorationSecure/getExcelHourlyInfo")
     public void getExcelHourlyInfo(HttpSession httpSession, HttpServletResponse httpServletResponse) {
-        prepareAndSendExcelResponse(httpSession, httpServletResponse, HOURLY_INFO);
+        prepareAndSendExcelResponse(httpSession, httpServletResponse, HOURLY_INFO, isPrivilegedAdorator(currentUserProvider, httpSession));
     }
 
     /**
@@ -69,14 +69,14 @@ public class ExportController extends ControllerBase {
      */
     @GetMapping(value = "/adorationSecure/getExcelAdoratorInfo")
     public void getExcelAdoratorInfo(HttpSession httpSession, HttpServletResponse httpServletResponse) {
-        prepareAndSendExcelResponse(httpSession, httpServletResponse, ADORATOR_INFO);
+        prepareAndSendExcelResponse(httpSession, httpServletResponse, ADORATOR_INFO, isRegisteredAdorator(currentUserProvider, httpSession));
     }
 
-    private void prepareAndSendExcelResponse(HttpSession httpSession, HttpServletResponse httpServletResponse, ExcelExportType excelExportType) {
+    private void prepareAndSendExcelResponse(HttpSession httpSession, HttpServletResponse httpServletResponse, ExcelExportType excelExportType, boolean isAllowed) {
         String templateFileName = excelExportType.getTemplateName();
         httpServletResponse.addHeader(CONTENT_DISPOSITION, String.format(ATTACHMENT_TEMPLATE, templateFileName));
         httpServletResponse.addHeader(CONTENT_TYPE, CONTENT_TYPE_XLSX);
-        if (isAdoratorAdmin(currentUserProvider, httpSession)) {
+        if (isAllowed) {
             try {
                 httpServletResponse.setStatus(HttpStatus.OK.value());
                 CurrentUserInformationJson currentUserInformationJson = currentUserProvider.getUserInformation(httpSession);
