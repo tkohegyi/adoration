@@ -56,10 +56,10 @@ subprojects {
     }
   
     dependencies {
-        compile(group: 'org.springframework', name: 'spring-context', version:'5.0.13.RELEASE') {
+        compile(group: 'org.springframework', name: 'spring-context', version:'5.0.16.RELEASE') {
             exclude(module: 'commons-logging')
         }
-	    compile group: 'org.springframework', name: 'spring-webmvc', version:'5.0.13.RELEASE'
+	    compile group: 'org.springframework', name: 'spring-webmvc', version:'5.0.16.RELEASE'
 	    compile group: 'org.aspectj', name: 'aspectjrt', version:'1.6.9'
         compile group: 'org.postgresql', name: 'postgresql', version:'42.2.12.jre7'
         testCompile group: 'org.mockito', name: 'mockito-core', version:'3.3.3'

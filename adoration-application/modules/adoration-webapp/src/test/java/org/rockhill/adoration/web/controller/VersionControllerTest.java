@@ -25,7 +25,7 @@ public class VersionControllerTest {
     private VersionController underTest;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         MockitoAnnotations.initMocks(this);
     }
 

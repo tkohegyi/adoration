@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -28,6 +29,31 @@ public class BusinessWithAuditTrail extends BusinessBase {
 
     @Autowired
     private BusinessWithNextGeneralKey businessWithNextGeneralKey;
+
+    /**
+     * Get the list of audit records that has happened in last N days.
+     *
+     * @param days is the number of days before now
+     * @return with the list of related audit records
+     */
+    public List<AuditTrail> getAuditTrailOfLastDays(@NotNull Long days) {
+        List<AuditTrail> result;
+        if (days == null || days <= 0) {
+            throw new DatabaseHandlingException("Tried to get audit trail for negative or zero days, pls contact to maintainers.");
+        }
+        Session session = SessionFactoryHelper.getOpenedSession();
+        session.beginTransaction();
+        //select * from dbo.audittrail where TO_TIMESTAMP(atwhen,'YYYY-MM-DD HH24:MI:SS.MS') > (NOW()::timestamp - interval '3 day');
+        String hql = "from AuditTrail as AT where TO_TIMESTAMP(AT.atWhen,'YYYY-MM-DD HH24:MI:SS.MS') > :" + EXPECTED_PARAMETER + " order by AT.atWhen ASC";
+        Query<AuditTrail> query = session.createQuery(hql, AuditTrail.class);
+        DateTimeConverter dateTimeConverter = new DateTimeConverter();
+        Date date = dateTimeConverter.getDateNDaysAgo(days);
+        query.setParameter(EXPECTED_PARAMETER, date);
+        result = query.list();
+        session.getTransaction().commit();
+        session.close();
+        return result;
+    }
 
     /**
      * Get the list of audit records that has connection to the given reference id.

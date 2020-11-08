@@ -1,12 +1,13 @@
 package org.rockhill.adoration.database.business;
 
-import org.junit.Test;
 import org.junit.Before;
+import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 import org.rockhill.adoration.database.exception.DatabaseHandlingException;
 
 public class BusinessWithAuditTrailTest {
+
     @InjectMocks
     private BusinessWithAuditTrail underTest;
 
@@ -19,7 +20,7 @@ public class BusinessWithAuditTrailTest {
     public void testCheckDangerousValueNoIssue() {
         //GIVEN
         //WHEN
-        underTest.checkDangerousValue("normal text árvítűrőtükörfúrógép ÁRVÍZTŰRŐTÜKÖRFÚRÓGÉP [].;-_*=()+!%/",null);
+        underTest.checkDangerousValue("normal text árvítűrőtükörfúrógép ÁRVÍZTŰRŐTÜKÖRFÚRÓGÉP [].;-_*=()+!%/", null);
         //THEN
         //nothing
     }
@@ -28,7 +29,7 @@ public class BusinessWithAuditTrailTest {
     public void testCheckDangerousValueLeftBIssue() {
         //GIVEN
         //WHEN
-        underTest.checkDangerousValue("hash is < need ",null);
+        underTest.checkDangerousValue("hash is < need ", null);
         //THEN
         //exception shall occur
     }
@@ -37,7 +38,7 @@ public class BusinessWithAuditTrailTest {
     public void testCheckDangerousValueRightBIssue() {
         //GIVEN
         //WHEN
-        underTest.checkDangerousValue("hash is > need ",null);
+        underTest.checkDangerousValue("hash is > need ", null);
         //THEN
         //exception shall occur
     }
@@ -46,7 +47,7 @@ public class BusinessWithAuditTrailTest {
     public void testCheckDangerousValueBackSlIssue() {
         //GIVEN
         //WHEN
-        underTest.checkDangerousValue("hash is \\ need ",null);
+        underTest.checkDangerousValue("hash is \\ need ", null);
         //THEN
         //exception shall occur
     }
@@ -55,7 +56,7 @@ public class BusinessWithAuditTrailTest {
     public void testCheckDangerousValueHashIssue() {
         //GIVEN
         //WHEN
-        underTest.checkDangerousValue("hash is # need ",null);
+        underTest.checkDangerousValue("hash is # need ", null);
         //THEN
         //exception shall occur
     }
@@ -64,9 +65,19 @@ public class BusinessWithAuditTrailTest {
     public void testCheckDangerousValueAtIssue() {
         //GIVEN
         //WHEN
-        underTest.checkDangerousValue("hash is & need ",null);
+        underTest.checkDangerousValue("hash is & need ", null);
         //THEN
         //exception shall occur
+    }
+
+    @Test(expected = DatabaseHandlingException.class)
+    public void getAuditTrailOfLastDaysWithZeroDays() {
+        underTest.getAuditTrailOfLastDays(0L);
+    }
+
+    @Test(expected = DatabaseHandlingException.class)
+    public void getAuditTrailOfLastDaysWithNegativeDays() {
+        underTest.getAuditTrailOfLastDays(-1L);
     }
 
 }

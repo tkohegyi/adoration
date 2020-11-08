@@ -42,7 +42,7 @@ public class AppLogControllerTest {
     private static final String ATTACHMENT_TEMPLATE = "attachment; filename=%s";
 
     @Mock
-    RequestMappingHandlerMapping handlerMapping;
+    private RequestMappingHandlerMapping handlerMapping;
     @Mock
     private LogFileProvider logFileProvider;
     @Mock

@@ -18,7 +18,7 @@ import static org.mockito.Mockito.doReturn;
 public class HomeControllerTest {
 
     @InjectMocks
-    HomeController underTest;
+    private HomeController underTest;
     @Mock
     private CoverageInformationJson coverageInformationJson;
     @Mock
