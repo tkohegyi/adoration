@@ -1,6 +1,7 @@
 var loggedInUserInfo;
 
 function setupMenu() {
+    jQuery.ajaxSetup({async:false});
     $.get('/adoration/getLoggedInUserInfo', function(data) {
         loggedInUserInfo = data.loggedInUserInfo;
         if (loggedInUserInfo.isLoggedIn) {
@@ -20,6 +21,7 @@ function setupMenu() {
             $("#nav-application-log").show();
         }
     });
+    jQuery.ajaxSetup({async:true});
 }
 
 function getReadableLanguageCode(code) {

@@ -43,7 +43,7 @@
 				<th scope="col"></th>
 			</tr>
 			<tr>
-				<td style="vertical-align:top;" class="veryBadCoverage textRight">2 - Piros&nbsp;</td>
+				<td style="vertical-align:middle;" class="veryBadCoverage textRight">2 - Piros&nbsp;</td>
 				<td style="padding-left:4px">színűek azok az órák, amelyekben a jelentkezőkre leginkább szükség van. Ezért, ha teheted, jelentkezz a pirossal jelölt órák valamelyikére.</td>
 			</tr>
 			<tr>

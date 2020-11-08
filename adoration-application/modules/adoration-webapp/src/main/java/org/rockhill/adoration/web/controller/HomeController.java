@@ -37,7 +37,7 @@ public class HomeController extends ControllerBase {
      */
     @GetMapping(value = "/")
     public String pseudoHome() {
-        return "redirect:/adoration/";
+        return REDIRECT_TO_HOME;
     }
 
     /**

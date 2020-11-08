@@ -50,7 +50,7 @@ public class AdoratorsController extends ControllerBase {
     @GetMapping(value = "/adorationSecure/adorators")
     public String adorators(HttpSession httpSession) {
         if (!isAdoratorAdmin(currentUserProvider, httpSession)) {
-            return "redirect:/adoration/";
+            return REDIRECT_TO_HOME;
         }
         return "adorators";
     }
@@ -81,7 +81,7 @@ public class AdoratorsController extends ControllerBase {
     @GetMapping(value = "/adorationSecure/getPerson/{id:.+}")
     public TableDataInformationJson getPersonById(HttpSession httpSession, @PathVariable("id") final String requestedId) {
         TableDataInformationJson content = null;
-        if (isAdoratorAdmin(currentUserProvider, httpSession)) {
+        if (isPrivilegedAdorator(currentUserProvider, httpSession)) {
             //can get the person
             try {
                 Long id = Long.valueOf(requestedId);

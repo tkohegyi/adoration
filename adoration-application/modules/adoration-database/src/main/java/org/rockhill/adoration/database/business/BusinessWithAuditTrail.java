@@ -43,7 +43,7 @@ public class BusinessWithAuditTrail extends BusinessBase {
         }
         Session session = SessionFactoryHelper.getOpenedSession();
         session.beginTransaction();
-        //select * from dbo.audittrail where TO_TIMESTAMP(atwhen,'YYYY-MM-DD HH24:MI:SS.MS') > (NOW()::timestamp - interval '3 day');
+        // similar sql could be - where TO_TIMESTAMP(atwhen,'YYYY-MM-DD HH24:MI:SS.MS') > (NOW()::timestamp - interval '3 day');
         String hql = "from AuditTrail as AT where TO_TIMESTAMP(AT.atWhen,'YYYY-MM-DD HH24:MI:SS.MS') > :" + EXPECTED_PARAMETER + " order by AT.atWhen ASC";
         Query<AuditTrail> query = session.createQuery(hql, AuditTrail.class);
         DateTimeConverter dateTimeConverter = new DateTimeConverter();

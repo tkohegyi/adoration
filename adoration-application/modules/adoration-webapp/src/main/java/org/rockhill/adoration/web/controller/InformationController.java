@@ -55,7 +55,7 @@ public class InformationController extends ControllerBase {
         if (currentUserInformationJson.isLoggedIn) { //can be waiting for identification or guest
             return "infoGuest";
         }
-        return "redirect:/adoration/"; //not even logged in -> go back to basic home page
+        return REDIRECT_TO_HOME; //not even logged in -> go back to basic home page
     }
 
     /**

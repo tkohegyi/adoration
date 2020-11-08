@@ -31,7 +31,7 @@ import static org.springframework.security.web.context.HttpSessionSecurityContex
  */
 @Controller
 public class LoginController {
-    private static final String[] VALID_HOSTS = {"127.0.0.1", "orokimadas.info"};
+    private static final String[] VALID_HOSTS = {"127.0.0.1", "orokimadas.info", "95.111.227.163"};
     private static final String LOGIN_PAGE = "login";
     private static final String HOME_PAGE = "home";
 

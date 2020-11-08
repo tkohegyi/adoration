@@ -161,6 +161,13 @@ public class PeopleProvider extends ProviderBase {
         newValue = handleSimpleStringFieldUpdate(person.getId(), personInformationJson.dhcSignedDate, person.getDhcSignedDate(),
                 userName, auditTrailCollection, "DhcSignedDate");
         person.setDhcSignedDate(newValue);
+
+        //finally handle the 2 string fields those can be changed by Coo-s too
+        handleCooModifiableStringFields(personInformationJson, person, userName, auditTrailCollection);
+    }
+
+    private void handleCooModifiableStringFields(PersonInformationJson personInformationJson, Person person, String userName, Collection<AuditTrail> auditTrailCollection) {
+        String newValue;
         //coordinatorComment
         newValue = handleSimpleStringFieldUpdate(person.getId(), personInformationJson.coordinatorComment.trim(), person.getCoordinatorComment(),
                 userName, auditTrailCollection, "CoordinatorComment");
@@ -410,5 +417,27 @@ public class PeopleProvider extends ProviderBase {
                 + "\n\n  Kapcsolat üzenet: \n" + info
                 + "\n\n  Üzenet:\n" + message;
         emailSender.sendMailToAdministrator(SUBJECT_NEW_MESSAGE, text);
+    }
+
+    /**
+     * Update Person by Coordinator - this means only 2 comment field can be updated.
+     *
+     * @param personInformationJson      is the arrived expected new person information
+     * @param currentUserInformationJson is info about tha actual user
+     * @return with the id of the updated record
+     */
+    public Long updatePersonByCoo(PersonInformationJson personInformationJson, CurrentUserInformationJson currentUserInformationJson) {
+        Collection<AuditTrail> auditTrailCollection = new ArrayList<>();
+        Long id = Long.parseLong(personInformationJson.id);
+        Person person = businessWithPerson.getPersonById(id);
+        if (person == null) {
+            //new Person? - shall not be done by Coo-s
+            throw new DatabaseHandlingException("Coordinator cannot create new adorator.");
+        }
+        //prepare the comment fields for update
+        handleCooModifiableStringFields(personInformationJson, person, currentUserInformationJson.userName, auditTrailCollection);
+
+        id = businessWithPerson.updatePerson(person, auditTrailCollection);
+        return id;
     }
 }

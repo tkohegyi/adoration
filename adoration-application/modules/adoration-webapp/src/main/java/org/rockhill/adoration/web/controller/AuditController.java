@@ -37,7 +37,7 @@ public class AuditController extends ControllerBase {
         if (isAdoratorAdmin(currentUserProvider, httpSession)) { //only admins
             return "audit";
         }
-        return "redirect:/adoration/"; //not admin -> go back to basic home page
+        return REDIRECT_TO_HOME; //not admin -> go back to basic home page
     }
 
     /**

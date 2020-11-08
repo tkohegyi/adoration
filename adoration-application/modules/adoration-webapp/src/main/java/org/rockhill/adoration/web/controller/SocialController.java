@@ -44,7 +44,7 @@ public class SocialController extends ControllerBase {
     @GetMapping(value = "/adorationSecure/social")
     public String social(HttpSession httpSession) {
         if (!isAdoratorAdmin(currentUserProvider, httpSession)) {
-            return "redirect:/adoration/";
+            return REDIRECT_TO_HOME;
         }
         return "social";
     }

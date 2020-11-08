@@ -1,6 +1,5 @@
 package org.rockhill.adoration.web.controller;
 
-import com.google.gson.Gson;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -31,7 +30,7 @@ import static org.mockito.Mockito.verify;
 public class AdoratorsControllerTest {
 
     @Mock
-    Logger logger;
+    private Logger logger;
     @Mock
     private CurrentUserProvider currentUserProvider;
     @Mock
@@ -96,7 +95,7 @@ public class AdoratorsControllerTest {
 
     @Test
     public void getPersonByIdForAdministrator() {
-        currentUserInformationJson.isAdoratorAdmin = true;
+        currentUserInformationJson.isPrivilegedAdorator = true;
         DummyTestObject expected = new DummyTestObject();
         doReturn(expected).when(peopleProvider).getPersonAsObject(1L);
         //when
@@ -107,7 +106,7 @@ public class AdoratorsControllerTest {
 
     @Test
     public void getPersonByIdForAdministratorButIncorrectId() {
-        currentUserInformationJson.isAdoratorAdmin = true;
+        currentUserInformationJson.isPrivilegedAdorator = true;
         DummyTestObject expected = new DummyTestObject();
         doReturn(expected).when(peopleProvider).getPersonAsObject(1L);
         //when
@@ -119,7 +118,7 @@ public class AdoratorsControllerTest {
 
     @Test
     public void getPersonByIdForNonAdministrator() {
-        currentUserInformationJson.isAdoratorAdmin = false;
+        currentUserInformationJson.isPrivilegedAdorator = false;
         DummyTestObject expected = new DummyTestObject();
         doReturn(expected).when(peopleProvider).getPersonAsObject(1L);
         //when

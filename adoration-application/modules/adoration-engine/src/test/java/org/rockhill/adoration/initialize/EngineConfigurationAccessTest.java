@@ -9,7 +9,6 @@ import org.powermock.reflect.Whitebox;
 import org.rockhill.adoration.configuration.PropertyHolder;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doReturn;
 
 /**

@@ -33,7 +33,7 @@ public class LinksController extends ControllerBase {
     @GetMapping(value = "/adorationSecure/links")
     public String adorators(HttpSession httpSession) {
         if (!isAdoratorAdmin(currentUserProvider, httpSession)) {
-            return "redirect:/adoration/";
+            return REDIRECT_TO_HOME;
         }
         return "links";
     }

@@ -8,12 +8,11 @@ import org.mockito.MockitoAnnotations;
 import org.powermock.reflect.Whitebox;
 import org.rockhill.adoration.database.business.BusinessWithAuditTrail;
 import org.rockhill.adoration.web.helper.DummyTestObject;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.doReturn;
 
 public class AuditProviderTest {
@@ -25,7 +24,7 @@ public class AuditProviderTest {
     private AuditProvider underTest;
 
     @Before
-    public void setUp()  {
+    public void setUp() {
         MockitoAnnotations.initMocks(this);
         Whitebox.setInternalState(underTest, "businessWithAuditTrail", businessWithAuditTrail);
 

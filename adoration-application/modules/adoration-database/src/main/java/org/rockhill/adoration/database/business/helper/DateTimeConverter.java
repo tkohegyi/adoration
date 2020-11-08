@@ -9,7 +9,7 @@ import java.util.Date;
 public class DateTimeConverter {
     private static final String DATETIME_PATTERN = "yyyy-MM-dd HH:mm:ss.SSS";
     private static final String DATE_PATTERN = "yyyy-MM-dd";
-    private static final long DAY_IN_MS = 1000 * 60 * 60 * 24;
+    private static final long DAY_IN_MS = 1000L * 60 * 60 * 24;
 
     /**
      * Gets actual date & time as standard String.

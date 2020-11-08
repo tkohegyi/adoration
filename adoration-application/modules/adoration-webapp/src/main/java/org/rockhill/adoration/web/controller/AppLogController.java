@@ -68,7 +68,7 @@ public class AppLogController extends ControllerBase {
     public String appLog(HttpSession httpSession,
                          HttpServletResponse httpServletResponse) {
         if (!isAdoratorAdmin(currentUserProvider, httpSession)) {
-            return "redirect:/adoration/";
+            return REDIRECT_TO_HOME;
         }
         return "applog";
     }
