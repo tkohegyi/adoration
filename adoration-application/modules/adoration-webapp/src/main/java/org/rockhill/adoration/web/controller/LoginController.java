@@ -18,7 +18,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.Arrays;
 
 import static org.rockhill.adoration.web.service.FacebookOauth2Service.FACEBOOK_TEXT;
 import static org.rockhill.adoration.web.service.GoogleOauth2Service.GOOGLE_TEXT;
