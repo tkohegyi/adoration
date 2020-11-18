@@ -5,11 +5,16 @@ import org.rockhill.adoration.web.json.CoverageInformationJson;
 import org.rockhill.adoration.web.json.CurrentUserInformationJson;
 import org.rockhill.adoration.web.provider.CoverageProvider;
 import org.rockhill.adoration.web.provider.CurrentUserProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +29,7 @@ import javax.servlet.http.HttpSession;
 public class HomeController extends ControllerBase {
     private static final String JSON_LOGGED_IN_USER_INFO = "loggedInUserInfo";
     private static final String JSON_COVERAGE_INFO = "coverageInfo";
+    private final Logger logger = LoggerFactory.getLogger(HomeController.class);
 
     @Autowired
     private CurrentUserProvider currentUserProvider;
@@ -86,8 +92,10 @@ public class HomeController extends ControllerBase {
      * @param httpServletRequest is the request
      * @return with proper content
      */
-    @GetMapping(value = "/adoration/e404")
+    @RequestMapping(value = "/adoration/e404", method = {RequestMethod.GET, RequestMethod.POST})
     public String e404(HttpServletRequest httpServletRequest) {
+        logger.warn("E404 caused by: {} / method: {}",
+                httpServletRequest.getRemoteHost(), httpServletRequest.getMethod());
         return "E404";
     }
 
@@ -97,8 +105,10 @@ public class HomeController extends ControllerBase {
      * @param httpServletRequest is the request
      * @return with proper content
      */
-    @GetMapping(value = "/adoration/e500")
+    @RequestMapping(value = "/adoration/e500", method = {RequestMethod.GET, RequestMethod.POST})
     public String e500(HttpServletRequest httpServletRequest) {
+        logger.warn("E500 caused by: {} / method: {}",
+                httpServletRequest.getRemoteHost(), httpServletRequest.getMethod());
         return "E404";
     }
 

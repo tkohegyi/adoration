@@ -11,10 +11,14 @@ import org.rockhill.adoration.web.json.CoverageInformationJson;
 import org.rockhill.adoration.web.json.CurrentUserInformationJson;
 import org.rockhill.adoration.web.provider.CoverageProvider;
 import org.rockhill.adoration.web.provider.CurrentUserProvider;
+import org.slf4j.Logger;
 import org.springframework.http.ResponseEntity;
+
+import javax.servlet.http.HttpServletRequest;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.verify;
 
 public class HomeControllerTest {
 
@@ -28,12 +32,17 @@ public class HomeControllerTest {
     private CoverageProvider coverageProvider;
     @Mock
     private CurrentUserInformationJson currentUserInformationJson;
+    @Mock
+    private HttpServletRequest httpServletRequest;
+    @Mock
+    private Logger logger;
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         Whitebox.setInternalState(underTest, "currentUserProvider", currentUserProvider);
         Whitebox.setInternalState(underTest, "coverageProvider", coverageProvider);
+        Whitebox.setInternalState(underTest, "logger", logger);
         doReturn(currentUserInformationJson).when(currentUserProvider).getUserInformation(null);
     }
 
@@ -84,20 +93,27 @@ public class HomeControllerTest {
 
     @Test
     public void e404() {
-        //given - no precondition
+        //given
+        doReturn("A").when(httpServletRequest).getRemoteHost();
+        doReturn("C").when(httpServletRequest).getMethod();
         //when
-        String result = underTest.e404(null);
+        String result = underTest.e404(httpServletRequest);
         // then
         assertEquals("E404", result);
+        verify(logger).warn("E404 caused by: {} / method: {}", "A", "C");
     }
 
     @Test
     public void e500() {
-        //given - no precondition
+        //given
+        doReturn("A").when(httpServletRequest).getRemoteHost();
+        doReturn("B").when(httpServletRequest).getRequestURI();
+        doReturn("C").when(httpServletRequest).getMethod();
         //when
-        String result = underTest.e500(null);
+        String result = underTest.e500(httpServletRequest);
         // then
         assertEquals("E404", result);
+        verify(logger).warn("E500 caused by: {} / method: {}", "A", "C");
     }
 
     @Test
