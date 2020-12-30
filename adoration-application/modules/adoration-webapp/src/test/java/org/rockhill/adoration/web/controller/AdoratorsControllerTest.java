@@ -27,6 +27,9 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 
+/**
+ * Test class of {@link AdoratorsController} class.
+ */
 public class AdoratorsControllerTest {
 
     @Mock

@@ -83,8 +83,7 @@
     			</tr>
     			<tr>
     				<td />
-    				<td>- A kápolnában elhelyezett sárga jelentkezési lapokon, kitöltés
-    					után azt bedobva a piarista rendház postaládájába.</td>
+    				<td>- A kápolnában elhelyezett jelentkezési lapokon, kitöltés után azt bedobva a piarista rendház postaládájába.</td>
     			</tr>
     			<tr>
     				<td />
@@ -120,8 +119,7 @@
     	<br />
 
     	<hr />
-    	<a href="http://vacitemplom.piarista.hu/">Urgás vissza</a> a Szent Anna Piarista Templom oldalára.
-
+    	<a href="http://vacitemplom.piarista.hu/">Urgás</a> a Váci Szent Anna Piarista Templom oldalára.
 
   </div>
   <script src="/resources/js/external/jquery-3.4.1.js"></script>

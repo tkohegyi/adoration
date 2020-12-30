@@ -15,6 +15,9 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.doReturn;
 
+/**
+ * Unit test for {@link AuditProvider} class.
+ */
 public class AuditProviderTest {
 
     @Mock

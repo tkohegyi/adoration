@@ -18,6 +18,9 @@ import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 
+/**
+ * Unit test for {@link AuditController} class.
+ */
 public class AuditControllerTest {
 
     @Mock

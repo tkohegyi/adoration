@@ -17,6 +17,9 @@ import static org.powermock.api.mockito.PowerMockito.doNothing;
 import static org.powermock.api.mockito.PowerMockito.spy;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
+/**
+ * Test class of {@link AdorationApplication} class.
+ */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(AdorationApplication.class)
 public class AdorationApplicationTest {

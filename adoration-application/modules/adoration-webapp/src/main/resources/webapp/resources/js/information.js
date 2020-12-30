@@ -104,6 +104,37 @@ function getInformation() {
             $("#noLeadership").show();
             $("#yesLeadership").hide();
         }
+        //show sub-leadership
+        $("#yesSubLeadership").empty();
+        if (information.leadership.length > 0) {
+            //has leadership info
+            $("#noSubLeadership").hide();
+            $("#yesSubLeadership").show();
+            tr = $("<tr class=\"tableHead\"><th class=\"infoTable\" colspan=\"4\">Óra Koordinátorok:</th></tr>");
+            $("#yesSubLeadership").append(tr);
+            tr = $("<tr class=\"tableHead\"><th class=\"infoTable\">Óra:</th><th class=\"infoTable\">Név:</th><th class=\"infoTable\">Telefon:</th><th class=\"infoTable\">E-mail:</th></tr>");
+            $("#yesSubLeadership").append(tr);
+            for (i = 0; i < information.leadership.length; i++) {
+                coordinator = information.leadership[i];
+                if (parseInt(coordinator.coordinatorType) <= 23) { //only for hour coordinators
+                    tr = $("<tr/>");
+                    if (i % 2 == 0) {
+                        tr.addClass("evenInfo");
+                    } else {
+                        tr.addClass("oddInfo");
+                    }
+                    tr.append($("<td class=\"infoTable\">" + coordinator.coordinatorTypeText
+                        + "</td><td class=\"infoTable\">" + coordinator.personName
+                        + "</td><td class=\"infoTable\">" + coordinator.phone
+                        + "</td><td class=\"infoTable\">" + coordinator.eMail + "</td>"));
+                    $("#yesSubLeadership").append(tr);
+                }
+            }
+        } else {
+            //has no leadership
+            $("#noSubLeadership").show();
+            $("#yesSubLeadership").hide();
+        }
         //show actual hour
         $("#yesAdoratorNow").empty();
         if (information.currentHourList.length > 0) {

@@ -20,6 +20,9 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 
+/**
+ * Unit test for {@link HomeController} class.
+ */
 public class HomeControllerTest {
 
     @InjectMocks
@@ -109,20 +112,19 @@ public class HomeControllerTest {
         String result = underTest.e404(httpServletRequest);
         // then
         assertEquals("E404", result);
-        verify(logger).warn("E404 caused by: {} / method: {}", "A", "C");
+        verify(logger).info("E404 caused by: {}, method: {}, URI: {}", "A", "C", "unknown");
     }
 
     @Test
     public void e500() {
         //given
         doReturn("A").when(httpServletRequest).getRemoteHost();
-        doReturn("B").when(httpServletRequest).getRequestURI();
         doReturn("C").when(httpServletRequest).getMethod();
         //when
         String result = underTest.e500(httpServletRequest);
         // then
         assertEquals("E404", result);
-        verify(logger).warn("E500 caused by: {} / method: {}", "A", "C");
+        verify(logger).info("E500 caused by: {}, method: {}, URI: {}", "A", "C", "unknown");
     }
 
     @Test

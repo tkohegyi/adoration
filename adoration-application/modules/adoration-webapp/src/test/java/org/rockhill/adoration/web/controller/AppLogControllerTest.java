@@ -32,7 +32,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doReturn;
 
 /**
- * Unit test for {@link AppLogController}.
+ * Unit test for {@link AppLogController} class.
  */
 public class AppLogControllerTest {
 

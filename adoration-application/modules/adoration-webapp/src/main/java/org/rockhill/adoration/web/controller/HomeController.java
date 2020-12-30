@@ -1,5 +1,6 @@
 package org.rockhill.adoration.web.controller;
 
+import org.eclipse.jetty.server.Request;
 import org.rockhill.adoration.web.controller.helper.ControllerBase;
 import org.rockhill.adoration.web.json.CoverageInformationJson;
 import org.rockhill.adoration.web.json.CurrentUserInformationJson;
@@ -103,8 +104,12 @@ public class HomeController extends ControllerBase {
      */
     @RequestMapping(value = "/adoration/e404", method = {RequestMethod.GET, RequestMethod.POST})
     public String e404(HttpServletRequest httpServletRequest) {
-        logger.warn("E404 caused by: {} / method: {}",
-                httpServletRequest.getRemoteHost(), httpServletRequest.getMethod());
+        String originalUri = "unknown";
+        if (httpServletRequest instanceof Request) {
+            originalUri = ((Request) httpServletRequest).getOriginalURI();
+        }
+        logger.info("E404 caused by: {}, method: {}, URI: {}",
+                httpServletRequest.getRemoteHost(), httpServletRequest.getMethod(), originalUri);
         return "E404";
     }
 
@@ -116,8 +121,12 @@ public class HomeController extends ControllerBase {
      */
     @RequestMapping(value = "/adoration/e500", method = {RequestMethod.GET, RequestMethod.POST})
     public String e500(HttpServletRequest httpServletRequest) {
-        logger.warn("E500 caused by: {} / method: {}",
-                httpServletRequest.getRemoteHost(), httpServletRequest.getMethod());
+        String originalUri = "unknown";
+        if (httpServletRequest instanceof Request) {
+            originalUri = ((Request) httpServletRequest).getOriginalURI();
+        }
+        logger.info("E500 caused by: {}, method: {}, URI: {}",
+                httpServletRequest.getRemoteHost(), httpServletRequest.getMethod(), originalUri);
         return "E404";
     }
 

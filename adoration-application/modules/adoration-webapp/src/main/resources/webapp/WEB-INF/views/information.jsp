@@ -52,29 +52,29 @@
 	</div>
 	<div class="centerwidediv centerDiv">
         <legend class="message-legend h4" id="dailyCoordinators">Napszak koordinátorok elérhetősége</legend>
-            <div class="centerwidediv centerDiv">
-                <div class="container centerDiv" style="padding:5px"><button id="message-button" type="button" class="btn btn-primary" data-toggle="modal" data-target="#sendMessageModal" onclick="msgClick()">Üzenet küldése az általános koordinátornak...</button></div>
-            </div>
-            <%@include file="../include/sendMessage.html" %>
+        <div class="centerwidediv centerDiv">
+            <div class="container centerDiv" style="padding:5px"><button id="message-button" type="button" class="btn btn-primary" data-toggle="modal" data-target="#sendMessageModal" onclick="msgClick()">Üzenet küldése az általános koordinátornak...</button></div>
+        </div>
+        <%@include file="../include/sendMessage.html" %>
 
         <div id="noLeadership">Sajnos nincs megjeleníthető adat.</div>
 		<p><table id="yesLeadership" role="presentation"><tbody></tbody></table></p>
 	</div>
 
-    <div class="form-horizontal" id="downloads">
-        <div class="centerwidediv centerDiv">
-            <legend class="message-legend h4">Letöltések</legend>
-            <div class="control-group" id="forDc">
-                <a id="translator-button" class="btn btn-primary" href="/adorationSecure/getExcelDailyInfo">Napszakok fedettségtáblázata</a>
-            </div><p/>
-            <div class="control-group" id="forHc">
-                <a id="translator-button" class="btn btn-primary" href="/adorationSecure/getExcelHourlyInfo">Órakoordinátor információ letöltése</a>
-            </div><p/>
-            <div class="control-group" id="forStdA">
-                <a id="translator-button" class="btn btn-primary" href="/adorationSecure/getExcelAdoratorInfo">Saját adatok letöltése</a>
-            </div>
-        </div>
+    <div class="centerwidediv centerDiv" id="downloads">
+        <legend class="message-legend h4">Letöltések</legend>
+        <a id="forDc" class="btn btn-primary" href="/adorationSecure/getExcelDailyInfo">Napszakok fedettségtáblázata</a>
+        <a id="forHc" class="btn btn-primary" href="/adorationSecure/getExcelHourlyInfo">Órakoordinátor információ letöltése</a>
+        <a id="forStdA" class="btn btn-primary" href="/adorationSecure/getExcelAdoratorInfo">Saját adatok letöltése</a>
+        <p/>
     </div>
+
+	<div class="centerwidediv centerDiv">
+        <legend class="message-legend h4" id="hourlyCoordinators">Óra koordinátorok elérhetősége</legend>
+        <div id="noSubLeadership">Sajnos nincs megjeleníthető adat.</div>
+		<p><table id="yesSubLeadership" role="presentation"><tbody></tbody></table></p>
+	</div>
+
     <%@include file="../include/commonAlert.html" %>
 </body>
 </html>

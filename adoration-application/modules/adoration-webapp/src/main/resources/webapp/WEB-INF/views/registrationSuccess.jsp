@@ -31,9 +31,7 @@
 			 <br /><br />
 			 Néhány másodperc múlva átirányítjuk Önt az Örökimádás
 		főoldalára. <br /> Amennyiben ez mégsem történne meg, kérjük folytassa
-		az Örökimádás oldalán <a href="/adoration/" target="_self">erre a
-			linkre kattintva,</a><br /> vagy térjen vissza a templom weboldalára
-		<a href="http://vacitemplom.piarista.hu/">itt</a>.
+		az Örökimádás oldalán <a href="/adoration/" target="_self">erre a linkre kattintva</a>.
 		</p>
 	</div>
 </div>
