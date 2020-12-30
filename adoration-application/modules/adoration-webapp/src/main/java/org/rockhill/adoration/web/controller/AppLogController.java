@@ -65,8 +65,7 @@ public class AppLogController extends ControllerBase {
      * @return the name of the applog jsp file
      */
     @GetMapping(value = "/adorationSecure/applog")
-    public String appLog(HttpSession httpSession,
-                         HttpServletResponse httpServletResponse) {
+    public String appLog(HttpSession httpSession, HttpServletResponse httpServletResponse) {
         if (!isAdoratorAdmin(currentUserProvider, httpSession)) {
             return REDIRECT_TO_HOME;
         }

@@ -83,6 +83,15 @@ public class HomeControllerTest {
     }
 
     @Test
+    public void siteMapXml() {
+        //given - no precondition
+        //when
+        String result = underTest.siteMapXml();
+        // then
+        assertEquals("redirect:/resources/sitemap.xml", result);
+    }
+
+    @Test
     public void securityText() {
         //given - no precondition
         //when
