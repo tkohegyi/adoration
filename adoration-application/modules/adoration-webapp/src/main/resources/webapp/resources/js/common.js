@@ -65,6 +65,9 @@ function getDayName(hourId) {
     return dayNames[x];
 }
 
+/**
+ * Get Day ID (0..6) from hourID.
+*/
 function getDay(hourId) {
     var x = Math.floor(hourId / 24);
     return x;

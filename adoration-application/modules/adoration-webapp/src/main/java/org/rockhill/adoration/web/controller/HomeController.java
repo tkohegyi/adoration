@@ -97,6 +97,16 @@ public class HomeController extends ControllerBase {
     }
 
     /**
+     * Serving "sitemap.txt" request.
+     *
+     * @return with the proper content
+     */
+    @GetMapping(value = "/sitemap.txt")
+    public String siteMapText() {
+        return "redirect:/resources/sitemap.txt";
+    }
+
+    /**
      * Grace handling of E404 (File not found) issues.
      *
      * @param httpServletRequest is the request

@@ -20,6 +20,44 @@ function getInfo() {
 }
 
 jQuery.extend( jQuery.fn.dataTableExt.oSort, {
+    "dayBased-pre": function ( a ) {
+        var i;
+        switch (a) {
+        case "vasárnap":
+            i = 0;
+            break;
+        case "hétfő":
+            i = 1;
+            break;
+        case "kedd":
+            i = 2;
+            break;
+        case "szerda":
+            i = 3;
+            break;
+        case "csütörtök":
+            i = 4;
+            break;
+        case "péntek":
+            i = 5;
+            break;
+        case "szombat":
+            i = 6;
+            break;
+        default:
+            i = 7; //which is impossible
+        }
+        return i;
+    },
+    "dayBased-desc": function ( a, b ) {
+        return ((a < b) ? -1 : ((a > b) ? 1 : 0));
+    },
+    "dayBased-asc": function ( a, b ) {
+        return ((a < b) ? 1 : ((a > b) ? -1 : 0));
+    }
+} );
+
+jQuery.extend( jQuery.fn.dataTableExt.oSort, {
     "hourBased-pre": function ( a ) {
         var str = " óra";
         var endPos = a.indexOf(str);
@@ -54,6 +92,7 @@ function setupLinkTable() {
             { "data": "publicComment" }
         ],
         "columnDefs": [
+            { type: 'dayBased', targets: 0 },
             { type: 'hourBased', targets: 1 },
             {
                 "className": "text-center",

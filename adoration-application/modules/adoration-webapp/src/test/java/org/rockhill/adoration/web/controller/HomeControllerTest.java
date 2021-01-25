@@ -95,6 +95,15 @@ public class HomeControllerTest {
     }
 
     @Test
+    public void siteMapText() {
+        //given - no precondition
+        //when
+        String result = underTest.siteMapText();
+        // then
+        assertEquals("redirect:/resources/sitemap.txt", result);
+    }
+
+    @Test
     public void securityText() {
         //given - no precondition
         //when
