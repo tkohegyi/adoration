@@ -177,7 +177,7 @@
                       <tbody id="timeContent"/>
                   </table>
               </form>
-              <div>&nbsp;<div/>
+              <div>&nbsp;</div>
               <form id="newTimeTable">
                 <input id="editHourPersonId" type="hidden" value="">
                 <input id="editHourId" type="hidden" value="">

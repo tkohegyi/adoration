@@ -28,7 +28,11 @@
     </div>
 
         <fieldset class="form-horizontal" id="actualCoverage">
-            <legend class="message-legend h4">Az órák aktuális fedettsége</legend>
+            <legend class="message-legend h4">Az órák aktuális fedettsége
+                <span style="float: right">
+                    <button id="uniqueRegister" style="display:none; vertical-align: super" type="button" class="btn btn-secondary btn-sm" onclick="registerForHour()">Jelentkezés egyedi alkalomra</button>
+                </span>
+            </legend>
             <div class="control-group">
                 <%@include file="../include/coverageBar.html" %>
                 <%@include file="../include/coverageBarVertical.html" %>

@@ -1,5 +1,4 @@
 User-agent: *
-Disallow: /adorationSecure/
 Disallow: /resources/json/
 Disallow: /resources/js/
 Disallow: /resources/css/

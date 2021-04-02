@@ -28,7 +28,8 @@
         <legend class="message-legend h4"d>Jelentkezés Örökimádásra</legend>
         <fieldset id="suggestLogin" class="form-horizontal">
             <div class="alert alert-danger" role="alert">
-                <legend class="message-legend" style="text-align:center; color:#E05050; font-family: Oswald">Ön nincs bejelentkezve, kérjük a regisztrálás előtt lépjen be <a id="gLoginAnchor" class="login" href="/adoration/loginGoogle"><img src="./../resources/img/google_login.png" alt="Google"/></a> vagy <a id="fLoginAnchor" class="login" href="/adoration/loginFacebook"><img src="./../resources/img/facebook_login.png" alt="Facebook"/></a> azonosítójával.</legend>
+                <legend class="message-legend" style="text-align:center; color:#E05050; font-family: Oswald">Ön nincs bejelentkezve, kérjük a regisztrálás előtt lépjen be <a id="gLoginAnchor" class="login" href="/adoration/loginGoogle"><img src="./../resources/img/google_login.png" alt="Google"/></a> vagy <a id="fLoginAnchor" class="login" href="/adoration/loginFacebook"><img src="./../resources/img/facebook_login.png" alt="Facebook"/></a> azonosítójával.
+                </legend>
             </div>
             <div>
                 Igen, válaszolok a hívásra! <br /> Jézussal akarok lenni, aki
