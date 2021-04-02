@@ -1,5 +1,6 @@
 package org.rockhill.adoration.database.business.helper;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -33,7 +34,7 @@ public class DateTimeConverter {
     }
 
     /**
-     * Gets the standard String format of a given date & time.
+     * Gets the standard String format of a given date.
      *
      * @param date is the give date & time
      * @return with its string format
@@ -55,5 +56,16 @@ public class DateTimeConverter {
      */
     public Date getDateNDaysAgo(final long n) {
         return new Date(System.currentTimeMillis() - (n * DAY_IN_MS));
+    }
+
+    /**
+     * Convert YYYY-MM-DD string to Date object.
+     */
+    public Date getDate(final String dateString) throws ParseException {
+        if (dateString == null) {
+            throw new ParseException("Null string received.", 0);
+        }
+        SimpleDateFormat formatter = new SimpleDateFormat(DATE_PATTERN);
+        return formatter.parse(dateString);
     }
 }

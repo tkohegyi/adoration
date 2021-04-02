@@ -2,7 +2,7 @@ $(document).ready(function() {
     $("#nav-home").addClass("active");
     setupMenu();
     setupCoverage();
-//    uniqueRegister();
+    uniqueRegister();
 });
 
 function uniqueRegister() {
