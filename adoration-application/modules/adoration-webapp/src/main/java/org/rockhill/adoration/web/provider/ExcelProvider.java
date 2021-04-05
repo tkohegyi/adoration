@@ -246,13 +246,13 @@ public class ExcelProvider {
         fillCellsWithHourlyCoordinators(sheet);
         //prepare data
         Map<Integer, Integer> posRecord = new HashMap<>();
-        for (int i = BusinessWithLink.MIN_HOUR; i <= BusinessWithLink.MAX_HOUR; i++) { //this is about priority only
+        for (int i = Link.MIN_HOUR; i <= Link.MAX_HOUR; i++) { //this is about priority only
             posRecord.put(i, 0);
         }
         //fill data
         int colBase = 4;
         int rowBase = 3;
-        for (int i = BusinessWithLink.MIN_HOUR; i <= BusinessWithLink.MAX_HOUR; i++) {
+        for (int i = Link.MIN_HOUR; i <= Link.MAX_HOUR; i++) {
             List<Link> links = businessWithLink.getPhysicalLinksOfHour(i);
             if (links != null && !links.isEmpty()) {
                 links.sort(Comparator.comparing(Link::getPriority));

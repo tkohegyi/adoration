@@ -44,7 +44,7 @@ public class OneTimeLinkHandler {
     /**
      * Collect obsolete one-time links and remove them.
      * A link is obsolete if:
-     *  has type: One-Time AND
+     *  has type: One-Time-On/Off AND
      *  EITHER has no meaningful admin comment which is: YYYY-MM-DD
      *  OR admin comment is correct, but in the past
      */
@@ -54,7 +54,8 @@ public class OneTimeLinkHandler {
         Date todayLimit = dateTimeConverter.getDateNDaysAgo(1);
         List<Link> linkList = businessWithLink.getLinkList();
         for (Link link: linkList) {
-            if (link.getType().equals(AdorationMethodTypes.ONETIME.getAdorationMethodValue())) {
+            if (link.getType().equals(AdorationMethodTypes.ONETIME_ON.getAdorationMethodValue())
+                    || link.getType().equals(AdorationMethodTypes.ONETIME_OFF.getAdorationMethodValue())) {
                 try {
                     Date targetDate = dateTimeConverter.getDate(link.getAdminComment());
                     if (todayLimit.after(targetDate)) {

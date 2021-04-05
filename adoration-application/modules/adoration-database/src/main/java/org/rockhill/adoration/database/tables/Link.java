@@ -1,6 +1,7 @@
 package org.rockhill.adoration.database.tables;
 
 import org.rockhill.adoration.database.business.helper.enums.AdorationMethodTypes;
+import org.rockhill.adoration.database.exception.DatabaseHandlingException;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,6 +15,8 @@ import javax.persistence.Table;
 @Table(name = "dbo.link")
 public class Link {
 
+    public static final Integer MIN_HOUR = 0;
+    public static final Integer MAX_HOUR = 167;
     private Long id;
     private Long personId;
     private Integer hourId;
@@ -55,6 +58,9 @@ public class Link {
     }
 
     public void setHourId(Integer hourId) {
+        if (hourId > MAX_HOUR || hourId < MIN_HOUR) {
+            throw new DatabaseHandlingException("Specified HourId is out of bounds.");
+        }
         this.hourId = hourId;
     }
 

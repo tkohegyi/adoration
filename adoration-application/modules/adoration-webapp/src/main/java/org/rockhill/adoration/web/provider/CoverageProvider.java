@@ -71,12 +71,16 @@ public class CoverageProvider {
         coverageInformationJson.visibleHours = new HashMap<>();
         coverageInformationJson.allHours = new HashMap<>();
         coverageInformationJson.onlineHours = new HashMap<>();
+        coverageInformationJson.missHours = new HashMap<>();
+        coverageInformationJson.oneTimeHours = new HashMap<>();
         coverageInformationJson.adorators = new HashMap<>();
         //ensure that we have initial info about all the hours
-        for (int i = 0; i <= BusinessWithLink.MAX_HOUR; i++) {
+        for (int i = Link.MIN_HOUR; i <= Link.MAX_HOUR; i++) {
             coverageInformationJson.visibleHours.put(i, 0);
             coverageInformationJson.allHours.put(i, new HashSet<>());
             coverageInformationJson.onlineHours.put(i, new HashSet<>());
+            coverageInformationJson.missHours.put(i, new HashSet<>());
+            coverageInformationJson.oneTimeHours.put(i, new HashSet<>());
         }
         fillCoverage(currentUserInformationJson, coverageInformationJson);
         return coverageInformationJson;
@@ -89,6 +93,8 @@ public class CoverageProvider {
         for (Link link : linkList) {
             handleLinkWithPhysicalAdorator(link, coverageInformationJson, canSeeAdorators);
             handleLinkWithOnlineAdorator(link, coverageInformationJson, canSeeAdorators);
+            handleLinkWithOneTimeMissingAdorator(link, coverageInformationJson);
+            handleLinkWithOneTimeHelpingAdorator(link, coverageInformationJson, canSeeAdorators);
             handleAdoratorOfLink(link, coverageInformationJson, canSeeAdorators, currentUserInformationJson.isPrivilegedUser());
         }
     }
@@ -108,39 +114,59 @@ public class CoverageProvider {
         Integer hourId = link.getHourId();
         if (AdorationMethodTypes.getTypeFromId(link.getType()) == AdorationMethodTypes.PHYSICAL) {
             //fill all hours first, if that is necessary
-            if (coverageInformationJson.allHours.containsKey(hourId)) {
-                //we already have this in the map
-                if (canSeeAdorators) {
-                    Set<Long> idSet = coverageInformationJson.allHours.get(hourId);
-                    idSet.add(link.getPersonId());
-                }
-            } else {
-                //we don't have this in our map, data error !
-                logger.warn("Unexpected row in Link table, with Id: {}", link.getId());
+            if (canSeeAdorators) {
+                Set<Long> idSet = coverageInformationJson.allHours.get(hourId);
+                idSet.add(link.getPersonId());
             }
             //fill visible hours
-            if ((link.getPriority() < BusinessWithLink.PRIORITY_BORDER) //for physical we ask priority 1,2 too
-                    && coverageInformationJson.visibleHours.containsKey(hourId)) {
-                //we already have this in the map
+            if (link.getPriority() < BusinessWithLink.PRIORITY_BORDER) { //for physical we ask priority 1,2 too
                 coverageInformationJson.visibleHours.put(hourId, coverageInformationJson.visibleHours.get(hourId) + 1);
-            } //else part already handled at allHours
+            }
+        }
+    }
+
+    private void handleLinkWithOneTimeMissingAdorator(Link link, CoverageInformationJson coverageInformationJson) {
+        Integer hourId = link.getHourId();
+        Set<Long> idSet;
+        if (AdorationMethodTypes.getTypeFromId(link.getType()) == AdorationMethodTypes.ONETIME_OFF) {
+            //adorator is missing for a single time
+            idSet = coverageInformationJson.allHours.get(hourId);
+            idSet.remove(link.getPersonId());
+            idSet = coverageInformationJson.missHours.get(hourId);
+            idSet.add(link.getPersonId());
+            Integer visibleHours = coverageInformationJson.visibleHours.get(hourId);
+            if (visibleHours > 0) { //yes, we remove this even if the person's priority is below 2
+                visibleHours--;
+                coverageInformationJson.visibleHours.put(hourId, visibleHours);
+            }
+        }
+    }
+
+    private void handleLinkWithOneTimeHelpingAdorator(Link link, CoverageInformationJson coverageInformationJson, boolean canSeeAdorators) {
+        Integer hourId = link.getHourId();
+        Set<Long> idSet;
+        if (AdorationMethodTypes.getTypeFromId(link.getType()) == AdorationMethodTypes.ONETIME_ON) {
+            //adorator is missing for a single time
+            if (canSeeAdorators) {
+                idSet = coverageInformationJson.allHours.get(hourId);
+                idSet.add(link.getPersonId());
+            }
+            idSet = coverageInformationJson.oneTimeHours.get(hourId);
+            idSet.add(link.getPersonId());
+            //support should reflect in visibleHours too
+            coverageInformationJson.visibleHours.put(hourId, coverageInformationJson.visibleHours.get(hourId) + 1);
         }
     }
 
     private void handleLinkWithOnlineAdorator(Link link, CoverageInformationJson coverageInformationJson, boolean canSeeAdorators) {
         Integer hourId = link.getHourId();
         if (AdorationMethodTypes.getTypeFromId(link.getType()) == AdorationMethodTypes.ONLINE) {
-            if (coverageInformationJson.onlineHours.containsKey(hourId)) {
-                //we already have this in the map
-                Set<Long> idSet = coverageInformationJson.onlineHours.get(hourId);
-                if (canSeeAdorators) {
-                    idSet.add(link.getPersonId()); //we add real ids only if user can see them
-                } else { //otherwise we use a fake id
-                    idSet.add(0L);
-                }
-            } else {
-                //we don't have this in our map, data error !
-                logger.warn("Unexpected row in Link table, with Id: {}", link.getId());
+            //we already have this in the map
+            Set<Long> idSet = coverageInformationJson.onlineHours.get(hourId);
+            if (canSeeAdorators) {
+                idSet.add(link.getPersonId()); //we add real ids only if user can see them
+            } else { //otherwise we use a fake id
+                idSet.add(0L);
             }
         }
     }

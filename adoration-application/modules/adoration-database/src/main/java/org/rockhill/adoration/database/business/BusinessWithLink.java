@@ -24,9 +24,7 @@ import java.util.List;
  */
 @Component
 public class BusinessWithLink extends BusinessBase {
-    public static final Integer MIN_HOUR = 0;
     public static final Integer HOUR_IN_A_DAY = 24;
-    public static final Integer MAX_HOUR = 167;
     public static final Integer MIN_DAY = 0;
     public static final Integer MAX_DAY = 6;
     public static final Integer PRIORITY_BORDER = 3; //below this is high priority
@@ -40,7 +38,7 @@ public class BusinessWithLink extends BusinessBase {
      * @return true if hour is a valid week hour, otherwise false
      */
     public boolean isValidHour(Integer hour) {
-        return hour != null && hour >= MIN_HOUR && hour <= MAX_HOUR;
+        return hour != null && hour >= Link.MIN_HOUR && hour <= Link.MAX_HOUR;
     }
 
     /**
@@ -277,10 +275,10 @@ public class BusinessWithLink extends BusinessBase {
      */
     public Integer getPreviousHour(@NotNull Integer hourId) {
         int previousHour;
-        if (hourId > MIN_HOUR) {
+        if (hourId > Link.MIN_HOUR) {
             previousHour = hourId - 1;
         } else {
-            previousHour = MAX_HOUR;
+            previousHour = Link.MAX_HOUR;
         }
         return previousHour;
     }
@@ -293,10 +291,10 @@ public class BusinessWithLink extends BusinessBase {
      */
     public Integer getNextHour(@NotNull Integer hourId) {
         int nextHour;
-        if (hourId < MAX_HOUR) {
+        if (hourId < Link.MAX_HOUR) {
             nextHour = hourId + 1;
         } else {
-            nextHour = MIN_HOUR;
+            nextHour = Link.MIN_HOUR;
         }
         return nextHour;
     }

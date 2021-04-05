@@ -6,13 +6,16 @@ import org.rockhill.adoration.database.exception.DatabaseHandlingException;
  * Enum of possible adoration method types, those are either "Physical" or "Online".
  * Physical means the adoration happens in the chapel.
  * Online means that adoration happens in front of a screen, where the screen shows the picture of the camera located inside the chapel.
- * There is a third, special type: "OneTime" which means valid for one time only, and after that it is deleted.
- * Of course, this is a special kind of "Physical" adoration.
+ * The last two is used when a person registers for a single hour (One-Time participation/On)
+ * and when a person declares that cannot participate (One-Time Miss/Off)
+ * These two later ones are temporary ones, and deleted by the system after the event.
+ * Of course, these are valid for "Physical" adoration only.
  */
 public enum AdorationMethodTypes {
     PHYSICAL("Physical", 0),
     ONLINE("Online", 1),
-    ONETIME("OneTime", 2);
+    ONETIME_ON("OneTime Participate", 2),
+    ONETIME_OFF("OneTime Miss", 3);
 
     private final String adorationMethodText;
     private final Integer adorationMethodValue;

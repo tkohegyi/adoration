@@ -72,7 +72,7 @@ public class InformationProvider {
             informationJson.hourInDayNow = hourId % BusinessWithLink.HOUR_IN_A_DAY;
             informationJson.hourInDayNext = (hourId + 1) % BusinessWithLink.HOUR_IN_A_DAY;
             informationJson.currentHourList = businessWithLink.getLinksOfHour(hourId);
-            informationJson.futureHourList = businessWithLink.getLinksOfHour((hourId + 1) % (BusinessWithLink.MAX_HOUR + 1));
+            informationJson.futureHourList = businessWithLink.getLinksOfHour((hourId + 1) % (Link.MAX_HOUR + 1));
             fillRelatedPersonIds(informationJson, currentUserInformationJson.isPrivilegedUser());
             //fill the day names first
             informationJson.dayNames = new HashMap<>();
