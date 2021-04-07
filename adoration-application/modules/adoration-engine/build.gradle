@@ -46,6 +46,7 @@ shadowJar {
             '*.gif',
             '*.png',
             '*.dtd',
+            '*.xcf',
             'build.properties',
             'about.html']
 

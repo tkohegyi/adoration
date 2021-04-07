@@ -144,3 +144,15 @@
   text-decoration: none;
   cursor: pointer;
 }
+
+.missingHour {
+  width: 13px;
+  vertical-align: unset;
+  object-fit: scale-down;
+}
+
+.oneTimeHour {
+  width: 19px;
+  vertical-align: inherit;
+  object-fit: scale-down;
+}

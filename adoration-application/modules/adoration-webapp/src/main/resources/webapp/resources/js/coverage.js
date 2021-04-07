@@ -35,6 +35,8 @@ function setupCoverage() {
         var coverageInfo = data.coverageInfo;
         var hours = coverageInfo.visibleHours; // hour is 0-167,  eg: 75: 0
         coverageAllHourInfo = coverageInfo.allHours; // hour is 0-167,  eg: 75: [327, 34, 8]
+        coverageMissingInfo = coverageInfo.missHours; //like allHours, but contains ppl those cannot participate
+        coverageOneTimeInfo = coverageInfo.oneTimeHours; //like allHours, but contains ppl those substitute somebody
         coverageOnlineHourInfo = coverageInfo.onlineHours; // hour is 0-167,  eg: 75: [327, 34, 8]
         coverageAdoratorInfo = coverageInfo.adorators; //id - info pairs
         coverageDayNames = coverageInfo.dayNames; // eg FRIDAY: "péntek"
@@ -103,6 +105,21 @@ function setupCoverage() {
                     item2.addClass("lowPriorityColumn");
                 }
             }
+
+            value = coverageMissingInfo[i];
+            if (value != undefined && value.length > 0) {
+                var htmlVal = "<img class=\"missingHour\" src=\"/resources/img/black-cross-th.png\"/>";
+                item.html(htmlVal);
+                item2.html(htmlVal);
+            }
+
+            value = coverageOneTimeInfo[i];
+            if (value != undefined && value.length > 0) {
+                var htmlVal = "<img class=\"oneTimeHour\" src=\"/resources/img/light-green-check-mark-th.png\"/>";
+                item.html(htmlVal);
+                item2.html(htmlVal);
+            }
+
             var onlineValue = coverageOnlineHourInfo[i];
             if (onlineValue.length > 0) {
                 if (item.hasClass("lowPriority")) { //only online is possible, so emphasize it
@@ -193,9 +210,21 @@ function coverageClick(h) {
         }
         if (counter > 1) { //this means we have something to show
             coverageModal.style.display="block";
-        } else {
-            $(".pop").hide(500);
-            $("#coveragePopup").empty();
+        } else { //no adorator for the hour so...
+            //if not logged in properly OR no adoration in the hour, then don't show anything
+            item = $("#hour-" + h);
+            if (!loggedInUserInfo.isRegisteredAdorator || item.hasClass("lowPriorityColumn")) {
+                //don't show anything
+                $(".pop").hide(500);
+                $("#coveragePopup").empty();
+            } else { //adorator user logged in and there should be adoration in the hour
+                //offer possibility of one-time adoration
+                r = $("<tr/>");
+                rContent = "<td><button type=\"button\" class=\"btn btn-success\" onclick=\"registerOneTimeAdoration(" + h + ")\">Jelentkezés egy alkalomra, erre az órára</button></td>";
+                r.append($(rContent));
+                $("#coveragePopup").append(r);
+                coverageModal.style.display="block";
+            }
         }
     }
 }
@@ -213,4 +242,33 @@ window.onclick = function(event) {
   if (event.target == coverageModal) {
     coverageModal.style.display = "none";
   }
+}
+
+function registerOneTimeAdoration(h) {
+  coverageModal.style.display = "none"; //hide the modal first
+  hour = getDayName(h) + "/" + getHourName(h) + " óra";
+  showConfirm("Megerősítés kérdés", "Biztosan jelentkezni kíván a legközelebbi alkalomra: " + hour + "?", function () { registerOneTimeConfirmOk(h) });
+}
+
+function registerOneTimeConfirmOk(h) {
+    var req = {
+        entityId : h,
+    };
+    var token = $("meta[name='_csrf']").attr("content");
+    var header = $("meta[name='_csrf_header']").attr("content");
+    $.ajax({
+        url : '/adorationSecure/registerOneTimeAdoration',
+        type : 'POST',
+        async: false,
+        contentType: 'application/json',
+        data: JSON.stringify(req),
+        dataType: 'json',
+        success : reloadLocation,
+        beforeSend : function(request) {
+            request.setRequestHeader(header, token);
+        },
+    }).fail( function(xhr, status) {
+        var obj = JSON.parse(xhr.responseText);
+        showAlert("Hiba történt!", obj.entityCreate);
+    });
 }

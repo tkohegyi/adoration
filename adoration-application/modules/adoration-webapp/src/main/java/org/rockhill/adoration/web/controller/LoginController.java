@@ -7,6 +7,7 @@ import org.rockhill.adoration.web.service.GoogleOauth2Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -122,12 +123,12 @@ public class LoginController {
             HttpServletRequest httpServletRequest
     ) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if ((code.length() > 0) && (state.length() == 0) && (auth == null)) {  //if GOOGLE login can be performed and it is not yet authenticated for Ador App
+        if ((code.length() > 0) && (state.length() == 0) && ((auth == null) || auth instanceof AnonymousAuthenticationToken)) {  //if GOOGLE login can be performed and it is not yet authenticated for Ador App
             String nextPage;
             nextPage = authenticateWithGoogle(httpSession, httpServletResponse, code);
             return nextPage;
         }
-        if ((code.length() > 0) && (state.length() > 0) && (auth == null)) {  //if FACEBOOK login can be performed and it is not yet authenticated for Ador App
+        if ((code.length() > 0) && (state.length() > 0) && ((auth == null) || auth instanceof AnonymousAuthenticationToken)) {  //if FACEBOOK login can be performed and it is not yet authenticated for Ador App
             String nextPage;
             nextPage = authenticateWithFacebook(httpSession, httpServletResponse, code);
             return nextPage;

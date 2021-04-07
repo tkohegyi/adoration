@@ -8,9 +8,11 @@ import java.util.Date;
  * Supporter class to convert special date values to String values.
  */
 public class DateTimeConverter {
+    public static final long HOUR_IN_MS = 1000L * 60 * 60;
+
     private static final String DATETIME_PATTERN = "yyyy-MM-dd HH:mm:ss.SSS";
     private static final String DATE_PATTERN = "yyyy-MM-dd";
-    private static final long DAY_IN_MS = 1000L * 60 * 60 * 24;
+    private static final long DAY_IN_MS = HOUR_IN_MS * 24;
 
     /**
      * Gets actual date & time as standard String.

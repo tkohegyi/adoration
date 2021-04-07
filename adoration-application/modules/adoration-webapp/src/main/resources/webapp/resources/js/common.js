@@ -157,3 +157,7 @@ function hideConfirmOk() {
         confirmAfterCloseFunctionOk();
     }
 }
+
+function reloadLocation() {
+    location.reload();
+}

@@ -153,8 +153,8 @@ public class CoverageProvider {
             }
             idSet = coverageInformationJson.oneTimeHours.get(hourId);
             idSet.add(link.getPersonId());
-            //support should reflect in visibleHours too
-            coverageInformationJson.visibleHours.put(hourId, coverageInformationJson.visibleHours.get(hourId) + 1);
+            //support should not reflect in visibleHours
+            //coverageInformationJson.visibleHours.put(hourId, coverageInformationJson.visibleHours.get(hourId) + 1);
         }
     }
 

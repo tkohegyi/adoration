@@ -119,6 +119,8 @@ function setupLinkTable() {
                     switch (z) {
                     case 0: z = 'Kápolnában'; break;
                     case 1: z = 'Online'; break;
+                    case 2: z = 'Kápolnában - egyszer'; break;
+                    case 3: z = 'Kápolnából kimaradás'; break;
                     default: z = '???';
                     }
                     return z;

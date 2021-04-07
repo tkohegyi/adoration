@@ -1,13 +1,23 @@
 package org.rockhill.adoration.web.controller;
 
+import com.google.gson.Gson;
+import org.rockhill.adoration.exception.SystemException;
 import org.rockhill.adoration.web.controller.helper.ControllerBase;
+import org.rockhill.adoration.web.json.CurrentUserInformationJson;
+import org.rockhill.adoration.web.json.DeleteEntityJson;
 import org.rockhill.adoration.web.json.TableDataInformationJson;
 import org.rockhill.adoration.web.provider.CurrentUserProvider;
 import org.rockhill.adoration.web.provider.LinkProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -19,6 +29,7 @@ import java.util.Optional;
  */
 @Controller
 public class LinksController extends ControllerBase {
+    private final Logger logger = LoggerFactory.getLogger(LinksController.class);
 
     @Autowired
     private CurrentUserProvider currentUserProvider;
@@ -89,6 +100,47 @@ public class LinksController extends ControllerBase {
             content = new TableDataInformationJson(person);
         }
         return content;
+    }
+
+    /**
+     * Add a One-Time Adoration Link.
+     *
+     * @param session is the actual HTTP session
+     * @return list of hits as a JSON response
+     */
+    @ResponseBody
+    @PostMapping(value = "/adorationSecure/registerOneTimeAdoration")
+    public ResponseEntity<String> registerOneTimeAdoration(@RequestBody final String body, final HttpSession session) {
+        String resultString;
+        ResponseEntity<String> result;
+        try {
+            CurrentUserInformationJson currentUserInformationJson = currentUserProvider.getUserInformation(session);
+            //check authorization
+            if (!currentUserInformationJson.isRegisteredAdorator) {
+                result = buildUnauthorizedActionBodyResult();
+            } else {
+                //authorization checked, ok
+                Gson g = new Gson();
+                DeleteEntityJson p = g.fromJson(body, DeleteEntityJson.class);
+                Long updatedObjectId = linkProvider.registerOneTimeAdoration(p, currentUserInformationJson);
+                if (updatedObjectId != null) {
+                    resultString = "OK";
+                    result = buildResponseBodyResult(JSON_RESPONSE_CREATE, resultString, HttpStatus.CREATED);
+                } else {
+                    resultString = "Cannot register one-time adoration, please check and retry.";
+                    result = buildResponseBodyResult(JSON_RESPONSE_CREATE, resultString, HttpStatus.BAD_REQUEST);
+                    logger.info("Cannot register one-time adoration - data issue.");
+                }
+            }
+        } catch (SystemException e) {
+            resultString = e.getMessage();
+            result = buildResponseBodyResult(JSON_RESPONSE_CREATE, resultString, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            resultString = "Cannot register one-time adoration, pls contact to maintainers.";
+            result = buildResponseBodyResult(JSON_RESPONSE_CREATE, resultString, HttpStatus.BAD_REQUEST);
+            logger.warn("Error happened at register one-time adoration call", e);
+        }
+        return result;
     }
 
 }

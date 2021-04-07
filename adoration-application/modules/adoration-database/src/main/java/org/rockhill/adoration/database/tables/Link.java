@@ -58,7 +58,7 @@ public class Link {
     }
 
     public void setHourId(Integer hourId) {
-        if (hourId > MAX_HOUR || hourId < MIN_HOUR) {
+        if (hourId == null || hourId > MAX_HOUR || hourId < MIN_HOUR) {
             throw new DatabaseHandlingException("Specified HourId is out of bounds.");
         }
         this.hourId = hourId;

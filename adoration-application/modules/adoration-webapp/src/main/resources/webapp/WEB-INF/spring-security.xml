@@ -5,7 +5,7 @@
 	http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
     http://www.springframework.org/schema/security/oauth2 http://www.springframework.org/schema/security/spring-security-oauth2.xsd">
 
-    <http pattern="/adoration/**" security="none"/>
+    <!-- http pattern="/adoration/**" security="none"/ -->
     <http pattern="/" security="none"/>
     <http pattern="/resources/**" security="none"/>
 

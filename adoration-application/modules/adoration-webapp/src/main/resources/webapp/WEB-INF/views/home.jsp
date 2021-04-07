@@ -2,15 +2,18 @@
 <!DOCTYPE html>
 <html lang="hu">
 <head>
+<meta charset="UTF-8">
+<meta name="_csrf" content="${_csrf.token}"/>
+<meta name="_csrf_header" content="${_csrf.headerName}"/>
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
 <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0, user-scalable=yes">
-<meta name="HandheldFriendly" content="true">
-<meta name="apple-mobile-web-app-capable" content="YES">
-<meta name="author" content="Tamas Kohegyi">
-<meta name="Description" content="Perpetual adoration in Hungary, Vác / Örökimádás a váci Szent Anna Piarista Templomban">
-<meta name="Keywords" content="örökimádás,vác,perpetual,adoration">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0, user-scalable=yes" />
+<meta name="HandheldFriendly" content="true" />
+<meta name="apple-mobile-web-app-capable" content="YES" />
+<meta name="author" content="Tamas Kohegyi" />
+<meta name="Description" content="Perpetual adoration in Hungary, Vác / Örökimádás a váci Szent Anna Piarista Templomban" />
+<meta name="Keywords" content="örökimádás,vác,perpetual,adoration" />
 <script src="/resources/js/external/jquery-3.4.1.js"></script>
 <script src="/resources/js/external/bootstrap-4.3.1.min.js"></script>
 <title>Örökimádás - Vác</title>
@@ -22,7 +25,7 @@
 <body class="body">
   <div class="container">
     <%@include file="../include/navbar.html" %>
-    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
+    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 
     <div class="centerwidediv" style="text-align: center">
         <br />
@@ -128,6 +131,9 @@
     <a href="http://vacitemplom.piarista.hu/">Urgás</a> a Váci Szent Anna Piarista Templom oldalára.
 
   </div>
+
+  <%@include file="../include/commonAlert.html" %>
+  <%@include file="../include/commonConfirm.html" %>
 
 </body>
 <script src="/resources/js/common.js"></script>

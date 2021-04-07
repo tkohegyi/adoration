@@ -16,6 +16,7 @@ import javax.servlet.http.HttpSession;
  */
 public class ControllerBase {
 
+    public static final String JSON_RESPONSE_CREATE = "entityCreate";
     public static final String JSON_RESPONSE_UPDATE = "entityUpdate";
     public static final String JSON_RESPONSE_DELETE = "entityDelete";
     protected static final String REDIRECT_TO_HOME = "redirect:/adoration/";
