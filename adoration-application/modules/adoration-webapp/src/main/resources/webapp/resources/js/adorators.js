@@ -447,7 +447,7 @@ function reBuildTimeModal(personId) {
             //var info2 = data.data.others;
             var info3 = data.data.dayNames;
             for (var i = 0; i < hourInfo.length; i++) {
-              var r = $("<tr onclick=\"clickHourEdit(" + hourInfo[i].hourId + ")\" />");
+              var r = $("<tr onclick=\"clickHourEdit(" + hourInfo[i].id + ")\" />");
               //day
               var x = Math.floor(hourInfo[i].hourId / 24);
               var d = $("<td>" + info3[x] + "</td>");r.append(d);
@@ -456,15 +456,23 @@ function reBuildTimeModal(personId) {
               d = $("<td>" + x + "</td>");r.append(d);
               //priority
               d = $("<td>" + hourInfo[i].priority + "</td>");r.append(d);
-              //type/online
+              //type
               var z;
-              if (hourInfo[i].type > 0) {
-                  imgSrc = "/resources/img/dark-green-check-mark-th.png"
-                  z = "<td><img alt=\"Igen\" src=\"" + imgSrc + "\" height=\"20\" width=\"20\" /></td>";
-              } else {
-                  imgSrc = "/resources/img/orange-cross-th.png";
-                  z = "<td><img alt=\"Nem\" src=\"" + imgSrc + "\" height=\"20\" width=\"20\" /></td>";
-              }
+                switch (hourInfo[i].type) {
+                default:
+                case 0: //ph
+                    z = "<td>Kápolna</td>";
+                    break;
+                case 1: //online
+                    z = "<td>Online</td>";
+                    break;
+                case 2: //one time on
+                    z = "<td>Egyszeri helyettesítés</td>";
+                    break;
+                case 3: //one time off
+                    z = "<td>Egyszeri lemondás</td>";
+                    break;
+                }
               d = $(z);r.append(d);
               //other adorators
               d = $("<td>" + "TBD..." + "</td>");r.append(d);
@@ -513,16 +521,15 @@ function saveNewHour() {
     b.priority = $("#newPriority").val();
     b.adminComment = $("#newAdminComment").val();
     b.publicComment = $("#newPublicComment").val();
-    if ($("#newOnline").prop("checked").toString() == "true") {
-        b.type = 1;
-    } else {
-        b.type = 0;
-    }
+    b.type = parseInt($("#newType").find(":selected").val());
     // b is ready
     //validation
     if (b.priority == "") {
         bad = 1;
         eStr = "Prioritás megadása kötelező!";
+    }
+    if (b.type > 1) {
+        b.priority = 1; //forced priority in case of one-time event
     }
     //validation done (cannot validate more at client level)
     if (bad == 1) {
@@ -560,14 +567,14 @@ function requestLinkComplete() {
     processLinkEntityUpdated();
 }
 
-function clickHourEdit(hourId) {
+function clickHourEdit(id) {
     //identify the hour
     for (var i = 0; i < hourInfo.length; i++) {
-        if (hourInfo[i].hourId == hourId) {
+        if (hourInfo[i].id == id) {
             break;
         }
     }
-    if (hourInfo[i].hourId == hourId) { //if we really found it
+    if (hourInfo[i].id == id) { //if we really found it
         var x = Math.floor(hourInfo[i].hourId / 24) * 24;
         $("#newDay option[value=" + x + "]").prop('selected', 'selected').change();
         x = hourInfo[i].hourId % 24;
@@ -575,11 +582,7 @@ function clickHourEdit(hourId) {
         $("#newPriority").val(hourInfo[i].priority);
         $("#newAdminComment").val(hourInfo[i].adminComment);
         $("#newPublicComment").val(hourInfo[i].publicComment);
-        if (hourInfo[i].type > 0) {
-            $("#newOnline").prop("checked", true);
-        } else {
-            $("#newOnline").removeProp("checked");
-        }
+        $("#newType option[value=" + hourInfo[i].type + "]").prop('selected', 'selected').change();
         showNewPartOfModal();
         $("#editHourId").val(hourInfo[i].id);
         $('#deleteHourButton').show();

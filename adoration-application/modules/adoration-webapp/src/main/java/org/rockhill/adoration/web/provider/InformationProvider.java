@@ -4,6 +4,7 @@ import org.rockhill.adoration.database.business.BusinessWithLink;
 import org.rockhill.adoration.database.business.BusinessWithPerson;
 import org.rockhill.adoration.database.business.BusinessWithSocial;
 import org.rockhill.adoration.database.business.BusinessWithTranslator;
+import org.rockhill.adoration.database.business.helper.enums.AdorationMethodTypes;
 import org.rockhill.adoration.database.business.helper.enums.AdoratorStatusTypes;
 import org.rockhill.adoration.database.business.helper.enums.SocialStatusTypes;
 import org.rockhill.adoration.database.business.helper.enums.TranslatorDayNames;
@@ -66,6 +67,12 @@ public class InformationProvider {
             informationJson.status = AdoratorStatusTypes.getTranslatedString(person.getAdorationStatus());
             informationJson.id = person.getId().toString();
             informationJson.linkList = businessWithLink.getLinksOfPerson(person);
+            informationJson.hoursCancelled = new HashSet<>();
+            for (Link link: informationJson.linkList) {
+                if (link.getType() == AdorationMethodTypes.ONETIME_OFF.getAdorationMethodValue()) {
+                    informationJson.hoursCancelled.add(link.getHourId());
+                }
+            }
             informationJson.leadership = coordinatorProvider.getLeadership(currentUserInformationJson);
             Calendar cal = Calendar.getInstance();
             int hourId = (cal.get(Calendar.DAY_OF_WEEK) - 1) * BusinessWithLink.HOUR_IN_A_DAY + cal.get(Calendar.HOUR_OF_DAY);  // use sun as 0 day

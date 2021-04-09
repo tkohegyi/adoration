@@ -168,7 +168,7 @@
                               <th scope="col">Nap</th>
                               <th scope="col">Óra</th>
                               <th scope="col">Prioritás</th>
-                              <th scope="col">Online</th>
+                              <th scope="col">Mód</th>
                               <th scope="col">Más adorálók</th>
                               <th scope="col">Admin megjegyzés</th>
                               <th scope="col">Publikus megjegyzés</th>
@@ -226,7 +226,13 @@
                                 <option value="22">22</option>
                                 <option value="23">23</option>
                               </select></td></tr>
-                          <tr><td>Online</td><td><input type="checkbox" id="newOnline" value=""></td></tr>
+                          <tr><td>Mód</td><td>
+                              <select id="newType">
+                                  <option value="0">Kápolnában</option>
+                                  <option value="1">Online</option>
+                                  <option value="2">Egyszeri helyettesítés</option>
+                                  <option value="3">Egyszeri lemondás</option>
+                              </select></td></tr>
                           <tr><td>Prioritás (1..)</td><td>
                             <input type="number" id="newPriority" min="1" max="25">
                           </td></tr>

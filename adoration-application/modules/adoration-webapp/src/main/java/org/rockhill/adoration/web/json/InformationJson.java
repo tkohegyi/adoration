@@ -5,6 +5,7 @@ import org.rockhill.adoration.helper.JsonField;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Json structure that is used to provide information for a registered adorator.
@@ -20,6 +21,8 @@ public class InformationJson {
     public String id;   //id of the adorator
     @JsonField
     public List<Link> linkList; //committed hours of the adorator
+    @JsonField
+    public Set<Integer> hoursCancelled; //committed hours those are one-time cancelled
     @JsonField
     public List<CoordinatorJson> leadership; //main coordinators
     @JsonField

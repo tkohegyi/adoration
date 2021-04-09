@@ -33,9 +33,9 @@ function getInformation() {
             //has offered hours
             $("#noOfferedHours").hide();
             $("#yesOfferedHours").show();
-            tr = $("<tr class=\"tableHead\"><th class=\"infoTable\" colspan=\"2\">Vállalt órám/óráim:</th><th class=\"infoTable\" colspan=\"3\">Órafelelős:</th></tr>");
+            tr = $("<tr class=\"tableHead\"><th class=\"infoTable\" colspan=\"3\">Vállalt órám/óráim:</th><th class=\"infoTable\" colspan=\"3\">Órafelelős:</th></tr>");
             $("#yesOfferedHours").append(tr);
-            tr = $("<tr class=\"tableHead\"><th class=\"infoTable\">Nap:</th><th class=\"infoTable\">Óra:</th><th class=\"infoTable\">Név:</th><th class=\"infoTable\">Telefon:</th><th class=\"infoTable\">E-mail:</th></tr>");
+            tr = $("<tr class=\"tableHead\"><th class=\"infoTable\">Nap:</th><th colspan=\"2\" class=\"infoTable\">Óra:</th><th class=\"infoTable\">Név:</th><th class=\"infoTable\">Telefon:</th><th class=\"infoTable\">E-mail:</th></tr>");
             $("#yesOfferedHours").append(tr);
             for (i = 0; i < information.linkList.length; i++) {
                 offeredHour = information.linkList[i];
@@ -60,9 +60,29 @@ function getInformation() {
                         }
                     }
                 } // else N/A, already set
+                var hourTd;
+                switch (offeredHour.type) {
+                default:
+                case 0: //ph
+                    if (information.hoursCancelled.indexOf(offeredHour.hourId) >= 0) { //if cancelled
+                        hourTd = "<td class=\"infoTable\">Kápolnában - legközelebbi alkalom lemondva.</td>";
+                    } else {
+                        hourTd = "<td class=\"infoTable\">Kápolnában <button type=\"button\" class=\"btn btn-outline-danger btn-sm\" onclick=\"registerOneTimeMiss(" + offeredHour.hourId + ")\">Következő alkalom lemondása</button></td>";
+                    }
+                    break;
+                case 1: //online
+                    hourTd = "<td class=\"infoTable\">Online óra</td>";
+                    break;
+                case 2: //one time on
+                    hourTd = "<td class=\"infoTable\">Egyszer vállalt óra <button type=\"button\" class=\"btn btn-outline-danger btn-sm\" onclick=\"unRegisterOneTimeAdoration(" + offeredHour.id + ")\">Lemondás</button></td>";
+                    break;
+                case 3: //one time off
+                    hourTd = "<td class=\"infoTable\">Az óra egyszer lemondva <button type=\"button\" class=\"btn btn-outline-danger btn-sm\" onclick=\"unRegisterOneTimeMiss(" + offeredHour.id + ")\">Lemondás viszavonása</button></td>";
+                    break;
+                }
                 tr.append($("<td class=\"infoTable\">"
                     + dayName + "</td><td class=\"infoTable\">"
-                    + hourName + "</td><td class=\"infoTable\">"
+                    + hourName + "</td>" + hourTd + "<td class=\"infoTable\">"
                     + coordinatorName + "</td><td class=\"infoTable\">"
                     + phone + "</td><td class=\"infoTable\">"
                     + email +"</td>"));
@@ -221,4 +241,86 @@ function getInformation() {
             }
             $("#forStdA").show();
     }
+}
+
+function registerOneTimeMiss(h) {
+  hour = getDayName(h) + "/" + getHourName(h) + " óra";
+  showConfirm("Megerősítés kérdés", "Biztosan nem tud részt venni a legközelebbi alkalmon: " + hour + "?", function () { registerOneMissConfirmOk(h) });
+}
+
+function registerOneMissConfirmOk(h) {
+    var req = {
+        entityId : h,
+    };
+    var token = $("meta[name='_csrf']").attr("content");
+    var header = $("meta[name='_csrf_header']").attr("content");
+    $.ajax({
+        url : '/adorationSecure/registerOneTimeMiss',
+        type : 'POST',
+        async: false,
+        contentType: 'application/json',
+        data: JSON.stringify(req),
+        dataType: 'json',
+        success : reloadLocation,
+        beforeSend : function(request) {
+            request.setRequestHeader(header, token);
+        },
+    }).fail( function(xhr, status) {
+        var obj = JSON.parse(xhr.responseText);
+        showAlert("Hiba történt!", obj.entityCreate);
+    });
+}
+
+function unRegisterOneTimeAdoration(id) {
+  showConfirm("Megerősítés kérdés", "Lemondja a jelentkezést?", function () { unRegisterOneTimeAdorationConfirmOk(id) });
+}
+
+function unRegisterOneTimeAdorationConfirmOk(h) {
+    var req = {
+        entityId : h,
+    };
+    var token = $("meta[name='_csrf']").attr("content");
+    var header = $("meta[name='_csrf_header']").attr("content");
+    $.ajax({
+        url : '/adorationSecure/unRegisterOneTimeAdoration',
+        type : 'POST',
+        async: false,
+        contentType: 'application/json',
+        data: JSON.stringify(req),
+        dataType: 'json',
+        success : reloadLocation,
+        beforeSend : function(request) {
+            request.setRequestHeader(header, token);
+        },
+    }).fail( function(xhr, status) {
+        var obj = JSON.parse(xhr.responseText);
+        showAlert("Hiba történt!", obj.entityCreate);
+    });
+}
+
+function unRegisterOneTimeMiss(id) {
+  showConfirm("Megerősítés kérdés", "Mégis rész tud venni a következő alkalmon?", function () { unRegisterOneTimeMissConfirmOk(id) });
+}
+
+function unRegisterOneTimeMissConfirmOk(h) {
+    var req = {
+        entityId : h,
+    };
+    var token = $("meta[name='_csrf']").attr("content");
+    var header = $("meta[name='_csrf_header']").attr("content");
+    $.ajax({
+        url : '/adorationSecure/unRegisterOneTimeMiss',
+        type : 'POST',
+        async: false,
+        contentType: 'application/json',
+        data: JSON.stringify(req),
+        dataType: 'json',
+        success : reloadLocation,
+        beforeSend : function(request) {
+            request.setRequestHeader(header, token);
+        },
+    }).fail( function(xhr, status) {
+        var obj = JSON.parse(xhr.responseText);
+        showAlert("Hiba történt!", obj.entityCreate);
+    });
 }

@@ -154,8 +154,15 @@ function buildHours(personId) {
                 var z = "<div>" + getDayNameLocalized(hourId, dayNames) + ", " + getHourName(hourId) + " óra";
                 if (hourInfo[i].type == 0) {
                     z = z + ", Kápolnában"
-                } else {
+                }
+                if (hourInfo[i].type == 1) {
                     z = z + ", Online"
+                }
+                if (hourInfo[i].type == 2) {
+                    z = z + ", Egyszeri alkalom"
+                }
+                if (hourInfo[i].type == 3) {
+                    z = z + ", Következő alkalom lemondva"
                 }
                 if (hourInfo[i].publicComment.length > 0) {
                     z = z + ", Megjegyzés:" + hourInfo[i].publicComment;

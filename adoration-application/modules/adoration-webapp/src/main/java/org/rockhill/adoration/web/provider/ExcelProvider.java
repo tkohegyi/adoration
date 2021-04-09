@@ -451,6 +451,9 @@ public class ExcelProvider {
         List<Link> links = businessWithLink.getLinksOfPerson(p);
         if (links != null) {  //have assigned hours to be filled
             for (Link l : links) {
+                if (l.getType() >= 2) { //so if one-time hour
+                    continue;
+                }
                 Integer hourId = l.getHourId();
                 int day = hourId / BusinessWithLink.HOUR_IN_A_DAY;
                 Integer hour = hourId - day * BusinessWithLink.HOUR_IN_A_DAY;
@@ -481,7 +484,7 @@ public class ExcelProvider {
     }
 
     private void fillNeighbourHour(Sheet sheet, Integer previousHour, int baseRow, int baseCol) {
-        List<Link> previousLinks = businessWithLink.getLinksOfHour(previousHour);
+        List<Link> previousLinks = businessWithLink.getPhysicalLinksOfHour(previousHour);
         if (previousLinks != null && !previousLinks.isEmpty()) {
             Link aPreviousLink = previousLinks.get(0);
             Person aPreviousPerson = businessWithPerson.getPersonById(aPreviousLink.getPersonId());

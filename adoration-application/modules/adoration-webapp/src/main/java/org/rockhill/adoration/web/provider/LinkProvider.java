@@ -13,6 +13,7 @@ import org.rockhill.adoration.database.tables.Person;
 import org.rockhill.adoration.web.json.CurrentUserInformationJson;
 import org.rockhill.adoration.web.json.DeleteEntityJson;
 import org.rockhill.adoration.web.json.LinkJson;
+import org.rockhill.adoration.web.json.PersonCommitmentJson;
 import org.rockhill.adoration.web.json.PersonJson;
 import org.rockhill.adoration.web.provider.helper.ProviderBase;
 import org.slf4j.Logger;
@@ -141,6 +142,35 @@ public class LinkProvider extends ProviderBase {
         return coverageProvider.updatePersonCommitment(link, currentUserInformationJson);
     }
 
+    /**
+     * Register a new Link to cover one-time miss.
+     *
+     * @param p is the hour to be missed
+     * @param currentUserInformationJson is the person who are registering the hour
+     * @return with id of the created Link or null in case of error
+     */
+    public Long registerOneTimeMiss(DeleteEntityJson p, CurrentUserInformationJson currentUserInformationJson) {
+        Link link = new Link();
+        Integer hourId;
+        try {
+            hourId = Integer.parseInt(p.entityId);
+        } catch (NumberFormatException e) {
+            throw new DatabaseHandlingException("Specified Hour is invalid.");
+        }
+        //check that the person has hour to miss :)
+        if (!currentUserInformationJson.isAdoratorAdmin && !coverageProvider.isPersonCommittedToHour(currentUserInformationJson.personId, hourId)) {
+            //well, nothing to miss
+            throw new DatabaseHandlingException("Specified Hour is not owned.");
+        }
+        link.setId(0L); //enforced new link creation
+        link.setHourId(hourId);
+        link.setPriority(1);
+        link.setPersonId(currentUserInformationJson.personId);
+        link.setType(AdorationMethodTypes.ONETIME_OFF.getAdorationMethodValue());
+        link.setAdminComment(calculateTargetDate(hourId));
+        return coverageProvider.updatePersonCommitment(link, currentUserInformationJson);
+    }
+
     private String calculateTargetDate(Integer hourId) {
         //figure out closest date of specified hour
         Calendar cal = Calendar.getInstance();
@@ -155,4 +185,11 @@ public class LinkProvider extends ProviderBase {
         return dateTimeConverter.getDateAsString(targetDate);
     }
 
+    public Long unRegisterOneTimeAdoration(DeleteEntityJson p, CurrentUserInformationJson currentUserInformationJson) {
+        return coverageProvider.deletePersonCommitment(p, currentUserInformationJson);
+    }
+
+    public Long unRegisterOneTimeMiss(DeleteEntityJson p, CurrentUserInformationJson currentUserInformationJson) {
+        return coverageProvider.deletePersonCommitment(p, currentUserInformationJson);
+    }
 }

@@ -348,4 +348,15 @@ public class CoverageProvider {
         id = businessWithLink.deleteLink(l, auditTrail);
         return id;
     }
+
+    public boolean isPersonCommittedToHour(Long personId, Integer hourId) {
+        List<Link> linkList = businessWithLink.getPhysicalLinksOfHour(hourId);
+        //iterate through owned hours of the person
+        for (Link link : linkList) {
+            if (link.getPersonId().equals(personId)) {
+                return true; //we found the hour
+            }
+        }
+        return false;
+    }
 }

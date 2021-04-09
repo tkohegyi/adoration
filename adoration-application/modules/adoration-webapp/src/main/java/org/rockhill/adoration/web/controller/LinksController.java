@@ -143,4 +143,127 @@ public class LinksController extends ControllerBase {
         return result;
     }
 
+    /**
+     * Add a One-Time Missing Link.
+     *
+     * @param session is the actual HTTP session
+     * @return list of hits as a JSON response
+     */
+    @ResponseBody
+    @PostMapping(value = "/adorationSecure/registerOneTimeMiss")
+    public ResponseEntity<String> registerOneTimeMiss(@RequestBody final String body, final HttpSession session) {
+        String resultString;
+        ResponseEntity<String> result;
+        try {
+            CurrentUserInformationJson currentUserInformationJson = currentUserProvider.getUserInformation(session);
+            //check authorization
+            if (!currentUserInformationJson.isRegisteredAdorator) {
+                result = buildUnauthorizedActionBodyResult();
+            } else {
+                //authorization checked, ok
+                Gson g = new Gson();
+                DeleteEntityJson p = g.fromJson(body, DeleteEntityJson.class);
+                Long updatedObjectId = linkProvider.registerOneTimeMiss(p, currentUserInformationJson);
+                if (updatedObjectId != null) {
+                    resultString = "OK";
+                    result = buildResponseBodyResult(JSON_RESPONSE_CREATE, resultString, HttpStatus.CREATED);
+                } else {
+                    resultString = "Cannot register one-time miss, please check and retry.";
+                    result = buildResponseBodyResult(JSON_RESPONSE_CREATE, resultString, HttpStatus.BAD_REQUEST);
+                    logger.info("Cannot register one-time miss - data issue.");
+                }
+            }
+        } catch (SystemException e) {
+            resultString = e.getMessage();
+            result = buildResponseBodyResult(JSON_RESPONSE_CREATE, resultString, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            resultString = "Cannot register one-time miss, pls contact to maintainers.";
+            result = buildResponseBodyResult(JSON_RESPONSE_CREATE, resultString, HttpStatus.BAD_REQUEST);
+            logger.warn("Error happened at register one-time miss call", e);
+        }
+        return result;
+    }
+
+    /**
+     * Remove a One-Time Adoration Link.
+     *
+     * @param session is the actual HTTP session
+     * @return list of hits as a JSON response
+     */
+    @ResponseBody
+    @PostMapping(value = "/adorationSecure/unRegisterOneTimeAdoration")
+    public ResponseEntity<String> unRegisterOneTimeAdoration(@RequestBody final String body, final HttpSession session) {
+        String resultString;
+        ResponseEntity<String> result;
+        try {
+            CurrentUserInformationJson currentUserInformationJson = currentUserProvider.getUserInformation(session);
+            //check authorization
+            if (!currentUserInformationJson.isRegisteredAdorator) {
+                result = buildUnauthorizedActionBodyResult();
+            } else {
+                //authorization checked, ok
+                Gson g = new Gson();
+                DeleteEntityJson p = g.fromJson(body, DeleteEntityJson.class);
+                Long updatedObjectId = linkProvider.unRegisterOneTimeAdoration(p, currentUserInformationJson);
+                if (updatedObjectId != null) {
+                    resultString = "OK";
+                    result = buildResponseBodyResult(JSON_RESPONSE_CREATE, resultString, HttpStatus.CREATED);
+                } else {
+                    resultString = "Cannot un-register one-time adoration, please check and retry.";
+                    result = buildResponseBodyResult(JSON_RESPONSE_CREATE, resultString, HttpStatus.BAD_REQUEST);
+                    logger.info("Cannot un-register one-time adoration - data issue.");
+                }
+            }
+        } catch (SystemException e) {
+            resultString = e.getMessage();
+            result = buildResponseBodyResult(JSON_RESPONSE_CREATE, resultString, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            resultString = "Cannot un-register one-time adoration, pls contact to maintainers.";
+            result = buildResponseBodyResult(JSON_RESPONSE_CREATE, resultString, HttpStatus.BAD_REQUEST);
+            logger.warn("Error happened at un-register one-time adoration call", e);
+        }
+        return result;
+    }
+
+    /**
+     * Remove a One-Time Missing Link.
+     *
+     * @param session is the actual HTTP session
+     * @return list of hits as a JSON response
+     */
+    @ResponseBody
+    @PostMapping(value = "/adorationSecure/unRegisterOneTimeMiss")
+    public ResponseEntity<String> unRegisterOneTimeMiss(@RequestBody final String body, final HttpSession session) {
+        String resultString;
+        ResponseEntity<String> result;
+        try {
+            CurrentUserInformationJson currentUserInformationJson = currentUserProvider.getUserInformation(session);
+            //check authorization
+            if (!currentUserInformationJson.isRegisteredAdorator) {
+                result = buildUnauthorizedActionBodyResult();
+            } else {
+                //authorization checked, ok
+                Gson g = new Gson();
+                DeleteEntityJson p = g.fromJson(body, DeleteEntityJson.class);
+                Long updatedObjectId = linkProvider.unRegisterOneTimeMiss(p, currentUserInformationJson);
+                if (updatedObjectId != null) {
+                    resultString = "OK";
+                    result = buildResponseBodyResult(JSON_RESPONSE_CREATE, resultString, HttpStatus.CREATED);
+                } else {
+                    resultString = "Cannot un-register one-time miss, please check and retry.";
+                    result = buildResponseBodyResult(JSON_RESPONSE_CREATE, resultString, HttpStatus.BAD_REQUEST);
+                    logger.info("Cannot un-register one-time miss - data issue.");
+                }
+            }
+        } catch (SystemException e) {
+            resultString = e.getMessage();
+            result = buildResponseBodyResult(JSON_RESPONSE_CREATE, resultString, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            resultString = "Cannot un-register one-time miss, pls contact to maintainers.";
+            result = buildResponseBodyResult(JSON_RESPONSE_CREATE, resultString, HttpStatus.BAD_REQUEST);
+            logger.warn("Error happened at un-register one-time miss call", e);
+        }
+        return result;
+    }
+
 }
