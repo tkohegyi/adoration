@@ -119,8 +119,8 @@
             <tr>
                 <td class="right">Adorálás módja:&nbsp;<span style="color:red">*</span></td>
                 <td class="left"><select id="method">
-                        <option id="method-1" value="1">Heti rendszerességgel, az Vácott, az Örökimádás kápolnából</option>
-                        <option id="method-2" value="2">Heti rendszerességgel, távolról, online módon</option>
+                        <option id="method-1" value="1">Heti rendszerességgel, Vácott, az Örökimádás kápolnából</option>
+                        <option id="method-2" value="2">Heti rendszerességgel, távolról, Online módon</option>
                         <option id="method-3" value="3">Alkalmanként, nem rendszeresen</option>
                 </select></td>
             </tr>
