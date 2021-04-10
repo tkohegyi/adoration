@@ -54,16 +54,22 @@ function setupCoverage() {
             item = $("#hour-" + i);
             var item2 = $("#hour-" + i + "-2");
             var value = hours[i];
+            item.removeClass("oneTimeCandidate");
+            item.removeClass("goodCoverage");
+            item.removeClass("badCoverage");
+            item.removeClass("veryBadCoverage");
+            item2.removeClass("oneTimeCandidate");
+            item2.removeClass("goodCoverage");
+            item2.removeClass("badCoverage");
+            item2.removeClass("veryBadCoverage");
             if (value == 0) {
                 if (!item.hasClass("lowPriority")) {
                     item.text("2");
-                    item.removeClass("goodCoverage");
-                    item.removeClass("badCoverage");
                     item.addClass("veryBadCoverage");
+                    item.addClass("oneTimeCandidate");
                     item2.text("2");
-                    item2.removeClass("goodCoverage");
-                    item2.removeClass("badCoverage");
                     item2.addClass("veryBadCoverage");
+                    item2.addClass("oneTimeCandidate");
                 } else {
                     item.text("");
                     item.addClass("lowPriorityColumn");
@@ -74,12 +80,8 @@ function setupCoverage() {
             if (value == 1) {
                 if (!item.hasClass("lowPriority")) {
                     item.text("1");
-                    item.removeClass("goodCoverage");
-                    item.removeClass("veryBadCoverage");
                     item.addClass("badCoverage");
                     item2.text("1");
-                    item2.removeClass("goodCoverage");
-                    item2.removeClass("veryBadCoverage");
                     item2.addClass("badCoverage");
                 } else {
                     item.text("");
@@ -91,12 +93,8 @@ function setupCoverage() {
             if (value > 1) {
                 if (!item.hasClass("lowPriority")) {
                     item.text("");
-                    item.removeClass("veryBadCoverage");
-                    item.removeClass("badCoverage");
                     item.addClass("goodCoverage");
                     item2.text("");
-                    item2.removeClass("veryBadCoverage");
-                    item2.removeClass("badCoverage");
                     item2.addClass("goodCoverage");
                 } else {
                     item.text("");
@@ -117,7 +115,9 @@ function setupCoverage() {
             if (value != undefined && value.length > 0) {
                 var htmlVal = "<img class=\"oneTimeHour\" src=\"/resources/img/light-green-check-mark-th.png\"/>";
                 item.html(htmlVal);
+                item.removeClass("oneTimeCandidate");
                 item2.html(htmlVal);
+                item2.removeClass("oneTimeCandidate");
             }
 
             var onlineValue = coverageOnlineHourInfo[i];
@@ -208,23 +208,20 @@ function coverageClick(h) {
                 $("#coveragePopup").append(r);
             }
         }
-        if (counter > 1) { //this means we have something to show
+        item = $("#hour-" + h);
+        if (item.hasClass("oneTimeCandidate") && !item.hasClass("lowPriorityColumn")) {
+            //offer possibility of one-time adoration
+            r = $("<tr/>");
+            rContent = "<td><button type=\"button\" class=\"btn btn-success\" onclick=\"registerOneTimeAdoration(" + h + ")\">Jelentkezés egy alkalomra, erre az órára</button></td>";
+            r.append($(rContent));
+            $("#coveragePopup").append(r);
+        }
+        if (!loggedInUserInfo.isRegisteredAdorator || item.hasClass("lowPriorityColumn")) {
+            //don't show anything
+            $(".pop").hide(500);
+            $("#coveragePopup").empty();
+        } else { //adorator user logged in and worth to show the info
             coverageModal.style.display="block";
-        } else { //no adorator for the hour so...
-            //if not logged in properly OR no adoration in the hour, then don't show anything
-            item = $("#hour-" + h);
-            if (!loggedInUserInfo.isRegisteredAdorator || item.hasClass("lowPriorityColumn")) {
-                //don't show anything
-                $(".pop").hide(500);
-                $("#coveragePopup").empty();
-            } else { //adorator user logged in and there should be adoration in the hour
-                //offer possibility of one-time adoration
-                r = $("<tr/>");
-                rContent = "<td><button type=\"button\" class=\"btn btn-success\" onclick=\"registerOneTimeAdoration(" + h + ")\">Jelentkezés egy alkalomra, erre az órára</button></td>";
-                r.append($(rContent));
-                $("#coveragePopup").append(r);
-                coverageModal.style.display="block";
-            }
         }
     }
 }
