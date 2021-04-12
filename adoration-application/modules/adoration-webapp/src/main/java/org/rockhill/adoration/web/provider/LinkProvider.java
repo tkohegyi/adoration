@@ -13,7 +13,6 @@ import org.rockhill.adoration.database.tables.Person;
 import org.rockhill.adoration.web.json.CurrentUserInformationJson;
 import org.rockhill.adoration.web.json.DeleteEntityJson;
 import org.rockhill.adoration.web.json.LinkJson;
-import org.rockhill.adoration.web.json.PersonCommitmentJson;
 import org.rockhill.adoration.web.json.PersonJson;
 import org.rockhill.adoration.web.provider.helper.ProviderBase;
 import org.slf4j.Logger;
@@ -177,7 +176,7 @@ public class LinkProvider extends ProviderBase {
         int hourIdNow = (cal.get(Calendar.DAY_OF_WEEK) - 1) * BusinessWithLink.HOUR_IN_A_DAY + cal.get(Calendar.HOUR_OF_DAY);  // use sun as 0 day
         int diff = hourId - hourIdNow;
         if (diff < 0) {
-            diff+= Link.MAX_HOUR + 1;
+            diff += Link.MAX_HOUR + 1;
         }
         DateTimeConverter dateTimeConverter = new DateTimeConverter();
         Date targetDate = new Date();

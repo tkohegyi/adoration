@@ -156,7 +156,7 @@
         <button id="registerButton" type="button" class="btn btn-success btn-sm" onclick="doRegisterClick()">Jelentkezés elküldése</button>
         <br />
         <p/>
-        
+
         <hr />
         <div class="right">
             <script type="text/javascript"> //<![CDATA[
