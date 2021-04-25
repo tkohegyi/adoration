@@ -17,7 +17,7 @@
 <script src="/resources/js/external/jquery-3.4.1.js"></script>
 <script src="/resources/js/external/bootstrap-4.3.1.min.js"></script>
 <script src="/resources/js/common.js"></script>
-<script src="/resources/js/live.js" nonce></script>
+<script src="/resources/js/live.js?20210425" nonce></script>
 <title>Örökimádás - Vác - Élő Közvetítés</title>
 <link href="/resources/css/external/bootstrap-4.3.1.min.css" rel="stylesheet" media="screen">
 <link href="/resources/css/menu.css" rel="stylesheet" media="screen">
@@ -35,7 +35,7 @@
 
     <fieldset class="form-horizontal">
         <legend>Élő közvetítés:</legend>
-        <h3><a href="https://orok-imadas-vac-szent-anna-piarista-templom.click2stream.com/">Urgás az Örökimádás Webkamerájához</a></h3>
+        <h3><a href="https://orokimadas-vac.click2stream.com/">Urgás az Örökimádás Webkamerájához</a></h3>
     </fieldset>
 
   </div>

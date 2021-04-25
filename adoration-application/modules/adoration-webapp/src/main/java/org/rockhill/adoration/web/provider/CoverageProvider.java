@@ -285,18 +285,20 @@ public class CoverageProvider {
             auditTrailCollection.add(prepareUpdateAuditTrail(link.getPersonId(), link.getId(), currentUserInformationJson.userName, "Public Comment", oldValue, newValue));
         }
         //type
-        handleTypeUpdate(link, oldLink, currentUserInformationJson.userName, auditTrailCollection);
+        handleTypeUpdate(link, oldLink, currentUserInformationJson.userName, auditTrailCollection, currentUserInformationJson.isPrivilegedAdorator);
 
         id = businessWithLink.updateLink(link, auditTrailCollection);
         return id;
     }
 
-    private void handleTypeUpdate(Link newLink, Link oldLink, String userName, Collection<AuditTrail> auditTrailCollection) {
+    private void handleTypeUpdate(Link newLink, Link oldLink, String userName, Collection<AuditTrail> auditTrailCollection, boolean isPrivilegedAdorator) {
         Integer newInt = newLink.getType();
         Integer oldInt = oldLink.getType();
         if ((newInt < 0) || (newInt > 1)) {
-            logger.info("{} {} tried to create/update Link with bad type.", USER, userName);
-            throw new DatabaseHandlingException(CANNOT_UPDATE_PERSON_COMMITMENT_TEXT);
+            if (!isPrivilegedAdorator || (newInt < 0) || (newInt > 3)) {
+                logger.info("{} {} tried to create/update Link with bad type.", USER, userName);
+                throw new DatabaseHandlingException(CANNOT_UPDATE_PERSON_COMMITMENT_TEXT);
+            }
         }
         if (!newInt.equals(oldInt)) {
             auditTrailCollection.add(prepareUpdateAuditTrail(newLink.getPersonId(), newLink.getId(), userName, "Type",

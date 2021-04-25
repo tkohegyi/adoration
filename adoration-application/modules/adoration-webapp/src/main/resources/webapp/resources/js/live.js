@@ -27,7 +27,7 @@ function redirectAsNecessary() {
     if (typeof loggedInUserInfo != "undefined") {
         if (loggedInUserInfo.isLoggedIn) {
             //user logged in so can redirect to live site
-            window.location.href = "https://orok-imadas-vac-szent-anna-piarista-templom.click2stream.com/";
+            window.location.href = "https://orokimadas-vac.click2stream.com/";
         }
     }
 }
